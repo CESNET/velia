@@ -18,6 +18,9 @@ add_custom_target(velia-version-cmake-ide
 include(cmake/ProjectGitVersion.cmake)
 prepare_git_version(VELIA_VERSION "0.0")
 
+find_package(Doxygen)
+option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
+
 find_package(spdlog REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
@@ -64,4 +67,17 @@ if(BUILD_TESTING)
     endfunction()
 
     velia_test(dummy cla-utils)
+endif()
+
+if(WITH_DOCS)
+    set(doxyfile_in ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+    set(doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+    configure_file(${doxyfile_in} ${doxyfile} @ONLY)
+    add_custom_target(doc
+            COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            COMMENT "Generating API documentation with Doxygen"
+            VERBATIM
+            SOURCES ${doxyfile_in}
+            )
 endif()

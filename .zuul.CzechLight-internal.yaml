@@ -1,4 +1,15 @@
 - project:
     check:
       jobs:
-        - noop
+        - f31-gcc-cover:
+            requires: CzechLight-deps-f31-gcc
+        - f31-clang-asan-ubsan:
+            requires: CzechLight-deps-f31-clang-asan-ubsan
+        - f31-clang-tsan:
+            requires: CzechLight-deps-f31-clang-tsan
+        - f31-cpp-coverage-diff:
+            voting: false
+        - clang-format:
+            voting: false
+        - f31-gcc-cover-previous:
+            requires: CzechLight-deps-f31-gcc

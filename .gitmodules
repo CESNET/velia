@@ -1,0 +1,4 @@
+[submodule "submodules/dependencies"]
+	path = submodules/dependencies
+	url = ../dependencies
+	branch = master

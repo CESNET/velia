@@ -28,7 +28,32 @@ add_executable(cla-veliad
 
 target_link_libraries(cla-veliad PUBLIC cla-utils)
 
+# Testing
 if(BUILD_TESTING)
     include(CTest)
     enable_testing()
+
+    find_package(trompeloeil 33 REQUIRED)
+    find_package(doctest 2.3.1 REQUIRED)
+
+    add_library(DoctestIntegration STATIC
+            tests/doctest_integration.cpp
+            tests/trompeloeil_doctest.h
+            )
+    target_include_directories(DoctestIntegration PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+    target_link_libraries(DoctestIntegration doctest::doctest trompeloeil spdlog::spdlog)
+    target_compile_definitions(DoctestIntegration PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
+
+    function(velia_test name)
+        add_executable(test_${name} tests/${name}.cpp)
+        target_link_libraries(test_${name} DoctestIntegration ${ARGN})
+        target_include_directories(test_${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+
+        if(NOT CMAKE_CROSSCOMPILING)
+            add_test(test_${name} test_${name})
+        endif()
+
+    endfunction()
+
+    velia_test(dummy cla-utils)
 endif()

@@ -11,6 +11,13 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "-Wsuggest-override ${CMAKE_CXX_FLAGS}")
 endif()
 
+add_custom_target(velia-version-cmake-ide
+        cmake/ProjectGitVersion.cmake
+        cmake/ProjectGitVersionRunner.cmake
+        )
+include(cmake/ProjectGitVersion.cmake)
+prepare_git_version(VELIA_VERSION "0.0")
+
 find_package(spdlog REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
@@ -27,6 +34,7 @@ add_executable(cla-veliad
     )
 
 target_link_libraries(cla-veliad PUBLIC cla-utils)
+add_dependencies(cla-veliad target-VELIA_VERSION)
 
 # Testing
 if(BUILD_TESTING)

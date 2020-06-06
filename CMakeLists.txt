@@ -32,6 +32,13 @@ add_library(cla-utils STATIC
     )
 target_link_libraries(cla-utils PUBLIC spdlog::spdlog)
 
+add_library(cla-mux STATIC
+    src/inputs/AbstractInput.cpp
+    src/mux/Mux.cpp
+    )
+target_link_libraries(cla-mux PUBLIC cla-utils)
+
+
 add_executable(cla-veliad
     src/main.cpp
     )
@@ -67,6 +74,7 @@ if(BUILD_TESTING)
     endfunction()
 
     velia_test(dummy cla-utils)
+    velia_test(mux cla-mux)
 endif()
 
 if(WITH_DOCS)

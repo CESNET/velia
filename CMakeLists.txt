@@ -21,6 +21,7 @@ prepare_git_version(VELIA_VERSION "0.0")
 find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
+find_package(Boost REQUIRED)
 find_package(spdlog REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
@@ -31,6 +32,14 @@ add_library(velia-utils STATIC
     src/utils/log-init.cpp
     )
 target_link_libraries(velia-utils PUBLIC spdlog::spdlog)
+
+add_library(velia-state-manager STATIC
+    src/inputs/AbstractInput.cpp
+    src/manager/AbstractManager.cpp
+    src/manager/StateManager.cpp
+    src/State.cpp
+    )
+target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost)
 
 add_executable(veliad
     src/main.cpp
@@ -63,6 +72,7 @@ if(BUILD_TESTING)
         endif()
 
     endfunction()
+    velia_test(state-manager velia-state-manager)
 endif()
 
 if(WITH_DOCS)

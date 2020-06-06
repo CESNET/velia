@@ -3,7 +3,7 @@
 #include <doctest/doctest.h>
 #include <doctest/trompeloeil.hpp>
 #include <trompeloeil.hpp>
-
+#include "pretty-printers.h"
 #define SECTION(name) DOCTEST_SUBCASE(name)
 
 using doctest::Approx;

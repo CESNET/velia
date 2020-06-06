@@ -32,6 +32,13 @@ add_library(cla-utils STATIC
     )
 target_link_libraries(cla-utils PUBLIC spdlog::spdlog)
 
+add_library(cla-state-manager STATIC
+    src/inputs/AbstractInput.cpp
+    src/manager/StateManager.cpp
+    )
+target_link_libraries(cla-state-manager PUBLIC cla-utils)
+
+
 add_executable(cla-veliad
     src/main.cpp
     )
@@ -65,6 +72,7 @@ if(BUILD_TESTING)
         endif()
 
     endfunction()
+    velia_test(state-manager cla-state-manager)
 endif()
 
 if(WITH_DOCS)

@@ -3,7 +3,6 @@
 #include <doctest/doctest.h>
 #include <doctest/trompeloeil.hpp>
 #include <trompeloeil.hpp>
-
 #define SECTION(name) DOCTEST_SUBCASE(name)
 
 using doctest::Approx;

@@ -56,19 +56,13 @@ export PKG_CONFIG_PATH=${PREFIX}/lib64/pkgconfig:${PREFIX}/lib/pkgconfig:${PREFI
 
 ARTIFACT_URL=$(jq < ~/zuul-env.json -r '[.artifacts[]? | select(.name == "tarball") | select(.project == "CzechLight/dependencies")][-1]?.url + ""')
 
-DEP_SUBMODULE_COMMIT=$(git ls-tree -l master submodules/dependencies | cut -d ' ' -f 3)
-
 if [[ -z "${ARTIFACT_URL}" ]]; then
-    # fallback to a promoted artifact
+    # nothing ahead in the pipeline -> fallback to the latest promoted artifact
+    DEPSRCDIR=$(jq < ~/zuul-env.json -e -r ".projects[] | select(.name == \"CzechLight/dependencies\").src_dir")
+    DEP_SUBMODULE_COMMIT=$(git --git-dir ${HOME}/${DEPSRCDIR}/.git rev-parse HEAD)
     ARTIFACT_URL="https://object-store.cloud.muni.cz/swift/v1/ci-artifacts-${ZUUL_TENANT}/${ZUUL_GERRIT_HOSTNAME}/CzechLight/dependencies/${ZUUL_JOB_NAME%%-cover?(-previous|-diff)}/${DEP_SUBMODULE_COMMIT}.tar.zst"
 fi
 
-ARTIFACT_FILE=$(basename ${ARTIFACT_URL})
-DEP_HASH_FROM_ARTIFACT=$(echo "${ARTIFACT_FILE}" | sed -e 's/^czechlight-dependencies-//' -e 's/\.tar\.zst$//')
-if [[ "${DEP_HASH_FROM_ARTIFACT}" != "${DEP_SUBMODULE_COMMIT}" ]]; then
-    echo "Mismatched artifact: HEAD of ./submodules/dependencies does not match artifact commit ref"
-    exit 1
-fi
 curl ${ARTIFACT_URL} | unzstd --stdout | tar -C ${PREFIX} -xf -
 
 cd ${BUILD_DIR}

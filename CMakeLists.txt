@@ -23,6 +23,7 @@ option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${D
 
 find_package(Boost REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(sdbus-c++ REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
@@ -35,11 +36,12 @@ target_link_libraries(velia-utils PUBLIC spdlog::spdlog)
 
 add_library(velia-state-manager STATIC
     src/inputs/AbstractInput.cpp
+    src/inputs/DbusSemaphoreInput.cpp
     src/manager/AbstractManager.cpp
     src/manager/StateManager.cpp
     src/State.cpp
     )
-target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost)
+target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost SDBusCpp::sdbus-c++)
 
 add_executable(veliad
     src/main.cpp
@@ -57,10 +59,16 @@ if(BUILD_TESTING)
     add_library(DoctestIntegration STATIC
             tests/doctest_integration.cpp
             tests/trompeloeil_doctest.h
+            tests/wait-a-bit-longer.cpp
             )
     target_include_directories(DoctestIntegration PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ${CMAKE_CURRENT_SOURCE_DIR}/src/)
     target_link_libraries(DoctestIntegration doctest::doctest trompeloeil spdlog::spdlog)
     target_compile_definitions(DoctestIntegration PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
+
+    add_library(DbusTesting STATIC
+        tests/dbus-helpers/dbus_semaphore_server.cpp
+    )
+    target_link_libraries(DbusTesting PUBLIC SDBusCpp::sdbus-c++)
 
     function(velia_test name)
         add_executable(test_${name} tests/${name}.cpp)
@@ -73,6 +81,7 @@ if(BUILD_TESTING)
 
     endfunction()
     velia_test(state-manager velia-state-manager)
+    velia_test(input-semaphore velia-state-manager DbusTesting)
 endif()
 
 if(WITH_DOCS)

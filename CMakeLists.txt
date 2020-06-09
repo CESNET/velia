@@ -23,6 +23,7 @@ option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${D
 
 find_package(Boost REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(sdbus-c++ REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
@@ -35,10 +36,11 @@ target_link_libraries(cla-utils PUBLIC spdlog::spdlog)
 
 add_library(cla-state-manager STATIC
     src/inputs/AbstractInput.cpp
+    src/inputs/DbusSemaphoreInput.cpp
     src/manager/AbstractManager.cpp
     src/manager/StateManager.cpp
     )
-target_link_libraries(cla-state-manager PUBLIC cla-utils PRIVATE Boost::boost)
+target_link_libraries(cla-state-manager PUBLIC cla-utils PRIVATE Boost::boost SDBusCpp::sdbus-c++)
 
 
 add_executable(cla-veliad
@@ -64,6 +66,10 @@ if(BUILD_TESTING)
     target_link_libraries(DoctestIntegration doctest::doctest trompeloeil spdlog::spdlog)
     target_compile_definitions(DoctestIntegration PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
 
+    add_library(DbusTesting STATIC
+        tests/dbus-helpers/dbus_semaphore_server.cpp
+    )
+
     function(velia_test name)
         add_executable(test_${name} tests/${name}.cpp)
         target_link_libraries(test_${name} DoctestIntegration ${ARGN})
@@ -75,6 +81,7 @@ if(BUILD_TESTING)
 
     endfunction()
     velia_test(state-manager cla-state-manager)
+    velia_test(input-semaphore cla-state-manager DbusTesting)
 endif()
 
 if(WITH_DOCS)

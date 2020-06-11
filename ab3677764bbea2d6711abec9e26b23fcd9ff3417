@@ -1,0 +1,158 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95017776_bb5dc48f",
+        "filename": "src/manager/AbstractManager.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T18:20:25Z",
+      "side": 1,
+      "message": "OK, we\u0027ll require several consumers (one for a DBus property, the other for a LED). What about using boost::signals2 instead of managing these manually?",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 78
+      },
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf9a6089_7b857d79",
+        "filename": "src/manager/StateManager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T18:20:25Z",
+      "side": 1,
+      "message": "this will need documentation on what sort of thread safety is guaranteed because right now additions and removals race with state updates (and I think that\u0027s wrong)",
+      "range": {
+        "startLine": 87,
+        "startChar": 17,
+        "endLine": 87,
+        "endChar": 31
+      },
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b28a55d3_7767d13a",
+        "filename": "src/manager/StateManager.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T18:20:25Z",
+      "side": 1,
+      "message": "will this project require multithreaded access?",
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "859ddd67_ffa62f19",
+        "filename": "tests/state-manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T18:20:25Z",
+      "side": 1,
+      "message": "this looks like something which would benefit from a macro:\n\n #define REQUIRE_STATE_OUTPUT(STATE) REQUIRE_CALL(*o1, update(State::STATE)).IN_SEQUENCE(seq1)",
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d00b3d4_2d0be610",
+        "filename": "tests/state-manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T18:20:25Z",
+      "side": 1,
+      "message": "These classes are using smart pointers and everything, so I do not like the fact that I have to register and unregister them explicitly (i.e., consider keeping a shared_ptr to the manager in each output and let their dtors unregister).\n\nOr even better -- just use boost::signals2 and be done with it :).",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 33
+      },
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a46b1504_19fbea1a",
+        "filename": "tests/state-manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T18:20:25Z",
+      "side": 1,
+      "message": "I find this comment misleading because there\u0027s no notification (as you correctly say, this is the last input). IMHO, the comment should say that there\u0027s no notification because there are no other inputs.",
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26c2ef69_267815f4",
+        "filename": "tests/state-manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T18:20:25Z",
+      "side": 1,
+      "message": "IMHO it\u0027s a bit clearer to write it like this:\n\n  auto o1 \u003d std::make_shared\u003cFakeOutput\u003e();\n\n  {\n    REQUIRE_CALL(...)\n    mx-\u003eregisterOutput(o1);\n  }\n\n  std::shared_ptr\u003cInput\u003e i1, i2;\n\n  {\n    REQUIRE_CALL(...)\n    i1 \u003d std::make_shared\u003cFakeInput\u003e(mx);\n  }\n\n  {\n    REQUIRE_CALL(...)\n    i2 \u003d std::make_shared\u003cFakeInput\u003e(mx);\n  }",
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50dc9551_42a315fd",
+        "filename": "tests/state-manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T18:20:25Z",
+      "side": 1,
+      "message": "just to make my point about the fact that manual resource management sucks -- there\u0027s no unregistration of `o1` here",
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    }
+  ]
+}

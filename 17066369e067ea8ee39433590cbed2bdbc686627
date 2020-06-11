@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b5328d3_7eafc173",
+        "filename": "src/State.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T11:20:27Z",
+      "side": 1,
+      "message": "Why is the size specified here?",
+      "range": {
+        "startLine": 4,
+        "startChar": 19,
+        "endLine": 4,
+        "endChar": 27
+      },
+      "revId": "17066369e067ea8ee39433590cbed2bdbc686627",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

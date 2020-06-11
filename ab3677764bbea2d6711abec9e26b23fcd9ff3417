@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6aecc3c5_a5a4f799",
+        "filename": "src/manager/AbstractManager.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-11T20:00:17Z",
+      "side": 1,
+      "message": "I never really used boost library, I will take a look at it",
+      "parentUuid": "95017776_bb5dc48f",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 78
+      },
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bf9a6089_7b857d79",
         "filename": "src/manager/StateManager.cpp",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2020-06-11T18:20:25Z",
       "side": 1,
       "message": "this will need documentation on what sort of thread safety is guaranteed because right now additions and removals race with state updates (and I think that\u0027s wrong)",
+      "range": {
+        "startLine": 87,
+        "startChar": 17,
+        "endLine": 87,
+        "endChar": 31
+      },
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81874fad_7c4ab095",
+        "filename": "src/manager/StateManager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-11T20:00:17Z",
+      "side": 1,
+      "message": "It is definitely wrong.",
+      "parentUuid": "bf9a6089_7b857d79",
       "range": {
         "startLine": 87,
         "startChar": 17,
@@ -82,6 +130,24 @@
     },
     {
       "key": {
+        "uuid": "d9c9ba60_e1bd970e",
+        "filename": "tests/state-manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-11T20:00:17Z",
+      "side": 1,
+      "message": "I thought about some macros like that but did not manage to implement them before I had to to leave the office.",
+      "parentUuid": "859ddd67_ffa62f19",
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d00b3d4_2d0be610",
         "filename": "tests/state-manager.cpp",
         "patchSetId": 11
@@ -93,6 +159,30 @@
       "writtenOn": "2020-06-11T18:20:25Z",
       "side": 1,
       "message": "These classes are using smart pointers and everything, so I do not like the fact that I have to register and unregister them explicitly (i.e., consider keeping a shared_ptr to the manager in each output and let their dtors unregister).\n\nOr even better -- just use boost::signals2 and be done with it :).",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 33
+      },
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a73279e7_5547a449",
+        "filename": "tests/state-manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-11T20:00:17Z",
+      "side": 1,
+      "message": "Yeah that is something that bothers me. I thought that having a simple observer here is what we want. Having the ptr from output to manager is a possibility. But for some reason I don\u0027t like having the pointers in both directions thats why I did not implement this. But if you find it OK I might think about it again.\n\nBut I am going to read something about the boost:signals2 lib.",
+      "parentUuid": "4d00b3d4_2d0be610",
       "range": {
         "startLine": 76,
         "startChar": 0,

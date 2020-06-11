@@ -113,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "bc266507_166a08c3",
+        "filename": "src/manager/StateManager.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-11T20:07:56Z",
+      "side": 1,
+      "message": "Point taken.\nNot as of now - both current inputs run inside one thread (dbus event loop).\n\nSo I guess it is: \"do not bother with threads and locking now\"?",
+      "parentUuid": "b28a55d3_7767d13a",
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "859ddd67_ffa62f19",
         "filename": "tests/state-manager.cpp",
         "patchSetId": 11

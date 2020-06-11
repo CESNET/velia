@@ -131,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "29d8fca0_9001e311",
+        "filename": "src/manager/StateManager.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-11T20:18:10Z",
+      "side": 1,
+      "message": "+1 from me",
+      "parentUuid": "bc266507_166a08c3",
+      "revId": "ab3677764bbea2d6711abec9e26b23fcd9ff3417",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "859ddd67_ffa62f19",
         "filename": "tests/state-manager.cpp",
         "patchSetId": 11

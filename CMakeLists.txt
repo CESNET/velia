@@ -40,8 +40,8 @@ target_link_libraries(cla-veliad PUBLIC cla-utils)
 add_dependencies(cla-veliad target-VELIA_VERSION)
 
 # Testing
+include(CTest)
 if(BUILD_TESTING)
-    include(CTest)
     enable_testing()
 
     find_package(trompeloeil 33 REQUIRED)

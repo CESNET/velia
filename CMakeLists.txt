@@ -1,5 +1,5 @@
 project(velia LANGUAGES CXX)
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
 
 # Build options
 set(CMAKE_CXX_STANDARD 17)
@@ -40,10 +40,8 @@ target_link_libraries(veliad PUBLIC velia-utils)
 add_dependencies(veliad target-VELIA_VERSION)
 
 # Testing
+include(CTest)
 if(BUILD_TESTING)
-    include(CTest)
-    enable_testing()
-
     find_package(trompeloeil 33 REQUIRED)
     find_package(doctest 2.3.1 REQUIRED)
 

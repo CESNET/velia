@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "401381ca_b1548555",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-15T14:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46ce65a5_d04b574e",
+      "range": {
+        "startLine": 36,
+        "startChar": 12,
+        "endLine": 36,
+        "endChar": 16
+      },
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2e2d373_4f213205",
         "filename": "src/inputs/AbstractInput.h",
         "patchSetId": 14
@@ -45,6 +69,30 @@
       "revId": "285481875d1d062891c450f8422d9415c629049d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f74953b_be0e23f3",
+        "filename": "src/inputs/AbstractInput.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-15T14:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2e2d373_4f213205",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +130,24 @@
     },
     {
       "key": {
+        "uuid": "9e85b5cf_3f28e5c7",
+        "filename": "src/manager/StateManager.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-15T14:06:07Z",
+      "side": 1,
+      "message": "I am used to invoking count for quick checking whether a key is present in std::map/std::set. But I agree find is better and I understand why.",
+      "parentUuid": "67982639_240f4b7e",
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7c12d18_3e6628b6",
         "filename": "src/manager/StateManager.cpp",
         "patchSetId": 14
@@ -102,6 +168,30 @@
       "revId": "285481875d1d062891c450f8422d9415c629049d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3d0a02f_7838c250",
+        "filename": "src/manager/StateManager.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-15T14:06:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7c12d18_3e6628b6",
+      "range": {
+        "startLine": 56,
+        "startChar": 130,
+        "endLine": 56,
+        "endChar": 155
+      },
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {

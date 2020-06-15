@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "4545855d_07285f05",
+        "filename": "src/inputs/AbstractInput.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T21:17:11Z",
+      "side": 1,
+      "message": "Ah, I didn\u0027t know that. I think it makes sense to disallow direct instantiation (but I would be OK even if it wasn\u0027t an abstract class, too -- that would save some typing in the test suite after all).",
+      "parentUuid": "4452cb2b_a5a4776b",
+      "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "52dbf569_789e377c",
         "filename": "src/manager/AbstractManager.h",
         "patchSetId": 17

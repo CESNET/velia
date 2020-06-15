@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53ae4a79_ef3b13f4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T18:46:19Z",
+      "side": 1,
+      "message": "we don\u0027t know how pre-3.15 cmake operated and this sentence implies otherwise, but whatever, that\u0027s not a big deal.",
+      "range": {
+        "startLine": 13,
+        "startChar": 28,
+        "endLine": 13,
+        "endChar": 72
+      },
+      "revId": "a06d74d92bfc3af728b22625f6727e6db63c81bf",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    }
+  ]
+}

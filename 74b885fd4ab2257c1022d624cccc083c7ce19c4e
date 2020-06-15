@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "353cec2c_964730dc",
+        "filename": "src/inputs/AbstractInput.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T18:57:19Z",
+      "side": 1,
+      "message": "not a pure virtual, the dtor is defined in the .cpp file",
+      "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52dbf569_789e377c",
+        "filename": "src/manager/AbstractManager.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T18:57:19Z",
+      "side": 1,
+      "message": "Just a suggestion, I\u0027m interested in what you think: I would even go as far as removing the AbstractManager altogether, and just having a real Manager with these three methods virtual. The mock can still override them, and it\u0027s one extra class less.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 59
+      },
+      "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    }
+  ]
+}

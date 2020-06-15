@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46ce65a5_d04b574e",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T12:56:20Z",
+      "side": 1,
+      "message": "nit: consider getting rid of these prefixes (or replace them with velia- if you feel like doing that)",
+      "range": {
+        "startLine": 36,
+        "startChar": 12,
+        "endLine": 36,
+        "endChar": 16
+      },
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2e2d373_4f213205",
+        "filename": "src/inputs/AbstractInput.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T12:56:20Z",
+      "side": 1,
+      "message": "nit: \"velia\", perhaps? I think this does not have to imply any relation to CzechLight",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5537e301_f87d4d3b",
+        "filename": "src/manager/AbstractManager.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T12:56:20Z",
+      "side": 1,
+      "message": "I would prefer if this class already provided a public instance of boost::signals2::signal instead of this function. One of the big reasons is the simplification of tests which will go with that.",
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67982639_240f4b7e",
+        "filename": "src/manager/StateManager.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T12:56:20Z",
+      "side": 1,
+      "message": "nit: I noticed the find vs. count in reigsterInput/unregisterInput and it bothers me a very small bit. This code doesn\u0027t really need to find the count of stuff, it only needs checking the first item. But whatever, just some feedback from me, no need to change.",
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7c12d18_3e6628b6",
+        "filename": "src/manager/StateManager.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T12:56:20Z",
+      "side": 1,
+      "message": "\"something like operator\u003c\u003c(ostream\u0026, State)\" is already there for tests, so please make it usable also for logging",
+      "range": {
+        "startLine": 56,
+        "startChar": 130,
+        "endLine": 56,
+        "endChar": 155
+      },
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79d6cc89_7d03cf26",
+        "filename": "tests/fake.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T12:56:20Z",
+      "side": 1,
+      "message": "If the Manager exposes the underlying boost.signals2 signal, this boilerplate can be reduced to just a single class with a single member -- see https://gerrit.cesnet.cz/plugins/gitiles/CzechLight/cla-sysrepo/+/refs/heads/master/tests/thresholds.cpp#45 .",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 2
+      },
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1087d2e_6fbe926d",
+        "filename": "tests/fake.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T12:56:20Z",
+      "side": 1,
+      "message": "cla-sysrepo requires these \"generic\" macros for targetting more device drivers at the same time. I don\u0027t think it will be necessary to test whether the manager invokes all outputs (that\u0027s a library code straight from boost now that you use signals2), so I think this one can be removed.",
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d8bad51_5308bdbe",
+        "filename": "tests/state-manager.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T12:56:20Z",
+      "side": 1,
+      "message": "...and once the boost.signals.signal2 is exposed, this test becomes redundant.",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 122,
+        "endChar": 5
+      },
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

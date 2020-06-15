@@ -17,6 +17,6 @@ namespace spdlog {
 class logger;
 }
 
-namespace cla {
+namespace velia {
 using Log = std::shared_ptr<spdlog::logger>;
 }

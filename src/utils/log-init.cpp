@@ -9,7 +9,7 @@
 #include "utils/log-init.h"
 #include "utils/log.h"
 
-namespace cla {
+namespace velia {
 namespace utils {
 
 /** @short Initialize logging

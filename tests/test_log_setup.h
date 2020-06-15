@@ -15,7 +15,7 @@
 #define IMPL_TEST_INIT_LOGS_1                                                       \
     spdlog::drop_all();                                                             \
     auto test_logger = std::make_shared<spdlog::sinks::ansicolor_stderr_sink_mt>(); \
-    cla::utils::initLogs(test_logger);
+    velia::utils::initLogs(test_logger);
 
 #define IMPL_TEST_INIT_LOGS_2                   \
     spdlog::set_pattern("%S.%e [%t %n %L] %v"); \

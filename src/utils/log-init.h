@@ -19,7 +19,7 @@ class sink;
   * @short Implementation of initialization of logging
 */
 
-namespace cla {
+namespace velia {
 namespace utils {
 void initLogs(std::shared_ptr<spdlog::sinks::sink> sink);
 }

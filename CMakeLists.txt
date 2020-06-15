@@ -26,18 +26,18 @@ find_package(spdlog REQUIRED)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 # Targets
-add_library(cla-utils STATIC
+add_library(velia-utils STATIC
     src/utils/log-init.h
     src/utils/log-init.cpp
     )
-target_link_libraries(cla-utils PUBLIC spdlog::spdlog)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog)
 
-add_executable(cla-veliad
+add_executable(veliad
     src/main.cpp
     )
 
-target_link_libraries(cla-veliad PUBLIC cla-utils)
-add_dependencies(cla-veliad target-VELIA_VERSION)
+target_link_libraries(veliad PUBLIC velia-utils)
+add_dependencies(veliad target-VELIA_VERSION)
 
 # Testing
 if(BUILD_TESTING)

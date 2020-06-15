@@ -113,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "f7501961_2c6c4df7",
+        "filename": "src/manager/AbstractManager.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-15T16:30:24Z",
+      "side": 1,
+      "message": "Well, I agree, this would be a simplification.\n\nOn the other hand, is it wise to make all the methods (disconect_all, operator\u003d, etc) publicly available?",
+      "parentUuid": "5537e301_f87d4d3b",
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67982639_240f4b7e",
         "filename": "src/manager/StateManager.cpp",
         "patchSetId": 14

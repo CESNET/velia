@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efe4f280_37410f4e",
+        "filename": "src/inputs/DbusSemaphoreInput.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T19:20:37Z",
+      "side": 1,
+      "message": "nit: it\u0027s a coding style preference, but consider using an early return along with an if-statement with variable declaration, like this:\n\n if (iface !\u003d m_propertyInterface)\n     return;\n if (auto it \u003d changed.find(m_propertyName); it !\u003d changed.end()) {\n     m_log-\u003etrace(...);\n     updateState(stateFromString(it-\u003esecond);\n }\n\nI think it\u0027s worth it here if only because of that longish variable name above.",
+      "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d4b30f5_557fe0e2",
+        "filename": "src/inputs/DbusSemaphoreInput.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T19:20:37Z",
+      "side": 1,
+      "message": "nit, no need to change: I prefer a bit more brief debug messages which do not necessarily mention \"details\" such as class names, i.e., \"Watching for property changes of {}.{} on bus {}, object {}\".\n\nNo need to change this, though.",
+      "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3c2e341_35b611ef",
+        "filename": "src/inputs/DbusSemaphoreInput.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T19:20:37Z",
+      "side": 1,
+      "message": "this should be removed prior to merging once it\u0027s debugged -- or does it add value to the user?",
+      "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88cf6b57_0739fb09",
+        "filename": "src/inputs/DbusSemaphoreInput.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-15T19:20:37Z",
+      "side": 1,
+      "message": "nit: calling the get\u003cstd::string\u003e() would look better to me; if not, then please switch away from a C-style cast and either invoke constructor, or use static_cast",
+      "range": {
+        "startLine": 44,
+        "startChar": 37,
+        "endLine": 44,
+        "endChar": 50
+      },
+      "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

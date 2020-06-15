@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4452cb2b_a5a4776b",
+        "filename": "src/inputs/AbstractInput.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-15T19:52:20Z",
+      "side": 1,
+      "message": "It is pure virtual so that nobody can instantiate this class. However, pure virtual destructors must be defined anyway.\nhttps://en.cppreference.com/w/cpp/language/destructor#Pure_virtual_destructors",
+      "parentUuid": "353cec2c_964730dc",
+      "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "52dbf569_789e377c",
         "filename": "src/manager/AbstractManager.h",
         "patchSetId": 17

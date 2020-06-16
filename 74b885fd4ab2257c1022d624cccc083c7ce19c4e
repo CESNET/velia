@@ -99,6 +99,30 @@
       "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ebc1a11_5c64dfa3",
+        "filename": "src/manager/AbstractManager.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-16T13:55:30Z",
+      "side": 1,
+      "message": "I probably accidentaly resolved this.",
+      "parentUuid": "b0cd2c41_b689fb6f",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 59
+      },
+      "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

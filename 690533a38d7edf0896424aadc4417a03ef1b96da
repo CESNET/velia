@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "55e11afd_8547d54a",
+        "filename": "src/inputs/DbusSemaphoreInput.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-16T13:25:12Z",
+      "side": 1,
+      "message": "I agree.",
+      "parentUuid": "efe4f280_37410f4e",
+      "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d4b30f5_557fe0e2",
         "filename": "src/inputs/DbusSemaphoreInput.cpp",
         "patchSetId": 10
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "de322646_a9acde3f",
+        "filename": "src/inputs/DbusSemaphoreInput.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-16T13:25:12Z",
+      "side": 1,
+      "message": "Changed though. Shouldn\u0027t I create a logger sink per input source class so it is obvious which input source is the originator of this entry?",
+      "parentUuid": "6d4b30f5_557fe0e2",
+      "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c3c2e341_35b611ef",
         "filename": "src/inputs/DbusSemaphoreInput.cpp",
         "patchSetId": 10
@@ -50,6 +86,24 @@
       "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6472a6df_2fd2ea96",
+        "filename": "src/inputs/DbusSemaphoreInput.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-16T13:25:12Z",
+      "side": 1,
+      "message": "Eh yes, this is a leftover of a debugging process. Removed, thanks for this.",
+      "parentUuid": "c3c2e341_35b611ef",
+      "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {
@@ -73,6 +127,30 @@
       "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "196469a8_aa98b5f0",
+        "filename": "src/inputs/DbusSemaphoreInput.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-16T13:25:12Z",
+      "side": 1,
+      "message": "I don\u0027t think it is a nitpicking. I agree that explicit call to sdbus::Variant::get\u003cT\u003e is better.",
+      "parentUuid": "88cf6b57_0739fb09",
+      "range": {
+        "startLine": 44,
+        "startChar": 37,
+        "endLine": 44,
+        "endChar": 50
+      },
+      "revId": "690533a38d7edf0896424aadc4417a03ef1b96da",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

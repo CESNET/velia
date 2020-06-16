@@ -75,6 +75,30 @@
       "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0cd2c41_b689fb6f",
+        "filename": "src/manager/AbstractManager.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-16T07:30:50Z",
+      "side": 1,
+      "message": "Both keeping and removing this make sense. I like having the interface here but I admit it is probably useless. We are not going to create any new concrete Managers anyway (at least not now) so the AbstractInput can reference to a concrete Manager.",
+      "parentUuid": "52dbf569_789e377c",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 59
+      },
+      "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

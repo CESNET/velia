@@ -167,6 +167,24 @@
     },
     {
       "key": {
+        "uuid": "3dc087d1_d26c3592",
+        "filename": "src/manager/AbstractManager.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-16T07:30:50Z",
+      "side": 1,
+      "message": "I\u0027m sorry but I probably still do not get it why it is public.\n\nIsn\u0027t it sufficient to pass the return value from signal::connect() to the caller? I don\u0027t think the caller needs anything else (https://www.boost.org/doc/libs/1_61_0/doc/html/boost/signals2/signal.html).\n\nConnecting is almost identical. Except the first variant does not expose the signal object and actually hides from the user that we are using boost:signals2 (and I think the function is a single-line one).\n\n auto conn \u003d mx-\u003eregisterOutput(callable);\n auto conn \u003d mx-\u003esignal.connect(callable);\n\nAlso the tests do not seem to be simplified that much (looking at the diff between PS 16 and 17).\n\nBut hey, it is not a big deal for me.",
+      "parentUuid": "6c4b90cc_710b4400",
+      "revId": "285481875d1d062891c450f8422d9415c629049d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67982639_240f4b7e",
         "filename": "src/manager/StateManager.cpp",
         "patchSetId": 14

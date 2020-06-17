@@ -123,6 +123,30 @@
       "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8c24099_5b6da18e",
+        "filename": "src/manager/AbstractManager.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-17T08:22:38Z",
+      "side": 1,
+      "message": "your call, really, you\u0027ll get my CR+2 either way",
+      "parentUuid": "5ebc1a11_5c64dfa3",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 59
+      },
+      "revId": "74b885fd4ab2257c1022d624cccc083c7ce19c4e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

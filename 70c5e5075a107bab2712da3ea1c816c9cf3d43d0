@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21d1173e_1ba1d178",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-17T20:05:54Z",
+      "side": 1,
+      "message": "If I was writing this, I would probably just call it a `Led`. Just my 0.02€, no need for change.",
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "948b7284_fc64e01a",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-17T20:05:54Z",
+      "side": 1,
+      "message": "I do not expect callers to use these two methods.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 38
+      },
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6c7b801_239f1736",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-17T20:05:54Z",
+      "side": 1,
+      "message": "I don\u0027t think that the max brightness would change over time a LED device lifetime, so I don\u0027t think there\u0027s a need to query this file outside of the constructor.",
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d31421f_8e0e4e64",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-17T20:05:54Z",
+      "side": 1,
+      "message": "nit: let\u0027s use brief and succinct identifiers. In this case, writeBrightness() conveys the same amount of information.",
+      "range": {
+        "startLine": 31,
+        "startChar": 24,
+        "endLine": 31,
+        "endChar": 29
+      },
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

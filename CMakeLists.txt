@@ -41,6 +41,7 @@ add_library(velia-state-manager STATIC
     src/manager/AbstractManager.cpp
     src/manager/StateManager.cpp
     src/outputs/LedSysfsDriver.cpp
+    src/outputs/callables.cpp
     src/State.cpp
     )
 target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost SDBusCpp::sdbus-c++)

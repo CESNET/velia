@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "c4e0dc64_ad80b7ac",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-17T21:52:57Z",
+      "side": 1,
+      "message": "Ah, now that\u0027s a good catch, I didn\u0027t know that. So IMHO it makes sense to have:\n\n void off();\n void on();\n void set(uint32_t brightness);\n\nAnd *maybe* also:\n\n uint32_t maxBrightness() const;\n\nHowever, I do not think that the callers will be that generic in nature (i.e., they likely won\u0027t query the system for max brightness and then use something like 60% green and 100% red because that\u0027s extra work). So I wouldn\u0027t mind at all if this was a rather stupid code, garbage-in, garbage-out, and if the user invokes set(666), well, I don\u0027t care.\n\nBesides, the kernel appears to handle this just fine without having to write extra code here:\n\n # echo 666 \u003e /sys/class/leds/uid\\:blue/brightness \n # cat /sys/class/leds/uid\\:blue/brightness \n 256\n\n-\u003e what about just nuking this brightness chekcing?",
+      "parentUuid": "ef5a9dcc_b6b18f8e",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 38
+      },
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6c7b801_239f1736",
         "filename": "src/outputs/LedSysfsDriver.h",
         "patchSetId": 2

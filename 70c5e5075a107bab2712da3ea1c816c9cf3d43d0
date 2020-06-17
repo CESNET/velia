@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "ef5a9dcc_b6b18f8e",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-17T20:41:33Z",
+      "side": 1,
+      "message": "That depends if you want a yellow or orange color (I think we talked about orange earlier, right?) I don\u0027t know how to mix RGB to produce orange using only values from set {0,max}.\nIf yellow is sufficient then I will delete these methods. I might remember that discussion incorrectly.",
+      "parentUuid": "948b7284_fc64e01a",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 38
+      },
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6c7b801_239f1736",
         "filename": "src/outputs/LedSysfsDriver.h",
         "patchSetId": 2
@@ -53,6 +77,24 @@
       "writtenOn": "2020-06-17T20:05:54Z",
       "side": 1,
       "message": "I don\u0027t think that the max brightness would change over time a LED device lifetime, so I don\u0027t think there\u0027s a need to query this file outside of the constructor.",
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6ab7c78_6ca80cf4",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-17T20:41:33Z",
+      "side": 1,
+      "message": "This is not maxBrightness but currentBrightness. I will rename those identifiers so it is more clear at first sight.",
+      "parentUuid": "f6c7b801_239f1736",
       "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true

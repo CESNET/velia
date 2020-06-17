@@ -39,6 +39,7 @@ add_library(velia-state-manager STATIC
     src/inputs/DbusSemaphoreInput.cpp
     src/manager/AbstractManager.cpp
     src/manager/StateManager.cpp
+    src/outputs/LedSysfsDriver.cpp
     src/State.cpp
     )
 target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost SDBusCpp::sdbus-c++)
@@ -55,6 +56,8 @@ include(CTest)
 if(BUILD_TESTING)
     find_package(trompeloeil 33 REQUIRED)
     find_package(doctest 2.3.1 REQUIRED)
+
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/configure.cmake.h.in ${CMAKE_CURRENT_BINARY_DIR}/tests/configure.cmake.h)
 
     add_library(DoctestIntegration STATIC
             tests/doctest_integration.cpp
@@ -82,6 +85,7 @@ if(BUILD_TESTING)
     endfunction()
     velia_test(state-manager velia-state-manager)
     velia_test(input-semaphore velia-state-manager DbusTesting)
+    velia_test(output-led velia-state-manager)
 endif()
 
 if(WITH_DOCS)

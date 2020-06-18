@@ -90,6 +90,30 @@
     },
     {
       "key": {
+        "uuid": "5660b6ef_4c4c433e",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-18T08:07:34Z",
+      "side": 1,
+      "message": "void on();\n void set(uint32_t brightness);\n\nHow do you expect these to work? On() sets to max (or last known value \u003e0?) and set(val) sets to val? Now we have two differently named methods that can turn the light on. I\u0027m not sure whether it is clear (and I\u0027m obviously overthinking it again.)",
+      "parentUuid": "c4e0dc64_ad80b7ac",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 38
+      },
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6c7b801_239f1736",
         "filename": "src/outputs/LedSysfsDriver.h",
         "patchSetId": 2

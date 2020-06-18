@@ -114,6 +114,30 @@
     },
     {
       "key": {
+        "uuid": "4aa9f6cd_5317f766",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-18T08:44:03Z",
+      "side": 1,
+      "message": "Ah, sure, `void on();` would require knowing what the max value is :). So you can make it either (1):\n\n explicit Led(const std::filesystem::path\u0026 dir, const uint32_t maxBrightness);\n void off();\n void on();\n void set(const uint32_t brightness);\n\nor (2):\n\n explicit Led(const std::filesystem::path\u0026 dir);\n void set(const uint32_t brightness);\n\nor, as you have it now, (3) which is (1) with brightness autodetection. If you prefer (3), I can live with that even if it isn\u0027t really my preference. I think I like (2) because that\u0027s super-dumb, and I like dumb code (as I usually understand that).",
+      "parentUuid": "5660b6ef_4c4c433e",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 38
+      },
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6c7b801_239f1736",
         "filename": "src/outputs/LedSysfsDriver.h",
         "patchSetId": 2

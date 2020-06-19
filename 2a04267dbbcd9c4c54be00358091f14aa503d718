@@ -22,6 +22,30 @@
       "revId": "2a04267dbbcd9c4c54be00358091f14aa503d718",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1428139a_a5ed0428",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-19T17:05:00Z",
+      "side": 1,
+      "message": "nah, i agree. I will change that",
+      "parentUuid": "aa31e54e_fb205d67",
+      "range": {
+        "startLine": 20,
+        "startChar": 22,
+        "endLine": 20,
+        "endChar": 27
+      },
+      "revId": "2a04267dbbcd9c4c54be00358091f14aa503d718",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

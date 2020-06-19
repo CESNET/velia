@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa31e54e_fb205d67",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-19T16:00:32Z",
+      "side": 1,
+      "message": "I actually think that \"brightness\" was a better name because it described what it\u0027s about, but whatever.",
+      "range": {
+        "startLine": 20,
+        "startChar": 22,
+        "endLine": 20,
+        "endChar": 27
+      },
+      "revId": "2a04267dbbcd9c4c54be00358091f14aa503d718",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

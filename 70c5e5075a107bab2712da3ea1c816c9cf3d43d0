@@ -138,6 +138,30 @@
     },
     {
       "key": {
+        "uuid": "d7f66ffe_4eaac9de",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-19T07:39:44Z",
+      "side": 1,
+      "message": "Okay. I am removing all the checks (added a documentation note regarding that) and also getMax(). Let it be caller responsibility to know what the maxBrightnessValue is for the LED he initializes.\n\nWe can refactor later should it be neccesary.",
+      "parentUuid": "4aa9f6cd_5317f766",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 38
+      },
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6c7b801_239f1736",
         "filename": "src/outputs/LedSysfsDriver.h",
         "patchSetId": 2
@@ -173,6 +197,24 @@
     },
     {
       "key": {
+        "uuid": "9d3480f1_c2b8ed66",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-19T07:39:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6ab7c78_6ca80cf4",
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d31421f_8e0e4e64",
         "filename": "src/outputs/LedSysfsDriver.h",
         "patchSetId": 2
@@ -193,6 +235,30 @@
       "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e8a5692_f25072d0",
+        "filename": "src/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-19T07:39:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d31421f_8e0e4e64",
+      "range": {
+        "startLine": 31,
+        "startChar": 24,
+        "endLine": 31,
+        "endChar": 29
+      },
+      "revId": "70c5e5075a107bab2712da3ea1c816c9cf3d43d0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

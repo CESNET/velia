@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e78eb34_0261d307",
+        "filename": "src/outputs/LedSysfsDriver.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-19T09:29:12Z",
+      "side": 1,
+      "message": "I think this can be moved into the set() function directly. Or am I missing something?",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 5
+      },
+      "revId": "f783478944dd189cf8b1f1cb7acd340fcbd24e7a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

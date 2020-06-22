@@ -37,6 +37,7 @@ target_link_libraries(velia-utils PUBLIC spdlog::spdlog)
 add_library(velia-state-manager STATIC
     src/inputs/AbstractInput.cpp
     src/inputs/DbusSemaphoreInput.cpp
+    src/inputs/DbusSystemdInput.cpp
     src/manager/AbstractManager.cpp
     src/manager/StateManager.cpp
     src/outputs/LedSysfsDriver.cpp
@@ -70,6 +71,7 @@ if(BUILD_TESTING)
 
     add_library(DbusTesting STATIC
         tests/dbus-helpers/dbus_semaphore_server.cpp
+        tests/dbus-helpers/dbus_systemd_server.cpp
     )
     target_link_libraries(DbusTesting PUBLIC SDBusCpp::sdbus-c++)
 
@@ -85,6 +87,7 @@ if(BUILD_TESTING)
     endfunction()
     velia_test(state-manager velia-state-manager)
     velia_test(input-semaphore velia-state-manager DbusTesting)
+    velia_test(input-systemd velia-state-manager DbusTesting)
     velia_test(output-led velia-state-manager)
 endif()
 

@@ -52,10 +52,10 @@ TEST_CASE("State multiplexer")
 
         SECTION("State changes")
         {
-            REQUIRE_STATE_OUTPUT(OK);
+            // Transition from OK to OK - actually no updateState is called
             i1->invokeChangeState(velia::State::OK); // [OK, OK]
 
-            REQUIRE_STATE_OUTPUT(OK);
+            // Transition from OK to OK - actually no updateState is called
             i2->invokeChangeState(velia::State::OK); // [OK, OK]
 
             REQUIRE_STATE_OUTPUT(ERROR);
@@ -64,7 +64,7 @@ TEST_CASE("State multiplexer")
             REQUIRE_STATE_OUTPUT(WARNING);
             i1->invokeChangeState(velia::State::WARNING); // [WARNING, OK]
 
-            REQUIRE_STATE_OUTPUT(WARNING);
+            // Transition from WARNING to WARNING - actually no updateState is called
             i2->invokeChangeState(velia::State::OK); // [WARNING, OK]
 
             REQUIRE_STATE_OUTPUT(OK);

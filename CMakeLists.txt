@@ -29,15 +29,18 @@ find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
 find_package(Boost REQUIRED)
+find_package(docopt REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ REQUIRED)
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 include(GNUInstallDirs)
 
 # Targets
 add_library(velia-utils STATIC
+    src/utils/exceptions.cpp
     src/utils/log-init.h
     src/utils/log-init.cpp
     )
@@ -59,7 +62,7 @@ add_executable(veliad
     src/main.cpp
     )
 
-target_link_libraries(veliad PUBLIC velia-utils)
+target_link_libraries(veliad PUBLIC velia-utils velia-state-manager docopt)
 add_dependencies(veliad target-VELIA_VERSION)
 
 # Testing

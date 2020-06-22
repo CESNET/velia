@@ -21,7 +21,8 @@ void StateManager::registerInput(void* input, State value)
         throw std::invalid_argument("Input already registered.");
     }
 
-    updateState(input, value);
+    m_inputs.insert(std::make_pair(input, value));
+    computeOutput();
 }
 
 /** @brief Unregisters an input source */
@@ -40,9 +41,11 @@ void StateManager::unregisterInput(void* input)
 
 void StateManager::updateState(void* input, State value)
 {
-    m_inputs[input] = value;
-    m_log->trace("Input {} changed state to {}", input, value);
-    computeOutput();
+    if (auto it = m_inputs.find(input); it != m_inputs.end() && it->second != value) { // only on different state
+        it->second = value;
+        m_log->trace("Input {} changed state to {}", input, value);
+        computeOutput();
+    }
 }
 
 void StateManager::computeOutput()

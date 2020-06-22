@@ -70,6 +70,30 @@
       "revId": "f783478944dd189cf8b1f1cb7acd340fcbd24e7a",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34c23e3e_49b5e032",
+        "filename": "src/outputs/LedSysfsDriver.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-22T10:24:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa0a9e5c_b1b6a108",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 5
+      },
+      "revId": "f783478944dd189cf8b1f1cb7acd340fcbd24e7a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

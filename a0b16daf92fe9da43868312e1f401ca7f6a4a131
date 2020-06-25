@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8991cf7e_540e2156",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-25T19:35:47Z",
+      "side": 1,
+      "message": "please explain why this is a good idea. I know we talked about this during Tuesday\u0027s (?) call, I remember that I was initially against this because I wanted to implement this at the state manager\u0027s output, and then you said something which made me change my mind. I don\u0027t remember what was that.",
+      "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

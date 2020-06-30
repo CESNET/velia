@@ -16,6 +16,24 @@
       "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "964246b4_dba9b7ac",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-06-30T08:20:38Z",
+      "side": 1,
+      "message": "Well there is a problem that systemd sometimes emit PropertyChanged on a unit but the actual unit state (ActiveState and SubState, e.g. \"loaded running\" or \"activating auto-restart\") may not change.\n\nTherefore it sometimes happens that the code calls updateState from state A to state A several times in a row.\n\nThis is not not actually bad or wrong (it is actually only a \"not-so-cheap\" no-op on a manager) but it is pointless to do that.",
+      "parentUuid": "8991cf7e_540e2156",
+      "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

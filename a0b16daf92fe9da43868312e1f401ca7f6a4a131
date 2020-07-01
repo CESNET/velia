@@ -34,6 +34,24 @@
       "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "522c0082_3c106688",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-01T14:48:19Z",
+      "side": 1,
+      "message": "I thought that we talked about filtering these state changes within the source of the event (i.e., in the systemd handler). That would make sense to me because it\u0027s \"nice\" to have compact logs, etc (and I think that\u0027s actually that nice argument that you presented during the call).\n\nHowever, that\u0027s not what this patch is doing; this fix is not in the \"input source\" (a part which listens to D-Bus events related to systemd). Given that it\u0027s already in the manager, and manager has -- by definition -- access to the output, aggregated state, why don\u0027t just filter out these updates at the very end of the pipeline? I.e., keep the \"last output state\" as a member variable, then once you\u0027re in computeOutput (which will once again be upon each update of any input), walk all cached inputs, determine their maximum, compare that to the previous state, store the previous state, and if these were different, fire a signal.",
+      "parentUuid": "964246b4_dba9b7ac",
+      "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

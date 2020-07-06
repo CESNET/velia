@@ -52,6 +52,24 @@
       "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60787aea_767ecb38",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-07-06T09:35:34Z",
+      "side": 1,
+      "message": "\u003e I thought that we talked about filtering these state changes within the source of the event\n\nI thought otherwise, but lately I forget things so you might be right.\nI wanted to do this inside the manager in order to avoid duplicated code in the inputs (in case some other input will behave like this, e.g. cla-sysrepo restarts and goes from green to green).\n\nAlso I wanted to do this and as soon as possible in the manager (so the computeOutput is not executed unnecessarily when the input\u0027s state has not actually changed.",
+      "parentUuid": "522c0082_3c106688",
+      "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

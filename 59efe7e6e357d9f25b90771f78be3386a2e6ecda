@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5914a606_85e21ae2",
+        "filename": "src/inputs/DbusSystemdInput.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-10T13:18:50Z",
+      "side": 1,
+      "message": "These \u003c8\u003e and \u003c6\u003e are not super elegant if you ask me. Is there a way of using that code generator to do something prettier, such as unit.name and unit.state?\n\nIf not or if you think that a code generator is not worth it for just this thing, please add comments saying what that 6 and 8 are, preferably with a link to systemd\u0027s API description.",
+      "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "306890c3_f010f829",
+        "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-10T13:18:50Z",
+      "side": 1,
+      "message": "nit: I did not know this, but this part is not mandatory",
+      "range": {
+        "startLine": 18,
+        "startChar": 89,
+        "endLine": 18,
+        "endChar": 91
+      },
+      "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9db81aab_dd958791",
+        "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-10T13:18:50Z",
+      "side": 1,
+      "message": "I think it would be cleaner to say `this` here (and you won\u0027t need \u0026 capture for that).",
+      "range": {
+        "startLine": 19,
+        "startChar": 88,
+        "endLine": 19,
+        "endChar": 89
+      },
+      "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f6ec2ab_232e831b",
+        "filename": "tests/input-systemd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-10T13:18:50Z",
+      "side": 1,
+      "message": "What is the purpose of this?",
+      "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

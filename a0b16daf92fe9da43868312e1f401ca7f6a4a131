@@ -70,6 +70,24 @@
       "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22a765c5_07266f71",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-10T13:11:12Z",
+      "side": 1,
+      "message": "\u003e I wanted to do this inside the manager in order to avoid duplicated code in the inputs (in case some other input will behave like this, e.g. cla-sysrepo restarts and goes from green to green).\n\nI (vaguely) remember that you pointed out to log clarity as a benefit of that \"early filtering\". I don\u0027t care that much either way, i.e., I won\u0027t mind if the sources do not filter at all.\n\n\u003e Also I wanted to do this and as soon as possible in the manager (so the computeOutput is not executed unnecessarily when the input\u0027s state has not actually changed.\n\nBut that means that there will still be duplicate \"final outgoing transition\" when you\u0027ve got two inputs, A and B, that are currently in the same state, let\u0027s call it WARNING. The B transitions to OK, so this patch notices that it\u0027s indeed a real change, and calls into manager\u0027s output processing, which walks all cached inputs and notices that the new state is WARNING, and notifies about that even though the previous final state was also WARNING. There\u0027s no way around that, the code will always have to consult that cache. And it\u0027s also super-cheap because hey, it\u0027s a simple data structure that\u0027s super-easy to iterate through.\n\nIn my opinion, this patch adds code which is not enough to solve the real problem (\"I\u0027m getting extra transitions at the very end\"). You\u0027ll need that code anyway, so why not cut the middle man?",
+      "parentUuid": "60787aea_767ecb38",
+      "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

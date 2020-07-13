@@ -163,6 +163,24 @@
       "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be469eca_fb8dd3db",
+        "filename": "tests/input-systemd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-13T14:59:04Z",
+      "side": 1,
+      "message": "OK. If I was writing this, I would use this instead of #if 0:\n\n  #ifdef DEBUG_SHOW_INTERACTIVE_EVENTS_FROM_DEVELOPERS_SYSTEMD\n\nThere would be no need for a comment that way, IMHO.",
+      "parentUuid": "128831c1_de6707b1",
+      "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

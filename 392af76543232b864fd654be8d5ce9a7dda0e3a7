@@ -34,6 +34,24 @@
       "revId": "392af76543232b864fd654be8d5ce9a7dda0e3a7",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f503ae07_950740fd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-13T21:29:21Z",
+      "side": 1,
+      "message": "Just put that line like this (first line of  DbusSystemdServer::createUnit):\n\n m_units.insert(std::make_pair(static_cast\u003cconst sdbus::ObjectPath\u003e(objPath), Unit(sdbus::createObject(connection, objPath), activeState, subState)))\n\nApparently the current code uses this type:\n\n std::pair\u003cconst T\u0026, U\u003e\n\n...which is for some reason different from this one that std::map\u003cT, U\u003e::insert likes:\n\n std::pair\u003cconst T, U\u003e\n\nWith an appropriate FIXME for GCC stubbornes.",
+      "parentUuid": "5ca20cf8_b52e385c",
+      "revId": "392af76543232b864fd654be8d5ce9a7dda0e3a7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

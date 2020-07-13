@@ -16,6 +16,24 @@
       "revId": "392af76543232b864fd654be8d5ce9a7dda0e3a7",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ca20cf8_b52e385c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-07-13T21:07:28Z",
+      "side": 1,
+      "message": "Unfortunately, both calls to insert/emplace work on my g++-8.4.\n\nI will setup a docker g++-8.3 build environment or \"hack\" BR to compile tests too (if possible).",
+      "parentUuid": "694cdfab_74c8ad1b",
+      "revId": "392af76543232b864fd654be8d5ce9a7dda0e3a7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

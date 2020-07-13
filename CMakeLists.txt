@@ -11,6 +11,13 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "-Wsuggest-override ${CMAKE_CXX_FLAGS}")
 endif()
 
+if(CMAKE_CXX_FLAGS MATCHES "-stdlib=libc\\+\\+" AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
+    set(STD_FILESYSTEM_LIBRARY c++fs)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.1)
+    set(STD_FILESYSTEM_LIBRARY stdc++fs)
+endif()
+
+
 add_custom_target(velia-version-cmake-ide
         cmake/ProjectGitVersion.cmake
         cmake/ProjectGitVersionRunner.cmake
@@ -46,7 +53,7 @@ add_library(velia-state-manager STATIC
     src/outputs/callables.cpp
     src/State.cpp
     )
-target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost SDBusCpp::sdbus-c++)
+target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost SDBusCpp::sdbus-c++ ${STD_FILESYSTEM_LIBRARY})
 
 add_executable(veliad
     src/main.cpp

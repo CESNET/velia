@@ -24,7 +24,9 @@ DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection)
 /** @brief Creates a unit inside the test server. Registers dbus object and emits UnitNew signal. **/
 void DbusSystemdServer::createUnit(sdbus::IConnection& connection, const sdbus::ObjectPath& objPath, const std::string& activeState, const std::string& subState)
 {
-    m_units.insert(std::make_pair(objPath, Unit(sdbus::createObject(connection, objPath), activeState, subState)));
+    // FIXME buildroot's g++8.3 does not compile (copy constructor for sdbus::ObjectPath is deleted by compiler)
+    // m_units.insert(std::make_pair(objPath, Unit(sdbus::createObject(connection, objPath), activeState, subState)));
+    m_units.insert(std::make_pair(static_cast<std::string>(objPath), Unit(sdbus::createObject(connection, objPath), activeState, subState)));
 
     Unit& unit = m_units.at(objPath);
 

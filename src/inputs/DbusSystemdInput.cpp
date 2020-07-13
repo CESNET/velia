@@ -72,7 +72,10 @@ void DbusSystemdInput::registerSystemdUnit(sdbus::IConnection& connection, const
     std::string nSubState = proxyUnit->getProperty("SubState").onInterface(m_unitIface);
     onUnitStateChange(unitName, nActiveState, nSubState);
 
-    m_proxyUnits.emplace(std::make_pair(unitObjectPath, std::move(proxyUnit)));
+    // FIXME buildroot's g++8.3 does not compile (copy constructor for sdbus::ObjectPath is deleted by compiler)
+    // m_proxyUnits.emplace(unitObjectPath, std::move(proxyUnit));
+    m_proxyUnits.emplace(static_cast<const std::string>(unitObjectPath), std::move(proxyUnit));
+
     m_log->trace("Registered systemd unit watcher for '{}' ({} {})", unitName, nActiveState, nSubState);
 }
 

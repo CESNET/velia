@@ -88,6 +88,24 @@
       "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00c6602f_a323d3c8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-07-13T07:31:32Z",
+      "side": 1,
+      "message": "You are indeed right. I missed that case",
+      "parentUuid": "22a765c5_07266f71",
+      "revId": "a0b16daf92fe9da43868312e1f401ca7f6a4a131",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

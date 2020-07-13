@@ -92,6 +92,10 @@ if(BUILD_TESTING)
     velia_test(output-led velia-state-manager)
 endif()
 
+install(TARGETS
+    veliad
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)
+
 if(WITH_DOCS)
     set(doxyfile_in ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
     set(doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)

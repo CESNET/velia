@@ -27,6 +27,8 @@ find_package(sdbus-c++ REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
+include(GNUInstallDirs)
+
 # Targets
 add_library(velia-utils STATIC
     src/utils/log-init.h
@@ -91,6 +93,10 @@ if(BUILD_TESTING)
     velia_test(input-systemd velia-state-manager DbusTesting)
     velia_test(output-led velia-state-manager)
 endif()
+
+install(TARGETS
+    veliad
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)
 
 if(WITH_DOCS)
     set(doxyfile_in ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)

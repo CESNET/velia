@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "63543a31_37aa9932",
+        "filename": "src/inputs/DbusSystemdInput.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-07-13T13:03:36Z",
+      "side": 1,
+      "message": "Nope, the generator generates the code from signature only. It does not know about names. It also creates sdbus::Struct (which inherits from std::tuple), so no.\n\nI have added a comment.",
+      "parentUuid": "5914a606_85e21ae2",
+      "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "306890c3_f010f829",
         "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
         "patchSetId": 6
@@ -39,6 +57,30 @@
       "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5a16236_19690eec",
+        "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-07-13T13:03:36Z",
+      "side": 1,
+      "message": "Wow.",
+      "parentUuid": "306890c3_f010f829",
+      "range": {
+        "startLine": 18,
+        "startChar": 89,
+        "endLine": 18,
+        "endChar": 91
+      },
+      "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "213c773d_d489426d",
+        "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-07-13T13:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9db81aab_dd958791",
+      "range": {
+        "startLine": 19,
+        "startChar": 88,
+        "endLine": 19,
+        "endChar": 89
+      },
+      "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f6ec2ab_232e831b",
         "filename": "tests/input-systemd.cpp",
         "patchSetId": 6
@@ -76,6 +142,24 @@
       "writtenOn": "2020-07-10T13:18:50Z",
       "side": 1,
       "message": "What is the purpose of this?",
+      "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "128831c1_de6707b1",
+        "filename": "tests/input-systemd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-07-13T13:03:36Z",
+      "side": 1,
+      "message": "This is a debugging code that connects to your real (unmocked) systemd that I used for debugging. It is easier than creating a new main() or something like that.\n\nI have added a comment to clarify. I think it is handy for the development phase. Do you think I should discard this part or create a new target?",
+      "parentUuid": "8f6ec2ab_232e831b",
       "revId": "59efe7e6e357d9f25b90771f78be3386a2e6ecda",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true

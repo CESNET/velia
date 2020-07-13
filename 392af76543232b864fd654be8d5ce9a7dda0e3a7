@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "694cdfab_74c8ad1b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-13T20:27:57Z",
+      "side": 1,
+      "message": "Interesting. I\u0027m also getting the same error message in the test suite (and because tests are not built at all under buildroot, you probably haven\u0027t seen it):\n\n /usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/include/g++-v8/bits/stl_pair.h: In instantiation of ‘constexpr std::pair\u003ctypename std::__decay_and_strip\u003c_Tp\u003e::__type, typename std::__decay_and_strip\u003c_T2\u003e::__type\u003e std::make_pair(_T1\u0026\u0026, _T2\u0026\u0026) [with _T1 \u003d const sdbus::ObjectPath\u0026; _T2 \u003d DbusSystemdServer::Unit; typename std::__decay_and_strip\u003c_T2\u003e::__type \u003d DbusSystemdServer::Unit; typename std::__decay_and_strip\u003c_Tp\u003e::__type \u003d sdbus::ObjectPath]’:\n/home/jkt/work/cesnet/gerrit/CzechLight/velia/tests/dbus-helpers/dbus_systemd_server.cpp:27:113:   required from here\n/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/include/g++-v8/bits/stl_pair.h:524:14: error: no matching function for call to ‘std::pair\u003csdbus::ObjectPath, DbusSystemdServer::Unit\u003e::pair(const sdbus::ObjectPath\u0026, DbusSystemdServer::Unit)’\n       return __pair_type(std::forward\u003c_T1\u003e(__x), std::forward\u003c_T2\u003e(__y));\n              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/include/g++-v8/bits/stl_pair.h:431:9: note: candidate: ‘template\u003cclass ... _Args1, long unsigned int ..._Indexes1, class ... _Args2, long unsigned int ..._Indexes2\u003e std::pair\u003c_T1, _T2\u003e::pair(std::tuple\u003c_Args1 ...\u003e\u0026, std::tuple\u003c_Args2 ...\u003e\u0026, std::_Index_tuple\u003c_Indexes1 ...\u003e, std::_Index_tuple\u003c_Indexes2 ...\u003e)’\n         pair(tuple\u003c_Args1...\u003e\u0026, tuple\u003c_Args2...\u003e\u0026,\n         ^~~~\n/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/include/g++-v8/bits/stl_pair.h:431:9: note:   template argument deduction/substitution failed:\n/usr/lib/gcc/x86_64-pc-linux-gnu/8.1.0/include/g++-v8/bits/stl_pair.h:524:14: note:   types ‘std::tuple\u003c_Tps ...\u003e’ and ‘const sdbus::ObjectPath’ have incompatible cv-qualifiers\n\nCan you please fix that one as well?",
+      "revId": "392af76543232b864fd654be8d5ce9a7dda0e3a7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

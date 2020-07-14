@@ -52,6 +52,24 @@
       "revId": "392af76543232b864fd654be8d5ce9a7dda0e3a7",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70b5abe6_bdcab4f0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-07-14T08:44:29Z",
+      "side": 1,
+      "message": "Does this really work? I think this calls the missing copy constructor. (I tried to do the same in the DbusSystemdInput.cpp)\n\nerror: use of deleted function ‘sdbus::ObjectPath::ObjectPath(const sdbus::ObjectPath\u0026)’",
+      "parentUuid": "f503ae07_950740fd",
+      "revId": "392af76543232b864fd654be8d5ce9a7dda0e3a7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

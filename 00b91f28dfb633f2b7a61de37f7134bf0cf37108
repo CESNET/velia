@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcbe620c_1c18fa76",
+        "filename": "src/main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-16T13:06:01Z",
+      "side": 1,
+      "message": "I think that this comment is useless. I\u0027m at the edfe for the \"open dbus conn and event loop\" and \"input configuration\". I would have not included them if I was writing this, but that\u0027s your call. This one, however, is a one-line comment for a trivial one-liner.",
+      "revId": "00b91f28dfb633f2b7a61de37f7134bf0cf37108",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc23672e_857a7362",
+        "filename": "src/main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-07-16T13:06:01Z",
+      "side": 1,
+      "message": "Haven\u0027t we talked about this on a call? I think it\u0027s OK to remove this because the LED will get triggered by a first state change in any input -- or even by their plugging in.",
+      "revId": "00b91f28dfb633f2b7a61de37f7134bf0cf37108",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

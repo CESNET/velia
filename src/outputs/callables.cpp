@@ -15,6 +15,16 @@ LedOutputCallback::LedOutputCallback(std::shared_ptr<LedSysfsDriver> red, std::s
     , m_greenLed(std::move(green))
     , m_blueLed(std::move(blue))
 {
+    reset();
+}
+
+LedOutputCallback::~LedOutputCallback()
+{
+    reset();
+}
+
+void LedOutputCallback::reset()
+{
     m_redLed->set(0);
     m_greenLed->set(0);
     m_blueLed->set(0);

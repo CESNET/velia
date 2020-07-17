@@ -1,3 +1,4 @@
+#include <csignal>
 #include <docopt.h>
 #include <future>
 #include <sdbus-c++/sdbus-c++.h>
@@ -47,6 +48,10 @@ Options:
                                     4 -> debug, 5 -> trace)
 )";
 
+std::unique_ptr<sdbus::IConnection> g_dbusConnection;
+std::mutex g_cvMutex;
+std::condition_variable g_cv;
+
 int main(int argc, char* argv[])
 {
     std::shared_ptr<spdlog::sinks::sink> loggingSink;
@@ -67,7 +72,20 @@ int main(int argc, char* argv[])
         auto dbusConnection = sdbus::createSystemBusConnection();
 
         spdlog::get("main")->debug("Starting DBus event loop");
-        std::thread eventLoop([&dbusConnection]() { dbusConnection->enterEventLoop(); });
+        std::thread eventLoop([&dbusConnection]() {
+            g_cv.notify_one();
+            dbusConnection->enterEventLoop();
+        });
+
+        std::unique_lock<std::mutex> lk(g_cvMutex);
+        g_cv.wait(lk); // wait until event loop * mostprobably* started
+
+        // Gracefully leave dbus event loop on SIGTERM
+        struct sigaction sigact;
+        memset(&sigact, 0, sizeof(sigact));
+        sigact.sa_handler = [](int) { g_dbusConnection->leaveEventLoop(); };
+        sigact.sa_flags = SA_SIGINFO;
+        sigaction(SIGTERM, &sigact, nullptr);
 
         auto manager = std::make_shared<velia::StateManager>();
 
@@ -86,8 +104,6 @@ int main(int argc, char* argv[])
 
         spdlog::get("main")->debug("All inputs initialized.");
 
-        // TODO: Gracefully leave dbus event loop on SIGTERM
-        // dbusConnection->leaveEventLoop();
         eventLoop.join();
 
         spdlog::get("main")->debug("Shutting down");

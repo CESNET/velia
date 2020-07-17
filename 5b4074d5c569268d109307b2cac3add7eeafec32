@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc8b2e5f_f8d4ca02",
+        "filename": "src/main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-07-17T13:05:12Z",
+      "side": 1,
+      "message": "WIP:\nThis registration is done way too late. The signal handler is not yet registered in the input classes constructors hence the LEDs are not turned off then.\n\nHowever, if done earlier, the input constructors would continue executing.\n\nThis has to be redesigned.",
+      "revId": "5b4074d5c569268d109307b2cac3add7eeafec32",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

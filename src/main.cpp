@@ -7,6 +7,7 @@
 #include "inputs/DbusSystemdInput.h"
 #include "manager/StateManager.h"
 #include "outputs/LedSysfsDriver.h"
+#include "outputs/SlotWrapper.h"
 #include "outputs/callables.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
@@ -72,10 +73,10 @@ int main(int argc, char* argv[])
 
         // output configuration
         spdlog::get("main")->debug("Initializing LED drivers");
-        manager->m_outputSignal.connect(velia::LedOutputCallback(
+        manager->m_outputSignal.connect(velia::boost::signals2::SlotWrapper<void, velia::State>(std::make_shared<velia::LedOutputCallback>(
             std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:red/"),
             std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:green/"),
-            std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:blue/")));
+            std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:blue/"))));
 
         spdlog::get("main")->debug("All outputs initialized.");
 

@@ -16,6 +16,8 @@ class LedSysfsDriver;
 class LedOutputCallback {
 public:
     LedOutputCallback(std::shared_ptr<LedSysfsDriver> red, std::shared_ptr<LedSysfsDriver> green, std::shared_ptr<LedSysfsDriver> blue);
+    ~LedOutputCallback();
+    void reset();
     void operator()(State state);
 
 private:

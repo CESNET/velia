@@ -1,3 +1,4 @@
+#include <csignal>
 #include <docopt.h>
 #include <future>
 #include <sdbus-c++/sdbus-c++.h>
@@ -47,6 +48,8 @@ Options:
                                     4 -> debug, 5 -> trace)
 )";
 
+std::unique_ptr<sdbus::IConnection> g_dbusConnection;
+
 int main(int argc, char* argv[])
 {
     std::shared_ptr<spdlog::sinks::sink> loggingSink;
@@ -64,10 +67,17 @@ int main(int argc, char* argv[])
     try {
         spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
         spdlog::get("main")->debug("Opening DBus connection");
-        auto dbusConnection = sdbus::createSystemBusConnection();
+        g_dbusConnection = sdbus::createSystemBusConnection();
+
+        // Gracefully leave dbus event loop on SIGTERM
+        struct sigaction sigact;
+        memset(&sigact, 0, sizeof(sigact));
+        sigact.sa_handler = [](int) { g_dbusConnection->leaveEventLoop(); }; // sdbus-c++'s implementation doesn't mind if called before entering the event loop. It simply leaves the loop on entry
+        sigact.sa_flags = SA_SIGINFO;
+        sigaction(SIGTERM, &sigact, nullptr);
 
         spdlog::get("main")->debug("Starting DBus event loop");
-        std::thread eventLoop([&dbusConnection]() { dbusConnection->enterEventLoop(); });
+        std::thread eventLoop([] { g_dbusConnection->enterEventLoop(); });
 
         auto manager = std::make_shared<velia::StateManager>();
 
@@ -82,12 +92,10 @@ int main(int argc, char* argv[])
 
         // input configuration
         spdlog::get("main")->debug("Starting DBus systemd watcher");
-        auto inputSystemdDbus = std::make_shared<velia::DbusSystemdInput>(manager, *dbusConnection);
+        auto inputSystemdDbus = std::make_shared<velia::DbusSystemdInput>(manager, *g_dbusConnection);
 
         spdlog::get("main")->debug("All inputs initialized.");
 
-        // TODO: Gracefully leave dbus event loop on SIGTERM
-        // dbusConnection->leaveEventLoop();
         eventLoop.join();
 
         spdlog::get("main")->debug("Shutting down");

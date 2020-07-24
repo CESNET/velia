@@ -32,6 +32,9 @@ find_package(Boost REQUIRED)
 find_package(docopt REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ REQUIRED)
+find_package(PkgConfig)
+
+pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
@@ -41,10 +44,13 @@ include(GNUInstallDirs)
 # Targets
 add_library(velia-utils STATIC
     src/utils/exceptions.cpp
+    src/utils/journal.cpp
     src/utils/log-init.h
     src/utils/log-init.cpp
     )
 target_link_libraries(velia-utils PUBLIC spdlog::spdlog)
+target_link_libraries(velia-utils PRIVATE PkgConfig::SYSTEMD)
+
 
 add_library(velia-state-manager STATIC
     src/inputs/AbstractInput.cpp

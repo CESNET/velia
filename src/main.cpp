@@ -9,6 +9,7 @@
 #include "outputs/LedSysfsDriver.h"
 #include "outputs/callables.h"
 #include "utils/exceptions.h"
+#include "utils/journal.h"
 #include "utils/log-init.h"
 
 /** @short Extract log level from a CLI option */
@@ -53,7 +54,12 @@ Options:
 
 int main(int argc, char* argv[])
 {
-    std::shared_ptr<spdlog::sinks::sink> loggingSink = std::make_shared<spdlog::sinks::ansicolor_stderr_sink_mt>();
+    std::shared_ptr<spdlog::sinks::sink> loggingSink;
+    if (velia::utils::isJournaldActive()) {
+        loggingSink = velia::utils::create_journald_sink();
+    } else {
+        loggingSink = std::make_shared<spdlog::sinks::ansicolor_stderr_sink_mt>();
+    }
 
     auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "veliad " VELIA_VERSION, true);
 

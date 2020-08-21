@@ -29,7 +29,7 @@ DbusSemaphoreInput::DbusSemaphoreInput(std::shared_ptr<AbstractManager> manager,
     , m_dbusObjectProxy(sdbus::createProxy(connection, bus, objectPath))
     , m_propertyName(propertyName)
     , m_propertyInterface(propertyInterface)
-    , m_log(spdlog::get("input"))
+    , m_log(spdlog::get("main"))
 {
     m_dbusObjectProxy->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([&](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {
         if (iface != m_propertyInterface) {

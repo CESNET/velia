@@ -35,9 +35,6 @@ static const char usage[] =
 Usage:
   veliad
     [--log-level=<Level>]
-    [--manager-log-level=<Level>]
-    [--input-log-level=<Level>]
-    [--output-log-level=<Level>]
   veliad (-h | --help)
   veliad --version
 
@@ -45,9 +42,6 @@ Options:
   -h --help                         Show this screen.
   --version                         Show version.
   --log-level=<N>                   Log level for everything [default: 3]
-  --manager-log-level=<N>           Log level for manager [default: 3]
-  --input-log-level=<N>             Log level for the input providers [default: 3]
-  --output-log-level=<N>            Log level for the output providers [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
 )";
@@ -68,40 +62,34 @@ int main(int argc, char* argv[])
 
     try {
         spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
-        // nothing for "main", that just inherit the global stuff
-        spdlog::get("manager")->set_level(parseLogLevel("Manager subsystem", args["--manager-log-level"]));
-        spdlog::get("input")->set_level(parseLogLevel("Input subsystem", args["--input-log-level"]));
-        spdlog::get("output")->set_level(parseLogLevel("Output subsystem", args["--output-log-level"]));
-        // FIXME: the default values actually mean that nothing is propagated from the generic --log-level if passed...
-
-        spdlog::get("input")->debug("Opening DBus connection");
+        spdlog::get("main")->debug("Opening DBus connection");
         auto dbusConnection = sdbus::createSystemBusConnection();
 
-        spdlog::get("input")->debug("Starting DBus event loop");
+        spdlog::get("main")->debug("Starting DBus event loop");
         std::thread eventLoop([&dbusConnection]() { dbusConnection->enterEventLoop(); });
 
         auto manager = std::make_shared<velia::StateManager>();
 
         // output configuration
-        spdlog::get("output")->debug("Initializing LED drivers");
+        spdlog::get("main")->debug("Initializing LED drivers");
         manager->m_outputSignal.connect(velia::LedOutputCallback(
             std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:red/"),
             std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:green/"),
             std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:blue/")));
 
-        spdlog::get("input")->debug("All outputs initialized.");
+        spdlog::get("main")->debug("All outputs initialized.");
 
         // input configuration
-        spdlog::get("input")->debug("Starting DBus systemd watcher");
+        spdlog::get("main")->debug("Starting DBus systemd watcher");
         auto inputSystemdDbus = std::make_shared<velia::DbusSystemdInput>(manager, *dbusConnection);
 
-        spdlog::get("input")->debug("All inputs initialized.");
+        spdlog::get("main")->debug("All inputs initialized.");
 
         // TODO: Gracefully leave dbus event loop on SIGTERM
         // dbusConnection->leaveEventLoop();
         eventLoop.join();
 
-        spdlog::get("manager")->debug("Shutting down");
+        spdlog::get("main")->debug("Shutting down");
         return 0;
     } catch (std::exception& e) {
         velia::utils::fatalException(spdlog::get("main"), e, "main");

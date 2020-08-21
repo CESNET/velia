@@ -12,7 +12,7 @@
 namespace velia {
 
 LedSysfsDriver::LedSysfsDriver(const std::filesystem::path& directory)
-    : m_log(spdlog::get("output"))
+    : m_log(spdlog::get("main"))
     , m_brightnessFile(directory / "brightness")
 {
     // check that brightness file exists

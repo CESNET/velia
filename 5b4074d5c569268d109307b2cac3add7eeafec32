@@ -16,6 +16,24 @@
       "revId": "5b4074d5c569268d109307b2cac3add7eeafec32",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00251fdf_c6595900",
+        "filename": "src/main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-09-04T09:44:33Z",
+      "side": 1,
+      "message": "This is not valid anymore, right? (Gerrit actually warned me about this when I tried to submit, yay.)\n\nTomas, if it\u0027s indeed resolved, please merge this (and update veliad in br2-external afterwards as well).",
+      "parentUuid": "cc8b2e5f_f8d4ca02",
+      "revId": "5b4074d5c569268d109307b2cac3add7eeafec32",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

@@ -64,6 +64,8 @@ int main(int argc, char* argv[])
     velia::utils::initLogs(loggingSink);
     spdlog::set_level(spdlog::level::info);
 
+    std::thread eventLoop;
+
     try {
         spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
         spdlog::get("main")->debug("Opening DBus connection");
@@ -77,7 +79,7 @@ int main(int argc, char* argv[])
         sigaction(SIGTERM, &sigact, nullptr);
 
         spdlog::get("main")->debug("Starting DBus event loop");
-        std::thread eventLoop([] { g_dbusConnection->enterEventLoop(); });
+        eventLoop = std::thread([] { g_dbusConnection->enterEventLoop(); });
 
         auto manager = std::make_shared<velia::StateManager>();
 

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e188f98f_f820b618",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-10-14T14:00:30Z",
+      "side": 1,
+      "message": "it\u0027s probably nitpicking but this particular exception comes from LedSysfsDriver constructor\n\nI always wanted to give a -1 and this looks like a good opportunity",
+      "range": {
+        "startLine": 45,
+        "startChar": 12,
+        "endLine": 45,
+        "endChar": 33
+      },
+      "revId": "c02cb448dc8a94c1f817fc55cee1bd87bfee22f3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

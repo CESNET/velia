@@ -1,20 +1,20 @@
 - project:
     check:
       jobs:
-        - f31-gcc-cover:
-            requires: CzechLight-deps-f31-gcc
+        - f32-gcc-cover:
+            requires: CzechLight-deps-f32-gcc
             required-projects: &projects
               - CzechLight/dependencies
-        - f31-clang-asan-ubsan:
-            requires: CzechLight-deps-f31-clang-asan-ubsan
+        - f32-clang-asan-ubsan:
+            requires: CzechLight-deps-f32-clang-asan-ubsan
             required-projects: *projects
-        - f31-clang-tsan:
-            requires: CzechLight-deps-f31-clang-tsan
+        - f32-clang-tsan:
+            requires: CzechLight-deps-f32-clang-tsan
             required-projects: *projects
-        - f31-cpp-coverage-diff:
+        - f32-cpp-coverage-diff:
             voting: false
         - clang-format:
             voting: false
-        - f31-gcc-cover-previous:
-            requires: CzechLight-deps-f31-gcc
+        - f32-gcc-cover-previous:
+            requires: CzechLight-deps-f32-gcc
             required-projects: *projects

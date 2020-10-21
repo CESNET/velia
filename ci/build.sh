@@ -70,6 +70,30 @@ fi
 
 curl ${ARTIFACT_URL} | unzstd --stdout | tar -C ${PREFIX} -xf -
 
+BUILD_SD=~/build-sd
+pushd ${ZUUL_PROJECT_SRC_DIR}/../../github/systemd/systemd
+env \
+    -u CC \
+    -u CXX \
+    -u LD \
+    -u CFLAGS \
+    -u CXXFLAGS \
+    -u LDFLAGS \
+    meson ${BUILD_SD} \
+        -Drootprefix=${PREFIX} \
+        -Dprefix=${PREFIX} \
+        -Dsysconfdir=${PREFIX}/etc \
+        -Dlocalstatedir=${PREFIX}/var \
+        -Dsysvinit-path=${PREFIX}/etc/init.d \
+        -Dsysvrcnd-path=${PREFIX}/etc/rc.d \
+        -Drc-local=${PREFIX}/etc/rc.local \
+        -Dcertificate-root=${PREFIX}/etc/ssl \
+        -Dbashcompletiondir=${PREFIX}/share/bash-completion/completions \
+        -Dcreate-log-dirs=false \
+        -Dhwdb=false
+ninja-build -C ${BUILD_SD} install
+popd
+
 cd ${BUILD_DIR}
 cmake -GNinja -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Debug} -DCMAKE_INSTALL_PREFIX=${PREFIX} ${CMAKE_OPTIONS} ${ZUUL_PROJECT_SRC_DIR}
 ninja-build

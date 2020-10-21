@@ -5,12 +5,17 @@
             requires: CzechLight-deps-f31-gcc
             required-projects: &projects
               - CzechLight/dependencies
+              - name: github/systemd/systemd
+                override-checkout: v246
+            pre-run: ci/pre.yaml
         - f31-clang-asan-ubsan:
             requires: CzechLight-deps-f31-clang-asan-ubsan
             required-projects: *projects
+            pre-run: ci/pre.yaml
         - f31-clang-tsan:
             requires: CzechLight-deps-f31-clang-tsan
             required-projects: *projects
+            pre-run: ci/pre.yaml
         - f31-cpp-coverage-diff:
             voting: false
         - clang-format:
@@ -18,3 +23,4 @@
         - f31-gcc-cover-previous:
             requires: CzechLight-deps-f31-gcc
             required-projects: *projects
+            pre-run: ci/pre.yaml

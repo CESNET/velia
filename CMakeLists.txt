@@ -35,6 +35,9 @@ find_package(sdbus-c++ REQUIRED)
 find_package(PkgConfig)
 
 pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
+if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
+    message(FATAL_ERROR "Systemd 245 has a bug affecting DBus method calls using sdbus-c++. Please see https://github.com/Kistler-Group/sdbus-cpp/issues/106.")
+endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)

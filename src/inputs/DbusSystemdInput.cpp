@@ -62,8 +62,8 @@ void DbusSystemdInput::registerSystemdUnit(sdbus::IConnection& connection, const
             nSubState = it->second.get<std::string>();
         }
 
-        onUnitStateChange(unitName, nActiveState, nSubState);
         m_log->trace("Systemd unit '{}' changed state ({} {})", unitName, nActiveState, nSubState);
+        onUnitStateChange(unitName, nActiveState, nSubState);
     });
     proxyUnit->finishRegistration();
 

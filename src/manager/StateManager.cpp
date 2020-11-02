@@ -48,7 +48,12 @@ void StateManager::updateState(void* input, State value)
 void StateManager::computeOutput()
 {
     auto itMax = std::max_element(m_inputs.begin(), m_inputs.end(), [](const auto& e1, const auto& e2) { return e1.second < e2.second; });
-    if (itMax != m_inputs.end()) { // fire a signal unless 0 inputs registered
+
+    if (itMax == m_inputs.end()) {
+        // No inputs -- there's no sane thing to do, so remain silent
+        m_oldState.reset();
+    } else if (!m_oldState || (*m_oldState != itMax->second)) {
+        m_oldState = itMax->second;
         m_log->info("Status: {}", itMax->second);
         m_outputSignal(itMax->second);
     }

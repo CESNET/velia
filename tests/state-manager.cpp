@@ -43,7 +43,6 @@ TEST_CASE("State multiplexer")
         REQUIRE_STATE_OUTPUT(OK);
         auto i1 = std::make_shared<ManuallyInvokableInput>(mx);
 
-        REQUIRE_STATE_OUTPUT(OK);
         auto i2 = std::make_shared<ManuallyInvokableInput>(mx);
 
         SECTION("Nothing happens")
@@ -52,50 +51,65 @@ TEST_CASE("State multiplexer")
 
         SECTION("State changes")
         {
-            REQUIRE_STATE_OUTPUT(OK);
             i1->invokeChangeState(velia::State::OK); // [OK, OK]
 
-            REQUIRE_STATE_OUTPUT(OK);
             i2->invokeChangeState(velia::State::OK); // [OK, OK]
 
-            REQUIRE_STATE_OUTPUT(ERROR);
-            i1->invokeChangeState(velia::State::ERROR); // [ERROR, OK]
+            {
+                REQUIRE_STATE_OUTPUT(ERROR);
+                i1->invokeChangeState(velia::State::ERROR); // [ERROR, OK]
+            }
 
-            REQUIRE_STATE_OUTPUT(WARNING);
-            i1->invokeChangeState(velia::State::WARNING); // [WARNING, OK]
+            {
+                REQUIRE_STATE_OUTPUT(WARNING);
+                i1->invokeChangeState(velia::State::WARNING); // [WARNING, OK]
+            }
 
-            REQUIRE_STATE_OUTPUT(WARNING);
             i2->invokeChangeState(velia::State::OK); // [WARNING, OK]
 
-            REQUIRE_STATE_OUTPUT(OK);
-            i1->invokeChangeState(velia::State::OK); // [OK, OK]
+            {
+                REQUIRE_STATE_OUTPUT(OK);
+                i1->invokeChangeState(velia::State::OK); // [OK, OK]
+            }
 
-            REQUIRE_STATE_OUTPUT(ERROR);
-            i2->invokeChangeState(velia::State::ERROR); // [OK, ERROR]
+            {
+                REQUIRE_STATE_OUTPUT(ERROR);
+                i2->invokeChangeState(velia::State::ERROR); // [OK, ERROR]
+            }
 
-            REQUIRE_STATE_OUTPUT(WARNING);
-            i2->invokeChangeState(velia::State::WARNING); // [OK, WARNING]
+            {
+                REQUIRE_STATE_OUTPUT(WARNING);
+                i2->invokeChangeState(velia::State::WARNING); // [OK, WARNING]
+            }
 
-            REQUIRE_STATE_OUTPUT(WARNING);
             i1->invokeChangeState(velia::State::WARNING); // [WARNING, WARNING]
 
-            REQUIRE_STATE_OUTPUT(ERROR);
-            i2->invokeChangeState(velia::State::ERROR); // [WARNING, ERROR]
+            {
+                REQUIRE_STATE_OUTPUT(ERROR);
+                i2->invokeChangeState(velia::State::ERROR); // [WARNING, ERROR]
+            }
 
-            REQUIRE_STATE_OUTPUT(WARNING);
-            i2->invokeChangeState(velia::State::WARNING); // [WARNING, WARNING]
+            {
+                REQUIRE_STATE_OUTPUT(WARNING);
+                i2->invokeChangeState(velia::State::WARNING); // [WARNING, WARNING]
+            }
 
-            REQUIRE_STATE_OUTPUT(WARNING);
             i1->invokeChangeState(velia::State::OK); // [OK, WARNING]
 
-            REQUIRE_STATE_OUTPUT(OK);
-            i2->invokeChangeState(velia::State::OK); // [OK, OK]
+            {
+                REQUIRE_STATE_OUTPUT(OK);
+                i2->invokeChangeState(velia::State::OK); // [OK, OK]
+            }
+
+            i1.reset(); // [OK]
+            i2.reset(); // [], but no update because there's nothing new to report
+
+            {
+                REQUIRE_STATE_OUTPUT(OK);
+                i1 = std::make_shared<ManuallyInvokableInput>(mx); // [OK]
+            }
+
+            i1.reset(); // []
         }
-
-        // manually destroy one of the two inputs so we capture the output update call
-        REQUIRE_STATE_OUTPUT(OK);
-        i1.reset();
-
-        // no output update is invoked upon destroying i2 because it is the last input
     }
 }

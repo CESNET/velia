@@ -62,10 +62,10 @@ void DbusSystemdInput::registerSystemdUnit(sdbus::IConnection& connection, const
             nSubState = it->second.get<std::string>();
         }
 
-        m_log->trace("Systemd unit '{}' changed state ({} {})", unitName, nActiveState, nSubState);
         onUnitStateChange(unitName, nActiveState, nSubState);
     });
     proxyUnit->finishRegistration();
+    m_log->trace("Registered systemd unit watcher for '{}'", unitName);
 
     // Query the current state of this unit
     std::string nActiveState = proxyUnit->getProperty("ActiveState").onInterface(m_unitIface);
@@ -73,7 +73,6 @@ void DbusSystemdInput::registerSystemdUnit(sdbus::IConnection& connection, const
     onUnitStateChange(unitName, nActiveState, nSubState);
 
     m_proxyUnits.emplace(std::make_pair(unitObjectPath, std::move(proxyUnit)));
-    m_log->trace("Registered systemd unit watcher for '{}' ({} {})", unitName, nActiveState, nSubState);
 }
 
 /** @brief Callback for unit state change */
@@ -85,6 +84,7 @@ void DbusSystemdInput::onUnitStateChange(const std::string& name, const std::str
         m_failedUnits.erase(name); // this unit is now OK
     }
 
+    m_log->debug("Systemd unit '{}' changed state ({} {})", name, activeState, subState);
     updateState(m_failedUnits.empty() ? State::OK : State::ERROR);
 }
 

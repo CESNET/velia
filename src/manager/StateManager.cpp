@@ -15,7 +15,7 @@ StateManager::~StateManager() = default;
 /** @brief Registers an input source */
 void StateManager::registerInput(void* input, State value)
 {
-    m_log->debug("Registering input {}", input);
+    m_log->trace("Registering input {}", input);
 
     if (m_inputs.find(input) != m_inputs.end()) {
         throw std::invalid_argument("Input already registered.");
@@ -27,7 +27,7 @@ void StateManager::registerInput(void* input, State value)
 /** @brief Unregisters an input source */
 void StateManager::unregisterInput(void* input)
 {
-    m_log->debug("Unregistering input {}", input);
+    m_log->trace("Unregistering input {}", input);
 
     auto it = m_inputs.find(input);
     if (it == m_inputs.end()) {
@@ -41,7 +41,7 @@ void StateManager::unregisterInput(void* input)
 void StateManager::updateState(void* input, State value)
 {
     m_inputs[input] = value;
-    m_log->debug("Input {} changed state to {}", input, value);
+    m_log->trace("Input {} changed state to {}", input, value);
     computeOutput();
 }
 
@@ -49,7 +49,7 @@ void StateManager::computeOutput()
 {
     auto itMax = std::max_element(m_inputs.begin(), m_inputs.end(), [](const auto& e1, const auto& e2) { return e1.second < e2.second; });
     if (itMax != m_inputs.end()) { // fire a signal unless 0 inputs registered
-        m_log->info("Output changed to {}", itMax->second);
+        m_log->info("Status: {}", itMax->second);
         m_outputSignal(itMax->second);
     }
 }

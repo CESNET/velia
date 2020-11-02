@@ -38,17 +38,17 @@ DbusSemaphoreInput::DbusSemaphoreInput(std::shared_ptr<AbstractManager> manager,
 
         if (auto it = changed.find(m_propertyName); it != changed.end()) {
             std::string newState = it->second.get<std::string>();
-            m_log->trace("Property changed to {}", newState);
+            m_log->debug("Changed {} {}: {}", objectPath, propertyName, newState);
             updateState(stateFromString(newState));
         }
     });
     m_dbusObjectProxy->finishRegistration();
-    m_log->trace("Watching for property changes of {}, object {}, property {}.{}", bus, objectPath, propertyInterface, propertyName);
+    m_log->debug("Watching for property changes of {}, object {}, property {}.{}", bus, objectPath, propertyInterface, propertyName);
 
     // we might update the state twice here (once from the callback, once from here).
     // But better than querying the current state before the registration; we might miss a state change that could happen between querying and callback registration
     std::string currentState = m_dbusObjectProxy->getProperty(m_propertyName).onInterface(propertyInterface).get<std::string>();
-    m_log->trace("Property initialized to {}", currentState);
+    m_log->debug("Property initialized to {}", currentState);
     updateState(stateFromString(currentState));
 }
 

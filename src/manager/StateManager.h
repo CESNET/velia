@@ -27,6 +27,7 @@ public:
 
 private:
     velia::Log m_log;
+    std::optional<State> m_oldState;
 
     /** Registered inputs are identified by their memory location. The pointer only serves as an ID, this class does not manage the input pointers lifetime */
     std::map<void*, State> m_inputs;

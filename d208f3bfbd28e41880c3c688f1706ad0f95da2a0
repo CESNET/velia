@@ -22,6 +22,30 @@
       "revId": "d208f3bfbd28e41880c3c688f1706ad0f95da2a0",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37fa1c98_4b5aabf4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-04T13:56:08Z",
+      "side": 1,
+      "message": "That would be another improvement, yup -- but do that in a spearate commit, please.",
+      "parentUuid": "9e95b2f8_db74faa8",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 3
+      },
+      "revId": "d208f3bfbd28e41880c3c688f1706ad0f95da2a0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

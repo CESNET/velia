@@ -78,6 +78,16 @@ void DbusSystemdInput::registerSystemdUnit(sdbus::IConnection& connection, const
 /** @brief Callback for unit state change */
 void DbusSystemdInput::onUnitStateChange(const std::string& name, const std::string& activeState, const std::string& subState)
 {
+    auto systemdState = std::make_pair(activeState, subState);
+
+    auto lastState = m_unitState.find(name);
+    if (lastState == m_unitState.end()) {
+        lastState = m_unitState.insert(std::make_pair(name, systemdState)).first;
+    } else if (lastState->second == systemdState) {
+        // We were notified about a state change into the same state. No need to fire any events, everything is still the same.
+        return;
+    }
+
     if (activeState == "failed" || (activeState == "activating" && subState == "auto-restart")) {
         m_failedUnits.insert(name); // this unit is in failed state
     } else {
@@ -85,6 +95,7 @@ void DbusSystemdInput::onUnitStateChange(const std::string& name, const std::str
     }
 
     m_log->debug("Systemd unit '{}' changed state ({} {})", name, activeState, subState);
+    lastState->second = systemdState;
     updateState(m_failedUnits.empty() ? State::OK : State::ERROR);
 }
 

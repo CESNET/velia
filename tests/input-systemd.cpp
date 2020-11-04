@@ -54,6 +54,9 @@ TEST_CASE("Systemd monitor")
     REQUIRE_CALL(*mx, updateState(i1.get(), velia::State::OK)).IN_SEQUENCE(seq1);
     server.changeUnitState("/cz/cesnet/systemd1/unit/unit3", "active", "running");
 
+    // In case we obtain a notifications that unit changed state from (X,Y) to (X,Y), do not trigger any events.
+    server.changeUnitState("/cz/cesnet/systemd1/unit/unit3", "active", "running");
+
     // add new unit with failed/failed, DbusSystemdInput should receive UnitNew signal and monitor this unit too
     // FailedUnits: {unit4} -> OK
     REQUIRE_CALL(*mx, updateState(i1.get(), velia::State::ERROR)).IN_SEQUENCE(seq1);

@@ -64,6 +64,7 @@ if(BUILD_TESTING)
     add_library(DoctestIntegration STATIC
             tests/doctest_integration.cpp
             tests/trompeloeil_doctest.h
+            tests/pretty_printers.h
             tests/wait-a-bit-longer.cpp
             )
     target_link_libraries(DoctestIntegration doctest::doctest trompeloeil spdlog::spdlog)
@@ -91,3 +92,4 @@ if(WITH_DOCS)
 endif()
 
 add_subdirectory(src/velia-systemstate)
+add_subdirectory(src/velia-hardware)

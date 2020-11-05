@@ -48,6 +48,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 add_library(velia-utils STATIC
     src/utils/exceptions.cpp
     src/utils/exceptions.h
+    src/utils/io.cpp
+    src/utils/io.h
     src/utils/journal.cpp
     src/utils/journal.h
     src/utils/log.h
@@ -86,6 +88,18 @@ target_link_libraries(veliad
     )
 add_dependencies(veliad target-VELIA_VERSION)
 target_include_directories(veliad PUBLIC ${CMAKE_BINARY_DIR})
+
+# - ietf-hardware
+add_library(velia-ietf-hardware STATIC
+    src/ietf-hardware/sysfs/EMMC.cpp
+    src/ietf-hardware/sysfs/EMMC.h
+    )
+target_link_libraries(velia-ietf-hardware
+    PUBLIC
+        velia-utils
+        ${STD_FILESYSTEM_LIBRARY}
+    )
+target_include_directories(velia-ietf-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
 
 
 # Testing
@@ -136,6 +150,8 @@ if(BUILD_TESTING)
     velia_test(health_input-semaphore velia-health DbusTesting)
     velia_test(health_input-systemd velia-health DbusTesting)
     velia_test(health_output-led velia-health)
+
+    velia_test(hardware_emmc velia-ietf-hardware)
 endif()
 
 if(WITH_DOCS)

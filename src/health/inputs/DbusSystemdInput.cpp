@@ -7,7 +7,7 @@
 #include "DbusSystemdInput.h"
 #include "utils/log.h"
 
-namespace velia {
+namespace velia::health {
 
 /** @brief Construct the systemd unit watcher for arbitrary dbus object. Mainly for tests. */
 DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, const std::set<std::string>& ignoredUnits, sdbus::IConnection& connection, const std::string& busname, const std::string& managerObjectPath, const std::string& managerIface, const std::string& unitIface)

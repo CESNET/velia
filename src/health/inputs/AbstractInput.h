@@ -1,10 +1,10 @@
 #pragma once
 
 #include <memory>
-#include "State.h"
-#include "manager/StateManager.h"
+#include "health/State.h"
+#include "health/manager/StateManager.h"
 
-namespace velia {
+namespace velia::health {
 
 /** @brief Interface for manager's input source. Manager should be notified through updateState invocation */
 class AbstractInput {

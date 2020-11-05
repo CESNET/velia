@@ -8,7 +8,7 @@
 #include "trompeloeil_doctest.h"
 #include <filesystem>
 #include <fstream>
-#include "outputs/LedSysfsDriver.h"
+#include "health/outputs/LedSysfsDriver.h"
 #include "test_log_setup.h"
 #include "tests/configure.cmake.h"
 
@@ -46,7 +46,7 @@ TEST_CASE("SysFS LED driver")
     SECTION("Basic usage test")
     {
         std::filesystem::copy(std::string(CMAKE_CURRENT_SOURCE_DIR) + "/tests/sysfs/led/1/"s, fakeSysfsDir, std::filesystem::copy_options::recursive);
-        velia::LedSysfsDriver led(fakeSysfsDir);
+        velia::health::LedSysfsDriver led(fakeSysfsDir);
 
         led.set(0);
         REQUIRE(readFile(fakeBrightnessFile) == 0);
@@ -64,6 +64,6 @@ TEST_CASE("SysFS LED driver")
     SECTION("Invalid directory")
     {
         std::filesystem::copy(std::string(CMAKE_CURRENT_SOURCE_DIR) + "/tests/sysfs/led/2/"s, fakeSysfsDir, std::filesystem::copy_options::recursive);
-        REQUIRE_THROWS_AS(velia::LedSysfsDriver(fakeSysfsDir), std::invalid_argument);
+        REQUIRE_THROWS_AS(velia::health::LedSysfsDriver(fakeSysfsDir), std::invalid_argument);
     }
 }

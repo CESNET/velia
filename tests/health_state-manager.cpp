@@ -7,7 +7,7 @@
 
 #include "trompeloeil_doctest.h"
 #include "fake.h"
-#include "manager/StateManager.h"
+#include "health/manager/StateManager.h"
 #include "test_log_setup.h"
 
 TEST_CASE("State multiplexer")
@@ -15,9 +15,9 @@ TEST_CASE("State multiplexer")
     TEST_INIT_LOGS;
     trompeloeil::sequence seq1;
 
-    auto mx = std::make_shared<velia::StateManager>();
+    auto mx = std::make_shared<velia::health::StateManager>();
     auto o1 = std::make_shared<FakeOutput>();
-    mx->m_outputSignal.connect([&](const velia::State state) { o1->update(state); });
+    mx->m_outputSignal.connect([&](const velia::health::State state) { o1->update(state); });
 
     SECTION("One input")
     {
@@ -31,10 +31,10 @@ TEST_CASE("State multiplexer")
         SECTION("State changes")
         {
             REQUIRE_STATE_OUTPUT(ERROR);
-            i1->invokeChangeState(velia::State::ERROR);
+            i1->invokeChangeState(velia::health::State::ERROR);
 
             REQUIRE_STATE_OUTPUT(OK);
-            i1->invokeChangeState(velia::State::OK);
+            i1->invokeChangeState(velia::health::State::OK);
         }
     }
 
@@ -51,54 +51,54 @@ TEST_CASE("State multiplexer")
 
         SECTION("State changes")
         {
-            i1->invokeChangeState(velia::State::OK); // [OK, OK]
+            i1->invokeChangeState(velia::health::State::OK); // [OK, OK]
 
-            i2->invokeChangeState(velia::State::OK); // [OK, OK]
+            i2->invokeChangeState(velia::health::State::OK); // [OK, OK]
 
             {
                 REQUIRE_STATE_OUTPUT(ERROR);
-                i1->invokeChangeState(velia::State::ERROR); // [ERROR, OK]
+                i1->invokeChangeState(velia::health::State::ERROR); // [ERROR, OK]
             }
 
             {
                 REQUIRE_STATE_OUTPUT(WARNING);
-                i1->invokeChangeState(velia::State::WARNING); // [WARNING, OK]
+                i1->invokeChangeState(velia::health::State::WARNING); // [WARNING, OK]
             }
 
-            i2->invokeChangeState(velia::State::OK); // [WARNING, OK]
+            i2->invokeChangeState(velia::health::State::OK); // [WARNING, OK]
 
             {
                 REQUIRE_STATE_OUTPUT(OK);
-                i1->invokeChangeState(velia::State::OK); // [OK, OK]
+                i1->invokeChangeState(velia::health::State::OK); // [OK, OK]
             }
 
             {
                 REQUIRE_STATE_OUTPUT(ERROR);
-                i2->invokeChangeState(velia::State::ERROR); // [OK, ERROR]
+                i2->invokeChangeState(velia::health::State::ERROR); // [OK, ERROR]
             }
 
             {
                 REQUIRE_STATE_OUTPUT(WARNING);
-                i2->invokeChangeState(velia::State::WARNING); // [OK, WARNING]
+                i2->invokeChangeState(velia::health::State::WARNING); // [OK, WARNING]
             }
 
-            i1->invokeChangeState(velia::State::WARNING); // [WARNING, WARNING]
+            i1->invokeChangeState(velia::health::State::WARNING); // [WARNING, WARNING]
 
             {
                 REQUIRE_STATE_OUTPUT(ERROR);
-                i2->invokeChangeState(velia::State::ERROR); // [WARNING, ERROR]
+                i2->invokeChangeState(velia::health::State::ERROR); // [WARNING, ERROR]
             }
 
             {
                 REQUIRE_STATE_OUTPUT(WARNING);
-                i2->invokeChangeState(velia::State::WARNING); // [WARNING, WARNING]
+                i2->invokeChangeState(velia::health::State::WARNING); // [WARNING, WARNING]
             }
 
-            i1->invokeChangeState(velia::State::OK); // [OK, WARNING]
+            i1->invokeChangeState(velia::health::State::OK); // [OK, WARNING]
 
             {
                 REQUIRE_STATE_OUTPUT(OK);
-                i2->invokeChangeState(velia::State::OK); // [OK, OK]
+                i2->invokeChangeState(velia::health::State::OK); // [OK, OK]
             }
 
             i1.reset(); // [OK]

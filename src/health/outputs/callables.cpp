@@ -6,9 +6,9 @@
 */
 
 #include "callables.h"
-#include "outputs/LedSysfsDriver.h"
+#include "health/outputs/LedSysfsDriver.h"
 
-namespace velia {
+namespace velia::health {
 
 LedOutputCallback::LedOutputCallback(std::shared_ptr<LedSysfsDriver> red, std::shared_ptr<LedSysfsDriver> green, std::shared_ptr<LedSysfsDriver> blue)
     : m_redLed(std::move(red))

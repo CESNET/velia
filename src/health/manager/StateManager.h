@@ -5,10 +5,10 @@
 #include <memory>
 #include <mutex>
 #include "AbstractManager.h"
-#include "State.h"
+#include "health/State.h"
 #include "utils/log-fwd.h"
 
-namespace velia {
+namespace velia::health {
 
 class AbstractInput;
 

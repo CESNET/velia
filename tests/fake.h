@@ -6,14 +6,14 @@
 */
 
 #include "trompeloeil_doctest.h"
-#include "inputs/AbstractInput.h"
-#include "manager/AbstractManager.h"
+#include "health/inputs/AbstractInput.h"
+#include "health/manager/AbstractManager.h"
 
-class ManuallyInvokableInput : public velia::AbstractInput {
+class ManuallyInvokableInput : public velia::health::AbstractInput {
 public:
-    using velia::AbstractInput::AbstractInput;
+    using velia::health::AbstractInput::AbstractInput;
 
-    void invokeChangeState(velia::State s)
+    void invokeChangeState(velia::health::State s)
     {
         updateState(s);
     }
@@ -21,14 +21,14 @@ public:
 
 struct FakeOutput {
 public:
-    MAKE_MOCK1(update, void(velia::State));
+    MAKE_MOCK1(update, void(velia::health::State));
 };
 
-#define REQUIRE_STATE_OUTPUT(STATE) REQUIRE_CALL(*o1, update(velia::State::STATE)).IN_SEQUENCE(seq1)
+#define REQUIRE_STATE_OUTPUT(STATE) REQUIRE_CALL(*o1, update(velia::health::State::STATE)).IN_SEQUENCE(seq1)
 
-class FakeManager : public velia::AbstractManager {
+class FakeManager : public velia::health::AbstractManager {
 public:
-    MAKE_MOCK2(updateState, void(void*, velia::State), override);
-    MAKE_MOCK2(registerInput, void(void*, velia::State), override);
+    MAKE_MOCK2(updateState, void(void*, velia::health::State), override);
+    MAKE_MOCK2(registerInput, void(void*, velia::health::State), override);
     MAKE_MOCK1(unregisterInput, void(void*), override);
 };

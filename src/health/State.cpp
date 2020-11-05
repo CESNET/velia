@@ -1,6 +1,6 @@
-#include "State.h"
+#include "health/State.h"
 
-namespace velia {
+namespace velia::health {
 
 std::ostream& operator<<(std::ostream& os, State state)
 {

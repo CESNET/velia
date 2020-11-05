@@ -4,10 +4,10 @@
 #include <functional>
 #include <memory>
 #include <vector>
-#include "State.h"
+#include "health/State.h"
 #include "utils/log-fwd.h"
 
-namespace velia {
+namespace velia::health {
 
 class AbstractInput;
 

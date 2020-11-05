@@ -5,11 +5,11 @@
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
 #include "VELIA_VERSION.h"
-#include "inputs/DbusSystemdInput.h"
-#include "manager/StateManager.h"
-#include "outputs/LedSysfsDriver.h"
-#include "outputs/SlotWrapper.h"
-#include "outputs/callables.h"
+#include "health/inputs/DbusSystemdInput.h"
+#include "health/manager/StateManager.h"
+#include "health/outputs/LedSysfsDriver.h"
+#include "health/outputs/SlotWrapper.h"
+#include "health/outputs/callables.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
 #include "utils/log-init.h"
@@ -35,11 +35,11 @@ static const char usage[] =
     R"(Monitor system health status
 
 Usage:
-  veliad
+  velia-systemstated
     [--log-level=<Level>]
     [--systemd-ignore-unit=<Unit>]...
-  veliad (-h | --help)
-  veliad --version
+  velia-systemstated (-h | --help)
+  velia-systemstated --version
 
 Options:
   -h --help                         Show this screen.
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
         loggingSink = std::make_shared<spdlog::sinks::ansicolor_stderr_sink_mt>();
     }
 
-    auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "veliad " VELIA_VERSION, true);
+    auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "velia-systemstated " VELIA_VERSION, true);
 
     velia::utils::initLogs(loggingSink);
     spdlog::set_level(spdlog::level::info);
@@ -83,14 +83,14 @@ int main(int argc, char* argv[])
         spdlog::get("main")->debug("Starting DBus event loop");
         eventLoop = std::thread([] { g_dbusConnection->enterEventLoop(); });
 
-        auto manager = std::make_shared<velia::StateManager>();
+        auto manager = std::make_shared<velia::health::StateManager>();
 
         // output configuration
         spdlog::get("main")->debug("Initializing LED drivers");
-        manager->m_outputSignal.connect(velia::boost::signals2::SlotWrapper<void, velia::State>(std::make_shared<velia::LedOutputCallback>(
-            std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:red/"),
-            std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:green/"),
-            std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:blue/"))));
+        manager->m_outputSignal.connect(velia::health::boost::signals2::SlotWrapper<void, velia::health::State>(std::make_shared<velia::health::LedOutputCallback>(
+            std::make_shared<velia::health::LedSysfsDriver>("/sys/class/leds/status:red/"),
+            std::make_shared<velia::health::LedSysfsDriver>("/sys/class/leds/status:green/"),
+            std::make_shared<velia::health::LedSysfsDriver>("/sys/class/leds/status:blue/"))));
 
         spdlog::get("main")->debug("All outputs initialized.");
 
@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
         if (!ignoredUnits.empty()) {
             spdlog::get("main")->debug("Systemd input will ignore changes of the following units: {}", args["--systemd-ignore-unit"]);
         }
-        auto inputSystemdDbus = std::make_shared<velia::DbusSystemdInput>(manager, ignoredUnits, *g_dbusConnection);
+        auto inputSystemdDbus = std::make_shared<velia::health::DbusSystemdInput>(manager, ignoredUnits, *g_dbusConnection);
 
         spdlog::get("main")->debug("All inputs initialized.");
 

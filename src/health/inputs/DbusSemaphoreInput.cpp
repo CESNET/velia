@@ -9,20 +9,20 @@
 
 namespace {
 
-velia::State stateFromString(const std::string& str)
+velia::health::State stateFromString(const std::string& str)
 {
     if (str == "WARNING")
-        return velia::State::WARNING;
+        return velia::health::State::WARNING;
     if (str == "ERROR")
-        return velia::State::ERROR;
+        return velia::health::State::ERROR;
     if (str == "OK")
-        return velia::State::OK;
+        return velia::health::State::OK;
 
     throw std::invalid_argument("DbusSemaphoreInput received invalid state");
 }
 }
 
-namespace velia {
+namespace velia::health {
 
 DbusSemaphoreInput::DbusSemaphoreInput(std::shared_ptr<AbstractManager> manager, sdbus::IConnection& connection, const std::string& bus, const std::string& objectPath, const std::string& propertyName, const std::string& propertyInterface)
     : AbstractInput(std::move(manager))

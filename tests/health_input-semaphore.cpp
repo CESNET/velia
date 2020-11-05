@@ -11,7 +11,7 @@
 #include <future>
 #include "dbus-helpers/dbus_semaphore_server.h"
 #include "fake.h"
-#include "inputs/DbusSemaphoreInput.h"
+#include "health/inputs/DbusSemaphoreInput.h"
 #include "test_log_setup.h"
 
 TEST_CASE("Test semaphore input")
@@ -63,19 +63,19 @@ TEST_CASE("Test semaphore input")
     // i1 gets constructed which means:
     //  - a registration is performed, along with an updateState call (State::OK)
     //  - i1's constructor queries the current state and performs updateState
-    REQUIRE_CALL(*mx, registerInput(ANY(void*), velia::State::OK)).LR_SIDE_EFFECT(mx->updateState(_1, _2)).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*mx, updateState(ANY(void*), velia::State::OK)).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*mx, updateState(ANY(void*), velia::State::ERROR)).IN_SEQUENCE(seq1);
-    auto i1 = std::make_shared<velia::DbusSemaphoreInput>(mx, *clientConnection, serverConnection->getUniqueName(), dbusObj, dbusProp, dbusPropIface);
+    REQUIRE_CALL(*mx, registerInput(ANY(void*), velia::health::State::OK)).LR_SIDE_EFFECT(mx->updateState(_1, _2)).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*mx, updateState(ANY(void*), velia::health::State::OK)).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*mx, updateState(ANY(void*), velia::health::State::ERROR)).IN_SEQUENCE(seq1);
+    auto i1 = std::make_shared<velia::health::DbusSemaphoreInput>(mx, *clientConnection, serverConnection->getUniqueName(), dbusObj, dbusProp, dbusPropIface);
     // i1 now listens for dbus events, we can start the semaphore server
 
     // mux should get notified for every semaphore state change
-    REQUIRE_CALL(*mx, updateState(i1.get(), velia::State::OK)).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*mx, updateState(i1.get(), velia::State::OK)).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*mx, updateState(i1.get(), velia::State::WARNING)).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*mx, updateState(i1.get(), velia::State::ERROR)).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*mx, updateState(i1.get(), velia::State::WARNING)).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*mx, updateState(i1.get(), velia::State::OK)).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*mx, updateState(i1.get(), velia::health::State::OK)).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*mx, updateState(i1.get(), velia::health::State::OK)).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*mx, updateState(i1.get(), velia::health::State::WARNING)).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*mx, updateState(i1.get(), velia::health::State::ERROR)).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*mx, updateState(i1.get(), velia::health::State::WARNING)).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*mx, updateState(i1.get(), velia::health::State::OK)).IN_SEQUENCE(seq1);
 
 
     auto a1 = std::async(std::launch::async, [&]() { server.runStateChanges(stateSequence); });

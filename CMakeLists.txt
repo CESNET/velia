@@ -39,40 +39,54 @@ if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
     message(FATAL_ERROR "Systemd 245 has a bug affecting DBus method calls using sdbus-c++. Please see https://github.com/Kistler-Group/sdbus-cpp/issues/106.")
 endif()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
-
 include(GNUInstallDirs)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
+
 # Targets
+# - utils
 add_library(velia-utils STATIC
     src/utils/exceptions.cpp
+    src/utils/exceptions.h
     src/utils/journal.cpp
-    src/utils/log-init.h
+    src/utils/journal.h
+    src/utils/log.h
+    src/utils/log-fwd.h
     src/utils/log-init.cpp
+    src/utils/log-init.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog)
-target_link_libraries(velia-utils PRIVATE PkgConfig::SYSTEMD)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD)
 
-
-add_library(velia-state-manager STATIC
-    src/inputs/AbstractInput.cpp
-    src/inputs/DbusSemaphoreInput.cpp
-    src/inputs/DbusSystemdInput.cpp
-    src/manager/AbstractManager.cpp
-    src/manager/StateManager.cpp
-    src/outputs/LedSysfsDriver.cpp
-    src/outputs/callables.cpp
-    src/State.cpp
+# - health
+add_library(velia-health STATIC
+    src/health/inputs/AbstractInput.cpp
+    src/health/inputs/DbusSemaphoreInput.cpp
+    src/health/inputs/DbusSystemdInput.cpp
+    src/health/manager/AbstractManager.cpp
+    src/health/manager/StateManager.cpp
+    src/health/outputs/LedSysfsDriver.cpp
+    src/health/outputs/callables.cpp
+    src/health/State.cpp
     )
-target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost SDBusCpp::sdbus-c++ ${STD_FILESYSTEM_LIBRARY})
-
-add_executable(veliad
-    src/main.cpp
+target_link_libraries(velia-health
+    PUBLIC
+        velia-utils
+        Boost::boost
+        SDBusCpp::sdbus-c++
+        ${STD_FILESYSTEM_LIBRARY}
     )
 
-target_link_libraries(veliad PUBLIC velia-utils velia-state-manager docopt)
-add_dependencies(veliad target-VELIA_VERSION)
+add_executable(velia-healthd
+    src/health/main.cpp
+    )
+target_link_libraries(velia-healthd
+    PUBLIC
+        velia-health
+        docopt
+    )
+add_dependencies(velia-healthd target-VELIA_VERSION)
+target_include_directories(velia-healthd PUBLIC ${CMAKE_BINARY_DIR})
+
 
 # Testing
 include(CTest)
@@ -83,39 +97,46 @@ if(BUILD_TESTING)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/configure.cmake.h.in ${CMAKE_CURRENT_BINARY_DIR}/tests/configure.cmake.h)
 
     add_library(DoctestIntegration STATIC
-            tests/doctest_integration.cpp
-            tests/trompeloeil_doctest.h
-            tests/wait-a-bit-longer.cpp
-            )
-    target_include_directories(DoctestIntegration PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+        tests/doctest_integration.cpp
+        tests/trompeloeil_doctest.h
+        tests/wait-a-bit-longer.cpp
+        )
     target_link_libraries(DoctestIntegration doctest::doctest trompeloeil spdlog::spdlog)
+    target_include_directories(DoctestIntegration PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/)
     target_compile_definitions(DoctestIntegration PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
 
     add_library(DbusTesting STATIC
         tests/dbus-helpers/dbus_semaphore_server.cpp
+        tests/dbus-helpers/dbus_semaphore_server.h
         tests/dbus-helpers/dbus_systemd_server.cpp
-    )
-    target_link_libraries(DbusTesting PUBLIC SDBusCpp::sdbus-c++)
+        tests/dbus-helpers/dbus_systemd_server.h
+        )
+    target_link_libraries(DbusTesting
+        PUBLIC
+            velia-utils
+            SDBusCpp::sdbus-c++
+        )
 
     function(velia_test name)
-        add_executable(test_${name} tests/${name}.cpp)
-        target_link_libraries(test_${name} DoctestIntegration ${ARGN})
-        target_include_directories(test_${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+        add_executable(test-${name} ${CMAKE_SOURCE_DIR}/tests/${name}.cpp)
+        target_link_libraries(test-${name} DoctestIntegration ${ARGN})
+        target_include_directories(test-${name}
+            PUBLIC
+                ${CMAKE_CURRENT_SOURCE_DIR}
+            PRIVATE
+                ${CMAKE_BINARY_DIR}
+        )
 
         if(NOT CMAKE_CROSSCOMPILING)
-            add_test(test_${name} test_${name})
+            add_test(test-${name} test-${name})
         endif()
-
     endfunction()
-    velia_test(state-manager velia-state-manager)
-    velia_test(input-semaphore velia-state-manager DbusTesting)
-    velia_test(input-systemd velia-state-manager DbusTesting)
-    velia_test(output-led velia-state-manager)
-endif()
 
-install(TARGETS
-    veliad
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)
+    velia_test(health_state-manager velia-health)
+    velia_test(health_input-semaphore velia-health DbusTesting)
+    velia_test(health_input-systemd velia-health DbusTesting)
+    velia_test(health_output-led velia-health)
+endif()
 
 if(WITH_DOCS)
     set(doxyfile_in ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
@@ -129,3 +150,7 @@ if(WITH_DOCS)
             SOURCES ${doxyfile_in}
             )
 endif()
+
+install(TARGETS
+    velia-healthd
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)

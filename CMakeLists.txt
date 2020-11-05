@@ -17,7 +17,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSI
     set(STD_FILESYSTEM_LIBRARY stdc++fs)
 endif()
 
-
 add_custom_target(velia-version-cmake-ide
         cmake/ProjectGitVersion.cmake
         cmake/ProjectGitVersionRunner.cmake
@@ -28,8 +27,6 @@ prepare_git_version(VELIA_VERSION "0.0")
 find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
-find_package(Boost REQUIRED)
-find_package(docopt REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ REQUIRED)
 find_package(PkgConfig)
@@ -39,40 +36,22 @@ if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
     message(FATAL_ERROR "Systemd 245 has a bug affecting DBus method calls using sdbus-c++. Please see https://github.com/Kistler-Group/sdbus-cpp/issues/106.")
 endif()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
-
 include(GNUInstallDirs)
 
 # Targets
 add_library(velia-utils STATIC
     src/utils/exceptions.cpp
+    src/utils/exceptions.h
     src/utils/journal.cpp
-    src/utils/log-init.h
+    src/utils/journal.h
+    src/utils/log.h
+    src/utils/log-fwd.h
     src/utils/log-init.cpp
+    src/utils/log-init.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog)
-target_link_libraries(velia-utils PRIVATE PkgConfig::SYSTEMD)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD)
+target_include_directories(velia-utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
-
-add_library(velia-state-manager STATIC
-    src/inputs/AbstractInput.cpp
-    src/inputs/DbusSemaphoreInput.cpp
-    src/inputs/DbusSystemdInput.cpp
-    src/manager/AbstractManager.cpp
-    src/manager/StateManager.cpp
-    src/outputs/LedSysfsDriver.cpp
-    src/outputs/callables.cpp
-    src/State.cpp
-    )
-target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost SDBusCpp::sdbus-c++ ${STD_FILESYSTEM_LIBRARY})
-
-add_executable(veliad
-    src/main.cpp
-    )
-
-target_link_libraries(veliad PUBLIC velia-utils velia-state-manager docopt)
-add_dependencies(veliad target-VELIA_VERSION)
 
 # Testing
 include(CTest)
@@ -87,35 +66,16 @@ if(BUILD_TESTING)
             tests/trompeloeil_doctest.h
             tests/wait-a-bit-longer.cpp
             )
-    target_include_directories(DoctestIntegration PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ${CMAKE_CURRENT_SOURCE_DIR}/src/)
     target_link_libraries(DoctestIntegration doctest::doctest trompeloeil spdlog::spdlog)
+    target_include_directories(DoctestIntegration PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/)
     target_compile_definitions(DoctestIntegration PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
 
     add_library(DbusTesting STATIC
         tests/dbus-helpers/dbus_semaphore_server.cpp
         tests/dbus-helpers/dbus_systemd_server.cpp
     )
-    target_link_libraries(DbusTesting PUBLIC SDBusCpp::sdbus-c++)
-
-    function(velia_test name)
-        add_executable(test_${name} tests/${name}.cpp)
-        target_link_libraries(test_${name} DoctestIntegration ${ARGN})
-        target_include_directories(test_${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-
-        if(NOT CMAKE_CROSSCOMPILING)
-            add_test(test_${name} test_${name})
-        endif()
-
-    endfunction()
-    velia_test(state-manager velia-state-manager)
-    velia_test(input-semaphore velia-state-manager DbusTesting)
-    velia_test(input-systemd velia-state-manager DbusTesting)
-    velia_test(output-led velia-state-manager)
+    target_link_libraries(DbusTesting PUBLIC velia-utils SDBusCpp::sdbus-c++)
 endif()
-
-install(TARGETS
-    veliad
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)
 
 if(WITH_DOCS)
     set(doxyfile_in ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
@@ -129,3 +89,5 @@ if(WITH_DOCS)
             SOURCES ${doxyfile_in}
             )
 endif()
+
+add_subdirectory(src/velia-systemstate)

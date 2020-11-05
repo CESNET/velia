@@ -9,7 +9,7 @@
 #include <filesystem>
 #include "utils/log-fwd.h"
 
-namespace velia {
+namespace velia::health {
 
 /**
  * @brief Sysfs driver for manipulating with LED brightness using https://www.kernel.org/doc/Documentation/leds/leds-class.txt

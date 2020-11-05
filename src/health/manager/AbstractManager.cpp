@@ -1,6 +1,6 @@
 #include "AbstractManager.h"
 
-namespace velia {
+namespace velia::health {
 
 AbstractManager::~AbstractManager() = default;
 

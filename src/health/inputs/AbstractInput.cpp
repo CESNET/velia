@@ -2,7 +2,7 @@
 
 #include <utility>
 
-namespace velia {
+namespace velia::health {
 
 AbstractInput::AbstractInput(std::shared_ptr<AbstractManager> manager)
     : m_manager(std::move(manager))

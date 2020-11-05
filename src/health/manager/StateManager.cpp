@@ -3,7 +3,7 @@
 #include "StateManager.h"
 #include "utils/log.h"
 
-namespace velia {
+namespace velia::health {
 
 StateManager::StateManager()
     : m_log(spdlog::get("main"))

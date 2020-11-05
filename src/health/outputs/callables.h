@@ -7,9 +7,9 @@
 #pragma once
 
 #include <memory>
-#include "State.h"
+#include "health/State.h"
 
-namespace velia {
+namespace velia::health {
 
 class LedSysfsDriver;
 

@@ -6,7 +6,7 @@
 */
 #pragma once
 
-namespace velia {
+namespace velia::health {
 
 class LedOutputCallback;
 

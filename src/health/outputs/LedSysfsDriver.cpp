@@ -9,7 +9,7 @@
 #include "LedSysfsDriver.h"
 #include "utils/log.h"
 
-namespace velia {
+namespace velia::health {
 
 LedSysfsDriver::LedSysfsDriver(const std::filesystem::path& directory)
     : m_log(spdlog::get("main"))

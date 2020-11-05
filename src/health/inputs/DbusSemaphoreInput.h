@@ -8,10 +8,10 @@
 
 #include <memory>
 #include <sdbus-c++/sdbus-c++.h>
-#include "inputs/AbstractInput.h"
-#include "manager/StateManager.h"
+#include "health/inputs/AbstractInput.h"
+#include "health/manager/StateManager.h"
 
-namespace velia {
+namespace velia::health {
 
 class DbusSemaphoreInput : public AbstractInput {
 public:

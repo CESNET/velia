@@ -3,7 +3,7 @@
 #include <ostream>
 #include <spdlog/fmt/ostr.h> // allow spdlog to use operator<<(ostream, State) to print State
 
-namespace velia {
+namespace velia::health {
 
 enum class State {
     OK,

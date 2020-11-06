@@ -12,13 +12,14 @@ public:
 
     explicit DbusSystemdServer(sdbus::IConnection& connection);
 
-    void createUnit(sdbus::IConnection& connection, const sdbus::ObjectPath& objPath, const std::string& activeState, const std::string& subState);
+    void createUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& objPath, const std::string& activeState, const std::string& subState);
     void changeUnitState(const sdbus::ObjectPath& objPath, const std::string& activeState, const std::string& subState);
 
 private:
     struct Unit {
-        Unit(std::unique_ptr<sdbus::IObject> object, std::string activeState, std::string subState);
+        Unit(std::string unitName, std::unique_ptr<sdbus::IObject> object, std::string activeState, std::string subState);
 
+        std::string m_unitName;
         std::unique_ptr<sdbus::IObject> m_object;
         std::string m_activeState;
         std::string m_subState;

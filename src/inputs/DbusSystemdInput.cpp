@@ -10,7 +10,7 @@
 namespace velia {
 
 /** @brief Construct the systemd unit watcher for arbitrary dbus object. Mainly for tests. */
-DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, sdbus::IConnection& connection, const std::string& busname, const std::string& managerObjectPath, const std::string& managerIface, const std::string& unitIface)
+DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, const std::set<std::string>& ignoredUnits, sdbus::IConnection& connection, const std::string& busname, const std::string& managerObjectPath, const std::string& managerIface, const std::string& unitIface)
     : AbstractInput(std::move(manager))
     , m_log(spdlog::get("main"))
     , m_busName(busname)
@@ -35,13 +35,16 @@ DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, sdb
     std::vector<sdbus::Struct<std::string, std::string, std::string, std::string, std::string, std::string, sdbus::ObjectPath, uint32_t, std::string, sdbus::ObjectPath>> units;
     m_proxyManager->callMethod("ListUnits").onInterface(managerIface).storeResultsTo(units);
     for (const auto& unit : units) {
-        registerSystemdUnit(connection, unit.get<0>(), unit.get<6>());
+        // register unless it is ignored
+        if (ignoredUnits.find(unit.get<0>()) == ignoredUnits.end()) {
+            registerSystemdUnit(connection, unit.get<0>(), unit.get<6>());
+        }
     }
 }
 
 /** @brief Construct the systemd watcher for well-known systemd paths. */
-DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, sdbus::IConnection& connection)
-    : DbusSystemdInput(std::move(manager), connection, "org.freedesktop.systemd1", "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "org.freedesktop.systemd1.Unit")
+DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, const std::set<std::string>& ignoredUnits, sdbus::IConnection& connection)
+    : DbusSystemdInput(std::move(manager), ignoredUnits, connection, "org.freedesktop.systemd1", "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "org.freedesktop.systemd1.Unit")
 {
 }
 

@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9709217_40529489",
+        "filename": "src/inputs/DbusSystemdInput.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-06T21:01:52Z",
+      "side": 1,
+      "message": "I think this comment doesn\u0027t add that much value. What would help more is assigning names to the get\u003c0\u003e and get\u003c6\u003e results; that way there would be no need for an extra comment, IMHO:\n \nfor (const auto\u0026 unit : units) {\n  const auto\u0026 name \u003d unit.get\u003c0\u003e();\n  if (ignoredUnits.find(name) \u003d\u003d ignoredUnits.end()) {\n    registerSystemdUnit(connection, name, unit.get\u003c6\u003e());\n  }\n}\n\nAlso C++20 would help as well (std::set::contains), but well, we don\u0027t have that yet :).",
+      "revId": "afe5c39299b710d568878e0955c34631cde2b216",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f93bdde3_80425441",
+        "filename": "src/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-06T21:01:52Z",
+      "side": 1,
+      "message": "- I think the previous version with one option per line was more readable\n- please add a comment somewhere (preferably to the option documentation) how to ignore several units at once. Do I speciy that option multiple times? Do I use some delimiter -- which one?",
+      "revId": "afe5c39299b710d568878e0955c34631cde2b216",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c21fe1e_494c4d9d",
+        "filename": "src/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-06T21:01:52Z",
+      "side": 1,
+      "message": "I understand this works (because asStringList() returns a reference to a variable, it does not build anything on demand), but I was a bit surprised to see code like this and went to check if it\u0027s indeed correct. I was worried that it might compare iterators of two separate vector instances. I think it\u0027s OK as-is (and would be made better with ranges, but then we don\u0027t really have ranges yet).",
+      "range": {
+        "startLine": 96,
+        "startChar": 73,
+        "endLine": 96,
+        "endChar": 147
+      },
+      "revId": "afe5c39299b710d568878e0955c34631cde2b216",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    }
+  ]
+}

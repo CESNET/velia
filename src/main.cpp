@@ -37,6 +37,7 @@ static const char usage[] =
 Usage:
   veliad
     [--log-level=<Level>]
+    [--systemd-ignore-unit=<Unit>]...
   veliad (-h | --help)
   veliad --version
 
@@ -46,6 +47,7 @@ Options:
   --log-level=<N>                   Log level for everything [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
+  --systemd-ignore-unit=<Unit>      Ignore state of systemd's unit in systemd state tracker. Can be specified multiple times.
 )";
 
 std::unique_ptr<sdbus::IConnection> g_dbusConnection;
@@ -93,8 +95,12 @@ int main(int argc, char* argv[])
         spdlog::get("main")->debug("All outputs initialized.");
 
         // input configuration
+        std::set<std::string> ignoredUnits(args["--systemd-ignore-unit"].asStringList().begin(), args["--systemd-ignore-unit"].asStringList().end());
         spdlog::get("main")->debug("Starting DBus systemd watcher");
-        auto inputSystemdDbus = std::make_shared<velia::DbusSystemdInput>(manager, *g_dbusConnection);
+        if (!ignoredUnits.empty()) {
+            spdlog::get("main")->debug("Systemd input will ignore changes of the following units: {}", args["--systemd-ignore-unit"]);
+        }
+        auto inputSystemdDbus = std::make_shared<velia::DbusSystemdInput>(manager, ignoredUnits, *g_dbusConnection);
 
         spdlog::get("main")->debug("All inputs initialized.");
 

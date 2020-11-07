@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d1697631_1b890945",
+        "filename": "src/inputs/DbusSystemdInput.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-07T18:32:59Z",
+      "side": 1,
+      "message": "I\u0027m used to write something like ignoredUnits.count(elem) to achieve the contains functionality. But I remember vaguely that you didn\u0027t like in some patch, so I went this way :-) It is now rewritten using your suggestion.",
+      "parentUuid": "b9709217_40529489",
+      "revId": "afe5c39299b710d568878e0955c34631cde2b216",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f93bdde3_80425441",
         "filename": "src/main.cpp",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "afe5c39299b710d568878e0955c34631cde2b216",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b8c2311_d8b757b5",
+        "filename": "src/main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-07T18:32:59Z",
+      "side": 1,
+      "message": "* Done\n* well it is specified by the help string (for multiple units repeat whole flag several times), but I surely should reflect that in the README so it is clear.",
+      "parentUuid": "f93bdde3_80425441",
+      "revId": "afe5c39299b710d568878e0955c34631cde2b216",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {

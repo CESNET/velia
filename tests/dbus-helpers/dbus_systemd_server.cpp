@@ -22,9 +22,9 @@ DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection)
 }
 
 /** @brief Creates a unit inside the test server. Registers dbus object and emits UnitNew signal. **/
-void DbusSystemdServer::createUnit(sdbus::IConnection& connection, const sdbus::ObjectPath& objPath, const std::string& activeState, const std::string& subState)
+void DbusSystemdServer::createUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& objPath, const std::string& activeState, const std::string& subState)
 {
-    m_units.insert(std::make_pair(objPath, Unit(sdbus::createObject(connection, objPath), activeState, subState)));
+    m_units.insert(std::make_pair(objPath, Unit(unitName, sdbus::createObject(connection, objPath), activeState, subState)));
 
     Unit& unit = m_units.at(objPath);
 
@@ -50,8 +50,8 @@ std::vector<DbusSystemdServer::UnitStruct> DbusSystemdServer::ListUnits()
 {
     std::vector<UnitStruct> res;
 
-    for (const auto& [name, unit] : m_units) {
-        res.push_back(UnitStruct(name, ""s, ""s, ""s, ""s, ""s, unit.m_object->getObjectPath(), 0, ""s, "/dummy"s));
+    for (const auto& [objPath, unit] : m_units) {
+        res.push_back(UnitStruct(unit.m_unitName, ""s, ""s, ""s, ""s, ""s, unit.m_object->getObjectPath(), 0, ""s, "/dummy"s));
     }
 
     return res;
@@ -67,8 +67,9 @@ void DbusSystemdServer::changeUnitState(const sdbus::ObjectPath& objPath, const 
     }
 }
 
-DbusSystemdServer::Unit::Unit(std::unique_ptr<sdbus::IObject> object, std::string activeState, std::string subState)
-    : m_object(std::move(object))
+DbusSystemdServer::Unit::Unit(std::string unitName, std::unique_ptr<sdbus::IObject> object, std::string activeState, std::string subState)
+    : m_unitName(std::move(unitName))
+    , m_object(std::move(object))
     , m_activeState(std::move(activeState))
     , m_subState(std::move(subState))
 {

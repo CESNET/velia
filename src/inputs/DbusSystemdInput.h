@@ -19,8 +19,8 @@ namespace velia {
  */
 class DbusSystemdInput : public AbstractInput {
 public:
-    DbusSystemdInput(std::shared_ptr<AbstractManager> manager, sdbus::IConnection& connection);
-    DbusSystemdInput(std::shared_ptr<AbstractManager> manager, sdbus::IConnection& connection, const std::string& busname, const std::string& managerObjectPath, const std::string& managerIface, const std::string& unitIface);
+    DbusSystemdInput(std::shared_ptr<AbstractManager> manager, const std::set<std::string>& ignoredUnits, sdbus::IConnection& connection);
+    DbusSystemdInput(std::shared_ptr<AbstractManager> manager, const std::set<std::string>& ignoredUnits, sdbus::IConnection& connection, const std::string& busname, const std::string& managerObjectPath, const std::string& managerIface, const std::string& unitIface);
     ~DbusSystemdInput() override;
 
 private:

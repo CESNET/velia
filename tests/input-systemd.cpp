@@ -36,14 +36,15 @@ TEST_CASE("Systemd monitor")
     // create units. Unit2 and Unit3 are in states that we consider failed
     // therefore the DbusSystemdInput will report ERROR after loading the second unit
     // FailedUnits: {unit2, unit3} -> ERROR
-    server.createUnit(*serverConnection, "/cz/cesnet/systemd1/unit/unit1", "active", "running");
-    server.createUnit(*serverConnection, "/cz/cesnet/systemd1/unit/unit2", "activating", "auto-restart");
-    server.createUnit(*serverConnection, "/cz/cesnet/systemd1/unit/unit3", "failed", "failed");
+    server.createUnit(*serverConnection, "unit1.service", "/cz/cesnet/systemd1/unit/unit1", "active", "running");
+    server.createUnit(*serverConnection, "unit2.service", "/cz/cesnet/systemd1/unit/unit2", "activating", "auto-restart");
+    server.createUnit(*serverConnection, "unit3.service", "/cz/cesnet/systemd1/unit/unit3", "failed", "failed");
+    server.createUnit(*serverConnection, "unitIgnored.service", "/cz/cesnet/systemd1/unit/unitIgnored", "failed", "failed");
 
     REQUIRE_CALL(*mx, updateState(ANY(void*), velia::State::OK)).IN_SEQUENCE(seq1);
     REQUIRE_CALL(*mx, updateState(ANY(void*), velia::State::ERROR)).IN_SEQUENCE(seq1);
     REQUIRE_CALL(*mx, updateState(ANY(void*), velia::State::ERROR)).IN_SEQUENCE(seq1);
-    auto i1 = std::make_shared<velia::DbusSystemdInput>(mx, *clientConnection, "cz.cesnet.systemd1", "/cz/cesnet/systemd1", "cz.cesnet.systemd1.Manager", "cz.cesnet.systemd1.Unit");
+    auto i1 = std::make_shared<velia::DbusSystemdInput>(mx, std::set<std::string> {"unitIgnored.service"}, *clientConnection, "cz.cesnet.systemd1", "/cz/cesnet/systemd1", "cz.cesnet.systemd1.Manager", "cz.cesnet.systemd1.Unit");
     // i1 now listens for dbus events, we can start the semaphore server
 
     // FailedUnits: {unit3} -> ERROR
@@ -60,7 +61,12 @@ TEST_CASE("Systemd monitor")
     // add new unit with failed/failed, DbusSystemdInput should receive UnitNew signal and monitor this unit too
     // FailedUnits: {unit4} -> OK
     REQUIRE_CALL(*mx, updateState(i1.get(), velia::State::ERROR)).IN_SEQUENCE(seq1);
-    server.createUnit(*serverConnection, "/cz/cesnet/systemd1/unit/unit4", "failed", "failed");
+    server.createUnit(*serverConnection, "unit4.service", "/cz/cesnet/systemd1/unit/unit4", "failed", "failed");
+
+    // unitIgnored is ignored by us, so it can change in any way but since we don't obtain the notifications, nothing will happen
+    server.changeUnitState("/cz/cesnet/systemd1/unit/unitIgnored", "failed", "failed");
+    server.changeUnitState("/cz/cesnet/systemd1/unit/unitIgnored", "active", "auto-restarting");
+    server.changeUnitState("/cz/cesnet/systemd1/unit/unitIgnored", "active", "running");
 
     waitForCompletionAndBitMore(seq1);
 

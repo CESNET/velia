@@ -56,6 +56,8 @@ add_library(velia-utils STATIC
     src/utils/log-fwd.h
     src/utils/log-init.cpp
     src/utils/log-init.h
+    src/utils/string.cpp
+    src/utils/string.h
     )
 target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD)
 
@@ -93,6 +95,8 @@ target_include_directories(velia-healthd PUBLIC ${CMAKE_BINARY_DIR})
 add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/sysfs/EMMC.cpp
     src/ietf-hardware/sysfs/EMMC.h
+    src/ietf-hardware/sysfs/HWMon.cpp
+    src/ietf-hardware/sysfs/HWMon.h
     src/ietf-hardware/sysfs/SysfsAttributes.h
     )
 target_link_libraries(velia-ietf-hardware
@@ -153,6 +157,7 @@ if(BUILD_TESTING)
     velia_test(health_output-led velia-health)
 
     velia_test(hardware_emmc velia-ietf-hardware)
+    velia_test(hardware_hwmon velia-ietf-hardware)
 endif()
 
 if(WITH_DOCS)

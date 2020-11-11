@@ -12,7 +12,6 @@
 #include <sstream>
 #include <trompeloeil.hpp>
 
-
 namespace doctest {
 
 template <>
@@ -23,6 +22,20 @@ struct StringMaker<std::map<std::string, std::string>> {
         os << "{" << std::endl;
         for (const auto& [key, value] : map) {
             os << "  \"" << key << "\": \"" << value << "\"," << std::endl;
+        }
+        os << "}";
+        return os.str().c_str();
+    }
+};
+
+template <>
+struct StringMaker<std::map<std::string, int64_t>> {
+    static String convert(const std::map<std::string, int64_t>& map)
+    {
+        std::ostringstream os;
+        os << "{" << std::endl;
+        for (const auto& [key, value] : map) {
+            os << "  \"" << key << "\": " << value << "," << std::endl;
         }
         os << "}";
         return os.str().c_str();

@@ -64,6 +64,8 @@ add_library(velia-utils STATIC
     src/utils/log-init.h
     src/utils/string.cpp
     src/utils/string.h
+    src/utils/time.cpp
+    src/utils/time.h
     )
 target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD Boost::boost)
 
@@ -104,6 +106,8 @@ add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/sysfs/HWMon.cpp
     src/ietf-hardware/sysfs/HWMon.h
     src/ietf-hardware/sysfs/SysfsAttributes.h
+    src/ietf-hardware/IETFHardware.cpp
+    src/ietf-hardware/IETFHardware.h
     )
 target_link_libraries(velia-ietf-hardware
     PUBLIC
@@ -175,6 +179,7 @@ if(BUILD_TESTING)
 
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
+    velia_test(hardware_ietf-hardware velia-ietf-hardware)
 
     find_program(YANGLINT_PATH yanglint)
     if (NOT YANGLINT_PATH)

@@ -53,4 +53,17 @@ std::vector<uint32_t> readFileWords(const std::filesystem::path& path, int value
     return bytes;
 }
 
+/** @brief Reads a int64_t number from a file. */
+int64_t readFileInt64(const std::filesystem::path& path)
+{
+    std::ifstream ifs(openStream(path));
+    int64_t res;
+
+    if (ifs >> res) {
+        return res;
+    }
+
+    throw std::domain_error("Could not read int64_t value from '" + std::string(path) + "'.");
+}
+
 }

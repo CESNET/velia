@@ -7,23 +7,13 @@
 
 #include "trompeloeil_doctest.h"
 #include <filesystem>
+#include "fs-helpers/utils.h"
 #include "ietf-hardware/sysfs/EMMC.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
 #include "tests/configure.cmake.h"
 
 using namespace std::literals;
-
-namespace {
-
-/** @short Remove directory tree at 'rootDir' path (if exists) */
-void removeDirectoryTreeIfExists(const std::string& rootDir)
-{
-    if (std::filesystem::exists(rootDir)) {
-        std::filesystem::remove_all(rootDir);
-    }
-}
-}
 
 TEST_CASE("EMMC driver")
 {

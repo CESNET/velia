@@ -93,11 +93,14 @@ target_include_directories(veliad PUBLIC ${CMAKE_BINARY_DIR})
 add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/sysfs/EMMC.cpp
     src/ietf-hardware/sysfs/EMMC.h
+    src/ietf-hardware/sysfs/HWMon.cpp
+    src/ietf-hardware/sysfs/HWMon.h
     )
 target_link_libraries(velia-ietf-hardware
     PUBLIC
         velia-utils
         ${STD_FILESYSTEM_LIBRARY}
+        Boost::boost
     )
 target_include_directories(velia-ietf-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
 
@@ -131,6 +134,17 @@ if(BUILD_TESTING)
             SDBusCpp::sdbus-c++
         )
 
+    add_library(FsTestUtils STATIC
+        tests/fs-helpers/FileInjector.cpp
+        tests/fs-helpers/FileInjector.h
+        tests/fs-helpers/utils.cpp
+        tests/fs-helpers/utils.h
+        )
+    target_link_libraries(FsTestUtils
+        PUBLIC
+            ${STD_FILESYSTEM_LIBRARY}
+        )
+
     function(velia_test name)
         add_executable(test-${name} ${CMAKE_SOURCE_DIR}/tests/${name}.cpp)
         target_link_libraries(test-${name} DoctestIntegration ${ARGN})
@@ -151,7 +165,8 @@ if(BUILD_TESTING)
     velia_test(health_input-systemd velia-health DbusTesting)
     velia_test(health_output-led velia-health)
 
-    velia_test(hardware_emmc velia-ietf-hardware)
+    velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
+    velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
 endif()
 
 if(WITH_DOCS)

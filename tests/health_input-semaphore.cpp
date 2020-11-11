@@ -10,8 +10,8 @@
 #include <functional>
 #include <future>
 #include "dbus-helpers/dbus_semaphore_server.h"
-#include "fake.h"
 #include "health/inputs/DbusSemaphoreInput.h"
+#include "mock/health.h"
 #include "test_log_setup.h"
 
 TEST_CASE("Test semaphore input")

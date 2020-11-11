@@ -13,4 +13,5 @@
 namespace velia::ietf_hardware::sysfs {
 
 using EMMCAttributes = std::map<std::string, std::string>;
+using HWMonAttributes = std::map<std::string, int64_t>;
 }

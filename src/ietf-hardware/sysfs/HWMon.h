@@ -19,9 +19,9 @@ namespace velia::ietf_hardware::sysfs {
 class HWMon {
 public:
     explicit HWMon(std::filesystem::path hwmonDir);
-    ~HWMon();
+    virtual ~HWMon();
 
-    HWMonAttributes attributes() const;
+    virtual HWMonAttributes attributes() const;
 
 private:
     velia::Log m_log;

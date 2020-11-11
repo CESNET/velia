@@ -17,9 +17,9 @@ namespace velia::hardware::sysfs {
 class HWMon {
 public:
     explicit HWMon(std::filesystem::path hwmonDir);
-    ~HWMon();
+    virtual ~HWMon();
 
-    std::map<std::string, int64_t> attributes() const;
+    virtual std::map<std::string, int64_t> attributes() const;
 
 private:
     velia::Log m_log;

@@ -1,6 +1,7 @@
 project(velia-hardware LANGUAGES CXX)
 
 find_package(spdlog REQUIRED)
+find_package(PkgConfig)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -11,6 +12,8 @@ add_library(velia-hardware STATIC
     sysfs/EMMC.h
     sysfs/HWMon.cpp
     sysfs/HWMon.h
+    HardwareState.cpp
+    HardwareState.h
     )
 target_link_libraries(velia-hardware PUBLIC velia-utils ${STD_FILESYSTEM_LIBRARY})
 target_include_directories(velia-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
@@ -29,8 +32,5 @@ if(BUILD_TESTING)
     endfunction()
     hardware_test(hardware_emmc velia-hardware)
     hardware_test(hardware_hwmon velia-hardware)
+    hardware_test(hardware_hwstate velia-hardware)
 endif()
-
-#install(TARGETS
-#    veliad-hardwared
-#    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)

@@ -7,8 +7,8 @@
 
 #include "trompeloeil_doctest.h"
 #include "dbus-helpers/dbus_systemd_server.h"
-#include "fake.h"
 #include "inputs/DbusSystemdInput.h"
+#include "mock/systemstate.h"
 #include "test_log_setup.h"
 #include "utils/log-init.h"
 #include "utils/log.h"

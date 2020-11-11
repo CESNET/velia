@@ -18,7 +18,7 @@ public:
     EMMC(std::filesystem::path hwmonDir);
     ~EMMC();
 
-    std::map<std::string, std::string> attributes() const;
+    virtual std::map<std::string, std::string> attributes() const;
 
 private:
     velia::Log m_log;

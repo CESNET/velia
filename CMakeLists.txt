@@ -50,6 +50,8 @@ add_library(velia-utils STATIC
     src/utils/log-init.h
     src/utils/string.cpp
     src/utils/string.h
+    src/utils/time.cpp
+    src/utils/time.h
     )
 target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD)
 target_include_directories(velia-utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/)

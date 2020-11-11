@@ -17,9 +17,9 @@ namespace velia::ietf_hardware::sysfs {
 class EMMC {
 public:
     explicit EMMC(std::filesystem::path hwmonDir);
-    ~EMMC();
+    virtual ~EMMC();
 
-    EMMCAttributes attributes() const;
+    virtual EMMCAttributes attributes() const;
 
 private:
     velia::Log m_log;

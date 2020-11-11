@@ -18,9 +18,9 @@ public:
     using Attributes = std::map<std::string, std::string>;
 
     explicit EMMC(std::filesystem::path hwmonDir);
-    ~EMMC();
+    virtual ~EMMC();
 
-    Attributes attributes() const;
+    virtual Attributes attributes() const;
 
 private:
     velia::Log m_log;

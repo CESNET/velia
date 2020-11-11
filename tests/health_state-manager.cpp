@@ -6,8 +6,8 @@
 */
 
 #include "trompeloeil_doctest.h"
-#include "fake.h"
 #include "health/manager/StateManager.h"
+#include "mock/health.h"
 #include "test_log_setup.h"
 
 TEST_CASE("State multiplexer")

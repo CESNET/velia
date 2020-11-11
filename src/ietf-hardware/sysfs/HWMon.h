@@ -20,9 +20,9 @@ public:
     using Attributes = std::map<std::string, int64_t>;
 
     explicit HWMon(std::filesystem::path hwmonDir);
-    ~HWMon();
+    virtual ~HWMon();
 
-    Attributes attributes() const;
+    virtual Attributes attributes() const;
 
 private:
     velia::Log m_log;

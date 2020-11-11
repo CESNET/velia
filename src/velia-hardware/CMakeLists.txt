@@ -9,6 +9,8 @@ add_library(velia-hardware STATIC
     sysfs/Exceptions.h
     sysfs/EMMC.cpp
     sysfs/EMMC.h
+    sysfs/HWMon.cpp
+    sysfs/HWMon.h
     )
 target_link_libraries(velia-hardware PUBLIC velia-utils ${STD_FILESYSTEM_LIBRARY})
 target_include_directories(velia-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
@@ -26,6 +28,7 @@ if(BUILD_TESTING)
         endif()
     endfunction()
     hardware_test(hardware_emmc velia-hardware)
+    hardware_test(hardware_hwmon velia-hardware)
 endif()
 
 #install(TARGETS

@@ -48,6 +48,8 @@ add_library(velia-utils STATIC
     src/utils/log-fwd.h
     src/utils/log-init.cpp
     src/utils/log-init.h
+    src/utils/string.cpp
+    src/utils/string.h
     )
 target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD)
 target_include_directories(velia-utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/)
@@ -63,6 +65,7 @@ if(BUILD_TESTING)
 
     add_library(DoctestIntegration STATIC
             tests/doctest_integration.cpp
+            tests/pretty_printers.h
             tests/trompeloeil_doctest.h
             tests/pretty_printers.h
             tests/wait-a-bit-longer.cpp

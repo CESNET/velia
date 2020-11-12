@@ -89,17 +89,6 @@ target_link_libraries(velia-health
         ${STD_FILESYSTEM_LIBRARY}
     )
 
-add_executable(veliad
-    src/main.cpp
-    )
-target_link_libraries(veliad
-    PUBLIC
-        velia-health
-        docopt
-    )
-add_dependencies(veliad target-VELIA_VERSION)
-target_include_directories(veliad PUBLIC ${CMAKE_BINARY_DIR})
-
 # - ietf-hardware
 add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/sysfs/EMMC.cpp
@@ -130,6 +119,22 @@ target_link_libraries(velia-ietf-hardware-sysrepo
         PkgConfig::LIBYANG
     )
 target_include_directories(velia-ietf-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
+
+# - daemon
+add_executable(veliad
+        src/main.cpp
+        src/Factory.cpp
+        src/Factory.h
+        )
+target_link_libraries(veliad
+        PUBLIC
+        velia-health
+        velia-ietf-hardware
+        velia-ietf-hardware-sysrepo
+        docopt
+        )
+add_dependencies(veliad target-VELIA_VERSION)
+target_include_directories(veliad PUBLIC ${CMAKE_BINARY_DIR})
 
 # Testing
 include(CTest)

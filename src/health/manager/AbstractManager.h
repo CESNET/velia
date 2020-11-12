@@ -26,7 +26,7 @@ public:
     virtual void updateState(void* input, State value) = 0;
 
     /** Output signal */
-    boost::signals2::signal<void(State)> m_outputSignal;
+    ::boost::signals2::signal<void(State)> m_outputSignal;
 };
 
 }

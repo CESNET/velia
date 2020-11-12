@@ -98,3 +98,10 @@ endif()
 
 add_subdirectory(src/velia-systemstate)
 add_subdirectory(src/velia-hardware)
+
+install(FILES
+    yang/iana-hardware@2018-03-13.yang
+    yang/ietf-hardware@2018-03-13.yang
+    yang/ietf-hardware-state@2018-03-13.yang
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/velia/yang
+    )

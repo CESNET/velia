@@ -1,5 +1,6 @@
 project(velia-hardware LANGUAGES CXX)
 
+find_package(docopt REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(PkgConfig)
 pkg_check_modules(SYSREPO REQUIRED sysrepo-cpp>=1.4.79 IMPORTED_TARGET sysrepo)
@@ -27,6 +28,11 @@ add_library(velia-sysrepo STATIC
     sysrepo/OpsCallback.h
 )
 target_link_libraries(velia-sysrepo PUBLIC velia-utils PkgConfig::SYSREPO PkgConfig::LIBYANG)
+
+add_executable(velia-hardwarestated main.cpp)
+target_link_libraries(velia-hardwarestated PUBLIC velia-utils velia-hardware velia-sysrepo docopt)
+add_dependencies(velia-hardwarestated target-VELIA_VERSION)
+target_include_directories(velia-hardwarestated PUBLIC ${CMAKE_BINARY_DIR})
 
 # Testing
 include(CTest)
@@ -74,3 +80,7 @@ if(BUILD_TESTING)
             RESOURCE_LOCK sysrepo
     )
 endif()
+
+install(TARGETS
+    velia-hardwarestated
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)

@@ -4,12 +4,13 @@
 #include <sdbus-c++/sdbus-c++.h>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
+#include <sysrepo-cpp/Session.hpp>
+#include "Factory.h"
 #include "VELIA_VERSION.h"
 #include "health/inputs/DbusSystemdInput.h"
 #include "health/manager/StateManager.h"
-#include "health/outputs/LedSysfsDriver.h"
-#include "health/outputs/SlotWrapper.h"
 #include "health/outputs/callables.h"
+#include "ietf-hardware/sysrepo/Sysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
 #include "utils/log-init.h"
@@ -36,6 +37,7 @@ static const char usage[] =
 
 Usage:
   veliad
+    [--appliance=<Model>]
     [--log-level=<Level>]
     [--systemd-ignore-unit=<Unit>]...
   veliad (-h | --help)
@@ -44,6 +46,7 @@ Usage:
 Options:
   -h --help                         Show this screen.
   --version                         Show version.
+  --appliance=<Model>               Initialize IETF Hardware and outputs for specific appliance.
   --log-level=<N>                   Log level for everything [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
@@ -73,6 +76,21 @@ int main(int argc, char* argv[])
         spdlog::get("main")->debug("Opening DBus connection");
         g_dbusConnection = sdbus::createSystemBusConnection();
 
+        spdlog::get("main")->debug("Opening Sysrepo connection");
+        auto srConn = std::make_shared<sysrepo::Connection>();
+        auto srSess = std::make_shared<sysrepo::Session>(srConn);
+        auto srSubscription = std::make_shared<sysrepo::Subscribe>(srSess);
+
+        /* initialize ietf-hardware */
+        spdlog::get("main")->debug("Initializing IETFHardware module");
+        std::shared_ptr<velia::ietf_hardware::IETFHardware> hardwareState;
+        if (const auto& appliance = args["--appliance"]) {
+            hardwareState = velia::ietf_hardware::createIETFHardware(appliance.asString());
+        }
+
+        spdlog::get("main")->debug("Initializing Sysrepo ietf-hardware callback");
+        auto ietfHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSubscription, hardwareState);
+
         // Gracefully leave dbus event loop on SIGTERM
         struct sigaction sigact;
         memset(&sigact, 0, sizeof(sigact));
@@ -83,14 +101,14 @@ int main(int argc, char* argv[])
         spdlog::get("main")->debug("Starting DBus event loop");
         eventLoop = std::thread([] { g_dbusConnection->enterEventLoop(); });
 
+        /* health */
         auto manager = std::make_shared<velia::health::StateManager>();
 
         // output configuration
         spdlog::get("main")->debug("Initializing LED drivers");
-        manager->m_outputSignal.connect(velia::health::boost::signals2::SlotWrapper<void, velia::health::State>(std::make_shared<velia::health::LedOutputCallback>(
-            std::make_shared<velia::health::LedSysfsDriver>("/sys/class/leds/status:red/"),
-            std::make_shared<velia::health::LedSysfsDriver>("/sys/class/leds/status:green/"),
-            std::make_shared<velia::health::LedSysfsDriver>("/sys/class/leds/status:blue/"))));
+        if (const auto& appliance = args["--appliance"]) {
+            manager->m_outputSignal.connect(velia::health::createOutput(appliance.asString()));
+        }
 
         spdlog::get("main")->debug("All outputs initialized.");
 

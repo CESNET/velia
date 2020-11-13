@@ -39,6 +39,9 @@ if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
     message(FATAL_ERROR "Systemd 245 has a bug affecting DBus method calls using sdbus-c++. Please see https://github.com/Kistler-Group/sdbus-cpp/issues/106.")
 endif()
 
+pkg_check_modules(SYSREPO REQUIRED sysrepo-cpp>=1.4.79 IMPORTED_TARGET sysrepo)
+pkg_check_modules(LIBYANG REQUIRED libyang-cpp>=1.0.190 IMPORTED_TARGET libyang)
+
 include(GNUInstallDirs)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
@@ -114,6 +117,19 @@ target_link_libraries(velia-ietf-hardware
     )
 target_include_directories(velia-ietf-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
 
+add_library(velia-ietf-hardware-sysrepo STATIC
+    src/ietf-hardware/sysrepo/Logging.cpp
+    src/ietf-hardware/sysrepo/Logging.h
+    src/ietf-hardware/sysrepo/IETFHardwareSysrepo.cpp
+    src/ietf-hardware/sysrepo/IETFHardwareSysrepo.h
+    )
+target_link_libraries(velia-ietf-hardware-sysrepo
+    PUBLIC
+        velia-utils
+        PkgConfig::SYSREPO
+        PkgConfig::LIBYANG
+    )
+target_include_directories(velia-ietf-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
 
 # Testing
 include(CTest)
@@ -170,6 +186,28 @@ if(BUILD_TESTING)
         endif()
     endfunction()
 
+    find_program(SYSREPOCTL sysrepoctl)
+    find_program(SYSREPOCFG sysrepocfg)
+
+    set(sysrepo_previous_fixture_name UNDEFINED)
+    function(sysrepo_fixture_env name)
+        set(test_name_init sysrepo:prep:${name})
+        set(test_name_cleanup sysrepo:clean:${name})
+        set(fixture_name sysrepo:env:${name})
+
+        add_test(NAME ${test_name_init} COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepoctl-manage-module.sh ${SYSREPOCTL} ${SYSREPOCFG} prepare ${ARGN})
+        set_tests_properties(${test_name_init} PROPERTIES FIXTURES_SETUP ${fixture_name} RESOURCE_LOCK sysrepo)
+        add_test(NAME ${test_name_cleanup} COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepoctl-manage-module.sh ${SYSREPOCTL} ${SYSREPOCFG} uninstall ${ARGN})
+        set_tests_properties(${test_name_cleanup} PROPERTIES FIXTURES_CLEANUP ${fixture_name} RESOURCE_LOCK sysrepo)
+
+        if (sysrepo_previous_fixture_name)
+            set_tests_properties(${test_name_init} PROPERTIES DEPENDS sysrepo:clean:${sysrepo_previous_fixture_name})
+        endif ()
+
+        set(sysrepo_previous_fixture_name ${name} PARENT_SCOPE)
+    endfunction()
+
+
     velia_test(health_state-manager velia-health)
     velia_test(health_input-semaphore velia-health DbusTesting)
     velia_test(health_input-systemd velia-health DbusTesting)
@@ -177,7 +215,13 @@ if(BUILD_TESTING)
 
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
-    velia_test(hardware_ietf-hardware velia-ietf-hardware)
+    velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo)
+    sysrepo_fixture_env(sysrepo YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware-state@2018-03-13.yang FEATURE hardware-sensor)
+    set_tests_properties(
+            test-hardware_ietf-hardware
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo
+            RESOURCE_LOCK sysrepo
+    )
 
     find_program(YANGLINT_PATH yanglint)
     if (NOT YANGLINT_PATH)

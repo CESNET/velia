@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9913b690_7526beb3",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-16T14:38:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c013380e_059a8cb7",
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a673223_e313483d",
         "filename": "src/velia-hardware/sysfs/EMMC.cpp",
         "patchSetId": 4
@@ -66,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "6de139a7_bdada091",
+        "filename": "src/velia-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-16T14:38:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bcffccda_aab8e787",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "036ba28b_04932ec0",
         "filename": "src/velia-hardware/sysfs/EMMC.cpp",
         "patchSetId": 4
@@ -86,6 +128,30 @@
       "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94458880_faba7495",
+        "filename": "src/velia-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-16T14:38:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "036ba28b_04932ec0",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 1
+      },
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {

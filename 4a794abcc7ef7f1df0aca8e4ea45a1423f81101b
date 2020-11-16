@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "bcffccda_aab8e787",
+        "filename": "src/velia-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:30:23Z",
+      "side": 1,
+      "message": "I wanted to see if there\u0027s something built-in in iostreams for just throwing if the file cannot be opened. When I found https://stackoverflow.com/questions/35088800/what-effect-would-lwg2349-have , I stopped searching because man, this is just broken :(.",
+      "parentUuid": "8a673223_e313483d",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "036ba28b_04932ec0",
         "filename": "src/velia-hardware/sysfs/EMMC.cpp",
         "patchSetId": 4

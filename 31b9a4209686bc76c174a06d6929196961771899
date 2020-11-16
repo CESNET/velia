@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9e0f4ac5_694be3a4",
+        "filename": "src/velia-systemstate/CMakeLists.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-16T13:48:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "934de98f_87b9fd46",
+      "range": {
+        "startLine": 11,
+        "startChar": 12,
+        "endLine": 11,
+        "endChar": 30
+      },
+      "revId": "31b9a4209686bc76c174a06d6929196961771899",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0968bdf7_c510d79a",
         "filename": "src/velia-systemstate/inputs/AbstractInput.h",
         "patchSetId": 3
@@ -39,6 +63,24 @@
       "revId": "31b9a4209686bc76c174a06d6929196961771899",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f323205_9f592386",
+        "filename": "src/velia-systemstate/inputs/AbstractInput.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-16T13:48:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0968bdf7_c510d79a",
+      "revId": "31b9a4209686bc76c174a06d6929196961771899",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

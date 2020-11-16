@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "934de98f_87b9fd46",
+        "filename": "src/velia-systemstate/CMakeLists.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:08:05Z",
+      "side": 1,
+      "message": "Can you call this (and the resulting binary, too) \"velia-services\", or, if you do not like that strong connection with a systemd term, perhaps even better `velia-health`? I think it better captures what this daemon is doing.",
+      "range": {
+        "startLine": 11,
+        "startChar": 12,
+        "endLine": 11,
+        "endChar": 30
+      },
+      "revId": "31b9a4209686bc76c174a06d6929196961771899",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0968bdf7_c510d79a",
+        "filename": "src/velia-systemstate/inputs/AbstractInput.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:08:05Z",
+      "side": 1,
+      "message": "consider changing this (and everywhere else) to `velia::health` because you\u0027re adding another enamespace for the sensros daemon in a followup commit",
+      "revId": "31b9a4209686bc76c174a06d6929196961771899",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

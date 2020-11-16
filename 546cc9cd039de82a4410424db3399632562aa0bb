@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efb5e063_8220c02b",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:08:05Z",
+      "side": 1,
+      "message": "let\u0027s keep this in just one top-level CMakeLists.txt, please",
+      "revId": "546cc9cd039de82a4410424db3399632562aa0bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

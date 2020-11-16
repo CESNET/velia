@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c013380e_059a8cb7",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:18:49Z",
+      "side": 1,
+      "message": "I\u0027ll be suggesting calling the daemon something like `velia-ietf-hardware` in a later commit where you add that daemon, so please consider naming that subdirectory with the source code `src/ietf-hardware` or something like that.\n\n(Also, everything in just the top-level CMakeLists.txt, please.)",
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a673223_e313483d",
+        "filename": "src/velia-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:18:49Z",
+      "side": 1,
+      "message": "Let\u0027s add a function that returns a stream or throws so that you don\u0027t have to repeat that error checking:\n \nstd::ifstream open_stream(const std::filesystem::path\u0026 path)\n{\n    std::ifstream ifs(path);\n    if (!ifs.is_open)\n       throw ...\n    return ifs;\n}",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "036ba28b_04932ec0",
+        "filename": "src/velia-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:18:49Z",
+      "side": 1,
+      "message": "These two files (and then the int64_t reader in the next file) are not really backend-specific. Consider moving them into a separate file.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 1
+      },
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5e4265a_9827099c",
+        "filename": "src/velia-hardware/sysfs/EMMC.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:18:49Z",
+      "side": 1,
+      "message": "All the data-providing backends will be using a map like this, so consider adding a typedef for that (in a separate file to be included by all the backends)",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 38
+      },
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

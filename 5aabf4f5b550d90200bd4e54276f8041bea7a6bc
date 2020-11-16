@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ea6cf54_b9a11fdc",
+        "filename": "docs/index.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:01:46Z",
+      "side": 1,
+      "message": "nit: What has worked well for my Markdown editing needs is always using one sentence per line. Just a suggestion.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 107
+      },
+      "revId": "5aabf4f5b550d90200bd4e54276f8041bea7a6bc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb91b297_8e95b0f7",
+        "filename": "docs/index.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:01:46Z",
+      "side": 1,
+      "message": "nit: a lot of tools complain about trailing whitespace on lines (git the CLI client and Gerrit both included)",
+      "range": {
+        "startLine": 8,
+        "startChar": 30,
+        "endLine": 8,
+        "endChar": 31
+      },
+      "revId": "5aabf4f5b550d90200bd4e54276f8041bea7a6bc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "856436f7_a345a32c",
+        "filename": "docs/index.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:01:46Z",
+      "side": 1,
+      "message": "\"system state\" is a generic term that doesn\u0027t help me understand what this particular daemon is doing (compare that with the description given in the ../README.md). What about:\n \n## Health of system services (`velia-services`)\n`velia-services` signals state of systemd units via a LED.\nIndividual inputs...",
+      "range": {
+        "startLine": 10,
+        "startChar": 3,
+        "endLine": 10,
+        "endChar": 35
+      },
+      "revId": "5aabf4f5b550d90200bd4e54276f8041bea7a6bc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26d5b076_19fffeaa",
+        "filename": "docs/index.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:01:46Z",
+      "side": 1,
+      "message": "please make this work with Doxygen (adding the velia::hardwarestate:: namespace prefix works for me)",
+      "range": {
+        "startLine": 41,
+        "startChar": 61,
+        "endLine": 41,
+        "endChar": 74
+      },
+      "revId": "5aabf4f5b550d90200bd4e54276f8041bea7a6bc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "914541fe_f5e19635",
+        "filename": "docs/index.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:01:46Z",
+      "side": 1,
+      "message": "nit: it\u0027s an \"eMMC\", please use that spelling in the docs",
+      "range": {
+        "startLine": 43,
+        "startChar": 93,
+        "endLine": 43,
+        "endChar": 97
+      },
+      "revId": "5aabf4f5b550d90200bd4e54276f8041bea7a6bc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "176deee7_902ac3bd",
+        "filename": "docs/index.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:01:46Z",
+      "side": 1,
+      "message": "turn this into a link to that RFC, please",
+      "range": {
+        "startLine": 48,
+        "startChar": 41,
+        "endLine": 48,
+        "endChar": 73
+      },
+      "revId": "5aabf4f5b550d90200bd4e54276f8041bea7a6bc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49c650f2_f0979764",
+        "filename": "docs/index.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T10:01:46Z",
+      "side": 1,
+      "message": "nit: the correct spelling is \"XPath\"",
+      "range": {
+        "startLine": 49,
+        "startChar": 65,
+        "endLine": 49,
+        "endChar": 70
+      },
+      "revId": "5aabf4f5b550d90200bd4e54276f8041bea7a6bc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

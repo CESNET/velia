@@ -1,0 +1,193 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2528e0cf_350cf2a6",
+        "filename": "src/velia-hardware/HardwareState.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "looks like a candidate for a function:\n \nstd::string xpathFor(const std::string\u0026 name)\n{\n    return impl::ietfHardwareStatePrefix + \"/component[name\u003d\u0027\" + name + \"\u0027]/\";\n}",
+      "range": {
+        "startLine": 50,
+        "startChar": 33,
+        "endLine": 50,
+        "endChar": 105
+      },
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fd3b164_1ed092b9",
+        "filename": "src/velia-hardware/HardwareState.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "...and with that function from above:\n \nres[xpathFor(compName) + \"sensor-data\"] \u003d value;",
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "838cfb6f_634dea3a",
+        "filename": "src/velia-hardware/HardwareState.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "Let\u0027s shorten that identifier to just `DataTree`, please",
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b357c4d5_5421cb55",
+        "filename": "src/velia-hardware/HardwareState.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "`IETFHardware` looks like a better name to me because it communicates that this class is setting up objects for that particular YANG model",
+      "range": {
+        "startLine": 40,
+        "startChar": 6,
+        "endLine": 40,
+        "endChar": 19
+      },
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96c515e3_591a4a92",
+        "filename": "src/velia-hardware/HardwareState.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "use that typedef here",
+      "range": {
+        "startLine": 49,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 38
+      },
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56d6d822_afad02e4",
+        "filename": "src/velia-hardware/HardwareState.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "This is not a data provider -- it\u0027s a struct which aggregates some data that are needed by the actual providers. If this was a provider, there would be an operator to satisfy that DataReader() interface that the HardwareState class uses to read data from data providers.\n\nThis is why I do not like this pattern of using private inheritance. To me, inheritance implies the is-a relation, and if there\u0027s an is-a relation, I expect the code to use that (typically via an interface). However, the HardwareState doesn\u0027t use component::Component directly, it instead builds a closure via a std::function.\n\nTo make this review actionable, I see two options here:\n- either clarify in the doc string that this is not a provider (and explain how providers are built),\n- or change the code to not use private inheritance.",
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95ad9119_bb0565e5",
+        "filename": "src/velia-hardware/HardwareState.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "The only difference between these two is in the constructor (what static data are fed there). I think it makes sense to merge these into just a single class, let\u0027s call it StaticData, which gets passed whatever data are needed via its constructor:\n \nstruct StaticData {\n    StaticData(const std::string\u0026 name, const std::string\u0026 parent, const DataTree\u0026 data);\n};\n \nauto roadm \u003d StaticData{\"ne\", std::string{}, {{\"manufacturer\": \"CESNET\"}, {\"serial-number\", eeprom-\u003eread(...)},}};\nauto controller \u003d StaticData{\"ne:ctrl\", \"ne\", {...}};",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 2
+      },
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9c16614_a8aee1b2",
+        "filename": "src/velia-hardware/HardwareState.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "nit: I would prefer \"fanCount\", I think that omitting these two letters is not worth the decreased readability.",
+      "range": {
+        "startLine": 91,
+        "startChar": 13,
+        "endLine": 91,
+        "endChar": 22
+      },
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a974c295_647a571a",
+        "filename": "src/velia-hardware/HardwareState.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "Without reading the code, I have no idea what sensor offset means -- whether it is something in the sysfs, or something in the resulting YANG tree. What about `sysfsChannelNr`?",
+      "range": {
+        "startLine": 104,
+        "startChar": 110,
+        "endLine": 104,
+        "endChar": 122
+      },
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

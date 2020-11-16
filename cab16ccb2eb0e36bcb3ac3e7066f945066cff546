@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a52bf350_d7377d85",
+        "filename": "yang/iana-hardware@2018-03-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-16T12:30:34Z",
+      "side": 1,
+      "message": "Please add these YANG models in a separate commit -- similarly to how it was done in cla-sysrepo.git",
+      "revId": "cab16ccb2eb0e36bcb3ac3e7066f945066cff546",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

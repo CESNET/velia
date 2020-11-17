@@ -43,6 +43,12 @@ include(GNUInstallDirs)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
+set(YANG_SRCS
+    yang/iana-hardware@2018-03-13.yang
+    yang/ietf-hardware-state@2018-03-13.yang
+    yang/ietf-hardware@2018-03-13.yang
+    )
+
 # Targets
 # - utils
 add_library(velia-utils STATIC
@@ -167,6 +173,14 @@ if(BUILD_TESTING)
 
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
+
+    find_program(YANGLINT_PATH yanglint)
+    if (NOT YANGLINT_PATH)
+        message(FATAL_ERROR "Cannot find libyang's yanglint")
+    endif()
+    foreach(yang_file ${YANG_SRCS})
+        add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
+    endforeach()
 endif()
 
 if(WITH_DOCS)
@@ -182,4 +196,6 @@ if(WITH_DOCS)
             )
 endif()
 
+set(YANG_DIR ${CMAKE_INSTALL_PREFIX}/share/velia/yang)
+install(FILES ${YANG_SRCS} DESTINATION ${YANG_DIR})
 install(TARGETS veliad RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)

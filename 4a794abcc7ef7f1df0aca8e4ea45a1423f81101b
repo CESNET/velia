@@ -175,6 +175,30 @@
       "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7bbaefe_04b017dd",
+        "filename": "src/velia-hardware/sysfs/EMMC.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-17T12:48:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5e4265a_9827099c",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 38
+      },
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

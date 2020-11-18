@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad39fe58_0ad7c40b",
+        "filename": "src/ietf-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T11:56:28Z",
+      "side": 1,
+      "message": "This function isn\u0027t used outside this file, so it can be wrapped in an unnamed namespace",
+      "range": {
+        "startLine": 53,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 35
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d43ad08c_2eec93fa",
+        "filename": "src/ietf-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T11:56:28Z",
+      "side": 1,
+      "message": "This could use std::transform instead of std::for_each",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 100,
+        "endChar": 17
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db246e24_b4d706e8",
+        "filename": "src/ietf-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T11:56:28Z",
+      "side": 1,
+      "message": "nit: can use `emplace` here",
+      "range": {
+        "startLine": 103,
+        "startChar": 11,
+        "endLine": 103,
+        "endChar": 17
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46fdac00_df89ed99",
+        "filename": "src/utils/io.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T11:56:28Z",
+      "side": 1,
+      "message": "Can be put in an unnamed namespace",
+      "range": {
+        "startLine": 15,
+        "startChar": 14,
+        "endLine": 15,
+        "endChar": 24
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15ee828a_c37eaaeb",
+        "filename": "src/utils/io.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T11:56:28Z",
+      "side": 1,
+      "message": "nit: I like to use `auto` a lot\n auto ifs \u003d impl::openStream(path);\n\nBut don\u0027t change if you don\u0027t like this syntax. :\u003e",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 46
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65f5f034_2c200a93",
+        "filename": "src/utils/io.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T11:56:28Z",
+      "side": 1,
+      "message": "This is already checked in `openStream`",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 5
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5083ec52_80e0586d",
+        "filename": "src/utils/log-init.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T11:56:28Z",
+      "side": 1,
+      "message": "note: You can actually completely leave out the vector and just use the braces and it produces an initializer list which you can iterate over with the range-based for-loop. Although you might have to swap out the include to \u003cinitializer_list\u003e if it isn\u0027t already included from one of the other includes.\n\nJust a small thing I learned about :\u003e",
+      "range": {
+        "startLine": 21,
+        "startChar": 28,
+        "endLine": 21,
+        "endChar": 73
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    }
+  ]
+}

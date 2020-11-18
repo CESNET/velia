@@ -230,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "2a5621da_972fad4e",
+        "filename": "src/velia-hardware/HardwareState.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-18T15:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56d6d822_afad02e4",
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95ad9119_bb0565e5",
         "filename": "src/velia-hardware/HardwareState.h",
         "patchSetId": 7
@@ -250,6 +268,30 @@
       "revId": "757c59dd82349a1d11b89958b333f381084928dd",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ad02d00_a534597e",
+        "filename": "src/velia-hardware/HardwareState.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-18T15:15:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95ad9119_bb0565e5",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 2
+      },
+      "revId": "757c59dd82349a1d11b89958b333f381084928dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {

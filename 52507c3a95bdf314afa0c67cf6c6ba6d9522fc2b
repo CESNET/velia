@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "650ce84a_fc6375f4",
+        "filename": "src/ietf-hardware/sysfs/HWMon.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T12:55:17Z",
+      "side": 1,
+      "message": "nit: can be .front()",
+      "range": {
+        "startLine": 65,
+        "startChar": 28,
+        "endLine": 65,
+        "endChar": 33
+      },
+      "revId": "52507c3a95bdf314afa0c67cf6c6ba6d9522fc2b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "166cfee3_2fe08c3d",
+        "filename": "src/ietf-hardware/sysfs/HWMon.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T12:55:17Z",
+      "side": 1,
+      "message": "could be changed to std::transform",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 5
+      },
+      "revId": "52507c3a95bdf314afa0c67cf6c6ba6d9522fc2b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "741e8aa4_1e3332f6",
+        "filename": "src/utils/string.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T12:55:17Z",
+      "side": 1,
+      "message": "I can see that Boost is available in velia. Boost.Algorithm already has a \"startsWith\" and an \"endsWith\" function, so maybe that could be used instead of a custom implementation?\nhttps://www.boost.org/doc/libs/1_74_0/doc/html/boost/algorithm/starts_with.html\nhttps://www.boost.org/doc/libs/1_74_0/doc/html/boost/algorithm/ends_with.html",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 67
+      },
+      "revId": "52507c3a95bdf314afa0c67cf6c6ba6d9522fc2b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c45eb06e_17f54505",
+        "filename": "tests/hardware_hwmon.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-18T12:55:17Z",
+      "side": 1,
+      "message": "hardware_emmc.cpp already has the exact same function, so this can be refactored",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 1
+      },
+      "revId": "52507c3a95bdf314afa0c67cf6c6ba6d9522fc2b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

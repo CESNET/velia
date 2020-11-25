@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "38cb521d_bb320356",
+        "filename": "src/ietf-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-25T15:53:00Z",
+      "side": 1,
+      "message": "Thanks I probably misunderstood on that.\nI think this will occur several times more so I will go through other patches and rename (or more like \u0027remove the name\u0027) the namespace.",
+      "parentUuid": "08033e51_6436ca56",
+      "range": {
+        "startLine": 53,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 35
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d43ad08c_2eec93fa",
         "filename": "src/ietf-hardware/sysfs/EMMC.cpp",
         "patchSetId": 7
@@ -163,6 +187,30 @@
       "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99b07867_3cff7ccb",
+        "filename": "src/utils/io.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-25T15:53:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46fdac00_df89ed99",
+      "range": {
+        "startLine": 15,
+        "startChar": 14,
+        "endLine": 15,
+        "endChar": 24
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {

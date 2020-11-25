@@ -40,6 +40,7 @@ static const char usage[] =
 Usage:
   veliad
     [--log-level=<Level>]
+    [--health-log-level=<Level>]
     [--sysrepo-log-level=<Level>]
     [--hardware-log-level=<Level>]
     [--systemd-ignore-unit=<Unit>]...
@@ -52,6 +53,7 @@ Options:
   --log-level=<N>                   Log level for everything [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
+  --health-log-level=<N>            Log level for the health monitoring [default: 3]
   --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
   --hardware-log-level=<N>          Log level for the hardware drivers [default: 3]
   --systemd-ignore-unit=<Unit>      Ignore state of systemd's unit in systemd state tracker. Can be specified multiple times.

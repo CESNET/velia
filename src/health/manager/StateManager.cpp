@@ -6,7 +6,7 @@
 namespace velia::health {
 
 StateManager::StateManager()
-    : m_log(spdlog::get("main"))
+    : m_log(spdlog::get("health"))
 {
 }
 

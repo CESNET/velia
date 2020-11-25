@@ -12,7 +12,7 @@ namespace velia::health {
 /** @brief Construct the systemd unit watcher for arbitrary dbus object. Mainly for tests. */
 DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, const std::set<std::string>& ignoredUnits, sdbus::IConnection& connection, const std::string& busname, const std::string& managerObjectPath, const std::string& managerIface, const std::string& unitIface)
     : AbstractInput(std::move(manager))
-    , m_log(spdlog::get("main"))
+    , m_log(spdlog::get("health"))
     , m_busName(busname)
     , m_unitIface(unitIface)
     , m_proxyManager(sdbus::createProxy(connection, m_busName, managerObjectPath))

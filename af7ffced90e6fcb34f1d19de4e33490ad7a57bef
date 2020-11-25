@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29c1812f_9e590fca",
+        "filename": "src/ietf-hardware/sysfs/SysfsAttributes.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:43:03Z",
+      "side": 1,
+      "message": "When my comment from the previous patch in this series gets resolved, this file will disappear, and the `using` should move to the class itself.",
+      "revId": "af7ffced90e6fcb34f1d19de4e33490ad7a57bef",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28284a7d_539c9adc",
+        "filename": "tests/hardware_hwmon.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:43:03Z",
+      "side": 1,
+      "message": "Well, I know that numeric_limits\u003cint64_t\u003e::min() is, but I don\u0027t know what its numerical value is. Also, what happens when you take the lowest int64_t and substract 1? Isn\u0027t that a signed integer overflow, which is UB in C++? What is the purpose of this test, and what is the expected result?\n\n(But thanks for that comment and SO link, I\u0027ll read once I send this review out :) ).",
+      "revId": "af7ffced90e6fcb34f1d19de4e33490ad7a57bef",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

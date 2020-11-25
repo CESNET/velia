@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3770011d_485b7970",
+        "filename": "src/velia-hardware/sysfs/HWMon.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:43:03Z",
+      "side": 1,
+      "message": "once there\u0027s that common thingy for a throwing ifstream, please use that from here as well",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 83
+      },
+      "revId": "b42c5e7cf48f34ecd33d67ea9439686405e3aca7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

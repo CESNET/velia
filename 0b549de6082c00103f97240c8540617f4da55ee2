@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b104c78a_f3f67c0c",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "nit: link to that section in this file",
+      "range": {
+        "startLine": 4,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 38
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c4b47cb_72a35e34",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "nit: link to that section in this file",
+      "range": {
+        "startLine": 6,
+        "startChar": 20,
+        "endLine": 6,
+        "endChar": 34
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db95d71e_5b2cf88d",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "nit: add a link to that class",
+      "range": {
+        "startLine": 11,
+        "startChar": 98,
+        "endLine": 11,
+        "endChar": 111
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d12e4d23_49100e77",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "nit: link",
+      "range": {
+        "startLine": 16,
+        "startChar": 3,
+        "endLine": 16,
+        "endChar": 18
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6394b9e_972803f2",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "nit: link",
+      "range": {
+        "startLine": 17,
+        "startChar": 3,
+        "endLine": 17,
+        "endChar": 20
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b92cc73c_e86e135f",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "nit: link",
+      "range": {
+        "startLine": 20,
+        "startChar": 3,
+        "endLine": 20,
+        "endChar": 6
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1dd419f_201a7b0f",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "s/Netopeer2-server/Netopeer2-server which/",
+      "range": {
+        "startLine": 34,
+        "startChar": 75,
+        "endLine": 34,
+        "endChar": 160
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad56dd2a_790139e1",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "I read this as \"each driver is free to come up with whatever interface fits its purpose best\". Let\u0027s not talk about each and every one of them, then, and instead just say something like:\n \nThe interface for exporting the gathered data is not specified.\nMany drivers return a `std::map\u003cstd::string, Something\u003e`, so that they can return, say, temperature serial number in one go.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 72
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d6b3d32_929f91e4",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "There\u0027s no link to any data reader in this section, so it is a bit hard to follow without cross-checking with the source code manually.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 182
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b5dd502_8ba4c343",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "nit: \"Actual data retrieval\". This is an intro-level docs, there\u0027s no need to assume that the reader knows that there is (used to be) a class named sysrepo::Callback in the previous version of sysrepo.",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 20
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87451d5e_26fc26ca",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "\"the OpsCallback instance builds a complete YANG tree and pushes the result into sysrepo\".\n\n(Passive voice is considered harmful by many, and therefore best avoided. :) )",
+      "range": {
+        "startLine": 70,
+        "startChar": 54,
+        "endLine": 70,
+        "endChar": 106
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b26be6f9_0aab2b06",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:27:04Z",
+      "side": 1,
+      "message": "Excellent. Can you please move this so that it becomes the first \"###-level\" section in the \"## IETF Hardware\" section?",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 138
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

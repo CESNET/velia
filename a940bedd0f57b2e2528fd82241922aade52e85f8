@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de4c94da_566b178e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:14:14Z",
+      "side": 1,
+      "message": "this needs a Depends-On on a change to br2-external which adds sysrepo as a dependency of the velia package:\n \nDepends-on: https://cesnet-gerrit-czechlight/c/CzechLight/br2-external/+/3279\nDepends-on: https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/3279",
+      "revId": "a940bedd0f57b2e2528fd82241922aade52e85f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33a9df05_e515b209",
+        "filename": "src/ietf-hardware/sysrepo/OpsCallback.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:14:14Z",
+      "side": 1,
+      "message": "This leaves some boilerplate to the caller (and the test suite). Can you instead make this class constructible from a connection (or subscription?) and a shared_ptr\u003cIETFHardware\u003e? (You\u0027ll probably want to move operator()(...) to a lambda, then, or at least make sure it isn\u0027t part of the public API.)",
+      "revId": "a940bedd0f57b2e2528fd82241922aade52e85f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3596973_e038e85d",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:14:14Z",
+      "side": 1,
+      "message": "The existing tests do not require a sysrepo connection. It\u0027s fine to have more top-level TEST_CASE blocks (or even separate TUs and test targets).",
+      "revId": "a940bedd0f57b2e2528fd82241922aade52e85f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

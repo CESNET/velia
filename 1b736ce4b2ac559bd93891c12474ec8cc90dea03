@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5eb55b2b_1f087104",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:05:04Z",
+      "side": 1,
+      "message": "nit: this one can definitely be anonymous",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 14
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b38ae5a_1e11fa1c",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:05:04Z",
+      "side": 1,
+      "message": "Is this FIXME new in this port from cla-sysrepo, or was it there before? (I couldn\u0027t find it). What properties will need to be added? Those from the fan tray\u0027s EEPROM? If so, make the comment more specific, please.",
+      "range": {
+        "startLine": 110,
+        "startChar": 65,
+        "endLine": 110,
+        "endChar": 70
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41215d3a_e354eceb",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:05:04Z",
+      "side": 1,
+      "message": "nit: an",
+      "range": {
+        "startLine": 27,
+        "startChar": 40,
+        "endLine": 27,
+        "endChar": 41
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d601a4aa_709d0864",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:05:04Z",
+      "side": 1,
+      "message": "nit: \"number\"",
+      "range": {
+        "startLine": 69,
+        "startChar": 42,
+        "endLine": 69,
+        "endChar": 49
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbadd86a_c4467494",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:05:04Z",
+      "side": 1,
+      "message": "I don\u0027t think that Fans creates any data reader -- it uses what gets passed via ctor, and then it returns data about several components in response to operator()().",
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bff9bbb_1d2de041",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:05:04Z",
+      "side": 1,
+      "message": "these comments make sense for the actual clearfog board, but probably not so much for the test suite",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 93
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1ee09b8_bc56c797",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T23:05:04Z",
+      "side": 1,
+      "message": "there\u0027s no EEPROM for the test suite :), let\u0027s remove this comment",
+      "range": {
+        "startLine": 60,
+        "startChar": 162,
+        "endLine": 60,
+        "endChar": 305
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

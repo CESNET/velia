@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3618ef7a_804386ac",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T18:14:45Z",
+      "side": 1,
+      "message": "I wonder if it\u0027s worth it (we are not building any extra modules on top of that one, and we cannot ever modify that file while it\u0027s still called ietf-*.yang), but why not.",
+      "revId": "d1b48b93e6cf206c65064de8b42a78476aebac6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    }
+  ]
+}

@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "cc750afe_f26bb02b",
+        "filename": "src/ietf-hardware/sysfs/HWMon.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-25T15:52:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bde365d4_be730091",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 5
+      },
+      "revId": "52507c3a95bdf314afa0c67cf6c6ba6d9522fc2b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "741e8aa4_1e3332f6",
         "filename": "src/utils/string.h",
         "patchSetId": 6
@@ -163,6 +187,30 @@
       "revId": "52507c3a95bdf314afa0c67cf6c6ba6d9522fc2b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7d7c222_af599401",
+        "filename": "tests/hardware_hwmon.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-25T15:52:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11a4a15c_d1c950ba",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 1
+      },
+      "revId": "52507c3a95bdf314afa0c67cf6c6ba6d9522fc2b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

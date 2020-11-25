@@ -22,6 +22,30 @@
       "revId": "b42c5e7cf48f34ecd33d67ea9439686405e3aca7",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b6a5292_3b571805",
+        "filename": "src/velia-hardware/sysfs/HWMon.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-25T15:52:54Z",
+      "side": 1,
+      "message": "This was done in following patchsets.",
+      "parentUuid": "3770011d_485b7970",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 83
+      },
+      "revId": "b42c5e7cf48f34ecd33d67ea9439686405e3aca7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

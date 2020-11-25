@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6dd3f17c_6fed229a",
+        "filename": "src/ietf-hardware/sysfs/SysfsAttributes.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-25T15:52:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29c1812f_9e590fca",
+      "revId": "af7ffced90e6fcb34f1d19de4e33490ad7a57bef",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28284a7d_539c9adc",
         "filename": "tests/hardware_hwmon.cpp",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2020-11-25T14:43:03Z",
       "side": 1,
       "message": "Well, I know that numeric_limits\u003cint64_t\u003e::min() is, but I don\u0027t know what its numerical value is. Also, what happens when you take the lowest int64_t and substract 1? Isn\u0027t that a signed integer overflow, which is UB in C++? What is the purpose of this test, and what is the expected result?\n\n(But thanks for that comment and SO link, I\u0027ll read once I send this review out :) ).",
+      "revId": "af7ffced90e6fcb34f1d19de4e33490ad7a57bef",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e2869b4_962694a6",
+        "filename": "tests/hardware_hwmon.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-25T15:52:54Z",
+      "side": 1,
+      "message": "The purpose is to test parsing of min and max possible values. Files temp{1,2}_crit contain such values (max value for int64_t and min value for int64_t) and the test tests whether the value (as a string) is correctly parsed and represented as int64_t.\n\nI tried to clarify the comment.\n\n\u003e Also, what happens when you take the lowest int64_t and substract 1?\n\nI\u0027m taking the second lowest and subtracting 1 to obtain the minimal one because the lexer is not able to parse the minimal value for int64_t.\n\nSo I have a file containing a string \"-9223372036854775808\" (min int64_t). And the decision here in the tests was whether I should use numeric_limits\u003c\u003e::min() or whether I should use -9223372036854775807 - 1.\nBoth is not good :-) Using numeric_limits I\u0027m hiding the actual value stored in the file. Using the subtraction I\u0027m not using the actual value as well.",
+      "parentUuid": "28284a7d_539c9adc",
       "revId": "af7ffced90e6fcb34f1d19de4e33490ad7a57bef",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true

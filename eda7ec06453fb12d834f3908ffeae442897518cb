@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "6ae99998_8fd0bd71",
+        "filename": "src/ietf-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2020-11-25T16:08:37Z",
+      "side": 1,
+      "message": "I usually use range-based for-loops instead of std::for_each, but when I\u0027m actually copying something, I almost always use std::transform or std::copy, especially when it\u0027s a one-liner like this. It\u0027s your call though of course",
+      "parentUuid": "56e6092b_b1e3f08e",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 100,
+        "endChar": 17
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db246e24_b4d706e8",
         "filename": "src/ietf-hardware/sysfs/EMMC.cpp",
         "patchSetId": 7

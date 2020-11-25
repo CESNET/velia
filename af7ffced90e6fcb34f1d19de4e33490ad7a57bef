@@ -69,6 +69,24 @@
       "revId": "af7ffced90e6fcb34f1d19de4e33490ad7a57bef",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45266068_96580347",
+        "filename": "tests/hardware_hwmon.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T18:10:08Z",
+      "side": 1,
+      "message": "Ack. I think that a symbolic consant is cleaner about the purpose (\"can we parse the lwest possible uint64_t\") when compared to a different number + substraction + a multiline comment. But I won\u0027t block this patch on that :].",
+      "parentUuid": "8e2869b4_962694a6",
+      "revId": "af7ffced90e6fcb34f1d19de4e33490ad7a57bef",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

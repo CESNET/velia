@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "337ba7a3_e392e1bd",
+        "filename": "src/utils/string.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T18:10:08Z",
+      "side": 1,
+      "message": "+1 for just calling it directly. In cla-sysrepo we were not using boost when these helpers were added.",
+      "parentUuid": "b5c78166_c0ebe5c4",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 67
+      },
+      "revId": "52507c3a95bdf314afa0c67cf6c6ba6d9522fc2b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c45eb06e_17f54505",
         "filename": "tests/hardware_hwmon.cpp",
         "patchSetId": 6

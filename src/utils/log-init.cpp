@@ -9,8 +9,7 @@
 #include "utils/log-init.h"
 #include "utils/log.h"
 
-namespace velia {
-namespace utils {
+namespace velia::utils {
 
 /** @short Initialize logging
 
@@ -18,9 +17,8 @@ Creates and registers all required loggers and connect them to the provided sink
 */
 void initLogs(std::shared_ptr<spdlog::sinks::sink> sink)
 {
-    for (const auto& name : std::vector<std::string> {"main", "hardware", "sysrepo"}) {
+    for (const auto& name : {"main", "health", "hardware", "sysrepo"}) {
         spdlog::register_logger(std::make_shared<spdlog::logger>(name, sink));
     }
-}
 }
 }

@@ -199,6 +199,30 @@
       "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "018cb627_de6e945f",
+        "filename": "src/velia-hardware/sysfs/EMMC.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:34:23Z",
+      "side": 1,
+      "message": "Actually, my bad -- I assumed that all the lowest-level drivers will be using the same format for passing the data around. Now that I\u0027ve read \"everything\", this is obviously not true, the code uses map\u003cstring, string\u003e here, but it\u0027s a map\u003cstring, int\u003e in another class. It\u0027s \"just a coincidence\" that this map\u003cstring, string\u003e is the same format as that thing which sits between the DataProvider and a Manager.\n\nNow that I know these are unrelated, let\u0027s get rid of SysfsAttributes altogether, it doesn\u0027t add value. You\u0027ve documented these classes that they all return data in whatever format is \"best\" for each implementation, so let\u0027s keep the typedefs in the class itself, please.",
+      "parentUuid": "a7bbaefe_04b017dd",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 38
+      },
+      "revId": "4a794abcc7ef7f1df0aca8e4ea45a1423f81101b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

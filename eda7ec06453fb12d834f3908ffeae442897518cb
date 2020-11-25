@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "08033e51_6436ca56",
+        "filename": "src/ietf-hardware/sysfs/EMMC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-25T14:34:23Z",
+      "side": 1,
+      "message": "In cla-sysrepo, the \"impl\" namespace is mainly used when something is meant as an implementation detail, yet it has to be available from several TUs. Basically, whenever it\u0027s in a .h file, I think that \"impl\" is the way to go. There are places where it\u0027s used in place of an anonymous namespace as well, but that\u0027s mostly a bug I guess.\n\n-\u003e let\u0027s go with an anonymous namespace, please.",
+      "parentUuid": "4a11b072_abc39e53",
+      "range": {
+        "startLine": 53,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 35
+      },
+      "revId": "eda7ec06453fb12d834f3908ffeae442897518cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d43ad08c_2eec93fa",
         "filename": "src/ietf-hardware/sysfs/EMMC.cpp",
         "patchSetId": 7

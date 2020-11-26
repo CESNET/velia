@@ -56,6 +56,29 @@
       "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f893aff_e32a0aaa",
+        "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-26T22:56:17Z",
+      "side": 1,
+      "message": "I started reading the docs (the next patch in this series), and I think that this class can be called \"Sysrepo\". It\u0027s in the ietf_hardware namespace, so there\u0027s no need to repeat that in the class name.",
+      "range": {
+        "startLine": 18,
+        "startChar": 6,
+        "endLine": 18,
+        "endChar": 25
+      },
+      "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

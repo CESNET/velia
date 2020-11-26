@@ -104,6 +104,24 @@
       "revId": "a940bedd0f57b2e2528fd82241922aade52e85f8",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e1ed9b6_8e1ffe77",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-26T22:50:03Z",
+      "side": 1,
+      "message": "yup, thanks!",
+      "parentUuid": "81032d14_2fd5aef7",
+      "revId": "a940bedd0f57b2e2528fd82241922aade52e85f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

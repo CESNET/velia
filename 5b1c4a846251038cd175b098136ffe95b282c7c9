@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ab8233a_1a1b2b84",
+        "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-26T22:50:03Z",
+      "side": 1,
+      "message": "nit: if you feel like changing this, consider defining the module name first and build the full prefix from that one (but no need to change it now).",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 62
+      },
+      "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e1bb837_159b7aea",
+        "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-26T22:50:03Z",
+      "side": 1,
+      "message": "This is just another name for \"propertyName\", right? Either remove it and use propertyName, or remove propertyName to your preferred name.",
+      "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ad51cf9_981ed87a",
+        "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-26T22:50:03Z",
+      "side": 1,
+      "message": "When there\u0027s just one of (propertyName, valuePath), this will become just some duplicate logging that can be removed.",
+      "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

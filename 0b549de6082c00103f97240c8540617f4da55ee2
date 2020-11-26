@@ -425,6 +425,30 @@
     },
     {
       "key": {
+        "uuid": "ca4ed301_10845b18",
+        "filename": "docs/index.md",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T14:34:09Z",
+      "side": 1,
+      "message": "I tried to change the wording, rearrange the sections, etc.",
+      "parentUuid": "c65261ca_b6caa91d",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 182
+      },
+      "revId": "0b549de6082c00103f97240c8540617f4da55ee2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b5dd502_8ba4c343",
         "filename": "docs/index.md",
         "patchSetId": 9

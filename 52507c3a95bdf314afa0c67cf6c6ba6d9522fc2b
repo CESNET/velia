@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "75cace28_72cc3bb7",
+        "filename": "src/utils/string.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T08:35:24Z",
+      "side": 1,
+      "message": "Done. The direct call brings the necessity to convert the fs::path argument to std::string (does not compile when comparing fs::path and string). But I believe this is OK.\n\n /usr/include/boost/algorithm/string/compare.hpp:43:28: error: no match for ‘operator\u003d\u003d’  (operand types are ‘const std::filesystem::__cxx11::path’ and ‘const char’)",
+      "parentUuid": "337ba7a3_e392e1bd",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 67
+      },
+      "revId": "52507c3a95bdf314afa0c67cf6c6ba6d9522fc2b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c45eb06e_17f54505",
         "filename": "tests/hardware_hwmon.cpp",
         "patchSetId": 6

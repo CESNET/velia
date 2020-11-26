@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b3061ee0_e71c406c",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:02:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5eb55b2b_1f087104",
+      "range": {
+        "startLine": 15,
+        "startChar": 10,
+        "endLine": 15,
+        "endChar": 14
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b38ae5a_1e11fa1c",
         "filename": "src/ietf-hardware/IETFHardware.cpp",
         "patchSetId": 12
@@ -45,6 +69,30 @@
       "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5163f1a7_d5572e2d",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:02:01Z",
+      "side": 1,
+      "message": "cla-sysrepo@238b1d583bb1c25382741f0d94e384ad05456c7b src/appliances/HardwareState.cpp:417\nComment added",
+      "parentUuid": "0b38ae5a_1e11fa1c",
+      "range": {
+        "startLine": 110,
+        "startChar": 65,
+        "endLine": 110,
+        "endChar": 70
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f239a442_457ef458",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:02:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41215d3a_e354eceb",
+      "range": {
+        "startLine": 27,
+        "startChar": 40,
+        "endLine": 27,
+        "endChar": 41
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d601a4aa_709d0864",
         "filename": "src/ietf-hardware/IETFHardware.h",
         "patchSetId": 12
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "bccd24ec_78c9af62",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:02:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d601a4aa_709d0864",
+      "range": {
+        "startLine": 69,
+        "startChar": 42,
+        "endLine": 69,
+        "endChar": 49
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbadd86a_c4467494",
         "filename": "src/ietf-hardware/IETFHardware.h",
         "patchSetId": 12
@@ -108,6 +204,24 @@
       "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fae39c81_dfd33d44",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:02:01Z",
+      "side": 1,
+      "message": "oof, you are actually right. I have renamed all the \"components\" structures to data readers so the name \"component\" is not ambiguous (component in the tree vs component as a data reader).\nAnd while renaming I renamed this too :(",
+      "parentUuid": "cbadd86a_c4467494",
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {
@@ -134,6 +248,30 @@
     },
     {
       "key": {
+        "uuid": "07f59eba_95b69398",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:02:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bff9bbb_1d2de041",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 93
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1ee09b8_bc56c797",
         "filename": "tests/hardware_ietf-hardware.cpp",
         "patchSetId": 12
@@ -154,6 +292,30 @@
       "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16d47699_388c3cec",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:02:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1ee09b8_bc56c797",
+      "range": {
+        "startLine": 60,
+        "startChar": 162,
+        "endLine": 60,
+        "endChar": 305
+      },
+      "revId": "1b736ce4b2ac559bd93891c12474ec8cc90dea03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

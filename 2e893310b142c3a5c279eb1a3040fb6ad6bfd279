@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "42952aee_a485f5eb",
+        "filename": "src/Factory.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-26T22:52:36Z",
+      "side": 1,
+      "message": "This is specific to our boards (the I2C addresses are just for CESNET\u0027s bits, the MDIO bits are for a particular mvebu SoC, etc). Better make sure it contains \"clearfog\" and perhaps also \"czechlight\".",
+      "range": {
+        "startLine": 8,
+        "startChar": 45,
+        "endLine": 8,
+        "endChar": 67
+      },
+      "revId": "2e893310b142c3a5c279eb1a3040fb6ad6bfd279",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb70310a_52447a40",
+        "filename": "src/main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-26T22:52:36Z",
+      "side": 1,
+      "message": "this belongs to another commit",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 34
+      },
+      "revId": "2e893310b142c3a5c279eb1a3040fb6ad6bfd279",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

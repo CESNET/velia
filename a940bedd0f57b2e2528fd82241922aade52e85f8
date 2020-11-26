@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d1cf9643_c5efb691",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:01:53Z",
+      "side": 1,
+      "message": "Thank you, I experimented with that few PSs back but it did not work. Probably I have done something wrong.",
+      "parentUuid": "de4c94da_566b178e",
+      "revId": "a940bedd0f57b2e2528fd82241922aade52e85f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33a9df05_e515b209",
         "filename": "src/ietf-hardware/sysrepo/OpsCallback.h",
         "patchSetId": 8
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "6f42347e_aa7d86a0",
+        "filename": "src/ietf-hardware/sysrepo/OpsCallback.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:01:53Z",
+      "side": 1,
+      "message": "Oh, that is what you mean by \"create a class that handles all Sysrepo\". Now I understand, sorry.",
+      "parentUuid": "33a9df05_e515b209",
+      "revId": "a940bedd0f57b2e2528fd82241922aade52e85f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3596973_e038e85d",
         "filename": "tests/hardware_ietf-hardware.cpp",
         "patchSetId": 8
@@ -47,6 +83,24 @@
       "writtenOn": "2020-11-25T23:14:14Z",
       "side": 1,
       "message": "The existing tests do not require a sysrepo connection. It\u0027s fine to have more top-level TEST_CASE blocks (or even separate TUs and test targets).",
+      "revId": "a940bedd0f57b2e2528fd82241922aade52e85f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81032d14_2fd5aef7",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-26T11:01:53Z",
+      "side": 1,
+      "message": "But they share  the initialization of the underlying sysfs drivers. That is why I did not want separate TUs or TEST_CASES. \n\nI have modified this to instantiate sysrepo stuff only in the sysrepo section. Is this be better?",
+      "parentUuid": "d3596973_e038e85d",
       "revId": "a940bedd0f57b2e2528fd82241922aade52e85f8",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true

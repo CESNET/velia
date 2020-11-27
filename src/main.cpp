@@ -39,6 +39,8 @@ Usage:
   veliad
     [--appliance=<Model>]
     [--log-level=<Level>]
+    [--sysrepo-log-level=<Level>]
+    [--hardware-log-level=<Level>]
     [--systemd-ignore-unit=<Unit>]...
   veliad (-h | --help)
   veliad --version
@@ -50,6 +52,8 @@ Options:
   --log-level=<N>                   Log level for everything [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
+  --hardware-log-level=<N>          Log level for the hardware drivers [default: 3]
   --systemd-ignore-unit=<Unit>      Ignore state of systemd's unit in systemd state tracker. Can be specified multiple times.
 )";
 
@@ -73,6 +77,9 @@ int main(int argc, char* argv[])
 
     try {
         spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
+        spdlog::get("hardware")->set_level(parseLogLevel("Hardware loggers", args["--hardware-log-level"]));
+        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
+
         spdlog::get("main")->debug("Opening DBus connection");
         g_dbusConnection = sdbus::createSystemBusConnection();
 

@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ff47f9a1_78209850",
+        "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-27T09:04:54Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "5ab8233a_1a1b2b84",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 62
+      },
+      "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e1bb837_159b7aea",
         "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.cpp",
         "patchSetId": 10
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "befdb9a3_5de49969",
+        "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-27T09:04:54Z",
+      "side": 1,
+      "message": "Uh, thanks for that. Probably a debug leftover.",
+      "parentUuid": "5e1bb837_159b7aea",
+      "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ad51cf9_981ed87a",
         "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.cpp",
         "patchSetId": 10
@@ -56,6 +98,24 @@
       "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf914312_bea12d3b",
+        "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-27T09:04:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ad51cf9_981ed87a",
+      "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {
@@ -79,6 +139,30 @@
       "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01ddbed3_1dec040e",
+        "filename": "src/ietf-hardware/sysrepo/IETFHardwareSysrepo.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-27T09:04:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f893aff_e32a0aaa",
+      "range": {
+        "startLine": 18,
+        "startChar": 6,
+        "endLine": 18,
+        "endChar": 25
+      },
+      "revId": "5b1c4a846251038cd175b098136ffe95b282c7c9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

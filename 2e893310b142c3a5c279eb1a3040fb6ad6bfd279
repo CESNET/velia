@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "70408105_dbcd2e08",
+        "filename": "src/Factory.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-27T10:23:51Z",
+      "side": 1,
+      "message": "That is a good point. Done.",
+      "parentUuid": "42952aee_a485f5eb",
+      "range": {
+        "startLine": 8,
+        "startChar": 45,
+        "endLine": 8,
+        "endChar": 67
+      },
+      "revId": "2e893310b142c3a5c279eb1a3040fb6ad6bfd279",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb70310a_52447a40",
         "filename": "src/main.cpp",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "2e893310b142c3a5c279eb1a3040fb6ad6bfd279",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d48b768_426a20c4",
+        "filename": "src/main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-11-27T10:23:51Z",
+      "side": 1,
+      "message": "I feel like it could be in this commit (adding stuff to the daemon that uses these two loggers) but I will move it to new commit. It certainly won\u0027t hurt.",
+      "parentUuid": "cb70310a_52447a40",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 34
+      },
+      "revId": "2e893310b142c3a5c279eb1a3040fb6ad6bfd279",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

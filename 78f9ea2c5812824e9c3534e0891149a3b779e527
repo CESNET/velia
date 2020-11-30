@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "165f6222_2081affc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-30T22:04:56Z",
+      "side": 1,
+      "message": "I know we talked about whether to put everything into a single process, or split into two of them, but I do not remember the result (and the awesome think as a reviewer is that I do not remember what I preferred, yay for that). Can you please extend the commit message with the list of related studies^H^H^H^H some discussion about the advantages and disadvantages of one-process-for-systemd and one-process-for-ietf-hw-state vs. just-one-process-for-everything?",
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90214bf3_b37332b7",
+        "filename": "src/Factory.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-30T22:04:56Z",
+      "side": 1,
+      "message": "IThinkThisIdentifierIsTooLong, and I don\u0027t see a point in creating another namespace for stuff that lives in the first namespace, so what about something simple like:\n \nnamespace velia::ietf_hardware {\nstd::shared_ptr\u003cIETFHardware\u003e createClearfog();\n}\n\nBut perhaps you intend to create something clearfog-specific that is not related to ietf_hardware?",
+      "range": {
+        "startLine": 9,
+        "startChar": 45,
+        "endLine": 9,
+        "endChar": 85
+      },
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a5220e4_8d62a7e9",
+        "filename": "src/main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-30T22:04:56Z",
+      "side": 1,
+      "message": "nit: I think this codebase doesn\u0027t use /* one line comments */ anywhere else (except where Doxygen requires them I think)\n\n(also below)",
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6851623e_8784929d",
+        "filename": "src/main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-30T22:04:56Z",
+      "side": 1,
+      "message": "This makes this code 100% CzechLight-specific. Perhaps it would make sense to use an --appliance parameter similar to how cla-sysrepo does that? Also, LED initialization is gonna be model-specific.\n\nPerhaps one of these appliances should be a \"dumb output\" mode where there\u0027s just a console handler for manager\u0027s state transitions (a dev typically has no LEDs that make sense for this purpose on their dev box, but it is useful to run this app anyway and just watch the log and the state changes, IMHO).",
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d37ce7e_57a04154",
+        "filename": "src/main2.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-30T22:04:56Z",
+      "side": 1,
+      "message": "what\u0027s the purpose of this file?",
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

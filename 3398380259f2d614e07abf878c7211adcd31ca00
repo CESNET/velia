@@ -22,6 +22,30 @@
       "revId": "3398380259f2d614e07abf878c7211adcd31ca00",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0d217a6_d59052c4",
+        "filename": "src/Factory.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-12-02T17:38:17Z",
+      "side": 1,
+      "message": "Ok, I have changed the \"clearfog\" into \"sdn-inline\" because that is the one I have now. If these boards differ even in these HW specs, then we have to handle it here (probably later, not now; a common part for each sdn-* and a special line of code for sdn-roadm-line\u0027s EEPROM). Also we probably have to specify something like\n\n --appliance\u003d\"$(grep -o \u0027czechlight\u003d[A-z-]*\u0027 /proc/cmdline | cut -d\u0027\u003d\u0027 -f2)\"\n\nin the velia.service. I do not feel like we need a separate service for every model like in cla-sysrepo (is there a better way how to parse kernel cmdline args? -- but that is probably a discussion for the br2-external patch)\n\nI\u0027m not a fan of introducing a special flag for a roadm-line only. So let the factory function know that all these 4 models exist and use as much common code as we can.",
+      "parentUuid": "d707ff49_d509f552",
+      "range": {
+        "startLine": 15,
+        "startChar": 26,
+        "endLine": 15,
+        "endChar": 34
+      },
+      "revId": "3398380259f2d614e07abf878c7211adcd31ca00",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

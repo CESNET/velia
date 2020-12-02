@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "903a9810_ec34c710",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-12-02T13:24:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "165f6222_2081affc",
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90214bf3_b37332b7",
         "filename": "src/Factory.h",
         "patchSetId": 8
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "4b2be346_ca83760f",
+        "filename": "src/Factory.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-12-02T13:24:27Z",
+      "side": 1,
+      "message": "Well i redesigned that. However, I have added init of output callbacks to Factory.cpp and now I have two namespaces there:\n\n namespace velia::ietf_hardware {\n std::shared_ptr\u003cietf_hardware::IETFHardware\u003e createIETFHardware(...);\n }\n\n namespace velia::health {\n boost::signals2::SlotWrapper\u003cvoid, health::State\u003e createOutput(...);\n }\n\nWhat do you thing about this?",
+      "parentUuid": "90214bf3_b37332b7",
+      "range": {
+        "startLine": 9,
+        "startChar": 45,
+        "endLine": 9,
+        "endChar": 85
+      },
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a5220e4_8d62a7e9",
         "filename": "src/main.cpp",
         "patchSetId": 8
@@ -56,6 +98,24 @@
       "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4f62fb9_132bc0b3",
+        "filename": "src/main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-12-02T13:24:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a5220e4_8d62a7e9",
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     },
     {
       "key": {
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "fd413393_edbfa4b5",
+        "filename": "src/main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-12-02T13:24:27Z",
+      "side": 1,
+      "message": "Done.\nDumb output in followup commits.",
+      "parentUuid": "6851623e_8784929d",
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d37ce7e_57a04154",
         "filename": "src/main2.cpp",
         "patchSetId": 8
@@ -90,6 +168,24 @@
       "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc73396b_1bac94b5",
+        "filename": "src/main2.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-12-02T13:24:27Z",
+      "side": 1,
+      "message": "oops, I\u0027m sorry.",
+      "parentUuid": "9d37ce7e_57a04154",
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

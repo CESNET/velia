@@ -46,6 +46,30 @@
       "revId": "3398380259f2d614e07abf878c7211adcd31ca00",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4abf031c_ddba12d3",
+        "filename": "src/Factory.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-12-02T19:42:43Z",
+      "side": 1,
+      "message": "By the way, we should decide who will be the maintainer of the topmost (ne) element of the tree -- Will it be cla-sysrepod or veliad? I believe you have said it should be cla-sysrepo, right? I think your arguments were that cla-sysrepo is designed \"specifically for this hw and it should know more about it\".\nIf this still holds then there is (as of now) no difference between all the sdn-* models. and also I have to remove line 23 from this file",
+      "parentUuid": "a0d217a6_d59052c4",
+      "range": {
+        "startLine": 15,
+        "startChar": 26,
+        "endLine": 15,
+        "endChar": 34
+      },
+      "revId": "3398380259f2d614e07abf878c7211adcd31ca00",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
     }
   ]
 }

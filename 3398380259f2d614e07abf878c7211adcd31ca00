@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d707ff49_d509f552",
+        "filename": "src/Factory.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-12-02T15:42:48Z",
+      "side": 1,
+      "message": "How do you plan to plug this into systemd? Our system uses the same rootfs image for all models that are based on a clearfog SBC, the only way to tell a line degree ROADM from an inline amp is the czechlight\u003d... kernel command line parameter. The majority of differences is in the optics, true, but still, the sdn-roadm-line has a certain daughter PCB which is missing on any other device, and that PCB has an EEPROM with a serial number. It would be great to export that S/N to the owner via NETCONF.\n\nHere are the appliance models (i.e., values for czechlight\u003d...) that we\u0027re using today:\n- sdn-roadm-line\n- sdn-roadm-add-drop\n- sdn-roadm-coherent-a-d\n- sdn-inline\n\nAlso, by the end of the year we\u0027re gonna have some revised PCBs which will be (eventually) replaced within all of our prototypes, and these new PCBs will bring new addresses for stuff below sysfs/hwmon. What is important for velia is that \"sdn-roadm-line\" has one additional internal PCB, which has an EEPROM with a factory-burned serial number, and this serial number should be exported to the user via sysrepo. Please feel free to propose a change here in velia *and* in br2-extenral which makes this work.",
+      "range": {
+        "startLine": 15,
+        "startChar": 26,
+        "endLine": 15,
+        "endChar": 34
+      },
+      "revId": "3398380259f2d614e07abf878c7211adcd31ca00",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

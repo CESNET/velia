@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "a3d6603c_4a1af204",
+        "filename": "src/Factory.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-12-02T15:42:48Z",
+      "side": 1,
+      "message": "IStillThinkThatTheseIdentifiersAreTooLong, sorry. What\u0027s the point of the factory namespace? Why don\u0027t you use:\n \nnamespace velia::ietf_hardware {\n    std::shared_ptr\u003cIETFHardware\u003e create(const std::string\u0026 appliance);\n}\n \nnamespace velia::health {\n    boost::signals2::SlotWrapper\u003cvoid, State\u003e createOutput(const std::string\u0026 appliance);\n}",
+      "parentUuid": "4b2be346_ca83760f",
+      "range": {
+        "startLine": 9,
+        "startChar": 45,
+        "endLine": 9,
+        "endChar": 85
+      },
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1a5220e4_8d62a7e9",
         "filename": "src/main.cpp",
         "patchSetId": 8

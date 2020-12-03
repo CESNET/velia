@@ -20,7 +20,12 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         auto sysfsTempMII1 = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/devices/platform/soc/soc:internal-regs/f1072004.mdio/mdio_bus/f1072004.mdio-mii/f1072004.mdio-mii:01/hwmon/");
         auto emmc = std::make_shared<velia::ietf_hardware::sysfs::EMMC>("/sys/block/mmcblk0/device/");
 
-        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}})); // FIXME: We have an EEPROM at the PCB for storing these information, but it's so far unused. We could also use U-Boot env variables for this.
+        /* FIXME:
+         * Publish more properties for ne element. We have an EEPROM at the PCB for storing serial numbers (etc.), but it's so far unused. We could also use U-Boot env variables
+         * This will be needed for sdn-roadm-line only. So we should also parse the model from /proc/cmdline here
+         */
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::StaticData("ne", std::nullopt, {{"description", "Czechlight project"s}}));
+
         ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
         ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::Fans("ne:fans", "ne", hwmonFans, 4));
         ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-front", "ne:ctrl", sysfsTempFront, 1));

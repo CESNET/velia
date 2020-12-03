@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b42ac658_1a9280fb",
+        "filename": "src/main.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-12-03T19:27:55Z",
+      "side": 1,
+      "message": "hardwareState is nullptr when appliance not specified",
+      "revId": "8953e4abab77ec890ed2af56714913bd56237f03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9c50413_33c687ec",
+        "filename": "src/main.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2020-12-03T19:27:55Z",
+      "side": 1,
+      "message": "rename to sysrepoIetfHardware",
+      "revId": "8953e4abab77ec890ed2af56714913bd56237f03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

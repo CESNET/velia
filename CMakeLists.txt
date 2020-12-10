@@ -228,6 +228,13 @@ if(BUILD_TESTING)
             RESOURCE_LOCK sysrepo
     )
 
+    velia_test(sysrepo_test_merge velia-ietf-hardware-sysrepo)
+    set_tests_properties(
+            test-sysrepo_test_merge
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo
+            RESOURCE_LOCK sysrepo
+    )
+
     find_program(YANGLINT_PATH yanglint)
     if (NOT YANGLINT_PATH)
         message(FATAL_ERROR "Cannot find libyang's yanglint")

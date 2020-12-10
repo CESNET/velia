@@ -31,3 +31,8 @@ auto dataFromSysrepo(const std::shared_ptr<sysrepo::Session>& session, const std
     IMPL_TEST_INIT_LOGS_1                      \
     velia::ietf_hardware::sysrepo::initLogs(); \
     IMPL_TEST_INIT_LOGS_2
+
+#define TEST_SYSREPO_INIT                                     \
+    auto srConn = std::make_shared<sysrepo::Connection>();    \
+    auto srSess = std::make_shared<sysrepo::Session>(srConn); \
+    auto srSubs = std::make_shared<sysrepo::Subscribe>(srSess);

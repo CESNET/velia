@@ -212,6 +212,8 @@ if(BUILD_TESTING)
         set(sysrepo_previous_fixture_name ${name} PARENT_SCOPE)
     endfunction()
 
+    sysrepo_fixture_env(sysrepo-ietf-hardware-state YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware-state@2018-03-13.yang FEATURE hardware-sensor)
+    sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
 
     velia_test(health_state-manager velia-health)
     velia_test(health_input-semaphore velia-health DbusTesting)
@@ -221,10 +223,27 @@ if(BUILD_TESTING)
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
     velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo)
-    sysrepo_fixture_env(sysrepo YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware-state@2018-03-13.yang FEATURE hardware-sensor)
     set_tests_properties(
             test-hardware_ietf-hardware
-            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-ietf-hardware-state
+            RESOURCE_LOCK sysrepo
+    )
+
+    velia_test(sysrepo_two-daemons velia-ietf-hardware-sysrepo)
+    # ctest dance for sysrepo_two-daemons: compile daemon, create a fixture for test
+    add_executable(test-sysrepo_test_merge-daemon ${CMAKE_SOURCE_DIR}/tests/sysrepo_two-daemons_daemon.cpp)
+    target_link_libraries(test-sysrepo_test_merge-daemon PkgConfig::SYSREPO PkgConfig::LIBYANG)
+
+    add_test(NAME sysrepo_test_merge-start COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_two-daemons_control.sh start)
+    add_test(NAME sysrepo_test_merge-stop  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_two-daemons_control.sh stop)
+    set_tests_properties(sysrepo_test_merge-start PROPERTIES FIXTURES_SETUP   sysrepo:two-daemons RESOURCE_LOCK sysrepo)
+    set_tests_properties(sysrepo_test_merge-stop  PROPERTIES FIXTURES_CLEANUP sysrepo:two-daemons RESOURCE_LOCK sysrepo)
+    set_tests_properties(sysrepo:clean:sysrepo-ietf-hardware PROPERTIES DEPENDS sysrepo_test_merge-stop)
+
+    set_tests_properties(
+            test-sysrepo_two-daemons
+            PROPERTIES
+                FIXTURES_REQUIRED "sysrepo:two-daemons;sysrepo:env:sysrepo-ietf-hardware"
             RESOURCE_LOCK sysrepo
     )
 

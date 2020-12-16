@@ -48,7 +48,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 set(YANG_SRCS
     yang/iana-hardware@2018-03-13.yang
-    yang/ietf-hardware-state@2018-03-13.yang
     yang/ietf-hardware@2018-03-13.yang
     )
 
@@ -212,7 +211,6 @@ if(BUILD_TESTING)
         set(sysrepo_previous_fixture_name ${name} PARENT_SCOPE)
     endfunction()
 
-    sysrepo_fixture_env(sysrepo-ietf-hardware-state YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware-state@2018-03-13.yang FEATURE hardware-sensor)
     sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
 
     velia_test(health_state-manager velia-health)
@@ -225,7 +223,7 @@ if(BUILD_TESTING)
     velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo)
     set_tests_properties(
             test-hardware_ietf-hardware
-            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-ietf-hardware-state
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-ietf-hardware
             RESOURCE_LOCK sysrepo
     )
 

@@ -14,7 +14,7 @@ using namespace std::literals;
 
 namespace {
 
-static const std::string ietfHardwareStatePrefix = "/ietf-hardware-state:hardware";
+static const std::string ietfHardwareStatePrefix = "/ietf-hardware:hardware";
 
 /** @brief Constructs a full XPath for a specific component */
 std::string xpathForComponent(const std::string& componentName)

@@ -12,7 +12,7 @@ namespace velia::ietf_hardware::sysrepo {
 
 namespace {
 
-const auto IETF_HARDWARE_MODULE_NAME = "ietf-hardware-state"s;
+const auto IETF_HARDWARE_MODULE_NAME = "ietf-hardware"s;
 const auto IETF_HARDWARE_MODULE_PREFIX = "/"s + IETF_HARDWARE_MODULE_NAME + ":hardware/*"s;
 
 void valuesToYang(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)

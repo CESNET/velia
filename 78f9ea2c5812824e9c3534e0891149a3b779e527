@@ -132,6 +132,30 @@
     },
     {
       "key": {
+        "uuid": "6a55c0af_85dccee4",
+        "filename": "src/Factory.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-12-17T10:02:04Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dad850fd_4eb21836",
+      "range": {
+        "startLine": 9,
+        "startChar": 45,
+        "endLine": 9,
+        "endChar": 85
+      },
+      "revId": "78f9ea2c5812824e9c3534e0891149a3b779e527",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a5220e4_8d62a7e9",
         "filename": "src/main.cpp",
         "patchSetId": 8

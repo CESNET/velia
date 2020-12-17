@@ -70,6 +70,30 @@
       "revId": "3398380259f2d614e07abf878c7211adcd31ca00",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa9c7e48_eb505515",
+        "filename": "src/Factory.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-12-17T10:02:04Z",
+      "side": 1,
+      "message": "Just to make Gerrit happy -- this is implemented in the follow-up patches.",
+      "parentUuid": "4abf031c_ddba12d3",
+      "range": {
+        "startLine": 15,
+        "startChar": 26,
+        "endLine": 15,
+        "endChar": 34
+      },
+      "revId": "3398380259f2d614e07abf878c7211adcd31ca00",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": false
     }
   ]
 }

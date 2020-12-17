@@ -39,40 +39,102 @@ if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
     message(FATAL_ERROR "Systemd 245 has a bug affecting DBus method calls using sdbus-c++. Please see https://github.com/Kistler-Group/sdbus-cpp/issues/106.")
 endif()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
+pkg_check_modules(SYSREPO REQUIRED sysrepo-cpp>=1.4.79 IMPORTED_TARGET sysrepo)
+pkg_check_modules(LIBYANG REQUIRED libyang-cpp>=1.0.190 IMPORTED_TARGET libyang)
 
 include(GNUInstallDirs)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
+
+set(YANG_SRCS
+    yang/iana-hardware@2018-03-13.yang
+    yang/ietf-hardware-state@2018-03-13.yang
+    yang/ietf-hardware@2018-03-13.yang
+    )
+
 # Targets
+# - utils
 add_library(velia-utils STATIC
     src/utils/exceptions.cpp
+    src/utils/exceptions.h
+    src/utils/io.cpp
+    src/utils/io.h
     src/utils/journal.cpp
-    src/utils/log-init.h
+    src/utils/journal.h
+    src/utils/log.h
+    src/utils/log-fwd.h
     src/utils/log-init.cpp
+    src/utils/log-init.h
+    src/utils/time.cpp
+    src/utils/time.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog)
-target_link_libraries(velia-utils PRIVATE PkgConfig::SYSTEMD)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD)
 
-
-add_library(velia-state-manager STATIC
-    src/inputs/AbstractInput.cpp
-    src/inputs/DbusSemaphoreInput.cpp
-    src/inputs/DbusSystemdInput.cpp
-    src/manager/AbstractManager.cpp
-    src/manager/StateManager.cpp
-    src/outputs/LedSysfsDriver.cpp
-    src/outputs/callables.cpp
-    src/State.cpp
+# - health
+add_library(velia-health STATIC
+    src/health/inputs/AbstractInput.cpp
+    src/health/inputs/DbusSemaphoreInput.cpp
+    src/health/inputs/DbusSystemdInput.cpp
+    src/health/manager/AbstractManager.cpp
+    src/health/manager/StateManager.cpp
+    src/health/outputs/LedSysfsDriver.cpp
+    src/health/outputs/callables.cpp
+    src/health/State.cpp
     )
-target_link_libraries(velia-state-manager PUBLIC velia-utils Boost::boost SDBusCpp::sdbus-c++ ${STD_FILESYSTEM_LIBRARY})
+target_link_libraries(velia-health
+    PUBLIC
+        velia-utils
+        Boost::boost
+        SDBusCpp::sdbus-c++
+        ${STD_FILESYSTEM_LIBRARY}
+    )
 
+# - ietf-hardware
+add_library(velia-ietf-hardware STATIC
+    src/ietf-hardware/sysfs/EMMC.cpp
+    src/ietf-hardware/sysfs/EMMC.h
+    src/ietf-hardware/sysfs/HWMon.cpp
+    src/ietf-hardware/sysfs/HWMon.h
+    src/ietf-hardware/IETFHardware.cpp
+    src/ietf-hardware/IETFHardware.h
+    )
+target_link_libraries(velia-ietf-hardware
+    PUBLIC
+        velia-utils
+        ${STD_FILESYSTEM_LIBRARY}
+        Boost::boost
+    )
+target_include_directories(velia-ietf-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
+
+add_library(velia-ietf-hardware-sysrepo STATIC
+    src/ietf-hardware/sysrepo/Logging.cpp
+    src/ietf-hardware/sysrepo/Logging.h
+    src/ietf-hardware/sysrepo/Sysrepo.cpp
+    src/ietf-hardware/sysrepo/Sysrepo.h
+    )
+target_link_libraries(velia-ietf-hardware-sysrepo
+    PUBLIC
+        velia-utils
+        PkgConfig::SYSREPO
+        PkgConfig::LIBYANG
+    )
+target_include_directories(velia-ietf-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
+
+# - daemon
 add_executable(veliad
-    src/main.cpp
-    )
-
-target_link_libraries(veliad PUBLIC velia-utils velia-state-manager docopt)
+        src/main.cpp
+        src/Factory.cpp
+        src/Factory.h
+        )
+target_link_libraries(veliad
+        PUBLIC
+        velia-health
+        velia-ietf-hardware
+        velia-ietf-hardware-sysrepo
+        docopt
+        )
 add_dependencies(veliad target-VELIA_VERSION)
+target_include_directories(veliad PUBLIC ${CMAKE_BINARY_DIR})
 
 # Testing
 include(CTest)
@@ -83,39 +145,97 @@ if(BUILD_TESTING)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/configure.cmake.h.in ${CMAKE_CURRENT_BINARY_DIR}/tests/configure.cmake.h)
 
     add_library(DoctestIntegration STATIC
-            tests/doctest_integration.cpp
-            tests/trompeloeil_doctest.h
-            tests/wait-a-bit-longer.cpp
-            )
-    target_include_directories(DoctestIntegration PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+        tests/doctest_integration.cpp
+        tests/trompeloeil_doctest.h
+        tests/wait-a-bit-longer.cpp
+        )
     target_link_libraries(DoctestIntegration doctest::doctest trompeloeil spdlog::spdlog)
+    target_include_directories(DoctestIntegration PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/)
     target_compile_definitions(DoctestIntegration PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
 
     add_library(DbusTesting STATIC
         tests/dbus-helpers/dbus_semaphore_server.cpp
+        tests/dbus-helpers/dbus_semaphore_server.h
         tests/dbus-helpers/dbus_systemd_server.cpp
-    )
-    target_link_libraries(DbusTesting PUBLIC SDBusCpp::sdbus-c++)
+        tests/dbus-helpers/dbus_systemd_server.h
+        )
+    target_link_libraries(DbusTesting
+        PUBLIC
+            velia-utils
+            SDBusCpp::sdbus-c++
+        )
+
+    add_library(FsTestUtils STATIC
+        tests/fs-helpers/FileInjector.cpp
+        tests/fs-helpers/FileInjector.h
+        tests/fs-helpers/utils.cpp
+        tests/fs-helpers/utils.h
+        )
+    target_link_libraries(FsTestUtils
+        PUBLIC
+            ${STD_FILESYSTEM_LIBRARY}
+        )
 
     function(velia_test name)
-        add_executable(test_${name} tests/${name}.cpp)
-        target_link_libraries(test_${name} DoctestIntegration ${ARGN})
-        target_include_directories(test_${name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+        add_executable(test-${name} ${CMAKE_SOURCE_DIR}/tests/${name}.cpp)
+        target_link_libraries(test-${name} DoctestIntegration ${ARGN})
+        target_include_directories(test-${name}
+            PUBLIC
+                ${CMAKE_CURRENT_SOURCE_DIR}
+            PRIVATE
+                ${CMAKE_BINARY_DIR}
+        )
 
         if(NOT CMAKE_CROSSCOMPILING)
-            add_test(test_${name} test_${name})
+            add_test(test-${name} test-${name})
         endif()
-
     endfunction()
-    velia_test(state-manager velia-state-manager)
-    velia_test(input-semaphore velia-state-manager DbusTesting)
-    velia_test(input-systemd velia-state-manager DbusTesting)
-    velia_test(output-led velia-state-manager)
-endif()
 
-install(TARGETS
-    veliad
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)
+    find_program(SYSREPOCTL sysrepoctl)
+    find_program(SYSREPOCFG sysrepocfg)
+
+    set(sysrepo_previous_fixture_name UNDEFINED)
+    function(sysrepo_fixture_env name)
+        set(test_name_init sysrepo:prep:${name})
+        set(test_name_cleanup sysrepo:clean:${name})
+        set(fixture_name sysrepo:env:${name})
+
+        add_test(NAME ${test_name_init} COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepoctl-manage-module.sh ${SYSREPOCTL} ${SYSREPOCFG} prepare ${ARGN})
+        set_tests_properties(${test_name_init} PROPERTIES FIXTURES_SETUP ${fixture_name} RESOURCE_LOCK sysrepo)
+        add_test(NAME ${test_name_cleanup} COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepoctl-manage-module.sh ${SYSREPOCTL} ${SYSREPOCFG} uninstall ${ARGN})
+        set_tests_properties(${test_name_cleanup} PROPERTIES FIXTURES_CLEANUP ${fixture_name} RESOURCE_LOCK sysrepo)
+
+        if (sysrepo_previous_fixture_name)
+            set_tests_properties(${test_name_init} PROPERTIES DEPENDS sysrepo:clean:${sysrepo_previous_fixture_name})
+        endif ()
+
+        set(sysrepo_previous_fixture_name ${name} PARENT_SCOPE)
+    endfunction()
+
+
+    velia_test(health_state-manager velia-health)
+    velia_test(health_input-semaphore velia-health DbusTesting)
+    velia_test(health_input-systemd velia-health DbusTesting)
+    velia_test(health_output-led velia-health)
+
+    velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
+    velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
+    velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo)
+    sysrepo_fixture_env(sysrepo YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware-state@2018-03-13.yang FEATURE hardware-sensor)
+    set_tests_properties(
+            test-hardware_ietf-hardware
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo
+            RESOURCE_LOCK sysrepo
+    )
+
+    find_program(YANGLINT_PATH yanglint)
+    if (NOT YANGLINT_PATH)
+        message(FATAL_ERROR "Cannot find libyang's yanglint")
+    endif()
+    foreach(yang_file ${YANG_SRCS})
+        add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
+    endforeach()
+endif()
 
 if(WITH_DOCS)
     set(doxyfile_in ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
@@ -129,3 +249,7 @@ if(WITH_DOCS)
             SOURCES ${doxyfile_in}
             )
 endif()
+
+set(YANG_DIR ${CMAKE_INSTALL_PREFIX}/share/velia/yang)
+install(FILES ${YANG_SRCS} DESTINATION ${YANG_DIR})
+install(TARGETS veliad RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)

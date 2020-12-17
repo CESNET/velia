@@ -4,12 +4,13 @@
 #include <sdbus-c++/sdbus-c++.h>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
+#include <sysrepo-cpp/Session.hpp>
+#include "Factory.h"
 #include "VELIA_VERSION.h"
-#include "inputs/DbusSystemdInput.h"
-#include "manager/StateManager.h"
-#include "outputs/LedSysfsDriver.h"
-#include "outputs/SlotWrapper.h"
-#include "outputs/callables.h"
+#include "health/inputs/DbusSystemdInput.h"
+#include "health/manager/StateManager.h"
+#include "health/outputs/callables.h"
+#include "ietf-hardware/sysrepo/Sysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
 #include "utils/log-init.h"
@@ -32,10 +33,11 @@ spdlog::level::level_enum parseLogLevel(const std::string& name, const docopt::v
 }
 
 static const char usage[] =
-    R"(Monitor system health status
+    R"(Monitor system health status.
 
 Usage:
   veliad
+    [--appliance=<Model>]
     [--log-level=<Level>]
     [--systemd-ignore-unit=<Unit>]...
   veliad (-h | --help)
@@ -44,6 +46,7 @@ Usage:
 Options:
   -h --help                         Show this screen.
   --version                         Show version.
+  --appliance=<Model>               Initialize IETF Hardware and outputs for specific appliance.
   --log-level=<N>                   Log level for everything [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
@@ -73,6 +76,23 @@ int main(int argc, char* argv[])
         spdlog::get("main")->debug("Opening DBus connection");
         g_dbusConnection = sdbus::createSystemBusConnection();
 
+        spdlog::get("main")->debug("Opening Sysrepo connection");
+        auto srConn = std::make_shared<sysrepo::Connection>();
+        auto srSess = std::make_shared<sysrepo::Session>(srConn);
+        auto srSubscription = std::make_shared<sysrepo::Subscribe>(srSess);
+
+        // initialize ietf-hardware
+        spdlog::get("main")->debug("Initializing IETFHardware module");
+        std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware;
+        if (const auto& appliance = args["--appliance"]) {
+            ietfHardware = velia::ietf_hardware::create(appliance.asString());
+        } else {
+            ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
+        }
+
+        spdlog::get("main")->debug("Initializing Sysrepo ietf-hardware callback");
+        auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSubscription, ietfHardware);
+
         // Gracefully leave dbus event loop on SIGTERM
         struct sigaction sigact;
         memset(&sigact, 0, sizeof(sigact));
@@ -83,14 +103,14 @@ int main(int argc, char* argv[])
         spdlog::get("main")->debug("Starting DBus event loop");
         eventLoop = std::thread([] { g_dbusConnection->enterEventLoop(); });
 
-        auto manager = std::make_shared<velia::StateManager>();
+        // health
+        auto manager = std::make_shared<velia::health::StateManager>();
 
         // output configuration
         spdlog::get("main")->debug("Initializing LED drivers");
-        manager->m_outputSignal.connect(velia::boost::signals2::SlotWrapper<void, velia::State>(std::make_shared<velia::LedOutputCallback>(
-            std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:red/"),
-            std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:green/"),
-            std::make_shared<velia::LedSysfsDriver>("/sys/class/leds/status:blue/"))));
+        if (const auto& appliance = args["--appliance"]) {
+            manager->m_outputSignal.connect(velia::health::createOutput(appliance.asString()));
+        }
 
         spdlog::get("main")->debug("All outputs initialized.");
 
@@ -100,7 +120,7 @@ int main(int argc, char* argv[])
         if (!ignoredUnits.empty()) {
             spdlog::get("main")->debug("Systemd input will ignore changes of the following units: {}", args["--systemd-ignore-unit"]);
         }
-        auto inputSystemdDbus = std::make_shared<velia::DbusSystemdInput>(manager, ignoredUnits, *g_dbusConnection);
+        auto inputSystemdDbus = std::make_shared<velia::health::DbusSystemdInput>(manager, ignoredUnits, *g_dbusConnection);
 
         spdlog::get("main")->debug("All inputs initialized.");
 

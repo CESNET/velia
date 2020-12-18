@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca315892_d13311e3",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-12-18T14:48:06Z",
+      "side": 1,
+      "message": "I would much prefer usage of C++ constructs. You can go for a \"--subscribe\"sv in case you prefer fancy features, but let\u0027s not use strcmp here, please.",
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4382074_bfa08d9c",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-12-18T14:48:06Z",
+      "side": 1,
+      "message": "this is redundant, that\u0027s what the default constructor is doing",
+      "range": {
+        "startLine": 57,
+        "startChar": 46,
+        "endLine": 57,
+        "endChar": 56
+      },
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da574081_6469e0bf",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-12-18T14:48:06Z",
+      "side": 1,
+      "message": "I don\u0027t think this comment adds that much; it\u0027s an instance of a \"Subscribe\" class and it is named \"srSubs\", so I think it\u0027s obvious it\u0027s somehow related to subscriptions. (Also below.)",
+      "range": {
+        "startLine": 57,
+        "startChar": 58,
+        "endLine": 57,
+        "endChar": 74
+      },
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d732a14_b3acd149",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-12-18T14:48:06Z",
+      "side": 1,
+      "message": "I think that leaving this commented-out is a recipe for future trouble :). If it\u0027s left uncommented, you can be sure that the compiler will do the same thing as what the code implies. If it\u0027s left as a comment, it has a potential of going out-of-sync with the actual behavior. I don\u0027t see any advantages, but perhaps there are some?",
+      "range": {
+        "startLine": 83,
+        "startChar": 11,
+        "endLine": 83,
+        "endChar": 37
+      },
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdab6eeb_e8ccc876",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-12-18T14:48:06Z",
+      "side": 1,
+      "message": "This is a unit test, there\u0027s no real execution in the main thread at this point, everything is handled by sysrepo\u0027s background thread. Why don\u0027t you just sleep(666) here? That way SIGINT still interrupts this, and 666 seconds should be plenty of time for a test to pass.",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 5
+      },
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
+      "unresolved": true
+    }
+  ]
+}

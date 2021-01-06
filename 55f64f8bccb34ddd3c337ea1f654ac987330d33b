@@ -34,6 +34,52 @@
       "parentUuid": "b257b4ae_e7533b71",
       "revId": "55f64f8bccb34ddd3c337ea1f654ac987330d33b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01db02ec_21e7ce1c",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-06T23:34:51Z",
+      "side": 1,
+      "message": "nit: this could be removed (I made a similar comment to cla-sysrepo)",
+      "range": {
+        "startLine": 215,
+        "startChar": 45,
+        "endLine": 215,
+        "endChar": 51
+      },
+      "revId": "55f64f8bccb34ddd3c337ea1f654ac987330d33b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84bdec72_d200ad76",
+        "filename": "tests/sysrepo_two-daemons_control.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-06T23:34:51Z",
+      "side": 1,
+      "message": "this effectively loses all logs, but perhaps it\u0027s not a problem. If logs are important, redirection via \u0026\u003e to a log file and making that log file available via CI would work",
+      "range": {
+        "startLine": 28,
+        "startChar": 47,
+        "endLine": 28,
+        "endChar": 58
+      },
+      "revId": "55f64f8bccb34ddd3c337ea1f654ac987330d33b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

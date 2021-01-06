@@ -103,7 +103,6 @@ target_link_libraries(velia-ietf-hardware
         ${STD_FILESYSTEM_LIBRARY}
         Boost::boost
     )
-target_include_directories(velia-ietf-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
 
 add_library(velia-ietf-hardware-sysrepo STATIC
     src/ietf-hardware/sysrepo/Logging.cpp
@@ -117,7 +116,6 @@ target_link_libraries(velia-ietf-hardware-sysrepo
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
     )
-target_include_directories(velia-ietf-hardware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/velia-hardware)
 
 # - daemon
 add_executable(veliad

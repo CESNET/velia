@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "ca315892_d13311e3",
         "filename": "tests/sysrepo_two-daemons_daemon.cpp",
@@ -14,10 +15,28 @@
       "side": 1,
       "message": "I would much prefer usage of C++ constructs. You can go for a \"--subscribe\"sv in case you prefer fancy features, but let\u0027s not use strcmp here, please.",
       "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
-      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
-      "unresolved": true
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ea67715_6bb77613",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2021-01-06T08:45:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca315892_d13311e3",
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "d4382074_bfa08d9c",
         "filename": "tests/sysrepo_two-daemons_daemon.cpp",
@@ -37,10 +56,10 @@
         "endChar": 56
       },
       "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
-      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
-      "unresolved": true
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "da574081_6469e0bf",
         "filename": "tests/sysrepo_two-daemons_daemon.cpp",
@@ -60,10 +79,58 @@
         "endChar": 74
       },
       "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
-      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
-      "unresolved": true
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb3e06d2_940d84ca",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2021-01-06T08:45:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4382074_bfa08d9c",
+      "range": {
+        "startLine": 57,
+        "startChar": 46,
+        "endLine": 57,
+        "endChar": 56
+      },
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "375614d6_ba9c6b99",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2021-01-06T08:45:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da574081_6469e0bf",
+      "range": {
+        "startLine": 57,
+        "startChar": 58,
+        "endLine": 57,
+        "endChar": 74
+      },
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "5d732a14_b3acd149",
         "filename": "tests/sysrepo_two-daemons_daemon.cpp",
@@ -83,10 +150,34 @@
         "endChar": 37
       },
       "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
-      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
-      "unresolved": true
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86601e4d_d7ec0f6b",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2021-01-06T08:45:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d732a14_b3acd149",
+      "range": {
+        "startLine": 83,
+        "startChar": 11,
+        "endLine": 83,
+        "endChar": 37
+      },
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "cdab6eeb_e8ccc876",
         "filename": "tests/sysrepo_two-daemons_daemon.cpp",
@@ -106,8 +197,31 @@
         "endChar": 5
       },
       "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
-      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68",
-      "unresolved": true
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2eaae4c8_9c1bc8e0",
+        "filename": "tests/sysrepo_two-daemons_daemon.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1000062
+      },
+      "writtenOn": "2021-01-06T08:45:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cdab6eeb_e8ccc876",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 5
+      },
+      "revId": "87bcef8e21d941e8dd2bd13518f285d7251b5bd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6037b295_8d96da92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-11T10:09:54Z",
+      "side": 1,
+      "message": "Not yet tested on real device (I will test after the Sysrepo ietf-system patch).",
+      "revId": "f616da4e5bea24092aca86cedadc11183be9c04e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

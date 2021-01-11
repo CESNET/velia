@@ -124,6 +124,8 @@ target_link_libraries(velia-ietf-hardware-sysrepo
 
 # - ietf-system
 add_library(velia-system STATIC
+        src/system/RAUC.cpp
+        src/system/RAUC.h
         src/system/Sysrepo.cpp
         src/system/Sysrepo.h
         )
@@ -132,6 +134,7 @@ target_link_libraries(velia-system
         velia-utils
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
+
     )
 
 # - daemon
@@ -169,6 +172,8 @@ if(BUILD_TESTING)
     target_compile_definitions(DoctestIntegration PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
 
     add_library(DbusTesting STATIC
+        tests/dbus-helpers/dbus_rauc_server.cpp
+        tests/dbus-helpers/dbus_rauc_server.h
         tests/dbus-helpers/dbus_semaphore_server.cpp
         tests/dbus-helpers/dbus_semaphore_server.h
         tests/dbus-helpers/dbus_systemd_server.cpp
@@ -231,6 +236,8 @@ if(BUILD_TESTING)
     velia_test(health_input-semaphore velia-health DbusTesting)
     velia_test(health_input-systemd velia-health DbusTesting)
     velia_test(health_output-led velia-health)
+
+    velia_test(system_rauc velia-system DbusTesting)
 
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)

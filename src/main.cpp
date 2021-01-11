@@ -1,6 +1,7 @@
 #include <csignal>
 #include <docopt.h>
 #include <future>
+#include <ietf-system/RAUC.h>
 #include <sdbus-c++/sdbus-c++.h>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
@@ -11,6 +12,7 @@
 #include "health/manager/StateManager.h"
 #include "health/outputs/callables.h"
 #include "ietf-hardware/sysrepo/Sysrepo.h"
+#include "ietf-system/Sysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
 #include "utils/log-init.h"
@@ -101,6 +103,11 @@ int main(int argc, char* argv[])
 
         spdlog::get("main")->debug("Initializing Sysrepo ietf-hardware callback");
         auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSubscription, ietfHardware);
+
+        // initialize ietf-system
+        spdlog::get("main")->debug("Initializing IETFSystem module");
+        auto rauc = std::make_shared<velia::ietf_system::RAUC>(*g_dbusConnection);
+        auto sysrepoIETFSystem = velia::ietf_system::sysrepo::Sysrepo(srSess, rauc);
 
         // Gracefully leave dbus event loop on SIGTERM
         struct sigaction sigact;

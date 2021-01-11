@@ -49,6 +49,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 set(YANG_SRCS
     yang/iana-hardware@2018-03-13.yang
     yang/ietf-hardware@2018-03-13.yang
+    yang/iana-crypt-hash@2014-08-06.yang
+    yang/ietf-netconf-acm@2018-02-14.yang
+    yang/ietf-system@2014-08-06.yang
     )
 
 # Targets
@@ -122,11 +125,15 @@ target_link_libraries(velia-ietf-hardware-sysrepo
 add_library(velia-ietf-system STATIC
         src/ietf-system/RAUC.cpp
         src/ietf-system/RAUC.h
+        src/ietf-system/Sysrepo.cpp
+        src/ietf-system/Sysrepo.h
         )
 target_link_libraries(velia-ietf-system
     PUBLIC
         velia-utils
         SDBusCpp::sdbus-c++
+        PkgConfig::SYSREPO
+        PkgConfig::LIBYANG
     )
 
 # - daemon
@@ -140,6 +147,7 @@ target_link_libraries(veliad
         velia-health
         velia-ietf-hardware
         velia-ietf-hardware-sysrepo
+        velia-ietf-system
         docopt
         )
 add_dependencies(veliad target-VELIA_VERSION)
@@ -232,6 +240,14 @@ if(BUILD_TESTING)
 
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
+
+    sysrepo_fixture_env(sysrepo-ietf-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang)
+    velia_test(sysrepo_ietf-system velia-ietf-system DbusTesting)
+    set_tests_properties(
+            test-sysrepo_ietf-system
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-ietf-system
+            RESOURCE_LOCK sysrepo
+    )
 
     sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
     velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo)

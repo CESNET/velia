@@ -11,6 +11,7 @@
 #include "health/manager/StateManager.h"
 #include "health/outputs/callables.h"
 #include "ietf-hardware/sysrepo/Sysrepo.h"
+#include "system/sysrepo/Sysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
 #include "utils/log-init.h"
@@ -101,6 +102,10 @@ int main(int argc, char* argv[])
 
         spdlog::get("main")->debug("Initializing Sysrepo ietf-hardware callback");
         auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSubscription, ietfHardware);
+
+        // initialize ietf-system
+        spdlog::get("main")->debug("Initializing Sysrepo for system models");
+        auto sysrepoSystem = velia::system::sysrepo::Sysrepo(srSess, "/etc/os-release");
 
         // Gracefully leave dbus event loop on SIGTERM
         struct sigaction sigact;

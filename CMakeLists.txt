@@ -122,6 +122,18 @@ target_link_libraries(velia-ietf-hardware-sysrepo
         PkgConfig::LIBYANG
     )
 
+# - ietf-system
+add_library(velia-system STATIC
+        src/system/sysrepo/Sysrepo.cpp
+        src/system/sysrepo/Sysrepo.h
+        )
+target_link_libraries(velia-system
+    PUBLIC
+        velia-utils
+        PkgConfig::SYSREPO
+        PkgConfig::LIBYANG
+    )
+
 # - daemon
 add_executable(veliad
         src/main.cpp
@@ -133,6 +145,7 @@ target_link_libraries(veliad
         velia-health
         velia-ietf-hardware
         velia-ietf-hardware-sysrepo
+        velia-system
         docopt
         )
 add_dependencies(veliad target-VELIA_VERSION)
@@ -221,6 +234,14 @@ if(BUILD_TESTING)
 
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
+
+    sysrepo_fixture_env(sysrepo-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang)
+    velia_test(sysrepo_system velia-system DbusTesting)
+    set_tests_properties(
+            test-sysrepo_system
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-system
+            RESOURCE_LOCK sysrepo
+    )
 
     sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
     velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo)

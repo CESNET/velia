@@ -1,0 +1,15 @@
+BUILDROOT_VERSION=2020.11-rc1-45-g386283e33b
+ID=buildroot
+BUILDROOT_VERSION_ID=2020.11-rc1
+NAME=CzechLight
+# When building under CI, these git revisions might not necessarily refer to
+# something that is available from Gerrit's git repositories. If the job which
+# produced this image is a result of a Zuul job tree with speculatively merged
+# changes, then these refs are private to Zuul mergers.
+PRETTY_NAME="Czech Light v4-105-g8294175-dirty"
+
+VERSION=v4-105-g8294175-dirty
+CLA_SYSREPO_VERSION=v4-170-g082749ea-dirty
+NETCONF_CLI_VERSION=0651966
+CPP_DEPENDENCIES_VERSION=cd88475
+GAMMARUS_VERSION=ee4affa

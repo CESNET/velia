@@ -25,3 +25,8 @@
 #define TEST_INIT_LOGS    \
     IMPL_TEST_INIT_LOGS_1 \
     IMPL_TEST_INIT_LOGS_2
+
+#define TEST_SYSREPO_INIT_LOGS       \
+    IMPL_TEST_INIT_LOGS_1            \
+    velia::utils::initLogsSysrepo(); \
+    IMPL_TEST_INIT_LOGS_2

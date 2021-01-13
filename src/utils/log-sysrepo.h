@@ -9,7 +9,7 @@
 /** @file
   * @short sysrepo-spdlog bridge
 */
-namespace velia::ietf_hardware::sysrepo {
+namespace velia::utils {
 
-void initLogs();
+void initLogsSysrepo();
 }

@@ -9,8 +9,8 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <map>
 #include <sysrepo-cpp/Session.hpp>
-#include "ietf-hardware/sysrepo/Logging.h"
 #include "test_log_setup.h"
+#include "utils/log-sysrepo.h"
 
 /** @short Return a subtree from sysrepo, compacting the XPath */
 auto dataFromSysrepo(const std::shared_ptr<sysrepo::Session>& session, const std::string& xpath)
@@ -27,9 +27,9 @@ auto dataFromSysrepo(const std::shared_ptr<sysrepo::Session>& session, const std
     return res;
 }
 
-#define TEST_SYSREPO_INIT_LOGS                 \
-    IMPL_TEST_INIT_LOGS_1                      \
-    velia::ietf_hardware::sysrepo::initLogs(); \
+#define TEST_SYSREPO_INIT_LOGS       \
+    IMPL_TEST_INIT_LOGS_1            \
+    velia::utils::initLogsSysrepo(); \
     IMPL_TEST_INIT_LOGS_2
 
 #define TEST_SYSREPO_INIT                                     \

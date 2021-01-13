@@ -68,6 +68,7 @@ add_library(velia-utils STATIC
     src/utils/log-sysrepo.h
     src/utils/time.cpp
     src/utils/time.h
+    src/utils/UniqueResource.h
     )
 target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::SYSREPO)
 

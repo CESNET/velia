@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea3630f0_4f256c1e",
+        "filename": "src/ietf-system/RAUC.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-13T19:35:28Z",
+      "side": 1,
+      "message": "The location of this class is probably wrong.\nI have started implementing czechlight-rauc (working title) YANG model (model to get some rauc status info + RPC to install a bundle) and I realized I am going to need this class too.",
+      "revId": "02899d48767d69abedabd311ea61096bbef5bd6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

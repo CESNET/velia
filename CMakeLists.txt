@@ -64,10 +64,12 @@ add_library(velia-utils STATIC
     src/utils/log-fwd.h
     src/utils/log-init.cpp
     src/utils/log-init.h
+    src/utils/log-sysrepo.cpp
+    src/utils/log-sysrepo.h
     src/utils/time.cpp
     src/utils/time.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::SYSREPO)
 
 # - health
 add_library(velia-health STATIC
@@ -105,8 +107,6 @@ target_link_libraries(velia-ietf-hardware
     )
 
 add_library(velia-ietf-hardware-sysrepo STATIC
-    src/ietf-hardware/sysrepo/Logging.cpp
-    src/ietf-hardware/sysrepo/Logging.h
     src/ietf-hardware/sysrepo/Sysrepo.cpp
     src/ietf-hardware/sysrepo/Sysrepo.h
     )

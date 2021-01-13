@@ -41,6 +41,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a669856_cd79b757",
+        "filename": "src/ietf-system/RAUC.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-13T17:50:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa55deb_49df624d",
+      "range": {
+        "startLine": 23,
+        "startChar": 16,
+        "endLine": 23,
+        "endChar": 19
+      },
+      "revId": "f616da4e5bea24092aca86cedadc11183be9c04e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57529a9d_7f478aaa",
@@ -54,6 +78,24 @@
       "writtenOn": "2021-01-11T19:13:26Z",
       "side": 1,
       "message": "This one has got the same content as the other rootfs slot. I think that tests will be more useful if different parts of the tree return different data.",
+      "revId": "f616da4e5bea24092aca86cedadc11183be9c04e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "067980a7_4e7f6ee7",
+        "filename": "tests/system_rauc.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-13T17:50:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57529a9d_7f478aaa",
       "revId": "f616da4e5bea24092aca86cedadc11183be9c04e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },

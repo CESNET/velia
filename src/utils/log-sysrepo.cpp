@@ -8,7 +8,7 @@ extern "C" {
 #include <sysrepo.h>
 }
 
-#include "Logging.h"
+#include "log-sysrepo.h"
 #include "utils/log.h"
 
 extern "C" {
@@ -39,12 +39,12 @@ static void spdlog_sr_log_cb(sr_log_level_t level, const char* message)
 }
 }
 
-namespace velia::ietf_hardware::sysrepo {
+namespace velia::utils {
 
 /** @short Setup sysrepo log forwarding
 You must call cla::utils::initLogs prior to this function.
 */
-void initLogs()
+void initLogsSysrepo()
 {
     sr_log_set_cb(spdlog_sr_log_cb);
 }

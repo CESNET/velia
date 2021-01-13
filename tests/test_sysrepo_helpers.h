@@ -27,11 +27,6 @@ auto dataFromSysrepo(const std::shared_ptr<sysrepo::Session>& session, const std
     return res;
 }
 
-#define TEST_SYSREPO_INIT_LOGS       \
-    IMPL_TEST_INIT_LOGS_1            \
-    velia::utils::initLogsSysrepo(); \
-    IMPL_TEST_INIT_LOGS_2
-
 #define TEST_SYSREPO_INIT                                     \
     auto srConn = std::make_shared<sysrepo::Connection>();    \
     auto srSess = std::make_shared<sysrepo::Session>(srConn); \

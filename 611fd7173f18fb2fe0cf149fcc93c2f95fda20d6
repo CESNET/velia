@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7c90a8ac_914c426e",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T08:57:19Z",
+      "side": 1,
+      "message": "That is because I took the latest revision of the dependent model, which is probably wrong, right?\n(I will also split this commit in two -- first to introduce the YANGs, second for the code. I\u0027m waiting until this comment thread gets resolved).",
+      "parentUuid": "8d2dc074_269f5696",
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cca37fcd_2ef6958e",
         "filename": "src/ietf-system/Sysrepo.cpp",
         "patchSetId": 2
@@ -31,6 +49,30 @@
       "writtenOn": "2021-01-14T00:50:52Z",
       "side": 1,
       "message": "That is just a board identifier internal to RAUC + our build system. Its only purpose is answering the question \"can I install this SW image here on this box\".\n\nJust use \"CzechLight\" in there.",
+      "range": {
+        "startLine": 34,
+        "startChar": 111,
+        "endLine": 34,
+        "endChar": 128
+      },
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e179920f_051bb874",
+        "filename": "src/ietf-system/Sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T08:57:19Z",
+      "side": 1,
+      "message": "So we probably don\u0027t need the RAUC here at all (as I mentioned in 3370).",
+      "parentUuid": "cca37fcd_2ef6958e",
       "range": {
         "startLine": 34,
         "startChar": 111,
@@ -64,6 +106,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4150f7ea_a9a8faf7",
+        "filename": "src/ietf-system/Sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T08:57:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab1928c8_35a5528b",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 11
+      },
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f664dfd9_73af781e",
@@ -77,6 +143,30 @@
       "writtenOn": "2021-01-14T00:50:52Z",
       "side": 1,
       "message": "In cla-sysrepo, tests are using a different connection (and therefore also session) then the thingy being tested, and I think it matches reality, which is why I would like this code to follow suite.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 49
+      },
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f19cd0c_d1fa6899",
+        "filename": "tests/sysrepo_ietf-system.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T08:57:19Z",
+      "side": 1,
+      "message": "Done, I have fixed it also for existing tests.",
+      "parentUuid": "f664dfd9_73af781e",
       "range": {
         "startLine": 58,
         "startChar": 0,

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50f9ac2e_1a4c94d3",
+        "filename": "tests/test_sysrepo_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T15:26:51Z",
+      "side": 1,
+      "message": "nit: consider using something less ugly, such as just `client`. That way you could do:\n \nREQUIRE(client-\u003efoo() \u003d\u003d bar)\n\ninstead of\n \nREQUIRE(srCliSess-\u003efoo() \u003d\u003d bar)\n\nBut whatever, this is your project :).",
+      "range": {
+        "startLine": 49,
+        "startChar": 9,
+        "endLine": 49,
+        "endChar": 18
+      },
+      "revId": "cd2c4813fbb303fc495dab41a9475dd1f3212535",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

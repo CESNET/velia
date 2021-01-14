@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f3b763b_f321512d",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T15:22:15Z",
+      "side": 1,
+      "message": "I would not bother if this was the only comment, but I\u0027m commenting on other parts as well. I think that there isn\u0027t much point in creating an extra subdir just for one class, please consider removing that.",
+      "range": {
+        "startLine": 125,
+        "startChar": 19,
+        "endLine": 125,
+        "endChar": 27
+      },
+      "revId": "335c30dd5ec6886d4e5c9c37d40147bb34122b35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "568403cf_596efbc8",
+        "filename": "src/system/sysrepo/Sysrepo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T15:22:15Z",
+      "side": 1,
+      "message": "what happens if there\u0027s no \"\u003d\"? Please add a test for that.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 56
+      },
+      "revId": "335c30dd5ec6886d4e5c9c37d40147bb34122b35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b38a030d_589bfec6",
+        "filename": "src/system/sysrepo/Sysrepo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T15:22:15Z",
+      "side": 1,
+      "message": "I think this is more readable, please use that:\n \nres[key] \u003d val;",
+      "revId": "335c30dd5ec6886d4e5c9c37d40147bb34122b35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

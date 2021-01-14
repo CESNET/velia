@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f3a03be1_f895c41a",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T09:38:23Z",
+      "side": 1,
+      "message": "You are right and I was wrong. As you correctly say, ietf-system does not pin its dependencies, so what I suggest is using whatever versions are available via sysrepo+netopeer2 today (to prevent multiple revisions, which would make stuff more interesting), and for those modules that are not already present, use the latest one.\n\nMaybe that\u0027s what you did already, in that case sorry for noise.",
+      "parentUuid": "d77edef2_6abe3968",
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cca37fcd_2ef6958e",
         "filename": "src/ietf-system/Sysrepo.cpp",
         "patchSetId": 2

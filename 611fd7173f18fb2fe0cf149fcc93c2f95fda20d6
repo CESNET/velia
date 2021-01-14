@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d2dc074_269f5696",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T00:50:52Z",
+      "side": 1,
+      "message": "I have not checked the code, but looking at the revision dates, I don\u0027t understand how come that the ietf-system from 2014 needs something from 2018. Why is this needed?",
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cca37fcd_2ef6958e",
+        "filename": "src/ietf-system/Sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T00:50:52Z",
+      "side": 1,
+      "message": "That is just a board identifier internal to RAUC + our build system. Its only purpose is answering the question \"can I install this SW image here on this box\".\n\nJust use \"CzechLight\" in there.",
+      "range": {
+        "startLine": 34,
+        "startChar": 111,
+        "endLine": 34,
+        "endChar": 128
+      },
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab1928c8_35a5528b",
+        "filename": "src/ietf-system/Sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T00:50:52Z",
+      "side": 1,
+      "message": "Yeah, I\u0027m using that for \"exception safety\" in cla-sysrepo, but I think it\u0027s probably a bit overengineered in there (we don\u0027t handle exceptions in that context, really). I think it\u0027s more straightforward to just switch the DS to operational and abck again with two lines of code here if it\u0027s needed to switch. It\u0027s one-time-only, constructor code, anyway.",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 11
+      },
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f664dfd9_73af781e",
+        "filename": "tests/sysrepo_ietf-system.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T00:50:52Z",
+      "side": 1,
+      "message": "In cla-sysrepo, tests are using a different connection (and therefore also session) then the thingy being tested, and I think it matches reality, which is why I would like this code to follow suite.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 49
+      },
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

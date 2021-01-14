@@ -13,7 +13,7 @@
 #include <variant>
 #include "utils/log-fwd.h"
 
-namespace velia::ietf_system {
+namespace velia::system {
 
 class RAUC {
 public:
@@ -22,6 +22,7 @@ public:
     explicit RAUC(sdbus::IConnection& connection);
     std::string primarySlot() const;
     std::map<std::string, SlotProperties> slotStatus() const;
+    void install(const std::string& source) const;
 
 private:
     std::shared_ptr<sdbus::IProxy> m_dbusObjectProxy;

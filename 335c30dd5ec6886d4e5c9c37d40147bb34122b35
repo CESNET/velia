@@ -95,6 +95,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1b932f0_4283a816",
+        "filename": "src/system/sysrepo/Sysrepo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T16:10:02Z",
+      "side": 1,
+      "message": "ack, this makes sense, I\u0027m OK with the current approach. If I was writing it, I would throw an exception, but this is OK as well.",
+      "parentUuid": "fd264e85_8f3ca887",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 56
+      },
+      "revId": "335c30dd5ec6886d4e5c9c37d40147bb34122b35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b38a030d_589bfec6",

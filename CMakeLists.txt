@@ -49,6 +49,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 set(YANG_SRCS
     yang/iana-hardware@2018-03-13.yang
     yang/ietf-hardware@2018-03-13.yang
+    yang/iana-crypt-hash@2014-08-06.yang
+    yang/ietf-inet-types@2013-07-15.yang
+    yang/ietf-netconf-acm@2018-02-14.yang
+    yang/ietf-system@2014-08-06.yang
+    yang/ietf-yang-types@2013-07-15.yang
     )
 
 # Targets

@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf2dbafd_32261001",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T15:57:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f3b763b_f321512d",
+      "range": {
+        "startLine": 125,
+        "startChar": 19,
+        "endLine": 125,
+        "endChar": 27
+      },
+      "revId": "335c30dd5ec6886d4e5c9c37d40147bb34122b35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "568403cf_596efbc8",
@@ -47,6 +71,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd264e85_8f3ca887",
+        "filename": "src/system/sysrepo/Sysrepo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T15:57:53Z",
+      "side": 1,
+      "message": "The find would of course return string::npos, which results in both key and val vars containing the same value (key). \nI\u0027m not sure how to deal with it properly. Should this line be ignored? I dont think so, the key exists. I have changed the behavior so that val is an empty string in this case.",
+      "parentUuid": "568403cf_596efbc8",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 56
+      },
+      "revId": "335c30dd5ec6886d4e5c9c37d40147bb34122b35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b38a030d_589bfec6",
@@ -60,6 +108,24 @@
       "writtenOn": "2021-01-14T15:22:15Z",
       "side": 1,
       "message": "I think this is more readable, please use that:\n \nres[key] \u003d val;",
+      "revId": "335c30dd5ec6886d4e5c9c37d40147bb34122b35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7a65d59_749eda35",
+        "filename": "src/system/sysrepo/Sysrepo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T15:57:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b38a030d_589bfec6",
       "revId": "335c30dd5ec6886d4e5c9c37d40147bb34122b35",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

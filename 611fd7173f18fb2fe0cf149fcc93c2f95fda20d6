@@ -72,6 +72,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f678267_87719942",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T15:57:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3a03be1_f895c41a",
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cca37fcd_2ef6958e",
@@ -133,6 +151,30 @@
       "side": 1,
       "message": "Yes, you can use the `VERSION` field from /etc/os-release. I thought you wanted to not write a parser for that because you already had a RAUC one. I don\u0027t really care. Actually, parsing /etc/os-release will give you CzechLight-agnostic \"OS name\" from the `NAME` field, which is a nice bonus. Also, the VERSION contains the `-dirty` suffix in case the SW is a development image, which is nice, I think.",
       "parentUuid": "e179920f_051bb874",
+      "range": {
+        "startLine": 34,
+        "startChar": 111,
+        "endLine": 34,
+        "endChar": 128
+      },
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "910b9a46_bfc306d4",
+        "filename": "src/ietf-system/Sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T15:57:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63c23bbc_32c31bbd",
       "range": {
         "startLine": 34,
         "startChar": 111,

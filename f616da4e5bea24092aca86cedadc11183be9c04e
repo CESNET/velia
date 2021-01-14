@@ -89,6 +89,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "707305c0_46f28d53",
+        "filename": "src/ietf-system/RAUC.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T08:15:11Z",
+      "side": 1,
+      "message": "I also took the liberty of renaming \"RAUC::Primary\" to \"RAUC::primarySlot\". I think that characterizes the method better (so hopefully no questions like \"primary-what?\").",
+      "parentUuid": "20249878_6cd6eb76",
+      "range": {
+        "startLine": 23,
+        "startChar": 16,
+        "endLine": 23,
+        "endChar": 19
+      },
+      "revId": "f616da4e5bea24092aca86cedadc11183be9c04e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57529a9d_7f478aaa",

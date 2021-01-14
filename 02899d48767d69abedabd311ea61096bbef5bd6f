@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8fe62e60_c5872ccd",
+        "filename": "src/ietf-system/RAUC.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T08:15:11Z",
+      "side": 1,
+      "message": "Well, I\u0027m not that convinced. I can put the RAUC-sysrepo handler class into the\n a) ietf-system namespace. But that doesn\u0027t seem correct.\n b) \"rauc\"-something namespace. Then I think I should relocate the RAUC class there too.\n c) \"rauc\"-something namespace and move the RAUC class to some \"common\" directory.\n\nWith your latest comment in 3379 (\"do not use bundle.compatible\") I think RAUC should not be in the ietf-system namespace (I will only read the bundle version and it is even not necessary because we have it in /etc/os-release) so I\u0027d vote for option b).\n\nFrom your comment I assume you propose a)?\n\nAnd yes, I assumed 1:1 mapping, or at least something like that.",
+      "parentUuid": "ee2e62cd_f88b431a",
+      "revId": "02899d48767d69abedabd311ea61096bbef5bd6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "49945232_ff4c6a3e",
         "filename": "src/ietf-system/RAUC.h",
         "patchSetId": 3
@@ -49,6 +67,24 @@
       "writtenOn": "2021-01-14T00:37:18Z",
       "side": 1,
       "message": "nit: this variable holds several properties, so it\u0027s probably better to use plural here",
+      "revId": "02899d48767d69abedabd311ea61096bbef5bd6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e3cf3e2_b7c68e24",
+        "filename": "src/ietf-system/RAUC.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-14T08:15:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49945232_ff4c6a3e",
       "revId": "02899d48767d69abedabd311ea61096bbef5bd6f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

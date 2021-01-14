@@ -34,10 +34,42 @@ std::variant<std::string, uint64_t, uint32_t> sdbusVariantToCPPVariant(const sdb
 
 namespace velia::system {
 
-RAUC::RAUC(sdbus::IConnection& connection)
+RAUC::RAUC(sdbus::IConnection& connection, std::function<void(const std::string&)> operCb, std::function<void(int32_t, const std::string&)> progressCb, std::function<void(int32_t, const std::string&)> completedCb)
     : m_dbusObjectProxy(sdbus::createProxy(connection, BUS, OBJPATH))
+    , m_operCb(std::move(operCb))
+    , m_progressCb(std::move(progressCb))
+    , m_completedCb(std::move(completedCb))
     , m_log(spdlog::get("system"))
 {
+    m_dbusObjectProxy->uponSignal("Completed").onInterface(INTERFACE).call([this](int32_t returnValue) {
+        std::string lastError = m_dbusObjectProxy->getProperty("LastError").onInterface(INTERFACE);
+        m_log->info("InstallBundle completed. Return value {}, last error: '{}'", returnValue, lastError);
+        m_completedCb(returnValue, lastError);
+    });
+
+    m_dbusObjectProxy->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([this](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {
+        if (iface != INTERFACE) {
+            return;
+        }
+
+        if (auto itProgress = changed.find("Progress"); itProgress != changed.end()) {
+            // https://rauc.readthedocs.io/en/v1.4/using.html#sec-processing-progress
+            auto progress = itProgress->second.get<sdbus::Struct<int32_t, std::string, int32_t>>();
+            int32_t percentage = progress.get<0>();
+            std::string message = progress.get<1>();
+
+            m_log->debug("InstallBundle progress changed: {} {}", percentage, message);
+            m_progressCb(percentage, message);
+        }
+
+        if (auto itOper = changed.find("Operation"); itOper != changed.end()) {
+            auto oper = itOper->second.get<std::string>();
+            m_log->debug("Operation changed: {}", oper);
+            m_operCb(oper);
+        }
+    });
+
+    m_dbusObjectProxy->finishRegistration();
 }
 
 /** @brief Get current primary slot.
@@ -77,4 +109,15 @@ std::map<std::string, RAUC::SlotProperties> RAUC::slotStatus() const
     return res;
 }
 
+/** @brief Install new bundle.
+ *
+ * RAUC's DBus InstallBundle method wrapper.
+ * This method is non-blocking. The status of the installation progress is announced via DBus properties (LastError, Progress)
+ * and after the installation finishes, the Completed signal is triggered.
+ * (see https://rauc.readthedocs.io/en/v1.4/reference.html#gdbus-method-de-pengutronix-rauc-installer-installbundle)
+ */
+void RAUC::install(const std::string& source)
+{
+    m_dbusObjectProxy->callMethod("InstallBundle").onInterface(INTERFACE).withArguments(source, std::map<std::string, sdbus::Variant> {});
+}
 }

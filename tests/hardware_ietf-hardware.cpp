@@ -177,9 +177,7 @@ TEST_CASE("HardwareState")
         SECTION("test last-change")
         {
             // at least check that there is some timestamp
-            srSess->session_switch_ds(SR_DS_OPERATIONAL);
-            REQUIRE(dataFromSysrepo(srSess, modulePrefix).count("/last-change") > 0);
-            srSess->session_switch_ds(SR_DS_RUNNING);
+            REQUIRE(dataFromSysrepo(srSess, modulePrefix, SR_DS_OPERATIONAL).count("/last-change") > 0);
         }
 
         SECTION("test components")
@@ -308,9 +306,7 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:emmc:lifetime']/sensor-data/units-display", "percent"},
             };
 
-            srSess->session_switch_ds(SR_DS_OPERATIONAL);
-            REQUIRE(dataFromSysrepo(srSess, modulePrefix + "/component") == expected);
-            srSess->session_switch_ds(SR_DS_RUNNING);
+            REQUIRE(dataFromSysrepo(srSess, modulePrefix + "/component", SR_DS_OPERATIONAL) == expected);
         }
 
         SECTION("test leafnode query")

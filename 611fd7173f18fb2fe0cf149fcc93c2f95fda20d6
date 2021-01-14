@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d77edef2_6abe3968",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T09:28:22Z",
+      "side": 1,
+      "message": "Yes, that would be wrong -- the importing pins the specific version of its dependency.",
+      "parentUuid": "7c90a8ac_914c426e",
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cca37fcd_2ef6958e",
         "filename": "src/ietf-system/Sysrepo.cpp",
         "patchSetId": 2
@@ -73,6 +91,30 @@
       "side": 1,
       "message": "So we probably don\u0027t need the RAUC here at all (as I mentioned in 3370).",
       "parentUuid": "cca37fcd_2ef6958e",
+      "range": {
+        "startLine": 34,
+        "startChar": 111,
+        "endLine": 34,
+        "endChar": 128
+      },
+      "revId": "611fd7173f18fb2fe0cf149fcc93c2f95fda20d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63c23bbc_32c31bbd",
+        "filename": "src/ietf-system/Sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T09:28:22Z",
+      "side": 1,
+      "message": "Yes, you can use the `VERSION` field from /etc/os-release. I thought you wanted to not write a parser for that because you already had a RAUC one. I don\u0027t really care. Actually, parsing /etc/os-release will give you CzechLight-agnostic \"OS name\" from the `NAME` field, which is a nice bonus. Also, the VERSION contains the `-dirty` suffix in case the SW is a development image, which is nice, I think.",
+      "parentUuid": "e179920f_051bb874",
       "range": {
         "startLine": 34,
         "startChar": 111,

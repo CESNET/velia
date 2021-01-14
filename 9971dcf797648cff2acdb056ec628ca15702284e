@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3dac5cc_b782cf0b",
+        "filename": "tests/test_sysrepo_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T15:25:11Z",
+      "side": 1,
+      "message": "It\u0027s a test code so there would be (almost) no point in exception safety, so I agree with not doing this via make_unique_resource.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 45
+      },
+      "revId": "9971dcf797648cff2acdb056ec628ca15702284e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

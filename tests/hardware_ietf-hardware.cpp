@@ -168,16 +168,15 @@ TEST_CASE("HardwareState")
     SECTION("Test IETF Hardware from sysrepo's view")
     {
         TEST_SYSREPO_INIT_LOGS;
+        TEST_SYSREPO_INIT;
+        TEST_SYSREPO_INIT_CLIENT;
 
-        auto srConn = std::make_shared<sysrepo::Connection>();
-        auto srSess = std::make_shared<sysrepo::Session>(srConn);
-        auto srSubs = std::make_shared<sysrepo::Subscribe>(srSess);
         auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSubs, ietfHardware);
 
         SECTION("test last-change")
         {
             // at least check that there is some timestamp
-            REQUIRE(dataFromSysrepo(srSess, modulePrefix, SR_DS_OPERATIONAL).count("/last-change") > 0);
+            REQUIRE(dataFromSysrepo(srCliSess, modulePrefix, SR_DS_OPERATIONAL).count("/last-change") > 0);
         }
 
         SECTION("test components")
@@ -306,15 +305,15 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:emmc:lifetime']/sensor-data/units-display", "percent"},
             };
 
-            REQUIRE(dataFromSysrepo(srSess, modulePrefix + "/component", SR_DS_OPERATIONAL) == expected);
+            REQUIRE(dataFromSysrepo(srCliSess, modulePrefix + "/component", SR_DS_OPERATIONAL) == expected);
         }
 
         SECTION("test leafnode query")
         {
             const auto xpath = modulePrefix + "/component[name='ne:ctrl:emmc:lifetime']/class";
-            srSess->session_switch_ds(SR_DS_OPERATIONAL);
-            auto val = srSess->get_item(xpath.c_str());
-            srSess->session_switch_ds(SR_DS_RUNNING);
+            srCliSess->session_switch_ds(SR_DS_OPERATIONAL);
+            auto val = srCliSess->get_item(xpath.c_str());
+            srCliSess->session_switch_ds(SR_DS_RUNNING);
             REQUIRE(!!val);
             REQUIRE(val->data()->get_identityref() == "iana-hardware:sensor"s);
         }

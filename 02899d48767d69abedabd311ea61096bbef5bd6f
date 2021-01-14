@@ -16,6 +16,41 @@
       "message": "The location of this class is probably wrong.\nI have started implementing czechlight-rauc (working title) YANG model (model to get some rauc status info + RPC to install a bundle) and I realized I am going to need this class too.",
       "revId": "02899d48767d69abedabd311ea61096bbef5bd6f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee2e62cd_f88b431a",
+        "filename": "src/ietf-system/RAUC.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T00:37:18Z",
+      "side": 1,
+      "message": "I think that this place makes sense (it\u0027s indeed RAUC specific). It seems to me that you\u0027re assuming that there\u0027s going to be a 1:1 mapping between source directories and YANG model names, and I think there\u0027s no need to do that -- grouping them by function works fine with me.",
+      "parentUuid": "ea3630f0_4f256c1e",
+      "revId": "02899d48767d69abedabd311ea61096bbef5bd6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49945232_ff4c6a3e",
+        "filename": "src/ietf-system/RAUC.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T00:37:18Z",
+      "side": 1,
+      "message": "nit: this variable holds several properties, so it\u0027s probably better to use plural here",
+      "revId": "02899d48767d69abedabd311ea61096bbef5bd6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

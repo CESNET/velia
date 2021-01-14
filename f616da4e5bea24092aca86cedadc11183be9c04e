@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "20249878_6cd6eb76",
+        "filename": "src/ietf-system/RAUC.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-14T00:37:18Z",
+      "side": 1,
+      "message": "let\u0027s stick with small initial letter as well, please",
+      "parentUuid": "4a669856_cd79b757",
+      "range": {
+        "startLine": 23,
+        "startChar": 16,
+        "endLine": 23,
+        "endChar": 19
+      },
+      "revId": "f616da4e5bea24092aca86cedadc11183be9c04e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "57529a9d_7f478aaa",
         "filename": "tests/system_rauc.cpp",
         "patchSetId": 2

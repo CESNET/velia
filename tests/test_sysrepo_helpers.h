@@ -27,6 +27,18 @@ auto dataFromSysrepo(const std::shared_ptr<sysrepo::Session>& session, const std
     return res;
 }
 
+/** @short Return a subtree from specified sysrepo's datastore, compacting the XPath*/
+auto dataFromSysrepo(const std::shared_ptr<sysrepo::Session>& session, const std::string& xpath, sr_datastore_t datastore)
+{
+    sr_datastore_t oldDatastore = session->session_get_ds();
+    session->session_switch_ds(datastore);
+
+    auto res = dataFromSysrepo(session, xpath);
+
+    session->session_switch_ds(oldDatastore);
+    return res;
+}
+
 #define TEST_SYSREPO_INIT                                     \
     auto srConn = std::make_shared<sysrepo::Connection>();    \
     auto srSess = std::make_shared<sysrepo::Session>(srConn); \

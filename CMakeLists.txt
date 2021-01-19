@@ -28,7 +28,7 @@ prepare_git_version(VELIA_VERSION "0.0")
 find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem)
 find_package(docopt REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ REQUIRED)
@@ -142,6 +142,18 @@ target_link_libraries(velia-system
         SDBusCpp::sdbus-c++
     )
 
+# - firewall
+add_library(velia-firewall STATIC
+    src/firewall/Firewall.cpp
+    )
+target_link_libraries(velia-firewall
+    PUBLIC
+        velia-utils
+        PkgConfig::SYSREPO
+        PkgConfig::LIBYANG
+    )
+
+
 # - daemons
 add_executable(veliad
         src/main.cpp
@@ -168,6 +180,19 @@ target_link_libraries(veliad-system
     )
 add_dependencies(veliad-system target-VELIA_VERSION)
 target_include_directories(veliad-system PUBLIC ${CMAKE_BINARY_DIR})
+
+add_executable(veliad-firewall
+    src/main-firewall.cpp
+    )
+target_link_libraries(veliad-firewall
+    PUBLIC
+        velia-firewall
+        velia-utils
+        Boost::filesystem
+        docopt
+    )
+add_dependencies(veliad-firewall target-VELIA_VERSION)
+target_include_directories(veliad-firewall PUBLIC ${CMAKE_BINARY_DIR})
 
 # Testing
 include(CTest)
@@ -301,6 +326,27 @@ if(BUILD_TESTING)
     foreach(yang_file ${YANG_SRCS})
         add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
     endforeach()
+
+    sysrepo_fixture_env(sysrepo-firewall
+        # Installing czechlight-firewall automatically installs ietf-access-control-list as implemented (not just
+        # imported) but I still need to install it myself to enable the features.
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-access-control-list@2019-03-04.yang
+            FEATURE eth
+            FEATURE match-on-eth
+            FEATURE match-on-ipv4
+            FEATURE ipv4
+            FEATURE match-on-ipv6
+            FEATURE ipv6
+            FEATURE mixed-eth-ipv4-ipv6
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-firewall@2021-01-25.yang
+    )
+
+    velia_test(sysrepo-firewall velia-firewall)
+    set_tests_properties(
+            test-sysrepo-firewall
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-firewall
+            RESOURCE_LOCK sysrepo
+    )
 endif()
 
 if(WITH_DOCS)

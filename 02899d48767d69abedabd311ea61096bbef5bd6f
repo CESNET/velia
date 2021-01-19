@@ -54,6 +54,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53873c2b_2dfa15e4",
+        "filename": "src/ietf-system/RAUC.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-19T13:09:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8fe62e60_c5872ccd",
+      "revId": "02899d48767d69abedabd311ea61096bbef5bd6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "49945232_ff4c6a3e",

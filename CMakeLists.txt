@@ -137,6 +137,17 @@ target_link_libraries(velia-system
         SDBusCpp::sdbus-c++
     )
 
+# - firewall
+add_library(velia-firewall STATIC
+    src/firewall/Firewall.cpp
+    )
+target_link_libraries(velia-firewall
+    PUBLIC
+        velia-utils
+        PkgConfig::SYSREPO
+        PkgConfig::LIBYANG
+    )
+
 # - daemon
 add_executable(veliad
         src/main.cpp
@@ -286,6 +297,27 @@ if(BUILD_TESTING)
     foreach(yang_file ${YANG_SRCS})
         add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
     endforeach()
+
+    sysrepo_fixture_env(sysrepo-firewall
+        # Installing czechlight-firewall automatically installs ietf-access-control-list as implemented (not just
+        # imported) but I still need to install it myself to enable the features.
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-access-control-list@2019-03-04.yang
+            FEATURE eth
+            FEATURE match-on-eth
+            FEATURE match-on-ipv4
+            FEATURE ipv4
+            FEATURE match-on-ipv6
+            FEATURE ipv6
+            FEATURE mixed-eth-ipv4-ipv6
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-firewall@2021-01-25.yang
+    )
+
+    velia_test(sysrepo-firewall velia-firewall)
+    set_tests_properties(
+            test-sysrepo-firewall
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-firewall
+            RESOURCE_LOCK sysrepo
+    )
 endif()
 
 if(WITH_DOCS)

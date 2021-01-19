@@ -44,4 +44,15 @@ module nftables-firewall {
     // We don't support attachment-points
     deviation /acl:acls/acl:attachment-points { deviate not-supported; }
 
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:actions/acl:forwarding {
+        deviate add {
+            must '. = "accept" or . = "drop"';
+        }
+    }
+
+    deviation /acl:acls/acl:acl {
+        deviate add {
+            max-elements 1;
+        }
+    }
 }

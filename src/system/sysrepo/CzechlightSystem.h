@@ -1,0 +1,28 @@
+/*
+ * Copyright (C) 2021 CESNET, https://photonics.cesnet.cz/
+ *
+ * Written by Tomáš Pecka <tomas.pecka@cesnet.cz>
+ *
+ */
+#pragma once
+
+#include <filesystem>
+#include <sdbus-c++/sdbus-c++.h>
+#include <sysrepo-cpp/Session.hpp>
+#include "system/RAUC.h"
+#include "utils/log-fwd.h"
+
+namespace velia::system::sysrepo {
+
+class CzechlightSystem {
+public:
+    CzechlightSystem(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnection);
+
+private:
+    std::shared_ptr<::sysrepo::Connection> m_srConn;
+    std::shared_ptr<::sysrepo::Session> m_srSession;
+    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
+    std::shared_ptr<RAUC> m_rauc;
+    velia::Log m_log;
+};
+}

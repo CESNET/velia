@@ -47,6 +47,7 @@ include(GNUInstallDirs)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 set(YANG_SRCS
+    yang/czechlight-system@2021-01-13.yang
     yang/iana-hardware@2018-03-13.yang
     yang/ietf-hardware@2018-03-13.yang
     yang/iana-crypt-hash@2014-08-06.yang
@@ -225,7 +226,7 @@ if(BUILD_TESTING)
         set_tests_properties(${test_name_cleanup} PROPERTIES FIXTURES_CLEANUP ${fixture_name} RESOURCE_LOCK sysrepo)
 
         if (sysrepo_previous_fixture_name)
-            set_tests_properties(${test_name_init} PROPERTIES DEPENDS sysrepo:clean:${sysrepo_previous_fixture_name})
+            #set_tests_properties(${test_name_init} PROPERTIES DEPENDS sysrepo:clean:${sysrepo_previous_fixture_name})
         endif ()
 
         set(sysrepo_previous_fixture_name ${name} PARENT_SCOPE)
@@ -241,11 +242,11 @@ if(BUILD_TESTING)
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
 
-    sysrepo_fixture_env(sysrepo-ietf-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang)
+    sysrepo_fixture_env(sysrepo-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2021-01-13.yang)
     velia_test(sysrepo_system velia-system DbusTesting)
     set_tests_properties(
             test-sysrepo_system
-            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-ietf-system
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-system
             RESOURCE_LOCK sysrepo
     )
 

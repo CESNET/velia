@@ -242,11 +242,11 @@ if(BUILD_TESTING)
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
 
-    sysrepo_fixture_env(sysrepo-ietf-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang)
+    sysrepo_fixture_env(sysrepo-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2021-01-13.yang)
     velia_test(sysrepo_system velia-system DbusTesting)
     set_tests_properties(
             test-sysrepo_system
-            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-ietf-system
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-system
             RESOURCE_LOCK sysrepo
     )
 

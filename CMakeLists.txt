@@ -127,6 +127,8 @@ target_link_libraries(velia-ietf-hardware-sysrepo
 add_library(velia-system STATIC
         src/system/RAUC.cpp
         src/system/RAUC.h
+        src/system/sysrepo/CzechlightSystem.cpp
+        src/system/sysrepo/CzechlightSystem.h
         src/system/sysrepo/IETFSystem.cpp
         src/system/sysrepo/IETFSystem.h
         )
@@ -258,6 +260,14 @@ if(BUILD_TESTING)
     set_tests_properties(
             test-sysrepo_system-ietfsystem
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-ietf-system
+            RESOURCE_LOCK sysrepo
+)
+
+    sysrepo_fixture_env(sysrepo-czechlight-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2021-01-13.yang)
+    velia_test(sysrepo_system-czechlightsystem velia-system DbusTesting)
+    set_tests_properties(
+            test-sysrepo_system-czechlightsystem
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
             RESOURCE_LOCK sysrepo
     )
 

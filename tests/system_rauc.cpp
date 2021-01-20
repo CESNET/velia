@@ -95,7 +95,7 @@ TEST_CASE("Fetch RAUC data over DBus")
         *clientConnection,
         [&fakeRaucInstallCb](const std::string& operation) { fakeRaucInstallCb.operationCallback(operation); },
         [&fakeRaucInstallCb](int32_t perc, const std::string& msg) { fakeRaucInstallCb.progressCallback(perc, msg); },
-        [&fakeRaucInstallCb](int32_t retval, const std::string& lastError) { fakeRaucInstallCb.completedCallback(retval, lastError); });
+        [&fakeRaucInstallCb](int32_t retVal, const std::string& lastError) { fakeRaucInstallCb.completedCallback(retVal, lastError); });
 
     REQUIRE(rauc->lastError() == "");
     REQUIRE(rauc->operation() == "idle");

@@ -1,0 +1,41 @@
+module czechlight-system {
+  yang-version 1.1;
+  namespace
+    "http://czechlight.cesnet.cz/yang/czechlight-system";
+
+  prefix "cla-rauc";
+
+  organization "CESNET";
+  contact "photonic@cesnet.cz";
+  description
+    "Model for YANG management of RAUC.";
+
+  revision 2021-01-13 {
+    description "Initial release";
+  }
+
+  container rauc {
+    config false;
+    container installation {
+      leaf in-progress {
+        type boolean;
+      }
+      leaf return-value {
+        type int32;
+      }
+      leaf last-error {
+        type string;
+      }
+    }
+  }
+
+  rpc rauc-install {
+    description "Install a bundle.";
+    input {
+      leaf source {
+        description "URL or path to the 'update.raucb' file.";
+        type string;
+      }
+    }
+  }
+}

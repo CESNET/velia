@@ -57,8 +57,10 @@ std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path
 namespace velia::system {
 
 /** @brief Reads some OS-identification data from osRelease file and publishes them via ietf-system model */
-Sysrepo::Sysrepo(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
+Sysrepo::Sysrepo(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease, std::shared_ptr<RAUC> rauc)
     : m_srSession(std::move(srSession))
+    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+    , m_rauc(std::move(rauc))
     , m_log(spdlog::get("system"))
 {
     std::map<std::string, std::string> osReleaseContents = parseKeyValueFile(osRelease);
@@ -79,5 +81,34 @@ Sysrepo::Sysrepo(std::shared_ptr<::sysrepo::Session> srSession, const std::files
 
     m_srSession->apply_changes();
     m_srSession->session_switch_ds(oldDatastore);
+
+    auto notify = std::make_shared<RAUC::InstallNotifier>([](int32_t, const std::string&, int32_t) {}, [this](int32_t returnValue, const std::string& lastError) {
+        sr_datastore_t oldDatastore = m_srSession->session_get_ds();
+        m_srSession->session_switch_ds(SR_DS_OPERATIONAL);
+        m_srSession->set_item_str("/czechlight-system:rauc/installation/return-value", std::to_string(returnValue).c_str());
+        m_srSession->set_item_str("/czechlight-system:rauc/installation/last-error", lastError.c_str());
+        m_srSession->set_item_str("/czechlight-system:rauc/installation/in-progress", "false");
+        m_srSession->apply_changes();
+        m_srSession->session_switch_ds(oldDatastore); });
+
+    m_srSubscribe->rpc_subscribe(
+        "/czechlight-system:rauc-install",
+        [this, notify]([[maybe_unused]] sysrepo::S_Session session, [[maybe_unused]] const char* op_path, const sysrepo::S_Vals input, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id, [[maybe_unused]] sysrepo::S_Vals_Holder output) {
+            std::string source = input->val(0)->val_to_string();
+
+            sr_datastore_t oldDatastore = m_srSession->session_get_ds();
+            m_srSession->session_switch_ds(SR_DS_OPERATIONAL);
+            m_srSession->delete_item("/czechlight-system:rauc/installation/return-value");
+            m_srSession->delete_item("/czechlight-system:rauc/installation/last-error");
+            m_srSession->set_item_str("/czechlight-system:rauc/installation/in-progress", "true");
+            m_srSession->apply_changes();
+            m_srSession->session_switch_ds(oldDatastore);
+
+            m_rauc->install(source, notify);
+
+            return SR_ERR_OK;
+        },
+        0,
+        SR_SUBSCR_CTX_REUSE);
 }
 }

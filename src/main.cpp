@@ -11,6 +11,7 @@
 #include "health/manager/StateManager.h"
 #include "health/outputs/callables.h"
 #include "ietf-hardware/sysrepo/Sysrepo.h"
+#include "system/RAUC.h"
 #include "system/Sysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
@@ -103,9 +104,11 @@ int main(int argc, char* argv[])
         spdlog::get("main")->debug("Initializing Sysrepo ietf-hardware callback");
         auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSubscription, ietfHardware);
 
-        // initialize ietf-system
+
+        // initialize ietf-system and czechlight-system
         spdlog::get("main")->debug("Initializing Sysrepo for system models");
-        auto sysrepoSystem = velia::system::Sysrepo(srSess, "/etc/os-release");
+        auto rauc = std::make_shared<velia::system::RAUC>(*g_dbusConnection);
+        auto sysrepoSystem = velia::system::Sysrepo(srConn, "/etc/os-release", rauc);
 
         // Gracefully leave dbus event loop on SIGTERM
         struct sigaction sigact;

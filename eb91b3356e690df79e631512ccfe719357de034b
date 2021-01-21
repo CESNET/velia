@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f74a29c0_2d802325",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T17:44:07Z",
+      "side": 1,
+      "message": "I\u0027m afraid this needs a lot of work:\n\n- please add the external modules in a separate commit and clearly state where they come from (that is, where you get the data from exactly, which git repo, what commit)\n\n- there\u0027s no module with deviations\n\n- a lot of items which are allowed to be set are silently discarded. In my opinion this is super-bad for a firewall module. Perhaps the code structure should be changed, instead of cherry picking \"known nodes\" and hoping that you never miss one it would be better to do it the other way round: walk the tree, and for reach node fail if it is not recognized. If it is recognized, perform an action.",
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c08fd85_998eb08e",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T17:44:07Z",
+      "side": 1,
+      "message": "- a rule which allows anything over `lo` is missing\n- the conntrack rule is added once per each \"ACL\" that the user creates, I think it should be present exactly once in the whole system\n- I\u0027m not sure you got the \"attachments\" correctly, but I doubt that it\u0027s OK to have multiple \"add chain inet filer foo { tipe filter hook input priority 0; }\" statements, one for each ACL. Either hardcode exactly one (and enforce that via YANG), or implement the \"attachment-points\" part of the RFC.",
+      "range": {
+        "startLine": 81,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 93
+      },
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e9a03d2_e7fe142e",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T17:44:07Z",
+      "side": 1,
+      "message": "This is wrong because it silently omits \"reject\". Please make this code more robust, that is, check for all possible values *and* add an else branch where it throws.",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 13
+      },
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "746558a1_447796d9",
+        "filename": "tests/sysrepo-firewall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T17:44:07Z",
+      "side": 1,
+      "message": "Frankly, I find this hard to read. It would be easier for me to understand what\u0027s going on if the tests always started with an empty state, and you used one SECTION for each \"type of a thing\" that can happen. IOW, make sure that these work:\n\n- filtering by a source IPv4 address\n- filtering by a source IPv6 address\n- filter by a combination of FOO and BAR (whatever it is, sorry, haven\u0027t really read the model)\n- action ACCEPT\n- action DROP\n- whatever other action there is\n- invalid (or just \"a strange\") name of the ACL\n- invalid (\"strange\") name of an ACE\n- more than one ACE in an ACL\n- no ACEs in an ACL (or a note in the commit message explaining that it is not valid and it\u0027s checked by the YANG validator)\n\nAll of these can use a structure of the test that\u0027s very similar to what you already have here -- start with a known state (empty in that future version of this patch), add one entry, verify what\u0027s going on in the produced result.\n\n*Then* the test should move to more complex things -- start with a known state, remove an entry, check that it\u0027s worked. Add another entry, see that it worked.",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 28
+      },
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f745764_a1993523",
+        "filename": "tests/sysrepo-firewall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T17:44:07Z",
+      "side": 1,
+      "message": "Is this required? Last time I checked, sysrepo auto-created missing nodes in the hierarchy.",
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

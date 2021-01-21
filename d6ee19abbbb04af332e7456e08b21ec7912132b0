@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd9bbc63_7247c836",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T18:35:45Z",
+      "side": 1,
+      "message": "\"cla-sys\" I guess",
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31484d94_d5894927",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T18:35:45Z",
+      "side": 1,
+      "message": "\"RAUC\" is an implementation detail, let\u0027s not hardcode that in the model. Call it \"firmware\", please, and remove \"RAUC\" from various descriptions if possible.",
+      "range": {
+        "startLine": 17,
+        "startChar": 12,
+        "endLine": 17,
+        "endChar": 16
+      },
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d21af307_6920a5c5",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T18:35:45Z",
+      "side": 1,
+      "message": "That doesn\u0027t provide much info in a YANG context. I checked RAUC\u0027s docs, and this is the int that comes from https://rauc.readthedocs.io/en/latest/reference.html#the-completed-signal, right? That one is documented to be \"0\" for success, and anything (unspecific) else for an error. Also, it\u0027s a result of a signal and not a property, which means that it\u0027s \"tricky\" to define how exactly to map that \"transient property\" to a YANG leaf.\n\nLet\u0027s take a step back and see what we want to achieve here. I think that as a user, I want this module to let me update the FW, to learn about the status of the A and B FW slots (OK, out of scope for now, why not, even though I would have probably started with that), and to learn about operations that might fail. We also agreed that the RPC (or an action) takes a looooong time to complete, so we need an async API. Also, it would be nice if the stuff that\u0027s available via YANG was \"reasonable\" and \"not actively misleading\" even in presence of a manual `rauc install blahblah` invocation from the CLI.\n\nThis means that there\u0027s value in communicating \"installation failure\", but that \"failure\" cannot be really tied to a particular RPC/action for two reasons:\n- it\u0027s asynchronous,\n- it can be triggered outside of sysrepo.\n\nI think this leads to a model like this one:\n \ncontainer installation {\n  leaf status {\n    type enumeration {\n      enum none;\n      enum in-progress;\n      enum succeeded;\n      enum failed;\n    }\n  }\n\n  leaf message {\n    type string;\n  }\n \n  notification update {\n    leaf message {\n      type string;\n    }\n    leaf progress {\n      type int8 {\n        range \"0 .. 100\";\n      }\n    }\n  }\n \n  action install {\n    input {\n      leaf url {\n        ...\n      }\n    }\n  }\n}\n\nHere\u0027s how \"status\" should be set from your class\u0027 ctor:\n \nif rauc.operation \u003d\u003d \"installing\":\n  status \u003d in-progress;\nelif rauc.last-error !\u003d empty:\n  status \u003d failed;\nelse:\n  status \u003d none;\n\nThe ctor also installs a watcher which reacts to dbus updates:\n\n- upon a change of \"operation\" to \"installing\", set to \"installing\"\n- upon recieving \"completed\":\n  - if exit code \u003d\u003d 0, set to \"succeeded\"\n  - otherwise set to \"failed\"\n\nAlso set a watcher, so that you can propagate events from https://rauc.readthedocs.io/en/latest/using.html#processing-progress-data like this:\n \nupdate(\"Installing\", 0%)\nupdate(\"Determining slot states\", 0%)\nupdate(Determining slot states done.\", 20%)\nupdate(\"Checking bundle\", 20%)\nupdate(\"Verifying signature\", 20%)\nupdate(\"Verifying signature done.\", 40%)\nupdate(\"Checking bundle done.\", 40%)\nupdate(Installing done.\", 100%)\n\nIMHO it\u0027s completely OK to ignore that nesting parameter.\n\nI know how to use an API like that to design a UI: I would show a blank icon for status \u003d\u003d \"none\", a waiting symbol for \"in-progress\", a green tickmark for \"succeeded\", and a red error thingy for \"failed\". I would also show a progressbar when status \u003d\u003d \"in-progress\", and update that progress bar upon getting the \"update\" notification. The progress bar would hide upon any transition of \"status\". Also, always show a text field initially populated from \"installation/message\", which will be overwritten by the notification\u0027s \"installation/update/message\".",
+      "range": {
+        "startLine": 30,
+        "startChar": 13,
+        "endLine": 30,
+        "endChar": 18
+      },
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2acf43c5_d803dfa0",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T18:35:45Z",
+      "side": 1,
+      "message": "YANG (and sysrepo) support actions as well, so I think it would make sense to move this into /czechlight-system:firmware/installation/install.",
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d8e7279_03e37e8a",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T18:35:45Z",
+      "side": 1,
+      "message": "I think this is confusing, see above for my suggestion. Just fail the whole RPC if you detect that it cannot be performed, just fail the whole RPC. These will be useful I think:\n\n- https://netopeer.liberouter.org/doc/sysrepo/devel/html/group__rpc__subs__api.html#ga1154cf0ed7f1284d953d614538ad8d7e\n- https://netopeer.liberouter.org/doc/sysrepo/devel/html/group__conn__sess__api.html#ga3f38b6ecc12161ebacaf106c848b3c39",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

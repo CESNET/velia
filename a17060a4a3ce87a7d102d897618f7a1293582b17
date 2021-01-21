@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a18c1aa2_36b9c1cf",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-21T18:47:39Z",
+      "side": 1,
+      "message": "I do not specifically subscribe for the de.pengutronix.rauc interface.\n\nThere is an interface and an interface. I should clarify :-)\n\nThe PropertiesChanged signal is defined on org.freedesktop.DBus.Properties (standard D-Bus interface for all objects). Whenever any property of the subscribed object changes, it is propagated through this signal (defined on org.freedesktop.DBus.Properties). \nI subscribe to this standard interface.\nAnd through this interface I obtain a signal that tells me that something happened within a property on *another* object\u0027s interface.\n\nThe object can have multiple properties and every property can use any interface. There are cases like that: Just look into systemd\u0027s /org/freedesktop/systemd1/unit/something-service and you will see that the object uses two interfaces: org.freedesktop.systemd1.Service and org.freedesktop.systemd1.Unit. Both interfaces have some properties and methods of their own.\n\nIf I want to check only for changed properties on iface2 (i.e., Prop2), I have to filter out using this condition, because the interface of the changed property is passed as the first argument of the signal.\n\nThat\u0027s why I filter only for those interesting those on INTERFACE.\n\nHowever, to be honest, this was initially a copy-paste from systemd watcher code where I really wanted to filter the interfaces and the object really used multiple interfaces for its properties.\n\nThe RAUC object uses only one interface for its properties, so *probably* it is not neccessary here because with the current RAUC version, the iface variable can contain only the \"de.pengutronix.rauc\" value.",
+      "parentUuid": "cd6b24e2_0a2ccc6b",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 9
+      },
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4d07ba18_a50e71ed",
         "filename": "src/system/RAUC.cpp",
         "patchSetId": 7

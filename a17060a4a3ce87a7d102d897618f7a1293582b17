@@ -72,6 +72,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4dc19c6_5308aeb8",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T19:35:22Z",
+      "side": 1,
+      "message": "Right, my bad. I also think that the fact that they use just one interface today doesn\u0027t mean they won\u0027t add a new one in future.\n\nI\u0027m OK with the if, then :).",
+      "parentUuid": "f7f688a4_4324360e",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 9
+      },
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4d07ba18_a50e71ed",

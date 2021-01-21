@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd6b24e2_0a2ccc6b",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T18:02:23Z",
+      "side": 1,
+      "message": "can you get a signal like that, given that you specifically subscribe for a notification over this interface?",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 9
+      },
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d07ba18_a50e71ed",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T18:02:23Z",
+      "side": 1,
+      "message": "I don\u0027t understand why this listener is not initialized from the constructor. If it was installed from the ctor, you would receive these updates all the time, which means that it would be possible to *also* sned notifications via NETCONF when someone updates things via CLI (and it would also make the code simpler).\n\nThe catch would be that this code wouldn\u0027t know if there\u0027s an installation in progress *that was initialized via sysrepo*. Given that you already have to handle that (and do so below, line 135), that means that there\u0027s no gain in not having the notifier available all the time.",
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f53c225e_b454e7ba",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-21T18:02:23Z",
+      "side": 1,
+      "message": "This will need a dedicated exception so that the sysrepo layer can react to an error from RAUC \"hey, you cannot install now\" by returning SR_ERR_something (and perhaps setting a detailed error message to the NETCONF protocol, see sysrepo docs about pushing errors to the client).",
+      "range": {
+        "startLine": 135,
+        "startChar": 19,
+        "endLine": 135,
+        "endChar": 30
+      },
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

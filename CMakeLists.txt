@@ -134,6 +134,7 @@ target_link_libraries(velia-system
         velia-utils
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
+        SDBusCpp::sdbus-c++
     )
 
 # - daemon

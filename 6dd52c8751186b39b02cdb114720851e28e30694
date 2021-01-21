@@ -1,0 +1,9 @@
+Verified+1: Zuul CI <cesnet-zuul+public@gerrit.cesnet.cz>
+Verified+1: CzechLight CI <cesnet-zuul+czechlight@gerrit.cesnet.cz>
+Code-Review+2: Jan Kundrát <jan.kundrat@cesnet.cz>
+Code-Review+2: Tomáš Pecka <Tomas.Pecka@cesnet.cz>
+Submitted-by: Václav Kubernát <kubernat@cesnet.cz>
+Submitted-at: Thu, 21 Jan 2021 10:10:16 +0100
+Reviewed-on: https://gerrit.cesnet.cz/c/CzechLight/velia/+/3435
+Project: CzechLight/velia
+Branch: refs/heads/master

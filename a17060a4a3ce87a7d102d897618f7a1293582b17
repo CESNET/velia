@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f7f688a4_4324360e",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-21T19:27:30Z",
+      "side": 1,
+      "message": "Sorry,\n\u003e on *another* object\u0027s interface.\n\nshould have been\n\n\u003e on object\u0027s *another* interface.",
+      "parentUuid": "a18c1aa2_36b9c1cf",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 9
+      },
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4d07ba18_a50e71ed",
         "filename": "src/system/RAUC.cpp",
         "patchSetId": 7
@@ -67,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d4e156aa_0dd0d5c0",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-21T19:27:30Z",
+      "side": 1,
+      "message": "Yes, I think I understand what should have been done. I will try in next PS",
+      "parentUuid": "4d07ba18_a50e71ed",
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f53c225e_b454e7ba",
         "filename": "src/system/RAUC.cpp",
         "patchSetId": 7
@@ -78,6 +120,30 @@
       "writtenOn": "2021-01-21T18:02:23Z",
       "side": 1,
       "message": "This will need a dedicated exception so that the sysrepo layer can react to an error from RAUC \"hey, you cannot install now\" by returning SR_ERR_something (and perhaps setting a detailed error message to the NETCONF protocol, see sysrepo docs about pushing errors to the client).",
+      "range": {
+        "startLine": 135,
+        "startChar": 19,
+        "endLine": 135,
+        "endChar": 30
+      },
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50d3dd61_78f60ca2",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-21T19:27:30Z",
+      "side": 1,
+      "message": "I will create a dedicated exception, I was catching the logic error in the RPC callback, but  yes, I agree that this is \"extremely suboptimal\".",
+      "parentUuid": "f53c225e_b454e7ba",
       "range": {
         "startLine": 135,
         "startChar": 19,

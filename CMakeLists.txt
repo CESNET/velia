@@ -56,6 +56,7 @@ set(YANG_SRCS
     yang/ietf-system@2014-08-06.yang
     yang/ietf-yang-types@2013-07-15.yang
     yang/ietf-access-control-list@2019-03-04.yang
+    yang/czechlight-firewall@2021-01-25.yang
     )
 
 # Targets

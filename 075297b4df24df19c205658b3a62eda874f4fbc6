@@ -90,6 +90,23 @@
       },
       "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d592434f_94b53d50",
+        "filename": "yang/nftables-firewall.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T09:08:40Z",
+      "side": 1,
+      "message": "In iptables, ACCEPT/REJECT/DROP was a trivial difference. Is there any particular reason for only handling ACCEPT and DROP and not REJECT here with nftables? If so, it belongs to the commit message.",
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

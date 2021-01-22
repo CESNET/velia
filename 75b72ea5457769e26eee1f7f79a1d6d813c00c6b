@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "442272a8_fffef679",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T09:58:23Z",
+      "side": 1,
+      "message": "The YANG model with deviations is not installed into sysrepo for test execution.",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 46
+      },
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b4f1c80_32ef7695",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T09:58:23Z",
+      "side": 1,
+      "message": "nit: most editor configs I\u0027ve seen highlight on capitals like FIXME, TODO, etc, not \"Todo\"",
+      "range": {
+        "startLine": 86,
+        "startChar": 11,
+        "endLine": 86,
+        "endChar": 15
+      },
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a69968da_188ac071",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T09:58:23Z",
+      "side": 1,
+      "message": "This depends on all nodes being present in the schema order when returned from sysrepo. Please ask sysrepo/libyang to document whether that\u0027s guaranteed. In case that cannot be offered, make sure you call the sort yourself.",
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36e92e76_f0957051",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T09:58:23Z",
+      "side": 1,
+      "message": "this probably needs escaping or a YANG filter for \u0027\"\u0027 (and maybe also \u0027\\\u0027, and maybe also newlines, and...)",
+      "range": {
+        "startLine": 112,
+        "startChar": 35,
+        "endLine": 112,
+        "endChar": 42
+      },
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dccf566b_c706efb6",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T09:58:23Z",
+      "side": 1,
+      "message": "nothing checks that the module with deviations is actually enabled (and the test runs without it being available)",
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

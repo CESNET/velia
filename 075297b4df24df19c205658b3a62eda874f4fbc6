@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fb67328_02d5ae17",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T08:56:58Z",
+      "side": 1,
+      "message": "please split out \"somebody else\u0027s stuff\" (models from IETF) from your original contribution (the deviation)",
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd1d80eb_71016658",
+        "filename": "yang/nftables-firewall.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T08:56:58Z",
+      "side": 1,
+      "message": "yup, \"czechlight-firewall\" please",
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27f6c9a0_5fbe3cdb",
+        "filename": "yang/nftables-firewall.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T08:56:58Z",
+      "side": 1,
+      "message": "http://czechlight.cesnet.cz/yang/czechlight-firewall",
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3492e51_9a54e425",
+        "filename": "yang/nftables-firewall.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-22T08:56:58Z",
+      "side": 1,
+      "message": "cla-fw",
+      "range": {
+        "startLine": 5,
+        "startChar": 11,
+        "endLine": 5,
+        "endChar": 14
+      },
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

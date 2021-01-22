@@ -1,0 +1,66 @@
+module czechlight-firewall {
+    yang-version 1.1;
+    namespace "http://czechlight.cesnet.cz/yang/czechlight-firewall";
+    prefix cla-fw;
+
+    import ietf-packet-fields {
+        prefix pf;
+    }
+
+    import ietf-access-control-list {
+        prefix acl;
+    }
+
+    revision 2021-01-25 {
+        description
+          "Initial version.";
+    }
+
+    // We don't support logging
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:actions/acl:logging { deviate not-supported; }
+
+    // We don't support these types of matching
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:egress-interface { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:ingress-interface { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l2 { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:destination-network { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:dscp { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:ecn { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:flags { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:identification { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:ihl { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:length { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:offset { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:protocol { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv4/acl:ipv4/acl:ttl { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv6/acl:ipv6/acl:destination-network { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv6/acl:ipv6/acl:dscp { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv6/acl:ipv6/acl:ecn { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv6/acl:ipv6/acl:flow-label { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv6/acl:ipv6/acl:length { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv6/acl:ipv6/acl:protocol { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l3/acl:ipv6/acl:ipv6/acl:ttl { deviate not-supported; }
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:matches/acl:l4 { deviate not-supported; }
+
+    // We don't support statistics
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:statistics { deviate not-supported; }
+
+    // We don't support attachment-points
+    deviation /acl:acls/acl:attachment-points { deviate not-supported; }
+
+    // We only support ONE acl (which we will translate to one table)
+    deviation /acl:acls/acl:acl {
+        deviate add {
+            max-elements 1;
+        }
+    }
+
+    deviation /acl:acls/acl:acl/acl:aces/acl:ace/acl:name {
+        deviate replace {
+            type string  {
+                // We don't allow newlines and double quotes in ACE names
+                pattern '[^\r\n"]+';
+            }
+        }
+    }
+}

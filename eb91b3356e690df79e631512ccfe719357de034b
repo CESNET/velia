@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86ca53f4_d065d210",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-22T05:41:51Z",
+      "side": 1,
+      "message": "1) done\n2) added the deviations module\n3) I reworked the algorithm and now I walk the whole tree",
+      "parentUuid": "f74a29c0_2d802325",
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8c08fd85_998eb08e",
@@ -41,6 +59,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37e9a245_06fe8ad6",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-22T05:41:51Z",
+      "side": 1,
+      "message": "1) done\n2 and 3) I have enforced only one ACL",
+      "parentUuid": "8c08fd85_998eb08e",
+      "range": {
+        "startLine": 81,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 93
+      },
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e9a03d2_e7fe142e",
@@ -54,6 +96,30 @@
       "writtenOn": "2021-01-21T17:44:07Z",
       "side": 1,
       "message": "This is wrong because it silently omits \"reject\". Please make this code more robust, that is, check for all possible values *and* add an else branch where it throws.",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 13
+      },
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5312a066_9a73eea2",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-22T05:41:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e9a03d2_e7fe142e",
       "range": {
         "startLine": 94,
         "startChar": 0,
@@ -100,6 +166,24 @@
       "writtenOn": "2021-01-21T17:44:07Z",
       "side": 1,
       "message": "Is this required? Last time I checked, sysrepo auto-created missing nodes in the hierarchy.",
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "057ab410_45092d2b",
+        "filename": "tests/sysrepo-firewall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-22T05:41:51Z",
+      "side": 1,
+      "message": "It\u0027s not, I removed it.",
+      "parentUuid": "8f745764_a1993523",
       "revId": "eb91b3356e690df79e631512ccfe719357de034b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

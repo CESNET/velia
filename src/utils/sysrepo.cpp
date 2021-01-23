@@ -1,15 +1,17 @@
 /*
- * Copyright (C) 2016-2018 CESNET, https://photonics.cesnet.cz/
+ * Copyright (C) 2016-2021 CESNET, https://photonics.cesnet.cz/
  *
  * Written by Jan Kundrát <jan.kundrat@cesnet.cz>
+ * Written by Tomáš Pecka <tomas.pecka@cesnet.cz>
  *
  */
+
+#include "sysrepo.h"
+#include "utils/log.h"
+
 extern "C" {
 #include <sysrepo.h>
 }
-
-#include "log-sysrepo.h"
-#include "utils/log.h"
 
 extern "C" {
 /** @short Propagate sysrepo events to spdlog */
@@ -48,4 +50,28 @@ void initLogsSysrepo()
 {
     sr_log_set_cb(spdlog_sr_log_cb);
 }
+
+void valuesToYang(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)
+{
+    for (const auto& [propertyName, value] : values) {
+        spdlog::get("main")->trace("propertyName: {}, value: {}", propertyName, value.c_str());
+
+        if (!parent) {
+            parent = std::make_shared<libyang::Data_Node>(
+                session->get_context(),
+                propertyName.c_str(),
+                value.c_str(),
+                LYD_ANYDATA_CONSTSTRING,
+                LYD_PATH_OPT_OUTPUT);
+        } else {
+            parent->new_path(
+                session->get_context(),
+                propertyName.c_str(),
+                value.c_str(),
+                LYD_ANYDATA_CONSTSTRING,
+                LYD_PATH_OPT_OUTPUT);
+        }
+    }
+}
+
 }

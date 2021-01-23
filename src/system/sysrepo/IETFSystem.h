@@ -10,11 +10,11 @@
 #include <sysrepo-cpp/Session.hpp>
 #include "utils/log-fwd.h"
 
-namespace velia::system {
+namespace velia::system::sysrepo {
 
-class Sysrepo {
+class IETFSystem {
 public:
-    explicit Sysrepo(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease);
+    explicit IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease);
 
 private:
     std::shared_ptr<::sysrepo::Session> m_srSession;

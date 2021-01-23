@@ -1,13 +1,13 @@
 #include "trompeloeil_doctest.h"
 #include "pretty_printers.h"
-#include "system/Sysrepo.h"
+#include "system/sysrepo/IETFSystem.h"
 #include "test_log_setup.h"
 #include "test_sysrepo_helpers.h"
 #include "tests/configure.cmake.h"
 
 using namespace std::literals;
 
-TEST_CASE("System stuff in Sysrepo")
+TEST_CASE("Sysrepo ietf-system")
 {
     trompeloeil::sequence seq1;
 
@@ -60,13 +60,13 @@ TEST_CASE("System stuff in Sysrepo")
                 };
             }
 
-            auto sysrepo = std::make_shared<velia::system::Sysrepo>(srSess, file);
+            auto sysrepo = std::make_shared<velia::system::sysrepo::IETFSystem>(srSess, file);
             REQUIRE(dataFromSysrepo(client, modulePrefix, SR_DS_OPERATIONAL) == expected);
         }
 
         SECTION("Invalid data (missing VERSION and NAME keys)")
         {
-            REQUIRE_THROWS_AS(std::make_shared<velia::system::Sysrepo>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys"), std::out_of_range);
+            REQUIRE_THROWS_AS(std::make_shared<velia::system::sysrepo::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys"), std::out_of_range);
         }
     }
 }

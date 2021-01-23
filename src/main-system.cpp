@@ -4,7 +4,7 @@
 #include <sysrepo-cpp/Session.hpp>
 #include "VELIA_VERSION.h"
 #include "main.h"
-#include "system/Sysrepo.h"
+#include "system/IETFSystem.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
 #include "utils/log-init.h"
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 
         // initialize ietf-system
         spdlog::get("main")->debug("Initializing Sysrepo for system models");
-        auto sysrepoIETFSystem = velia::system::Sysrepo(srSess, "/etc/os-release");
+        auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release");
 
         DBUS_EVENTLOOP_END
         return 0;

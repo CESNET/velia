@@ -7,7 +7,7 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
-#include "Sysrepo.h"
+#include "IETFSystem.h"
 #include "utils/io.h"
 #include "utils/log.h"
 
@@ -57,7 +57,7 @@ std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path
 namespace velia::system {
 
 /** @brief Reads some OS-identification data from osRelease file and publishes them via ietf-system model */
-Sysrepo::Sysrepo(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
+IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
     : m_srSession(std::move(srSession))
     , m_log(spdlog::get("system"))
 {

@@ -12,9 +12,9 @@
 
 namespace velia::system {
 
-class Sysrepo {
+class IETFSystem {
 public:
-    explicit Sysrepo(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease);
+    explicit IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease);
 
 private:
     std::shared_ptr<::sysrepo::Session> m_srSession;

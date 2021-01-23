@@ -23,6 +23,8 @@ public:
     std::string primarySlot() const;
     std::map<std::string, SlotProperties> slotStatus() const;
     void install(const std::string& source) const;
+    std::string operation() const;
+    std::string lastError() const;
 
 private:
     std::shared_ptr<sdbus::IProxy> m_dbusObjectProxy;

@@ -120,4 +120,14 @@ void RAUC::install(const std::string& source)
 {
     m_dbusObjectProxy->callMethod("InstallBundle").onInterface(INTERFACE).withArguments(source, std::map<std::string, sdbus::Variant> {});
 }
+
+std::string RAUC::operation() const
+{
+    return m_dbusObjectProxy->getProperty("Operation").onInterface(INTERFACE);
+}
+
+std::string RAUC::lastError() const
+{
+    return m_dbusObjectProxy->getProperty("LastError").onInterface(INTERFACE);
+}
 }

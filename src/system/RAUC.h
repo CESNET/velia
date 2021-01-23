@@ -23,6 +23,9 @@ public:
     std::string primarySlot() const;
     std::map<std::string, SlotProperties> slotStatus() const;
     void install(const std::string& source);
+    std::string operation() const;
+    std::string lastError() const;
+>>>>>>> 4c1366f (system: RAUC operation and last error properties)
 
 private:
     std::shared_ptr<sdbus::IProxy> m_dbusObjectProxy;

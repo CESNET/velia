@@ -70,8 +70,8 @@ add_library(velia-utils STATIC
     src/utils/log-fwd.h
     src/utils/log-init.cpp
     src/utils/log-init.h
-    src/utils/log-sysrepo.cpp
-    src/utils/log-sysrepo.h
+    src/utils/sysrepo.cpp
+    src/utils/sysrepo.h
     src/utils/time.cpp
     src/utils/time.h
     )

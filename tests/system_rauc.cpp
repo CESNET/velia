@@ -97,6 +97,9 @@ TEST_CASE("Fetch RAUC data over DBus")
         [&fakeRaucInstallCb](int32_t perc, const std::string& msg) { fakeRaucInstallCb.progressCallback(perc, msg); },
         [&fakeRaucInstallCb](int32_t retval, const std::string& lastError) { fakeRaucInstallCb.completedCallback(retval, lastError); });
 
+    REQUIRE(rauc->lastError() == "");
+    REQUIRE(rauc->operation() == "idle");
+
     SECTION("Test slot status")
     {
         REQUIRE(rauc->primarySlot() == primarySlot);
@@ -133,6 +136,7 @@ TEST_CASE("Fetch RAUC data over DBus")
         FAKE_RAUC_OPERATION("idle");
 
         rauc->install("/path/to/bundle");
+        REQUIRE(rauc->operation() == "installing");
 
         SECTION("Invoking another operation before the installation ends")
         {
@@ -158,6 +162,10 @@ TEST_CASE("Fetch RAUC data over DBus")
         FAKE_RAUC_OPERATION("idle");
 
         rauc->install("/path/to/bundle");
+        REQUIRE(rauc->operation() == "installing");
         waitForCompletionAndBitMore(seq1);
+        REQUIRE(rauc->lastError() == "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number");
     }
+
+    REQUIRE(rauc->operation() == "idle");
 }

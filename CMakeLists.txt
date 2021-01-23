@@ -127,8 +127,8 @@ target_link_libraries(velia-ietf-hardware-sysrepo
 add_library(velia-system STATIC
         src/system/RAUC.cpp
         src/system/RAUC.h
-        src/system/Sysrepo.cpp
-        src/system/Sysrepo.h
+        src/system/sysrepo/IETFSystem.cpp
+        src/system/sysrepo/IETFSystem.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -254,9 +254,9 @@ if(BUILD_TESTING)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)
 
     sysrepo_fixture_env(sysrepo-ietf-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang)
-    velia_test(sysrepo_system velia-system DbusTesting)
+    velia_test(sysrepo_system-ietfsystem velia-system DbusTesting)
     set_tests_properties(
-            test-sysrepo_system
+            test-sysrepo_system-ietfsystem
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-ietf-system
             RESOURCE_LOCK sysrepo
     )

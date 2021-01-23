@@ -116,7 +116,7 @@ std::map<std::string, RAUC::SlotProperties> RAUC::slotStatus() const
  * and after the installation finishes, the Completed signal is triggered.
  * (see https://rauc.readthedocs.io/en/v1.4/reference.html#gdbus-method-de-pengutronix-rauc-installer-installbundle)
  */
-void RAUC::install(const std::string& source)
+void RAUC::install(const std::string& source) const
 {
     m_dbusObjectProxy->callMethod("InstallBundle").onInterface(INTERFACE).withArguments(source, std::map<std::string, sdbus::Variant> {});
 }

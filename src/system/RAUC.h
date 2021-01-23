@@ -22,7 +22,7 @@ public:
     RAUC(sdbus::IConnection& connection, std::function<void(const std::string&)> operCb, std::function<void(int32_t, const std::string&)> progressCb, std::function<void(int32_t, const std::string&)> completedCb);
     std::string primarySlot() const;
     std::map<std::string, SlotProperties> slotStatus() const;
-    void install(const std::string& source);
+    void install(const std::string& source) const;
 
 private:
     std::shared_ptr<sdbus::IProxy> m_dbusObjectProxy;

@@ -10,7 +10,7 @@
 #include <map>
 #include <sysrepo-cpp/Session.hpp>
 #include "test_log_setup.h"
-#include "utils/log-sysrepo.h"
+#include "utils/sysrepo.h"
 
 /** @short Return a subtree from sysrepo, compacting the XPath */
 auto dataFromSysrepo(const std::shared_ptr<sysrepo::Session>& session, const std::string& xpath)

@@ -74,4 +74,24 @@ void valuesToYang(const std::map<std::string, std::string>& values, std::shared_
     }
 }
 
+void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore)
+{
+    sr_datastore_t oldDatastore = session->session_get_ds();
+    session->session_switch_ds(datastore);
+
+    valuesPush(values, session);
+
+    session->apply_changes();
+    session->session_switch_ds(oldDatastore);
+}
+
+void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session)
+{
+    libyang::S_Data_Node edit;
+    valuesToYang(values, session, edit);
+
+    session->edit_batch(edit, "merge");
+    session->apply_changes();
+}
+
 }

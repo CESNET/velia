@@ -74,4 +74,26 @@ void valuesToYang(const std::map<std::string, std::string>& values, std::shared_
     }
 }
 
+/** @brief Set values into Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
+void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore)
+{
+    sr_datastore_t oldDatastore = session->session_get_ds();
+    session->session_switch_ds(datastore);
+
+    valuesPush(values, session);
+
+    session->apply_changes();
+    session->session_switch_ds(oldDatastore);
+}
+
+/** @brief Set values into Sysrepo's current datastore. */
+void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session)
+{
+    libyang::S_Data_Node edit;
+    valuesToYang(values, session, edit);
+
+    session->edit_batch(edit, "merge");
+    session->apply_changes();
+}
+
 }

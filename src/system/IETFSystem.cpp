@@ -10,6 +10,7 @@
 #include "IETFSystem.h"
 #include "utils/io.h"
 #include "utils/log.h"
+#include "utils/sysrepo.h"
 
 using namespace std::literals;
 
@@ -69,15 +70,6 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
         {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-version", osReleaseContents.at("VERSION")},
     };
 
-    sr_datastore_t oldDatastore = m_srSession->session_get_ds();
-    m_srSession->session_switch_ds(SR_DS_OPERATIONAL);
-
-    for (const auto& [k, v] : opsSystemStateData) {
-        m_log->debug("Pushing to sysrepo: {} = {}", k, v);
-        m_srSession->set_item_str(k.c_str(), v.c_str());
-    }
-
-    m_srSession->apply_changes();
-    m_srSession->session_switch_ds(oldDatastore);
+    utils::valuesPush(opsSystemStateData, m_srSession, SR_DS_OPERATIONAL);
 }
 }

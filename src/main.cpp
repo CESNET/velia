@@ -1,4 +1,3 @@
-#include <csignal>
 #include <docopt.h>
 #include <future>
 #include <sdbus-c++/sdbus-c++.h>
@@ -11,6 +10,7 @@
 #include "health/manager/StateManager.h"
 #include "health/outputs/callables.h"
 #include "ietf-hardware/sysrepo/Sysrepo.h"
+#include "main.h"
 #include "system/Sysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
@@ -60,7 +60,7 @@ Options:
   --systemd-ignore-unit=<Unit>      Ignore state of systemd's unit in systemd state tracker. Can be specified multiple times.
 )";
 
-std::unique_ptr<sdbus::IConnection> g_dbusConnection;
+DBUS_EVENTLOOP_INIT
 
 int main(int argc, char* argv[])
 {
@@ -76,15 +76,10 @@ int main(int argc, char* argv[])
     velia::utils::initLogs(loggingSink);
     spdlog::set_level(spdlog::level::info);
 
-    std::thread eventLoop;
-
     try {
         spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
         spdlog::get("hardware")->set_level(parseLogLevel("Hardware loggers", args["--hardware-log-level"]));
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
-
-        spdlog::get("main")->debug("Opening DBus connection");
-        g_dbusConnection = sdbus::createSystemBusConnection();
 
         spdlog::get("main")->debug("Opening Sysrepo connection");
         auto srConn = std::make_shared<sysrepo::Connection>();
@@ -107,15 +102,7 @@ int main(int argc, char* argv[])
         spdlog::get("main")->debug("Initializing Sysrepo for system models");
         auto sysrepoSystem = velia::system::Sysrepo(srSess, "/etc/os-release");
 
-        // Gracefully leave dbus event loop on SIGTERM
-        struct sigaction sigact;
-        memset(&sigact, 0, sizeof(sigact));
-        sigact.sa_handler = [](int) { g_dbusConnection->leaveEventLoop(); }; // sdbus-c++'s implementation doesn't mind if called before entering the event loop. It simply leaves the loop on entry
-        sigact.sa_flags = SA_SIGINFO;
-        sigaction(SIGTERM, &sigact, nullptr);
-
-        spdlog::get("main")->debug("Starting DBus event loop");
-        eventLoop = std::thread([] { g_dbusConnection->enterEventLoop(); });
+        DBUS_EVENTLOOP_START
 
         // health
         auto manager = std::make_shared<velia::health::StateManager>();
@@ -138,9 +125,8 @@ int main(int argc, char* argv[])
 
         spdlog::get("main")->debug("All inputs initialized.");
 
-        eventLoop.join();
+        DBUS_EVENTLOOP_END;
 
-        spdlog::get("main")->debug("Shutting down");
         return 0;
     } catch (std::exception& e) {
         velia::utils::fatalException(spdlog::get("main"), e, "main");

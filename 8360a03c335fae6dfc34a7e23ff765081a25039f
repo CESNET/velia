@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37f5167b_6669200b",
+        "filename": "tests/mock/sysrepo/events.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T19:24:05Z",
+      "side": 1,
+      "message": "It would be nice to pick just one of these and get rid of the other one. My suggestion is to keep the one that uses sr_val_*, that\u0027s probably easier to work with and it\u0027s more feature-complete.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 133
+      },
+      "revId": "8360a03c335fae6dfc34a7e23ff765081a25039f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

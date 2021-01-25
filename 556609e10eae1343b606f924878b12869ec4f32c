@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b7714a7_73a97745",
+        "filename": "src/system/CzechlightSystem.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T20:30:24Z",
+      "side": 1,
+      "message": "That YANG model will be probably used for other purposes as well, and I think that it will be handled by different processes, so this name might get misleading in future. \"SrFirmwareUpdates\" or something like that might be more accurate if you ask me, but it\u0027s OK now.",
+      "range": {
+        "startLine": 17,
+        "startChar": 6,
+        "endLine": 17,
+        "endChar": 22
+      },
+      "revId": "556609e10eae1343b606f924878b12869ec4f32c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

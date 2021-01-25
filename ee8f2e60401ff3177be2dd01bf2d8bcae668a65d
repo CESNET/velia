@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d8f1687_5c48c70d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T10:25:33Z",
+      "side": 1,
+      "message": "This doesn\u0027t feel right to me; the mere fact that a method doesn\u0027t modify any class member variable does not, IMHO, mean that it\u0027s a const method. I consider the \"RAUC\" class to represent \"a handle\" to the system updater, not just the C++ code which implements the required interface. A const method should not, IMHO, change an object\u0027s state. This one surely does -- before the backend was idle, after I call this, something changes. (And yup, that state could change for any other external reason as well.)\n\nIf you insist on this, I\u0027m OK with merging it, but I wanted to mention this objection.",
+      "revId": "ee8f2e60401ff3177be2dd01bf2d8bcae668a65d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d8b1d20_c481b8a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T08:43:42Z",
+      "side": 1,
+      "message": "add this to CMakeLists.txt, then it\u0027s good to go",
+      "revId": "98a290a160a0f4c7ca3a0c0cb563655c151294de",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

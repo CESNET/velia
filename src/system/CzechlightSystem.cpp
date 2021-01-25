@@ -35,7 +35,18 @@ CzechlightSystem::CzechlightSystem(std::shared_ptr<::sysrepo::Connection> srConn
                   utils::valuesPush(data, std::make_shared<::sysrepo::Session>(m_srConn, SR_DS_OPERATIONAL));
               }
           },
-          []([[maybe_unused]] int32_t perc, [[maybe_unused]] const std::string& msg) { /* TODO notifications */ },
+          [this](int32_t perc, const std::string& msg) {
+              std::map<std::string, std::string> data = {
+                  {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/update/message", msg},
+                  {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/update/progress", std::to_string(perc)},
+              };
+
+              libyang::S_Data_Node dataNode;
+              auto session = std::make_shared<::sysrepo::Session>(m_srConn);
+
+              utils::valuesToYang(data, session, dataNode);
+              session->event_notif_send(dataNode);
+          },
           [this](int32_t retVal, const std::string& lastError) {
               std::map<std::string, std::string> data {
                   {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message", lastError},

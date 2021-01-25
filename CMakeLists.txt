@@ -145,18 +145,14 @@ target_link_libraries(velia-system
 # - daemons
 add_executable(veliad
     src/main.cpp
-    src/ietf-hardware/Factory.cpp
-    src/ietf-hardware/Factory.h
     src/health/Factory.cpp
     src/health/Factory.h
     )
 target_link_libraries(veliad
-        PUBLIC
+    PUBLIC
         velia-health
-        velia-ietf-hardware
-        velia-ietf-hardware-sysrepo
         docopt
-        )
+    )
 add_dependencies(veliad target-VELIA_VERSION)
 target_include_directories(veliad PUBLIC ${CMAKE_BINARY_DIR})
 
@@ -170,6 +166,20 @@ target_link_libraries(veliad-system
     )
 add_dependencies(veliad-system target-VELIA_VERSION)
 target_include_directories(veliad-system PUBLIC ${CMAKE_BINARY_DIR})
+
+add_executable(veliad-hardware
+    src/main-hardware.cpp
+    src/ietf-hardware/Factory.cpp
+    src/ietf-hardware/Factory.h
+    )
+target_link_libraries(veliad-hardware
+    PUBLIC
+        velia-ietf-hardware
+        velia-ietf-hardware-sysrepo
+        docopt
+    )
+add_dependencies(veliad-hardware target-VELIA_VERSION)
+target_include_directories(veliad-hardware PUBLIC ${CMAKE_BINARY_DIR})
 
 # Testing
 include(CTest)
@@ -341,3 +351,4 @@ set(YANG_DIR ${CMAKE_INSTALL_PREFIX}/share/velia/yang)
 install(FILES ${YANG_SRCS} DESTINATION ${YANG_DIR})
 install(TARGETS veliad RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)
 install(TARGETS veliad-system RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)
+install(TARGETS veliad-hardware RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)

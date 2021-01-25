@@ -44,6 +44,7 @@ auto dataFromSysrepo(const std::shared_ptr<sysrepo::Session>& session, const std
     auto srSess = std::make_shared<sysrepo::Session>(srConn); \
     auto srSubs = std::make_shared<sysrepo::Subscribe>(srSess);
 
-#define TEST_SYSREPO_INIT_CLIENT                               \
-    auto clientConn = std::make_shared<sysrepo::Connection>(); \
-    auto client = std::make_shared<sysrepo::Session>(clientConn);
+#define TEST_SYSREPO_INIT_CLIENT                                  \
+    auto clientConn = std::make_shared<sysrepo::Connection>();    \
+    auto client = std::make_shared<sysrepo::Session>(clientConn); \
+    auto subscription = std::make_shared<sysrepo::Subscribe>(client);

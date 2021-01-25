@@ -131,6 +131,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "122f8636_5171bbad",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-25T09:25:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4e156aa_0dd0d5c0",
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f53c225e_b454e7ba",
@@ -168,6 +186,30 @@
       "side": 1,
       "message": "I will create a dedicated exception, I was catching the logic error in the RPC callback, but  yes, I agree that this is \"extremely suboptimal\".",
       "parentUuid": "f53c225e_b454e7ba",
+      "range": {
+        "startLine": 135,
+        "startChar": 19,
+        "endLine": 135,
+        "endChar": 30
+      },
+      "revId": "a17060a4a3ce87a7d102d897618f7a1293582b17",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d94f7e13_55bbb828",
+        "filename": "src/system/RAUC.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-25T09:25:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50d3dd61_78f60ca2",
       "range": {
         "startLine": 135,
         "startChar": 19,

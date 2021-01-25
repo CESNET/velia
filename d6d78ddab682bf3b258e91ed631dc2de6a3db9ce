@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c701fd41_dd22ef85",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T10:14:12Z",
+      "side": 1,
+      "message": "consider turning this into a macro that\u0027s shared between all daemons that talk to DBus. Yeah, I know, macros stink in the general case, but I think they\u0027re better than repeating this several times.",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 25
+      },
+      "revId": "d6d78ddab682bf3b258e91ed631dc2de6a3db9ce",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

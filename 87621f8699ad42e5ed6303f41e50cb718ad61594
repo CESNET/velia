@@ -16,6 +16,24 @@
       "message": "That\u0027s one more namespace to my liking, I find this redundant. If you insist and say so here, you\u0027ll get my CR+2, though.",
       "revId": "87621f8699ad42e5ed6303f41e50cb718ad61594",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "096b07eb_8e1516b1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-25T15:19:36Z",
+      "side": 1,
+      "message": "I have removed both the sysrepo namespace and the directory",
+      "parentUuid": "75901aaa_0fc7bc2e",
+      "revId": "87621f8699ad42e5ed6303f41e50cb718ad61594",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9a24f9c_68a28868",
+        "filename": "src/main.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T13:54:54Z",
+      "side": 1,
+      "message": "We don\u0027t have C++20\u0027s std::jthread yet, but you can consider wrapping this into a  PoorMansJThread from netconf-cli\u0027s src/cli.cpp. That way, you will be able to get rid of the _END macro.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 48
+      },
+      "revId": "c4614b1a713b06080dd5bcef68b2b31888c6d869",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

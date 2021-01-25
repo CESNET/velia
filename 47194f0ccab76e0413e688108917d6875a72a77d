@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22f910f4_2faae9a8",
+        "filename": "tests/dbus-helpers/dbus_rauc_server.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T10:22:09Z",
+      "side": 1,
+      "message": "\"wow\". I assume this is what RAUC emits; I wonder if it would make sense to inform upstream about them emitting something that looks pretty much like noise to me. I mean, I think I understand what it\u0027s about, but it looks like some abstraction leaking form their framework of choice, and not as something they would like to have in their APIs. Just a suggestion if you happen to be bored, not a big deal.",
+      "range": {
+        "startLine": 64,
+        "startChar": 46,
+        "endLine": 64,
+        "endChar": 97
+      },
+      "revId": "47194f0ccab76e0413e688108917d6875a72a77d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd931082_8a6a5f1e",
+        "filename": "tests/dbus-helpers/dbus_rauc_server.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T10:22:09Z",
+      "side": 1,
+      "message": "I like this! It will make testing the sysrepo notifications a breeze.\n\nBTW, don\u0027t feel pressed into making mocks and expectations in that future sysrpeo-notification-recieving-test listing all of the changed states. It\u0027s OK to be lazy and just do something like REQUIRE(listener.count() \u003e 5) and perhaps REQUIRE(listener.first().progress \u003d\u003d 0), REQUIRE(listener.last().progress \u003d\u003d 100).",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 41
+      },
+      "revId": "47194f0ccab76e0413e688108917d6875a72a77d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

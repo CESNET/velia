@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "297e9e16_c1fbe50c",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-25T09:24:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd9bbc63_7247c836",
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "31484d94_d5894927",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-01-21T18:35:45Z",
       "side": 1,
       "message": "\"RAUC\" is an implementation detail, let\u0027s not hardcode that in the model. Call it \"firmware\", please, and remove \"RAUC\" from various descriptions if possible.",
+      "range": {
+        "startLine": 17,
+        "startChar": 12,
+        "endLine": 17,
+        "endChar": 16
+      },
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e48246d2_1aee95ff",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-25T09:24:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31484d94_d5894927",
       "range": {
         "startLine": 17,
         "startChar": 12,
@@ -77,6 +119,24 @@
       "writtenOn": "2021-01-21T18:35:45Z",
       "side": 1,
       "message": "YANG (and sysrepo) support actions as well, so I think it would make sense to move this into /czechlight-system:firmware/installation/install.",
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35f74f27_59ac053c",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-25T09:24:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2acf43c5_d803dfa0",
       "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },

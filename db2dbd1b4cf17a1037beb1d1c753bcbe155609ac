@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e5b446c_83236af2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T10:31:35Z",
+      "side": 1,
+      "message": "on a quick glance (and disregarding the CI failure), this looks good to me",
+      "revId": "db2dbd1b4cf17a1037beb1d1c753bcbe155609ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

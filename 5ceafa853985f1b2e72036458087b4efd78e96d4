@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d32b3a0_203a1d64",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T08:59:53Z",
+      "side": 1,
+      "message": "This is starting to look good. Have you tested this on a VM already?",
+      "revId": "5ceafa853985f1b2e72036458087b4efd78e96d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "864b99ca_34700fe0",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T08:59:53Z",
+      "side": 1,
+      "message": "Please also add a daemon that runs just this firewall class.",
+      "revId": "5ceafa853985f1b2e72036458087b4efd78e96d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f7f7f0f_e26f8b05",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T08:59:53Z",
+      "side": 1,
+      "message": "That\u0027s just a limitation of our shellscript wrapper, isn\u0027t it?",
+      "range": {
+        "startLine": 302,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 81
+      },
+      "revId": "5ceafa853985f1b2e72036458087b4efd78e96d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e70ec43c_76eef603",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T08:59:53Z",
+      "side": 1,
+      "message": "Is that still the case now that the test fixture installs the deviation?",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 46
+      },
+      "revId": "5ceafa853985f1b2e72036458087b4efd78e96d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97aa6e78_e24af185",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T08:59:53Z",
+      "side": 1,
+      "message": "obsolete comment",
+      "revId": "5ceafa853985f1b2e72036458087b4efd78e96d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

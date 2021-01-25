@@ -177,6 +177,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "974dd584_5da63002",
+        "filename": "tests/sysrepo-firewall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T08:59:53Z",
+      "side": 1,
+      "message": "\u003e filter by a combination of FOO and BAR (whatever it is, sorry, haven\u0027t really read the model) - I don\u0027t know what you mean by this :\u003c\n\nThat was about a filter based on two conditions at the same time, and I see you\u0027re handling it now.",
+      "parentUuid": "be9afee6_3245e54e",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 28
+      },
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8f745764_a1993523",

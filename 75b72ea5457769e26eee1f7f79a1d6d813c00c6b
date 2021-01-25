@@ -177,6 +177,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "954176bc_794d87d5",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T08:59:53Z",
+      "side": 1,
+      "message": "I think it\u0027s OK to reject newlines.",
+      "parentUuid": "aa5f5413_3303c99e",
+      "range": {
+        "startLine": 112,
+        "startChar": 35,
+        "endLine": 112,
+        "endChar": 42
+      },
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dccf566b_c706efb6",

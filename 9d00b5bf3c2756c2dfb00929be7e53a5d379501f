@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7c4cf09_b10d493e",
+        "filename": "src/utils/sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T10:29:08Z",
+      "side": 1,
+      "message": "I think these deserve a doxygen comment explaining the difference between them. I can see the difference, but I have to be looking at the actual code to be able to see that.",
+      "revId": "9d00b5bf3c2756c2dfb00929be7e53a5d379501f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

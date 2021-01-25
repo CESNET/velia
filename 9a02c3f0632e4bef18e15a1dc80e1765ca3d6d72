@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15b56369_5ed86ad2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T17:43:42Z",
+      "side": 1,
+      "message": "(this was getting flagged as a thing with unresolved comments in my gerrit dashboard, and I believe that these have been addressed in follow-up commits when the code moved there)",
+      "revId": "9a02c3f0632e4bef18e15a1dc80e1765ca3d6d72",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

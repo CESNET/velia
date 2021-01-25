@@ -106,6 +106,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42560a85_9f418d40",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T17:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d21af307_6920a5c5",
+      "range": {
+        "startLine": 30,
+        "startChar": 13,
+        "endLine": 30,
+        "endChar": 18
+      },
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2acf43c5_d803dfa0",
@@ -154,6 +178,30 @@
       "writtenOn": "2021-01-21T18:35:45Z",
       "side": 1,
       "message": "I think this is confusing, see above for my suggestion. Just fail the whole RPC if you detect that it cannot be performed, just fail the whole RPC. These will be useful I think:\n\n- https://netopeer.liberouter.org/doc/sysrepo/devel/html/group__rpc__subs__api.html#ga1154cf0ed7f1284d953d614538ad8d7e\n- https://netopeer.liberouter.org/doc/sysrepo/devel/html/group__conn__sess__api.html#ga3f38b6ecc12161ebacaf106c848b3c39",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "d6ee19abbbb04af332e7456e08b21ec7912132b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0070e2f1_e406460c",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T17:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d8e7279_03e37e8a",
       "range": {
         "startLine": 51,
         "startChar": 0,

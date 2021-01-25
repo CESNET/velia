@@ -35,6 +35,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a0ef585_3cb0004d",
+        "filename": "yang/nftables-firewall.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:08:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a459ff4_31bc6844",
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd1d80eb_71016658",
@@ -52,6 +70,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4748130a_9372de1d",
+        "filename": "yang/nftables-firewall.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:08:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd1d80eb_71016658",
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "27f6c9a0_5fbe3cdb",
@@ -65,6 +101,24 @@
       "writtenOn": "2021-01-22T08:56:58Z",
       "side": 1,
       "message": "http://czechlight.cesnet.cz/yang/czechlight-firewall",
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db761a52_0db975e9",
+        "filename": "yang/nftables-firewall.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:08:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27f6c9a0_5fbe3cdb",
       "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -92,6 +146,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "133fb9a0_864ef1e8",
+        "filename": "yang/nftables-firewall.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:08:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3492e51_9a54e425",
+      "range": {
+        "startLine": 5,
+        "startChar": 11,
+        "endLine": 5,
+        "endChar": 14
+      },
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d592434f_94b53d50",
@@ -105,6 +183,24 @@
       "writtenOn": "2021-01-22T09:08:40Z",
       "side": 1,
       "message": "In iptables, ACCEPT/REJECT/DROP was a trivial difference. Is there any particular reason for only handling ACCEPT and DROP and not REJECT here with nftables? If so, it belongs to the commit message.",
+      "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dda5a141_6d36cbdf",
+        "filename": "yang/nftables-firewall.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:08:14Z",
+      "side": 1,
+      "message": "I removed this.",
+      "parentUuid": "d592434f_94b53d50",
       "revId": "075297b4df24df19c205658b3a62eda874f4fbc6",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

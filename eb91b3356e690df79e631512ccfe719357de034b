@@ -153,6 +153,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "be9afee6_3245e54e",
+        "filename": "tests/sysrepo-firewall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:55:10Z",
+      "side": 1,
+      "message": "filtering by a source IPv4 address - done\nfiltering by a source IPv6 address - done\nfilter by a combination of FOO and BAR (whatever it is, sorry, haven\u0027t really read the model) - I don\u0027t know what you mean by this :\u003c\naction ACCEPT - done\naction DROP - done\nwhatever other action there is - reject, done\ninvalid (or just \"a strange\") name of the ACL - this shouldn\u0027t be a problem, I don\u0027t use the name\ninvalid (\"strange\") name of an ACE - I disabled some strange characters, that could be \"invalid\", but I added a test\nmore than one ACE in an ACL - done\nno ACEs in an ACL (or a note in the commit message explaining that it is not valid and it\u0027s checked by the YANG validator) - done\n\nI added some tests which start with a non-empty state too.",
+      "parentUuid": "746558a1_447796d9",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 28
+      },
+      "revId": "eb91b3356e690df79e631512ccfe719357de034b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8f745764_a1993523",

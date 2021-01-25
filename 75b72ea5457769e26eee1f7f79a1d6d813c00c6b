@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a22c565_e8fc15c6",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:55:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "442272a8_fffef679",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 46
+      },
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8b4f1c80_32ef7695",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-01-22T09:58:23Z",
       "side": 1,
       "message": "nit: most editor configs I\u0027ve seen highlight on capitals like FIXME, TODO, etc, not \"Todo\"",
+      "range": {
+        "startLine": 86,
+        "startChar": 11,
+        "endLine": 86,
+        "endChar": 15
+      },
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc83f509_0bbac19c",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:55:10Z",
+      "side": 1,
+      "message": "Yeah, yeah, I know :\u003e",
+      "parentUuid": "8b4f1c80_32ef7695",
       "range": {
         "startLine": 86,
         "startChar": 11,
@@ -66,6 +114,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ed200591_70ca2090",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:55:10Z",
+      "side": 1,
+      "message": "https://github.com/sysrepo/sysrepo/issues/2292",
+      "parentUuid": "a69968da_188ac071",
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "36e92e76_f0957051",
         "filename": "src/firewall/Firewall.cpp",
         "patchSetId": 7
@@ -89,6 +155,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aa5f5413_3303c99e",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:55:10Z",
+      "side": 1,
+      "message": "Added a simple deviation, hopefully it will be enough (nft just says it\u0027s a \"double-quoted (\") multi-word string\"). I banned newlines, although newlines can actually be used in nft comments. Let me know if I should be enable them or not.",
+      "parentUuid": "36e92e76_f0957051",
+      "range": {
+        "startLine": 112,
+        "startChar": 35,
+        "endLine": 112,
+        "endChar": 42
+      },
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dccf566b_c706efb6",
         "filename": "src/firewall/Firewall.cpp",
         "patchSetId": 7
@@ -100,6 +190,24 @@
       "writtenOn": "2021-01-22T09:58:23Z",
       "side": 1,
       "message": "nothing checks that the module with deviations is actually enabled (and the test runs without it being available)",
+      "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ddd6763_0f824fb6",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-25T06:55:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dccf566b_c706efb6",
       "revId": "75b72ea5457769e26eee1f7f79a1d6d813c00c6b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

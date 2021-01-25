@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26ea2a47_5b3f56b0",
+        "filename": "src/main-firewall.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T17:35:56Z",
+      "side": 1,
+      "message": "someone should de-duplicate these among the 666 daemons which we\u0027re gonna be using (and the same for loggingSink)",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 1
+      },
+      "revId": "dbf87e6ae0ff5252ad2842574d922e8f3a5e1a5b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eae22bbf_40b58934",
+        "filename": "src/main-firewall.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T17:35:56Z",
+      "side": 1,
+      "message": "this should be enough: https://linux.die.net/man/2/pause",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 9
+      },
+      "revId": "dbf87e6ae0ff5252ad2842574d922e8f3a5e1a5b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

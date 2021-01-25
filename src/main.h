@@ -25,3 +25,5 @@
 #define DBUS_EVENTLOOP_END \
     g_eventLoop.join();      \
     spdlog::get("main")->debug("Shutting down");
+
+void waitUntilSignaled();

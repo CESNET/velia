@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26e45e23_671890f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T19:29:13Z",
+      "side": 1,
+      "message": "Can you please also push a commit which renames \"veliad\" into something like \"velia-services\"? (Not \"velia-systemd\", that would be hard to distinguish from \"velia-system\". So feel free to go with \"velia-leds\" or whatever else :) ).",
+      "revId": "f71892ebab144218a939524e2ba33599c417e627",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

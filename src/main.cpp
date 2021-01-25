@@ -4,11 +4,12 @@
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
 #include <sysrepo-cpp/Session.hpp>
-#include "Factory.h"
 #include "VELIA_VERSION.h"
+#include "health/Factory.h"
 #include "health/inputs/DbusSystemdInput.h"
 #include "health/manager/StateManager.h"
 #include "health/outputs/callables.h"
+#include "ietf-hardware/Factory.h"
 #include "ietf-hardware/sysrepo/Sysrepo.h"
 #include "main.h"
 #include "utils/exceptions.h"

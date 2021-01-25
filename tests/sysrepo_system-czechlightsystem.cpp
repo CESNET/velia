@@ -5,6 +5,7 @@
 #include "test_log_setup.h"
 #include "test_sysrepo_helpers.h"
 #include "tests/configure.cmake.h"
+#include "tests/mock/sysrepo/events.h"
 
 using namespace std::literals;
 
@@ -109,6 +110,12 @@ TEST_CASE("czechlight-system")
                 {"/installation/message", ""},
                 {"/installation/status", "in-progress"},
             };
+            size_t expectedNotificationsCount;
+            std::string expectedLastNotificationMsg;
+
+            // subscribe to notifications
+            EventWatcher events;
+            subscription->event_notif_subscribe_tree("czechlight-system", events, "/czechlight-system:firmware/installation/update");
 
             SECTION("Successfull install")
             {
@@ -118,6 +125,8 @@ TEST_CASE("czechlight-system")
                     {"/installation/message", ""},
                     {"/installation/status", "succeeded"},
                 };
+                expectedNotificationsCount = 22;
+                expectedLastNotificationMsg = "Installing done.";
             }
 
             SECTION("Unsuccessfull install")
@@ -128,6 +137,8 @@ TEST_CASE("czechlight-system")
                     {"/installation/message", "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number"},
                     {"/installation/status", "failed"},
                 };
+                expectedNotificationsCount = 6;
+                expectedLastNotificationMsg = "Installing failed.";
             }
 
             raucServer.installBundleBehaviour(installType);
@@ -139,6 +150,20 @@ TEST_CASE("czechlight-system")
 
             std::this_thread::sleep_for(2s); // lets wait a while, so the installation can finish
             REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == expectedFinished);
+
+            // check updates notification count and that at least some of them are reasonable
+            REQUIRE(events.count() == expectedNotificationsCount);
+            REQUIRE(events.peek(0).data["/czechlight-system:firmware/installation/update/message"] == "Installing");
+            REQUIRE(events.peek(0).data["/czechlight-system:firmware/installation/update/progress"] == "0");
+            REQUIRE(events.peek(events.count() - 1).data["/czechlight-system:firmware/installation/update/message"] == expectedLastNotificationMsg);
+            REQUIRE(events.peek(events.count() - 1).data["/czechlight-system:firmware/installation/update/progress"] == "100");
+
+            // check updates notification progress is an increasing sequence
+            for (size_t i = 1; i < events.count(); i++) {
+                auto prevProgress = std::stoi(events.peek(i - 1).data["/czechlight-system:firmware/installation/update/progress"]);
+                auto currProgress = std::stoi(events.peek(i).data["/czechlight-system:firmware/installation/update/progress"]);
+                REQUIRE(prevProgress <= currProgress);
+            }
         }
 
         SECTION("Invoke another installation before the first finishes")

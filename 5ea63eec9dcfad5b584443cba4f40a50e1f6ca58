@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3279882b_de7e3234",
+        "filename": "src/utils/sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-25T10:28:07Z",
+      "side": 1,
+      "message": "I have a feeling that this will move to another library in future (when \"anything that uses sysrepo\" is made separate to \"anything not using sysrepo\"). However, the same argument could be said about anything that uses systemd, so OK, this change is OK with me.",
+      "revId": "5ea63eec9dcfad5b584443cba4f40a50e1f6ca58",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

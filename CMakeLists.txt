@@ -184,6 +184,12 @@ if(BUILD_TESTING)
     target_include_directories(DoctestIntegration PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tests/)
     target_compile_definitions(DoctestIntegration PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
 
+    add_library(SysrepoTesting STATIC
+        tests/mock/sysrepo/events.cpp
+        tests/mock/sysrepo/events.h
+        )
+    target_link_libraries(SysrepoTesting DoctestIntegration PkgConfig::SYSREPO)
+
     add_library(DbusTesting STATIC
         tests/dbus-helpers/dbus_rauc_server.cpp
         tests/dbus-helpers/dbus_rauc_server.h

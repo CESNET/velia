@@ -142,10 +142,12 @@ target_link_libraries(velia-system
 
 # - daemons
 add_executable(veliad
-        src/main.cpp
-        src/Factory.cpp
-        src/Factory.h
-        )
+    src/main.cpp
+    src/ietf-hardware/Factory.cpp
+    src/ietf-hardware/Factory.h
+    src/health/Factory.cpp
+    src/health/Factory.h
+    )
 target_link_libraries(veliad
         PUBLIC
         velia-health

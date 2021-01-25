@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a35bdcf1_48e1aaa2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-25T13:48:38Z",
+      "side": 1,
+      "message": "Sorry for that, wrong rebase. The code remains the same.",
+      "revId": "4a892c248a0d755e2214a9d131d6db0f6ea07675",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

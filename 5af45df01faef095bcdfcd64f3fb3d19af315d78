@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a827fdb8_e2e31072",
+        "filename": "src/utils/sysrepo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T16:04:49Z",
+      "side": 1,
+      "message": "this is not needed, is it?",
+      "range": {
+        "startLine": 103,
+        "startChar": 56,
+        "endLine": 103,
+        "endChar": 64
+      },
+      "revId": "5af45df01faef095bcdfcd64f3fb3d19af315d78",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

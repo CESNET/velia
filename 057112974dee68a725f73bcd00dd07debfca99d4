@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e003f61a_f484dfbd",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T13:32:29Z",
+      "side": 1,
+      "message": "This must be removed as well, otherwise you\u0027ll (hopefully) get an error message soon. There was no error message, which means that this never gets fed to sysrepo or libyang, so please also add this to the build system.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 3
+      },
+      "revId": "057112974dee68a725f73bcd00dd07debfca99d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dca9e900_e4dbd53e",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T13:32:29Z",
+      "side": 1,
+      "message": "yeah, use something like https://systemd.io/USER_NAMES/ , please",
+      "revId": "057112974dee68a725f73bcd00dd07debfca99d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec6979e8_615ab130",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T13:32:29Z",
+      "side": 1,
+      "message": "this doesn\u0027t make sense:\n- it\u0027s perfectly OK to have 666 rss-dsa pubkeys for one user\n- naming a leaf that is not a key in a list a \"key\" is evil",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 118,
+        "endChar": 9
+      },
+      "revId": "057112974dee68a725f73bcd00dd07debfca99d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

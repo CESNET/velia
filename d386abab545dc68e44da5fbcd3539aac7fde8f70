@@ -16,6 +16,24 @@
       "message": "Some libyang undefined behavior here...\n\n /home/ci/src/cesnet-gerrit-public/CzechLight/dependencies/libyang/src/tree_schema.c:3288:16: runtime error: null pointer passed as argument 1, which is declared to never be null",
       "revId": "d386abab545dc68e44da5fbcd3539aac7fde8f70",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d54efa2_a7e07196",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T16:17:58Z",
+      "side": 1,
+      "message": "https://github.com/CESNET/libyang/pull/1379, but note that there\u0027s also a test failure for that non-sanitizer build (wrong YANG feature setup)",
+      "parentUuid": "734a3fed_707ecaf9",
+      "revId": "d386abab545dc68e44da5fbcd3539aac7fde8f70",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -34,6 +34,24 @@
       "parentUuid": "c717e5b6_c0c7d254",
       "revId": "ac6db492bf0d9c0bb9aaa34f079587d28d50d6f9",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b458c151_2f973f47",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T12:35:34Z",
+      "side": 1,
+      "message": "It doesn\u0027t matter that they are not used from anywhere, it is still reasonable to add them to whatever auxiliary lib (\"utils\") that they will need to be in. I\u0027m OK with adding \"dead code\" like this, but at least make sure it goes via the compiler.",
+      "parentUuid": "15aeffbd_dff3e762",
+      "revId": "ac6db492bf0d9c0bb9aaa34f079587d28d50d6f9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

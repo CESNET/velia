@@ -71,6 +71,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a773665_7f67e862",
+        "filename": "src/main-firewall.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T23:46:56Z",
+      "side": 1,
+      "message": "I disagree, but perhaps it\u0027s just me.",
+      "parentUuid": "e94c90f2_37bbf9aa",
+      "revId": "6bf034c757c176cb3108e8ab9f06ce930de72cc8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ece9d8e3_25e1d746",

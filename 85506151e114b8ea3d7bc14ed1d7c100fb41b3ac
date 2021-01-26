@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "75543f80_ef66db8a",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:06:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c822fa0_49711eec",
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9fc37398_e5456aef",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-01-26T10:05:03Z",
       "side": 1,
       "message": "The \"IETF-aligned\" process would be essentially doing exactly what the ietf-ssh-server module is doing, but then we could just use that module directly. I think it\u0027s better to aim for a straightforward simplicity, which means just passing around plain strings, and calling a `ssh-keyXXX` binary for validation.",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 3
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "347c3c0f_b239286a",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:06:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9fc37398_e5456aef",
       "range": {
         "startLine": 75,
         "startChar": 0,
@@ -58,6 +100,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4506baf_d4a1e6ed",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:06:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f12fa5d3_afa2255f",
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6f75014_bcd0dbab",
@@ -71,6 +131,30 @@
       "writtenOn": "2021-01-26T10:05:03Z",
       "side": 1,
       "message": "Move the action to the inside of the `users` list, and you can get rid of this input parameter.",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 9
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbc7cbda_7ddce10a",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:06:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6f75014_bcd0dbab",
       "range": {
         "startLine": 109,
         "startChar": 0,
@@ -104,6 +188,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f776fb7c_5da0de47",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:06:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf90aaf6_532e8f67",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 9
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "94a74afc_eaa8fada",
@@ -127,6 +235,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9d82933_af90a7aa",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:06:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94a74afc_eaa8fada",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 5
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "949151d6_f91a5ad2",
@@ -140,6 +272,24 @@
       "writtenOn": "2021-01-26T10:05:03Z",
       "side": 1,
       "message": "- move to the users list\n- unify the output structure with the change-password action",
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ad59c4b_976f2a7f",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:06:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "949151d6_f91a5ad2",
       "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

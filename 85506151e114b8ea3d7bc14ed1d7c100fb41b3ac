@@ -260,6 +260,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "95cc4cea_20e9c4f9",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T16:05:55Z",
+      "side": 1,
+      "message": "I assume you mean \"rename\". Yes, done.",
+      "parentUuid": "d6d62979_0f556ea0",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 9
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "94a74afc_eaa8fada",

@@ -101,6 +101,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8292e22_914b3e34",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T16:05:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47c8e650_9ea17e45",
+      "revId": "057112974dee68a725f73bcd00dd07debfca99d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec6979e8_615ab130",

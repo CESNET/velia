@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d9fe394f_2ad5935f",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T14:59:09Z",
+      "side": 1,
+      "message": "I agree, please implement that in a standalone commit and use that from this one",
+      "parentUuid": "ee5fd21c_abc4a4aa",
+      "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d8b89c38_ca5d8499",
         "filename": "tests/sysrepo-firewall.cpp",
         "patchSetId": 17

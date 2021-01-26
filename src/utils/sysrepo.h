@@ -16,5 +16,6 @@ void valuesToYang(const std::map<std::string, std::string>& values, std::shared_
 void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore);
 void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session);
 void initLogsSysrepo();
+void ensureModuleImplemented(std::shared_ptr<::sysrepo::Session> session, const std::string& module, const std::string& revision);
 
 }

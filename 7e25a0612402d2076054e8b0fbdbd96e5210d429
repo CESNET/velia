@@ -52,6 +52,24 @@
       "parentUuid": "5437a04b_51bc2e22",
       "revId": "7e25a0612402d2076054e8b0fbdbd96e5210d429",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21cc809c_5f03dacc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T09:56:50Z",
+      "side": 1,
+      "message": "Yup, sorry, I forgot that we want the destructors to be called, so yeah, these two signal handlers should be in place.\n\n@Vasek, I think it\u0027s a good idea to cherry-pick this change to the beginning of your branch, clean it up (like you commetned above) and rebase your changes on top of that.",
+      "parentUuid": "4ffc66a2_32988fd0",
+      "revId": "7e25a0612402d2076054e8b0fbdbd96e5210d429",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

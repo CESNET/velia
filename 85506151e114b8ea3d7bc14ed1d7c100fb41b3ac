@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c822fa0_49711eec",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T10:05:03Z",
+      "side": 1,
+      "message": "This is a correct action, but please don\u0027t bother with that just yet, the module has not been installed anywhere yet, so it\u0027s not a useful change at this time (and it breaks the diff rendering on Gerrit unfortunately).",
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fc37398_e5456aef",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T10:05:03Z",
+      "side": 1,
+      "message": "The \"IETF-aligned\" process would be essentially doing exactly what the ietf-ssh-server module is doing, but then we could just use that module directly. I think it\u0027s better to aim for a straightforward simplicity, which means just passing around plain strings, and calling a `ssh-keyXXX` binary for validation.",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 3
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f12fa5d3_afa2255f",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T10:05:03Z",
+      "side": 1,
+      "message": "...after which this can become a leaf-list. Or, if you think that a leaf-list with looooooong strings like SSH pubkeys is evil, then a list indexed by a number.",
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6f75014_bcd0dbab",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T10:05:03Z",
+      "side": 1,
+      "message": "Move the action to the inside of the `users` list, and you can get rid of this input parameter.",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 9
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf90aaf6_532e8f67",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T10:05:03Z",
+      "side": 1,
+      "message": "Add description saying that it\u0027s supposed to get a plaintext password -- and make sure it\u0027s never logged anywhere. Well, that might be an interesting goal.",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 9
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94a74afc_eaa8fada",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T10:05:03Z",
+      "side": 1,
+      "message": "Let\u0027s turn this into two leafs:\n- `result`, which is going to be an enumeration holding just success/error\n- `message`, which will be a free-formatted English string",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 5
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "949151d6_f91a5ad2",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T10:05:03Z",
+      "side": 1,
+      "message": "- move to the users list\n- unify the output structure with the change-password action",
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

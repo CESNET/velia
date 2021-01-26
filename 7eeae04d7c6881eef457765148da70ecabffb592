@@ -106,6 +106,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e870f07a_6b30e9fd",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T16:00:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9fe394f_2ad5935f",
+      "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8b89c38_ca5d8499",

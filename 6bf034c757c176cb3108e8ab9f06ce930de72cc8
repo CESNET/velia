@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bf0f9c7_67946a0c",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 18
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T16:00:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faf7e0e6_2b0639a5",
+      "revId": "6bf034c757c176cb3108e8ab9f06ce930de72cc8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "064256af_9eb8b3e6",
@@ -37,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e94c90f2_37bbf9aa",
+        "filename": "src/main-firewall.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T16:00:36Z",
+      "side": 1,
+      "message": "I don\u0027t think they need to be removed, it\u0027s the highest log level, I expect there to be a lot stuff",
+      "parentUuid": "064256af_9eb8b3e6",
+      "revId": "6bf034c757c176cb3108e8ab9f06ce930de72cc8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ece9d8e3_25e1d746",
         "filename": "src/main-firewall.cpp",
         "patchSetId": 18
@@ -48,6 +84,24 @@
       "writtenOn": "2021-01-26T14:59:09Z",
       "side": 1,
       "message": "it would be nice to read stderr from here, assuming that nft actually provides some useful information (and that it\u0027s not like `iptables` which quite often just said \"meh, I\u0027m broken, see the kernel log\"). So:\n\n- please check if `nft` produces useful output on stderr,\n- and if so, log that via spdlog here\n- if not, just reply here",
+      "revId": "6bf034c757c176cb3108e8ab9f06ce930de72cc8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f402392d_33d589e7",
+        "filename": "src/main-firewall.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T16:00:36Z",
+      "side": 1,
+      "message": "Yes, done. Take a look at how I read the whole stderr, I think it\u0027s pretty neat.",
+      "parentUuid": "ece9d8e3_25e1d746",
       "revId": "6bf034c757c176cb3108e8ab9f06ce930de72cc8",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

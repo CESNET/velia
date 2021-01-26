@@ -104,6 +104,24 @@
       "parentUuid": "ece9d8e3_25e1d746",
       "revId": "6bf034c757c176cb3108e8ab9f06ce930de72cc8",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d09b7ea9_6d6c98ef",
+        "filename": "src/main-firewall.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T16:04:13Z",
+      "side": 1,
+      "message": "🦄",
+      "parentUuid": "f402392d_33d589e7",
+      "revId": "6bf034c757c176cb3108e8ab9f06ce930de72cc8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

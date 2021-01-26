@@ -238,6 +238,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d6d62979_0f556ea0",
+        "filename": "yang/czechlight-system@2021-01-26.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T15:35:06Z",
+      "side": 1,
+      "message": "That would be one argument for only carrying password hashes over NETCONF, but hey, let\u0027s try to do it in a simple manner and see where it gets logged. Perhaps also remove the password to \"password-cleartext\" so that it\u0027s obvious what it really is?",
+      "parentUuid": "65d9aa3a_4a748732",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 9
+      },
+      "revId": "85506151e114b8ea3d7bc14ed1d7c100fb41b3ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94a74afc_eaa8fada",
         "filename": "yang/czechlight-system@2021-01-26.yang",
         "patchSetId": 2

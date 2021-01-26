@@ -85,6 +85,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "47c8e650_9ea17e45",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T15:35:06Z",
+      "side": 1,
+      "message": "please also limit the character count, so let\u0027s use:\n \n^[a-z][a-z0-9-]{0,30}$\n\n...which is what the link above says at the very end of that page.",
+      "parentUuid": "9561769f_8f1f9cf2",
+      "revId": "057112974dee68a725f73bcd00dd07debfca99d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ec6979e8_615ab130",
         "filename": "yang/czechlight-system@2021-01-13.yang",
         "patchSetId": 3

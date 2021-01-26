@@ -34,6 +34,24 @@
       "parentUuid": "994c60cb_32dfb073",
       "revId": "167df99fc9e21d6a7c76b6093bb79972b5f91116",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2c844fa_7a3a1d67",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:55:12Z",
+      "side": 1,
+      "message": "or... CONSTEXPR!",
+      "parentUuid": "46cfff32_38e8fd03",
+      "revId": "167df99fc9e21d6a7c76b6093bb79972b5f91116",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

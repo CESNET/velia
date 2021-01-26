@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f50e65a_a1f3c7f0",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:55:12Z",
+      "side": 1,
+      "message": "I think I\u0027ll keep it lowercase",
+      "parentUuid": "952f876f_b038630d",
+      "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "baa89669_b029798b",
@@ -83,6 +101,24 @@
       "writtenOn": "2021-01-26T13:03:26Z",
       "side": 1,
       "message": "nit: There is tests/mocks/ directory for the mock objects that might be used in multiple tests. But this probably won\u0027t, right?",
+      "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b784226_bbd0a638",
+        "filename": "tests/sysrepo-firewall.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T13:55:12Z",
+      "side": 1,
+      "message": "It is very specific to this test yes.",
+      "parentUuid": "d8b89c38_ca5d8499",
       "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

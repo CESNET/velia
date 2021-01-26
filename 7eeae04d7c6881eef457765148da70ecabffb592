@@ -35,6 +35,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "87546e5d_6d908225",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T13:27:39Z",
+      "side": 1,
+      "message": "I think that it\u0027s better to leave this as-is:\n\nhttps://softwareengineering.stackexchange.com/questions/350501/is-there-any-benefit-to-to-define-constant-local-variables-as-static-c",
+      "parentUuid": "baa89669_b029798b",
+      "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee5fd21c_abc4a4aa",

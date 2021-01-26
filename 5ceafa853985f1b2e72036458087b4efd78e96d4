@@ -55,6 +55,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "7fa52c91_9dd3effd",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T13:27:39Z",
+      "side": 1,
+      "message": "You said you tested this on a VM, so I\u0027m closing this one.",
+      "parentUuid": "76eeb2c1_5b9ae0d7",
+      "revId": "5ceafa853985f1b2e72036458087b4efd78e96d4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "4f7f7f0f_e26f8b05",
         "filename": "CMakeLists.txt",
         "patchSetId": 8

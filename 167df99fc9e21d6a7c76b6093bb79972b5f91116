@@ -16,6 +16,24 @@
       "message": "this could be static, right?",
       "revId": "167df99fc9e21d6a7c76b6093bb79972b5f91116",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46cfff32_38e8fd03",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-26T13:27:39Z",
+      "side": 1,
+      "message": "...or in that anonymous namespace {}; to me that feels a bit more C++-ish way of stating that intent.",
+      "parentUuid": "994c60cb_32dfb073",
+      "revId": "167df99fc9e21d6a7c76b6093bb79972b5f91116",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

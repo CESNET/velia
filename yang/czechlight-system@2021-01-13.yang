@@ -62,4 +62,85 @@ module czechlight-system {
       }
     }
   }
+
+  typedef username-type {
+    type string {
+      pattern "[a-z][a-z0-9-]*";
+    }
+  }
+
+  grouping authentication-rpc-result {
+    leaf result {
+      mandatory true;
+      type enumeration {
+        enum success;
+        enum failure;
+      }
+    }
+
+    leaf message {
+      description "Can be used to supply and error message.";
+      type string;
+    }
+  }
+
+  typedef authorized-key-format {
+    description "Pubkey in the authorized_keys format for sshd.";
+    type string;
+  }
+
+
+  container authentication {
+    list users {
+      config false;
+      key 'name';
+
+      leaf name {
+        type username-type;
+      }
+
+      leaf password {
+        type string;
+      }
+
+      list authorized-keys {
+        key 'index';
+        leaf index {
+          type int32;
+        }
+
+        leaf public-key {
+          mandatory true;
+          type authorized-key-format;
+        }
+      }
+
+      action change-password {
+        input {
+          leaf password {
+            mandatory true;
+            description "This is supposed to be a plaintext password. Make sure it's not logged anywhere.";
+            type string;
+          }
+        }
+
+        output {
+          uses authentication-rpc-result;
+        }
+      }
+
+      action add-authorized-key {
+        input {
+          leaf key {
+            mandatory true;
+            type authorized-key-format;
+          }
+        }
+
+        output {
+          uses authentication-rpc-result;
+        }
+      }
+    }
+  }
 }

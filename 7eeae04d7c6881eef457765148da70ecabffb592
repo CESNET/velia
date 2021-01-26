@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "952f876f_b038630d",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-26T13:03:26Z",
+      "side": 1,
+      "message": "I usually name these kind of vars in uppercase, but this is just nitpicking.",
+      "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "baa89669_b029798b",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-26T13:03:26Z",
+      "side": 1,
+      "message": "This could be static const.",
+      "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee5fd21c_abc4a4aa",
+        "filename": "src/firewall/Firewall.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-26T13:03:26Z",
+      "side": 1,
+      "message": "This should probably be done for all the daemons. I think we should maybe move this to utils::sysrepo and use it everywhere (like in cla-sysrepod)",
+      "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8b89c38_ca5d8499",
+        "filename": "tests/sysrepo-firewall.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-26T13:03:26Z",
+      "side": 1,
+      "message": "nit: There is tests/mocks/ directory for the mock objects that might be used in multiple tests. But this probably won\u0027t, right?",
+      "revId": "7eeae04d7c6881eef457765148da70ecabffb592",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

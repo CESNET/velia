@@ -16,6 +16,24 @@
       "message": "i RTFMed because Vasek\u0027s code needed soemthing like that as well, and I think the correct approach is just calling pause().",
       "revId": "7e25a0612402d2076054e8b0fbdbd96e5210d429",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5437a04b_51bc2e22",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T07:00:55Z",
+      "side": 1,
+      "message": "this is enough for me:\n        struct sigaction sigact;\n        memset(\u0026sigact, 0, sizeof(sigact));\n        sigact.sa_handler \u003d [](int) {};\n        sigact.sa_flags \u003d SA_SIGINFO;\n        sigaction(SIGTERM, \u0026sigact, nullptr);\n\n        pause();",
+      "parentUuid": "16a158ac_76bc3881",
+      "revId": "7e25a0612402d2076054e8b0fbdbd96e5210d429",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

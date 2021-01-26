@@ -34,6 +34,24 @@
       "parentUuid": "16a158ac_76bc3881",
       "revId": "7e25a0612402d2076054e8b0fbdbd96e5210d429",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ffc66a2_32988fd0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-26T09:49:35Z",
+      "side": 1,
+      "message": "this is also enought for me:\n\n        signal(SIGTERM, [](int) {});\n        signal(SIGINT, [](int) {});\n\n        pause();",
+      "parentUuid": "5437a04b_51bc2e22",
+      "revId": "7e25a0612402d2076054e8b0fbdbd96e5210d429",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -96,4 +96,11 @@ void valuesPush(const std::map<std::string, std::string>& values, std::shared_pt
     session->apply_changes();
 }
 
+/** @brief Checks whether a module is implemented in Sysrepo and throws if not. */
+void ensureModuleImplemented(std::shared_ptr<::sysrepo::Session> session, const std::string& module, const std::string& revision)
+{
+    if (auto mod = session->get_context()->get_module(module.c_str(), revision.c_str()); !mod || !mod->implemented()) {
+        throw std::runtime_error(module + "@" + revision + " is not implemented in sysrepo.");
+    }
+}
 }

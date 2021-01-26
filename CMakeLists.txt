@@ -47,7 +47,7 @@ include(GNUInstallDirs)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 set(YANG_SRCS
-    yang/czechlight-system@2021-01-13.yang
+    yang/czechlight-system@2021-01-26.yang
     yang/iana-hardware@2018-03-13.yang
     yang/ietf-hardware@2018-03-13.yang
     yang/iana-crypt-hash@2014-08-06.yang

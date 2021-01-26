@@ -1,0 +1,150 @@
+module czechlight-system {
+  yang-version 1.1;
+  namespace
+    "http://czechlight.cesnet.cz/yang/czechlight-system";
+
+  prefix "cla-sys";
+
+  organization "CESNET";
+  contact "photonic@cesnet.cz";
+  description
+    "YANG model for system administration in Czechlight devices.";
+
+  revision 2021-01-13 {
+    description "Initial release";
+  }
+
+  revision 2021-01-26 {
+    description "Add support for authentication";
+  }
+
+  container firmware {
+    config false;
+
+    container installation {
+      leaf status {
+        description "Informs about the status of the current (or last) installation.";
+
+        type enumeration {
+          enum none;
+          enum in-progress;
+          enum succeeded;
+          enum failed;
+        }
+      }
+
+      leaf message {
+        description "The last message from the installation process. This MAY contain the last error message.";
+        type string;
+      }
+
+      notification update {
+        description "Notifies clients about installation progress.";
+
+        leaf message {
+          description "Progress status.";
+          type string;
+        }
+
+        leaf progress {
+          description "Progress of the installation in percents.";
+
+          type int8 {
+            range "0 .. 100";
+          }
+        }
+      }
+
+      action install {
+        input {
+          leaf url {
+            description "URL or path to the new firmware.";
+            type string;
+            mandatory true;
+          }
+        }
+      }
+    }
+  }
+
+  typedef username-type {
+    // TODO: this could be more constrained
+    type string;
+  }
+
+  grouping authorized-key-definition {
+    leaf type {
+      mandatory true;
+      type string; // TODO: maybe list supported key types?
+    }
+    leaf key {
+      mandatory true;
+      type string; // TODO: maybe different type?
+    }
+    leaf comment {
+      type string;
+    }
+  }
+
+  container authentication {
+    list users {
+      config false;
+      key 'name';
+
+      leaf name {
+        type username-type;
+      }
+
+      leaf password {
+        type string;
+      }
+
+      list authorized-keys {
+        uses authorized-key-definition;
+      }
+    }
+
+    action change-password {
+      input {
+        leaf user {
+          type username-type;
+        }
+
+        leaf password {
+          type string;
+        }
+      }
+
+      output {
+        leaf result {
+          type enumeration {
+            enum success;
+            enum user-does-not-exist;
+            // more errors...
+          }
+        }
+      }
+    }
+
+    action add-authorized-key {
+      input {
+        leaf user {
+          type username-type;
+        }
+
+        uses authorized-key-definition;
+      }
+
+      output {
+        leaf result {
+          type enumeration {
+            enum success;
+            enum user-does-not-exist;
+            enum invalid-key;
+            // more errors...
+          }
+        }
+      }
+    }
+  }
+}

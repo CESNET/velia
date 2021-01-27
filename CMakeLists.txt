@@ -33,6 +33,7 @@ find_package(docopt REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ REQUIRED)
 find_package(PkgConfig)
+find_package(fmt)
 
 pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
 if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
@@ -86,7 +87,7 @@ add_library(velia-utils STATIC
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::SYSREPO)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::SYSREPO fmt::fmt)
 
 # - health
 add_library(velia-health STATIC
@@ -140,6 +141,36 @@ set(NOBODY_GID 65534 CACHE STRING "GID which refers to 'nobody'. Used for droppi
 if(NOT NFT_EXECUTABLE)
     find_program(NFT_EXECUTABLE nft)
 endif()
+if(NOT SSH_KEYGEN_EXECUTABLE)
+    find_program(SSH_KEYGEN_EXECUTABLE ssh-keygen)
+endif()
+if(NOT CHPASSWD_EXECUTABLE)
+    find_program(CHPASSWD_EXECUTABLE chpasswd)
+endif()
+
+set(VELIA_AUTHORIZED_KEYS_FORMAT "{HOME}/.ssh/authorized_keys" CACHE STRING "pattern for determining path to users' SSH authorized_keys file. Must at least one of '{USER}' or '{HOME}' which will get replaced by the name of the user and the home directory of the user respectively.")
+if(NOT VELIA_AUTHORIZED_KEYS_FORMAT)
+    message(FATAL_ERROR "VELIA_AUTHORIZED_KEYS_FORMAT not set.")
+endif()
+
+if(NOT VELIA_AUTHORIZED_KEYS_FORMAT MATCHES "{USER}" AND NOT VELIA_AUTHORIZED_KEYS_FORMAT MATCHES "{HOME}")
+    message(FATAL_ERROR "Wrong format string given for VELIA_AUTHORIZED_KEYS_FORMAT: at least one of {USER} or {HOME} expected.")
+endif()
+
+set(VELIA_REAL_ETC_PASSWD "/etc/passwd" CACHE STRING "Path to passwd file")
+if(NOT VELIA_REAL_ETC_PASSWD)
+    message(FATAL_ERROR "VELIA_REAL_ETC_PASSWD not set")
+endif()
+
+set(VELIA_REAL_ETC_SHADOW "/etc/shadow" CACHE STRING "Path to shadow file")
+if(NOT VELIA_REAL_ETC_SHADOW)
+    message(FATAL_ERROR "VELIA_REAL_ETC_SHADOW not set")
+endif()
+
+set(VELIA_BACKUP_ETC_SHADOW "/etc/shadow" CACHE STRING "Path to where /etc/shadow gets copied to upon each change")
+if(NOT VELIA_BACKUP_ETC_SHADOW)
+    message(FATAL_ERROR "VELIA_BACKUP_ETC_SHADOW not set")
+endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/system/system_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/system_vars.h @ONLY)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -152,6 +183,8 @@ add_library(velia-system STATIC
         src/system/Firmware.h
         src/system/IETFSystem.cpp
         src/system/IETFSystem.h
+        src/system/Authentication.cpp
+        src/system/Authentication.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -338,6 +371,14 @@ if(BUILD_TESTING)
             test-sysrepo_system-firmware
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
             RESOURCE_LOCK "sysrepo;dbus-rauc"
+    )
+
+    velia_test(sysrepo_authentication velia-system FsTestUtils)
+
+    set_tests_properties(
+            test-sysrepo_authentication
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
+            RESOURCE_LOCK sysrepo
     )
 
     sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)

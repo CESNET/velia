@@ -5,10 +5,18 @@ module czechlight-system {
 
   prefix "cla-sys";
 
+  import ietf-yang-types {
+    prefix yang;
+  }
+
   organization "CESNET";
   contact "photonic@cesnet.cz";
   description
     "YANG model for system administration in Czechlight devices.";
+
+  revision 2021-01-25 {
+    description "Adding firmware slot list.";
+  }
 
   revision 2021-01-13 {
     description "Initial release";
@@ -16,6 +24,36 @@ module czechlight-system {
 
   container firmware {
     config false;
+
+    list firmware-slot {
+      description "Stores information about firmware slots.";
+
+      key name;
+
+      leaf name {
+        description "Name of the firmware slot.";
+        type string;
+      }
+
+      leaf version {
+        description "Version of the firmware installed in the slot.";
+        type string;
+      }
+
+      leaf state {
+        description "Current state of the firmware slot.";
+        type enumeration {
+          enum unknown;
+          enum inactive;
+          enum booted;
+        }
+      }
+
+      leaf installed {
+        description "Stores the date of firmware installation into this slot.";
+        type yang:date-and-time;
+      }
+    }
 
     container installation {
       leaf status {

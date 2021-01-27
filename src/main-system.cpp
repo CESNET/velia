@@ -4,6 +4,7 @@
 #include <sysrepo-cpp/Session.hpp>
 #include "VELIA_VERSION.h"
 #include "main.h"
+#include "system/Authentication.h"
 #include "system/IETFSystem.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
@@ -76,6 +77,14 @@ int main(int argc, char* argv[])
         // initialize ietf-system
         spdlog::get("main")->debug("Initializing Sysrepo for system models");
         auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release");
+
+        auto srSess2 = std::make_shared<sysrepo::Session>(srConn);
+        auto authentication = velia::system::Authentication(srSess2, {
+            velia::system::NAME_THIS::listUsers,
+            velia::system::NAME_THIS::changePassword,
+            velia::system::NAME_THIS::addKey,
+            velia::system::NAME_THIS::removeKey
+        });
 
         DBUS_EVENTLOOP_END
         return 0;

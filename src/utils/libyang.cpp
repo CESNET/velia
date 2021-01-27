@@ -14,7 +14,7 @@ libyang::S_Data_Node getSubtree(const libyang::S_Data_Node& start, const char* p
 {
     auto set = start->find_path(path);
     if (set->number() != 1) {
-        throw std::runtime_error("getSubtree: didn't get exactly one match (got " + std::to_string(set->number()) + ")");
+        throw std::runtime_error("getSubtree(" + start->path() + ", " + path + "): didn't get exactly one match (got " + std::to_string(set->number()) + ")");
     }
 
     return set->data().front();

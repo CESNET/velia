@@ -134,6 +134,19 @@ target_link_libraries(velia-ietf-hardware-sysrepo
         PkgConfig::LIBYANG
     )
 
+# TODO: how to do this better
+if(NOT AUTHORIZED_KEYS_FORMAT)
+    message(FATAL_ERROR "AUTHORIZED_KEYS_FORMAT not set")
+endif()
+
+# TODO: how to do this better
+if(NOT ETCSHADOW_FILE)
+    message(FATAL_ERROR "ETCSHADOW_FILE not set")
+endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/system/system_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/system_vars.h @ONLY)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 # - ietf-system
 add_library(velia-system STATIC
         src/system/RAUC.cpp
@@ -142,6 +155,8 @@ add_library(velia-system STATIC
         src/system/Firmware.h
         src/system/IETFSystem.cpp
         src/system/IETFSystem.h
+        src/system/Authentication.cpp
+        src/system/Authentication.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -149,6 +164,7 @@ target_link_libraries(velia-system
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
         SDBusCpp::sdbus-c++
+        Boost::filesystem
     )
 
 # - firewall
@@ -329,6 +345,14 @@ if(BUILD_TESTING)
             test-sysrepo_system-firmware
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
             RESOURCE_LOCK "sysrepo;dbus-rauc"
+    )
+
+    velia_test(sysrepo_authentication velia-system FsTestUtils)
+
+    set_tests_properties(
+            test-sysrepo_authentication
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
+            RESOURCE_LOCK sysrepo
     )
 
     sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)

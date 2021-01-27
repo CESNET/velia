@@ -24,6 +24,7 @@ private:
     std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
     std::shared_ptr<RAUC> m_rauc;
     std::string m_installStatus, m_installMessage;
+    std::map<std::string, std::string> m_slotStatus;
     velia::Log m_log;
 };
 }

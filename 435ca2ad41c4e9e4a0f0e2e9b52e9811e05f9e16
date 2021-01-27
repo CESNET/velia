@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "452da395_89b7ebbd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-27T16:00:48Z",
+      "side": 1,
+      "message": "Oh yeah, I missed the dependencies, thanks",
+      "revId": "435ca2ad41c4e9e4a0f0e2e9b52e9811e05f9e16",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

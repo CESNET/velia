@@ -133,6 +133,8 @@ add_library(velia-system STATIC
         src/system/RAUC.h
         src/system/IETFSystem.cpp
         src/system/IETFSystem.h
+        src/system/Authentication.cpp
+        src/system/Authentication.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -279,6 +281,16 @@ if(BUILD_TESTING)
     velia_test(health_output-led velia-health)
 
     velia_test(system_rauc velia-system DbusTesting)
+
+    sysrepo_fixture_env(sysrepo-czechlight-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2021-01-13.yang)
+
+    velia_test(sysrepo_authentication velia-system)
+
+    set_tests_properties(
+            test-sysrepo_authentication
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
+            RESOURCE_LOCK sysrepo
+    )
 
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)
     velia_test(hardware_hwmon velia-ietf-hardware FsTestUtils)

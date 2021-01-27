@@ -92,6 +92,18 @@ TEST_CASE("Firmware in czechlight-system")
     auto sysrepo = std::make_shared<velia::system::Firmware>(srConn, *dbusClientConnection);
 
     REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == std::map<std::string, std::string>{
+        {"/firmware-slot[name='A']", ""},
+        {"/firmware-slot[name='A']/boot-status", "bad"},
+        {"/firmware-slot[name='A']/installed", "2021-01-13T17:15:50Z"},
+        {"/firmware-slot[name='A']/name", "A"},
+        {"/firmware-slot[name='A']/state", "inactive"},
+        {"/firmware-slot[name='A']/version", "v4-104-ge80fcd4"},
+        {"/firmware-slot[name='B']", ""},
+        {"/firmware-slot[name='B']/boot-status", "good"},
+        {"/firmware-slot[name='B']/installed", "2021-01-13T17:20:15Z"},
+        {"/firmware-slot[name='B']/name", "B"},
+        {"/firmware-slot[name='B']/state", "booted"},
+        {"/firmware-slot[name='B']/version", "v4-103-g34d2f48"},
         {"/installation", ""},
         {"/installation/message", ""},
         {"/installation/status", "none"},
@@ -106,9 +118,8 @@ TEST_CASE("Firmware in czechlight-system")
         {
             DBusRAUCServer::InstallBehaviour installType;
             std::map<std::string, std::string> expectedFinished, expectedInProgress = {
-                {"/installation", ""},
-                {"/installation/message", ""},
-                {"/installation/status", "in-progress"},
+                {"/message", ""},
+                {"/status", "in-progress"},
             };
             size_t expectedNotificationsCount;
             std::string expectedLastNotificationMsg;
@@ -121,9 +132,8 @@ TEST_CASE("Firmware in czechlight-system")
             {
                 installType = DBusRAUCServer::InstallBehaviour::OK;
                 expectedFinished = {
-                    {"/installation", ""},
-                    {"/installation/message", ""},
-                    {"/installation/status", "succeeded"},
+                    {"/message", ""},
+                    {"/status", "succeeded"},
                 };
                 expectedNotificationsCount = 22;
                 expectedLastNotificationMsg = "Installing done.";
@@ -133,9 +143,8 @@ TEST_CASE("Firmware in czechlight-system")
             {
                 installType = DBusRAUCServer::InstallBehaviour::FAILURE;
                 expectedFinished = {
-                    {"/installation", ""},
-                    {"/installation/message", "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number"},
-                    {"/installation/status", "failed"},
+                    {"/message", "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number"},
+                    {"/status", "failed"},
                 };
                 expectedNotificationsCount = 6;
                 expectedLastNotificationMsg = "Installing failed.";
@@ -146,10 +155,10 @@ TEST_CASE("Firmware in czechlight-system")
             REQUIRE(res->val_cnt() == 0);
 
             std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
-            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == expectedInProgress);
+            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expectedInProgress);
 
             std::this_thread::sleep_for(2s); // lets wait a while, so the installation can finish
-            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == expectedFinished);
+            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expectedFinished);
 
             // check updates notification count and that at least some of them are reasonable
             REQUIRE(events.count() == expectedNotificationsCount);

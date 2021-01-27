@@ -26,6 +26,7 @@ private:
     std::shared_ptr<RAUC> m_rauc;
     std::mutex m_mtx; //! @brief locks access to cached elements that are shared from multiple threads
     std::string m_installStatus, m_installMessage;
+    std::map<std::string, std::string> m_slotStatus;
     velia::Log m_log;
 };
 }

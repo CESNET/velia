@@ -66,4 +66,17 @@ int64_t readFileInt64(const std::filesystem::path& path)
     throw std::domain_error("Could not read int64_t value from '" + std::string(path) + "'.");
 }
 
+/** @brief Reads whole contents of `path`. Throws if file doesn't exist. */
+std::string readFileToString(const std::filesystem::path& path)
+{
+    // FIXME: this is openStream copied from somewhere, should refactor.
+    std::ifstream ifs(path);
+    if (!ifs.is_open()) {
+        throw std::invalid_argument("File '" + std::string(path) + "' does not exist.");
+    }
+
+    std::istreambuf_iterator<char> begin(ifs), end;
+    return std::string(begin, end);
+}
+
 }

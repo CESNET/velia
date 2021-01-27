@@ -24,6 +24,7 @@ if [[ $ZUUL_JOB_NAME =~ .*-clang.* ]]; then
     sed -i \
         -e 's/spdlog::spdlog/spdlog::spdlog_header_only/' \
         -e '/find_package(spdlog/ a add_definitions(-DFMT_HEADER_ONLY)' \
+        -e 's/fmt::fmt/fmt::spdlog-header-only/' \
         ${ZUUL_PROJECT_SRC_DIR}/CMakeLists.txt
 fi
 

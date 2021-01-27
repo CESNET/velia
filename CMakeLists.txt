@@ -134,6 +134,20 @@ target_link_libraries(velia-ietf-hardware-sysrepo
         PkgConfig::LIBYANG
     )
 
+set(VELIA_AUTHORIZED_KEYS_FORMAT "/home/{USER}/.ssh/authorized_keys" CACHE STRING "pattern for determining path to users' SSH authorized_keys file. Must contain exactly one '{USER}' which will get replaced by the name of the user.")
+if(NOT VELIA_AUTHORIZED_KEYS_FORMAT)
+    message(FATAL_ERROR "VELIA_AUTHORIZED_KEYS_FORMAT not set")
+endif()
+
+# FIXME: fix this
+set(VELIA_REAL_ETC_SHADOW "/etc/shadow" CACHE STRING "path to where /etc/shadow gets saved")
+if(NOT VELIA_REAL_ETC_SHADOW)
+    message(FATAL_ERROR "VELIA_REAL_ETC_SHADOW not set")
+endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/system/system_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/system_vars.h @ONLY)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 # - ietf-system
 add_library(velia-system STATIC
         src/system/RAUC.cpp
@@ -142,6 +156,8 @@ add_library(velia-system STATIC
         src/system/Firmware.h
         src/system/IETFSystem.cpp
         src/system/IETFSystem.h
+        src/system/Authentication.cpp
+        src/system/Authentication.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -149,6 +165,7 @@ target_link_libraries(velia-system
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
         SDBusCpp::sdbus-c++
+        Boost::filesystem
     )
 
 # - firewall
@@ -329,6 +346,14 @@ if(BUILD_TESTING)
             test-sysrepo_system-firmware
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
             RESOURCE_LOCK "sysrepo;dbus-rauc"
+    )
+
+    velia_test(sysrepo_authentication velia-system FsTestUtils)
+
+    set_tests_properties(
+            test-sysrepo_authentication
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
+            RESOURCE_LOCK sysrepo
     )
 
     sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)

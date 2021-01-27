@@ -1,3 +1,4 @@
+#include <fstream>
 #include "utils.h"
 
 /** @short Remove directory tree at 'rootDir' path (if exists) */
@@ -7,3 +8,4 @@ void removeDirectoryTreeIfExists(const std::filesystem::path& rootDir)
         std::filesystem::remove_all(rootDir);
     }
 }
+

@@ -39,6 +39,30 @@
       },
       "revId": "8360a03c335fae6dfc34a7e23ff765081a25039f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "704a70c6_c43265f2",
+        "filename": "tests/mock/sysrepo/events.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-27T08:35:52Z",
+      "side": 1,
+      "message": "I have removed the _tree version (the libyang one).",
+      "parentUuid": "37f5167b_6669200b",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 133
+      },
+      "revId": "8360a03c335fae6dfc34a7e23ff765081a25039f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a1bfb7a_036f08ff",
+        "filename": "src/main-hardware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-01-27T09:24:57Z",
+      "side": 1,
+      "message": "oh no, I named the file Signalled, but the function Signaled. \u0027-.-",
+      "range": {
+        "startLine": 90,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 25
+      },
+      "revId": "aae9fe3379e51df7ba5edc5795151cac1efd7668",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

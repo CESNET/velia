@@ -22,6 +22,30 @@
       },
       "revId": "556609e10eae1343b606f924878b12869ec4f32c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1b8c0fa_871b7d7a",
+        "filename": "src/system/CzechlightSystem.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-27T13:46:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7b7714a7_73a97745",
+      "range": {
+        "startLine": 17,
+        "startChar": 6,
+        "endLine": 17,
+        "endChar": 22
+      },
+      "revId": "556609e10eae1343b606f924878b12869ec4f32c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -1,0 +1,2 @@
+#define AUTHORIZED_KEYS_FORMAT std::string_view("@VELIA_AUTHORIZED_KEYS_FORMAT@")
+#define REAL_ETC_SHADOW_FILE std::string("@VELIA_REAL_ETC_SHADOW@")

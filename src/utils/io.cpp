@@ -5,7 +5,10 @@
  *
 */
 
+#include <cstring>
+#include <fmt/core.h>
 #include <fstream>
+#include <unistd.h>
 #include "io.h"
 
 namespace velia::utils {
@@ -64,6 +67,41 @@ int64_t readFileInt64(const std::filesystem::path& path)
     }
 
     throw std::domain_error("Could not read int64_t value from '" + std::string(path) + "'.");
+}
+
+/** @brief Reads whole contents of `path`. Throws if file doesn't exist. */
+std::string readFileToString(const std::filesystem::path& path)
+{
+    std::ifstream ifs(openStream(path));
+
+    std::istreambuf_iterator<char> begin(ifs), end;
+    return std::string(begin, end);
+}
+
+void safeWriteFile(const std::string& filename, const std::string_view& contents)
+{
+    auto throwErr = [&filename] (const auto& what) {
+        throw std::runtime_error(fmt::format("Couldn't write file '{}' ({}) ({})", filename, what, std::strerror(errno)));
+    };
+    // FIXME: not sure if just the tilde is fine...
+    auto tempFileName = (filename + "~");
+    auto f = std::fopen(tempFileName.c_str(), "w");
+    if (!f) {
+        throwErr("fopen");
+    }
+    if (std::fwrite(contents.data(), contents.size(), 1, f) != 1) {
+        throwErr("fwrite");
+    }
+    if (fsync(fileno(f)) == -1) {
+        throwErr("fsync");
+    }
+    if (std::fclose(f) == -1) {
+        throwErr("fclose");
+    }
+    // std::rename is guaranteed to be atomic if replacing an old file
+    if (std::rename(tempFileName.c_str(), filename.c_str()) == -1 ) {
+        throwErr("std::rename");
+    }
 }
 
 }

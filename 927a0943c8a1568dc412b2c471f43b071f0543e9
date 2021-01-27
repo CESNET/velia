@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e34d1fc2_5726fa90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-01-27T13:25:51Z",
+      "side": 1,
+      "message": "Forgot ietf-interfaces, will fix soon",
+      "revId": "927a0943c8a1568dc412b2c471f43b071f0543e9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

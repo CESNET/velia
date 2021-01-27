@@ -22,17 +22,16 @@ namespace velia::system {
 
 Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnection)
     : m_srConn(std::move(srConn))
-    , m_srSession(std::make_shared<::sysrepo::Session>(m_srConn))
-    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+    , m_srSessionOps(std::make_shared<::sysrepo::Session>(m_srConn))
+    , m_srSessionRPC(std::make_shared<::sysrepo::Session>(m_srConn))
+    , m_srSubscribeOps(std::make_shared<::sysrepo::Subscribe>(m_srSessionOps))
+    , m_srSubscribeRPC(std::make_shared<::sysrepo::Subscribe>(m_srSessionRPC))
     , m_rauc(std::make_shared<RAUC>(
           dbusConnection,
           [this](const std::string& operation) {
               if (operation == "installing") {
-                  std::map<std::string, std::string> data {
-                      {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status", "in-progress"},
-                  };
-
-                  utils::valuesPush(data, std::make_shared<::sysrepo::Session>(m_srConn, SR_DS_OPERATIONAL));
+                  std::lock_guard<std::mutex> lck(m_mtx);
+                  m_installStatus = "in-progress";
               }
           },
           [this](int32_t perc, const std::string& msg) {
@@ -48,34 +47,30 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
               session->event_notif_send(dataNode);
           },
           [this](int32_t retVal, const std::string& lastError) {
-              std::map<std::string, std::string> data {
-                  {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message", lastError},
-                  {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status", retVal == 0 ? "succeeded" : "failed"},
-              };
-
-              utils::valuesPush(data, std::make_shared<::sysrepo::Session>(m_srConn, SR_DS_OPERATIONAL));
+              std::lock_guard<std::mutex> lck(m_mtx);
+              m_installStatus = retVal == 0 ? "succeeded" : "failed";
+              m_installMessage = lastError;
           }))
     , m_log(spdlog::get("system"))
 {
     {
         auto raucOperation = m_rauc->operation();
         auto raucLastError = m_rauc->lastError();
-        std::map<std::string, std::string> data {
-            {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message", raucLastError},
-        };
+
+        std::lock_guard<std::mutex> lck(m_mtx);
+
+        m_installMessage = raucLastError;
 
         if (raucOperation == "installing") {
-            data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status"] = "in-progress";
+            m_installStatus = "in-progress";
         } else if (!raucLastError.empty()) {
-            data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status"] = "failed";
+            m_installStatus = "failed";
         } else {
-            data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status"] = "none";
+            m_installStatus = "none";
         }
-
-        utils::valuesPush(data, m_srSession, SR_DS_OPERATIONAL);
     }
 
-    m_srSubscribe->rpc_subscribe(
+    m_srSubscribeRPC->rpc_subscribe(
         (CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/install").c_str(),
         [this](::sysrepo::S_Session session, [[maybe_unused]] const char* op_path, const ::sysrepo::S_Vals input, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id, [[maybe_unused]] ::sysrepo::S_Vals_Holder output) {
             try {
@@ -90,5 +85,23 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
         },
         0,
         SR_SUBSCR_CTX_REUSE);
+
+    m_srSubscribeOps->oper_get_items_subscribe(
+        CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(),
+        [this](::sysrepo::S_Session session, [[maybe_unused]] const char* module_name, [[maybe_unused]] const char* path, [[maybe_unused]] const char* request_xpath, [[maybe_unused]] uint32_t request_id, libyang::S_Data_Node& parent) {
+            std::map<std::string, std::string> data;
+            {
+                std::lock_guard<std::mutex> lck(m_mtx);
+                data = {
+                    {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status", m_installStatus},
+                    {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message", m_installMessage},
+                };
+            }
+
+            utils::valuesToYang(data, session, parent);
+            return SR_ERR_OK;
+        },
+        (CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "*").c_str(),
+        SR_SUBSCR_PASSIVE | SR_SUBSCR_OPER_MERGE | SR_SUBSCR_CTX_REUSE);
 }
 }

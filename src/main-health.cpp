@@ -35,14 +35,14 @@ static const char usage[] =
     R"(Monitor system health status.
 
 Usage:
-  veliad
+  veliad-health
     [--appliance=<Model>]
     [--log-level=<Level>]
     [--health-log-level=<Level>]
     [--sysrepo-log-level=<Level>]
     [--systemd-ignore-unit=<Unit>]...
-  veliad (-h | --help)
-  veliad --version
+  veliad-health (-h | --help)
+  veliad-health --version
 
 Options:
   -h --help                         Show this screen.
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
         loggingSink = std::make_shared<spdlog::sinks::ansicolor_stderr_sink_mt>();
     }
 
-    auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "veliad " VELIA_VERSION, true);
+    auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "veliad-health " VELIA_VERSION, true);
 
     velia::utils::initLogs(loggingSink);
     spdlog::set_level(spdlog::level::info);

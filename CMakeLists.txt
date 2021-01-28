@@ -68,6 +68,8 @@ add_library(velia-utils STATIC
     src/utils/io.h
     src/utils/journal.cpp
     src/utils/journal.h
+    src/utils/libyang.cpp
+    src/utils/libyang.h
     src/utils/log.h
     src/utils/log-fwd.h
     src/utils/log-init.cpp

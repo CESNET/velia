@@ -9,6 +9,7 @@
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include "firewall/Firewall.h"
+#include "utils/libyang.h"
 #include "utils/sysrepo.h"
 
 using namespace std::string_literals;
@@ -19,23 +20,6 @@ const auto ace_comment = "/ietf-access-control-list:acls/acl/aces/ace/name";
 const auto ipv4_matches = "/ietf-access-control-list:acls/acl/aces/ace/matches/l3/ipv4/ipv4/source-network/source-ipv4-network/source-ipv4-network";
 const auto ipv6_matches = "/ietf-access-control-list:acls/acl/aces/ace/matches/l3/ipv6/ipv6/source-network/source-ipv6-network/source-ipv6-network";
 const auto action = "/ietf-access-control-list:acls/acl/aces/ace/actions/forwarding";
-}
-
-/**
- * Gets a string value from a node.
- *
- * @param node A libyang data node. Mustn't be nullptr.
- *
- */
-namespace {
-const char* getValueAsString(const libyang::S_Data_Node& node)
-{
-    if (!node || node->schema()->nodetype() != LYS_LEAF) {
-        throw std::logic_error("retrieveString: invalid node");
-    }
-
-    return libyang::Data_Node_Leaf_List(node).value_str();
-}
 }
 
 std::string generateNftConfig(velia::Log logger, const libyang::S_Data_Node& tree)

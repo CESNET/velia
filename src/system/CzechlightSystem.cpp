@@ -79,6 +79,7 @@ CzechlightSystem::CzechlightSystem(std::shared_ptr<::sysrepo::Connection> srConn
                 session->set_error(e.getMessage().c_str(), nullptr);
                 return SR_ERR_OPERATION_FAILED;
             }
+            m_log->error("rpc call ends");
             return SR_ERR_OK;
         },
         0,

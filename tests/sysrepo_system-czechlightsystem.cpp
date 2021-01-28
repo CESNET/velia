@@ -145,7 +145,7 @@ TEST_CASE("czechlight-system")
             auto res = client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
             REQUIRE(res->val_cnt() == 0);
 
-            std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
+            std::this_thread::sleep_for(210ms); // lets wait a while, so the RAUC's callback for operation changed takes place
             REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == expectedInProgress);
 
             std::this_thread::sleep_for(2s); // lets wait a while, so the installation can finish

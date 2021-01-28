@@ -118,7 +118,9 @@ std::map<std::string, RAUC::SlotProperties> RAUC::slotStatus() const
  */
 void RAUC::install(const std::string& source)
 {
+    m_log->error("RAUC::install starts");
     m_dbusObjectProxy->callMethod("InstallBundle").onInterface(INTERFACE).withArguments(source, std::map<std::string, sdbus::Variant> {});
+    m_log->error("RAUC::install ends");
 }
 
 std::string RAUC::operation() const

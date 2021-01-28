@@ -67,6 +67,8 @@ set(YANG_SRCS
 add_library(velia-utils STATIC
     src/utils/exceptions.cpp
     src/utils/exceptions.h
+    src/utils/exec.cpp
+    src/utils/exec.h
     src/utils/io.cpp
     src/utils/io.h
     src/utils/journal.cpp
@@ -131,6 +133,11 @@ target_link_libraries(velia-ietf-hardware-sysrepo
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
     )
+
+set(NOBODY_UID 65534 CACHE STRING "UID which refers to 'nobody'. Used for dropping root privileges.")
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/system/system_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/system_vars.h @ONLY)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # - ietf-system
 add_library(velia-system STATIC

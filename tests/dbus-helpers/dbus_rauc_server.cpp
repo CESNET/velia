@@ -10,16 +10,25 @@ const std::string interfaceManager = "de.pengutronix.rauc.Installer";
 const std::string objectPathManager = "/";
 }
 
-#define PROGRESS(perc, msg, depth)                                      \
-    m_propProgress = sdbus::make_struct(perc, std::string(msg), depth); \
+#define PROGRESS(perc, msg, depth)                                          \
+    {                                                                       \
+        std::lock_guard<std::mutex> lck(m_mtx);                             \
+        m_propProgress = sdbus::make_struct(perc, std::string(msg), depth); \
+    }                                                                       \
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"Progress"});
 
-#define OPERATION(op)     \
-    m_propOperation = op; \
+#define OPERATION(op)                           \
+    {                                           \
+        std::lock_guard<std::mutex> lck(m_mtx); \
+        m_propOperation = op;                   \
+    }                                           \
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"Operation"});
 
-#define LAST_ERROR(msg)    \
-    m_propLastError = msg; \
+#define LAST_ERROR(msg)                         \
+    {                                           \
+        std::lock_guard<std::mutex> lck(m_mtx); \
+        m_propLastError = msg;                  \
+    }                                           \
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"LastError"});
 
 #define WAIT(time) std::this_thread::sleep_for(time);
@@ -76,14 +85,15 @@ DBusRAUCServer::DBusRAUCServer(sdbus::IConnection& connection, std::string prima
         std::lock_guard<std::mutex> lock(m_mtx);
         if (!m_operationInProgress) {
             m_operationInProgress = true;
+            if (m_installThread.joinable()) m_installThread.join();
             m_installThread = std::thread(&DBusRAUCServer::installBundle, this);
         } else {
             throw sdbus::Error("org.gtk.GDBus.UnmappedGError.Quark._g_2dio_2derror_2dquark.Code30", "Already processing a different method");
         }
     });
-    m_manager->registerProperty("Operation").onInterface(interfaceManager).withGetter([this]() { return m_propOperation; });
-    m_manager->registerProperty("LastError").onInterface(interfaceManager).withGetter([this]() { return m_propLastError; });
-    m_manager->registerProperty("Progress").onInterface(interfaceManager).withGetter([this]() { return m_propProgress; });
+    m_manager->registerProperty("Operation").onInterface(interfaceManager).withGetter([this]() { std::lock_guard<std::mutex> lck (m_mtx); return m_propOperation; });
+    m_manager->registerProperty("LastError").onInterface(interfaceManager).withGetter([this]() { std::lock_guard<std::mutex> lck (m_mtx); return m_propLastError; });
+    m_manager->registerProperty("Progress").onInterface(interfaceManager).withGetter([this]() { std::lock_guard<std::mutex> lck (m_mtx); return m_propProgress; });
     m_manager->registerSignal("Completed").onInterface(interfaceManager).withParameters<int32_t>();
     m_manager->finishRegistration();
 }
@@ -118,8 +128,11 @@ void DBusRAUCServer::installBundleOK()
 {
     OPERATION("installing");
 
-    m_propLastError = "";
-    m_propProgress = sdbus::make_struct(0, "Installing"s, 1);
+    {
+        std::lock_guard<std::mutex> lck (m_mtx);
+        m_propLastError = "";
+        m_propProgress = sdbus::make_struct(0, "Installing"s, 1);
+    }
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"LastError", "Progress"});
 
     PROGRESS(0, "Determining slot states", 2);
@@ -161,8 +174,11 @@ void DBusRAUCServer::installBundleError()
 {
     OPERATION("installing");
 
-    m_propLastError = "";
-    m_propProgress = sdbus::make_struct(0, "Installing"s, 1);
+    {
+        std::lock_guard<std::mutex> lck (m_mtx);
+        m_propLastError = "";
+        m_propProgress = sdbus::make_struct(0, "Installing"s, 1);
+    }
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"LastError", "Progress"});
 
     PROGRESS(0, "Determining slot states", 2);

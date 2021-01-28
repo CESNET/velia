@@ -67,6 +67,8 @@ set(YANG_SRCS
 add_library(velia-utils STATIC
     src/utils/exceptions.cpp
     src/utils/exceptions.h
+    src/utils/exec.cpp
+    src/utils/exec.h
     src/utils/io.cpp
     src/utils/io.h
     src/utils/journal.cpp

@@ -7,6 +7,7 @@
 #include "VELIA_VERSION.h"
 #include "firewall/Firewall.h"
 #include "utils/exceptions.h"
+#include "utils/exec.h"
 #include "utils/journal.h"
 #include "utils/log-init.h"
 #include "utils/waitUntilSignalled.h"
@@ -68,27 +69,8 @@ int main(int argc, char* argv[])
         auto srSess = std::make_shared<sysrepo::Session>(srConn);
         velia::firewall::SysrepoFirewall firewall(srSess, [] (const auto& config) {
             spdlog::get("firewall")->debug("running nft...");
-            namespace bp = boost::process;
-            bp::pipe stdinPipe;
-            bp::ipstream stderrStream;
+            velia::utils::execAndWait(spdlog::get("firewall"), "nft", {"-f", "-"}, config);
 
-            bp::child c(bp::search_path("nft"), "-f" , "-", bp::std_in < stdinPipe, bp::std_err > stderrStream);
-            spdlog::get("firewall")->trace("nft started");
-
-            stdinPipe.write(config.c_str(), config.size());
-            // I immediately close the pipe so that nft stops reading.
-            stdinPipe.close();
-
-            c.wait();
-            spdlog::get("firewall")->trace("nft exited");
-
-            if (c.exit_code()) {
-                std::istreambuf_iterator<char> begin(stderrStream), end;
-                std::string stderrOutput(begin, end);
-                spdlog::get("firewall")->critical("nft ended with a non-zero exit code. stderr: {}", stderrOutput);
-
-                throw std::runtime_error("nft returned non-zero exit code " + std::to_string(c.exit_code()));
-            }
             spdlog::get("firewall")->debug("nft config applied.");
         });
 

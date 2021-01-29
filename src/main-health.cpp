@@ -3,7 +3,6 @@
 #include <sdbus-c++/sdbus-c++.h>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
-#include <sysrepo-cpp/Session.hpp>
 #include "VELIA_VERSION.h"
 #include "health/Factory.h"
 #include "health/inputs/DbusSystemdInput.h"
@@ -39,7 +38,6 @@ Usage:
     [--appliance=<Model>]
     [--log-level=<Level>]
     [--health-log-level=<Level>]
-    [--sysrepo-log-level=<Level>]
     [--systemd-ignore-unit=<Unit>]...
   veliad-health (-h | --help)
   veliad-health --version
@@ -51,7 +49,6 @@ Options:
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
   --health-log-level=<N>            Log level for the health monitoring [default: 3]
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
   --systemd-ignore-unit=<Unit>      Ignore state of systemd's unit in systemd state tracker. Can be specified multiple times.
 )";
 
@@ -73,12 +70,6 @@ int main(int argc, char* argv[])
 
     try {
         spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
-        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
-
-        spdlog::get("main")->debug("Opening Sysrepo connection");
-        auto srConn = std::make_shared<sysrepo::Connection>();
-        auto srSess = std::make_shared<sysrepo::Session>(srConn);
-        auto srSubscription = std::make_shared<sysrepo::Subscribe>(srSess);
 
         DBUS_EVENTLOOP_START
 

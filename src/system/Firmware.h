@@ -14,9 +14,9 @@
 
 namespace velia::system {
 
-class CzechlightSystem {
+class Firmware {
 public:
-    CzechlightSystem(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnection);
+    Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnection);
 
 private:
     std::shared_ptr<::sysrepo::Connection> m_srConn;

@@ -77,8 +77,8 @@ int main(int argc, char* argv[])
         auto manager = std::make_shared<velia::health::StateManager>();
 
         // output configuration
-        spdlog::get("main")->debug("Initializing LED drivers");
         if (const auto& appliance = args["--appliance"]) {
+            spdlog::get("main")->debug("Initializing LED drivers");
             manager->m_outputSignal.connect(velia::health::createOutput(appliance.asString()));
         }
 

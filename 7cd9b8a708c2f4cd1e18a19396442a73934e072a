@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1d53db0_30d79b79",
+        "filename": "src/utils/exec.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-29T09:03:52Z",
+      "side": 1,
+      "message": "I think that this API has potential to be rather confusing. You define an optional string here, but when the caller puts a nullopt in there, then the process\u0027 stdin will never see EOF. And that, BTW, is the only difference between a nullopt and std::string{}, which makes me wonder if you really need an optional thingy in there.\n\nAlso, wouldn\u0027t a stringview be more appropriate in this context?\n\nAlso it would make sense to better describe that stderr gets ignored unless that process fails, etc.",
+      "range": {
+        "startLine": 22,
+        "startChar": 111,
+        "endLine": 22,
+        "endChar": 137
+      },
+      "revId": "7cd9b8a708c2f4cd1e18a19396442a73934e072a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

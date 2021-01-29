@@ -5,7 +5,7 @@
  *
  */
 
-#include "CzechlightSystem.h"
+#include "Firmware.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
@@ -20,7 +20,7 @@ const auto CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX = "/"s + CZECHLIGHT_SYSTEM_M
 
 namespace velia::system {
 
-CzechlightSystem::CzechlightSystem(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnection)
+Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnection)
     : m_srConn(std::move(srConn))
     , m_srSession(std::make_shared<::sysrepo::Session>(m_srConn))
     , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))

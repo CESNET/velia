@@ -1,7 +1,7 @@
 #include "trompeloeil_doctest.h"
 #include "dbus-helpers/dbus_rauc_server.h"
 #include "pretty_printers.h"
-#include "system/CzechlightSystem.h"
+#include "system/Firmware.h"
 #include "test_log_setup.h"
 #include "test_sysrepo_helpers.h"
 #include "tests/configure.cmake.h"
@@ -9,7 +9,7 @@
 
 using namespace std::literals;
 
-TEST_CASE("czechlight-system")
+TEST_CASE("Firmware in czechlight-system")
 {
     trompeloeil::sequence seq1;
 
@@ -89,7 +89,7 @@ TEST_CASE("czechlight-system")
                   }},
     };
     auto raucServer = DBusRAUCServer(*dbusServerConnection, "rootfs.1", dbusRaucStatus);
-    auto sysrepo = std::make_shared<velia::system::CzechlightSystem>(srConn, *dbusClientConnection);
+    auto sysrepo = std::make_shared<velia::system::Firmware>(srConn, *dbusClientConnection);
 
     REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == std::map<std::string, std::string>{
         {"/installation", ""},

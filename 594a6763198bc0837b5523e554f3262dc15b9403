@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58ae7dc2_c36dd005",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-01-29T18:07:29Z",
+      "side": 1,
+      "message": "I think that the CI is (a bit) broken because of a merge commit of br2-external, let\u0027s fix that one later.",
+      "revId": "594a6763198bc0837b5523e554f3262dc15b9403",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

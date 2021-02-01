@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9ffa268_b0d56262",
+        "filename": "src/utils/libyang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-01T12:45:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf36268a_851f70b7",
+      "revId": "746363f40bbf66cafc938341952f2561baf8ee42",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ba7e03b3_17e85e01",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-01-29T08:58:09Z",
       "side": 1,
       "message": "- also add what happens where there\u0027s more than one\n- split into a @brief one-sentence summary, newline, and then the rest of the docs please",
+      "revId": "746363f40bbf66cafc938341952f2561baf8ee42",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aad541ec_770db0c4",
+        "filename": "src/utils/libyang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-01T12:45:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba7e03b3_17e85e01",
       "revId": "746363f40bbf66cafc938341952f2561baf8ee42",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

@@ -13,10 +13,10 @@ TEST_CASE("Sysrepo ietf-system")
 
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
+    TEST_SYSREPO_INIT_CLIENT;
 
     SECTION("Test system-state")
     {
-        TEST_SYSREPO_INIT_CLIENT;
         static const auto modulePrefix = "/ietf-system:system-state"s;
 
         SECTION("Valid data")
@@ -69,4 +69,15 @@ TEST_CASE("Sysrepo ietf-system")
             REQUIRE_THROWS_AS(std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys"), std::out_of_range);
         }
     }
+
+#ifdef TEST_RPC_SYSTEM_REBOOT
+    SECTION("RPC system-restart")
+    {
+        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release");
+
+        auto rpcInput = std::make_shared<sysrepo::Vals>(0);
+        auto res = client->rpc_send("/ietf-system:system-restart", rpcInput);
+        REQUIRE(res->val_cnt() == 0);
+    }
+#endif
 }

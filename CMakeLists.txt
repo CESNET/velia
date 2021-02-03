@@ -140,6 +140,9 @@ set(NOBODY_GID 65534 CACHE STRING "GID which refers to 'nobody'. Used for droppi
 if(NOT NFT_EXECUTABLE)
     find_program(NFT_EXECUTABLE nft)
 endif()
+if(NOT SYSTEMCTL_EXECUTABLE)
+    find_program(SYSTEMCTL_EXECUTABLE systemctl)
+endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/system/system_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/system_vars.h @ONLY)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

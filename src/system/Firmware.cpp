@@ -20,14 +20,15 @@ const auto CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX = "/"s + CZECHLIGHT_SYSTEM_M
 
 namespace velia::system {
 
-Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnection)
+Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnectionSignals, sdbus::IConnection& dbusConnectionMethods)
     : m_srConn(std::move(srConn))
     , m_srSessionOps(std::make_shared<::sysrepo::Session>(m_srConn))
     , m_srSessionRPC(std::make_shared<::sysrepo::Session>(m_srConn))
     , m_srSubscribeOps(std::make_shared<::sysrepo::Subscribe>(m_srSessionOps))
     , m_srSubscribeRPC(std::make_shared<::sysrepo::Subscribe>(m_srSessionRPC))
     , m_rauc(std::make_shared<RAUC>(
-          dbusConnection,
+          dbusConnectionSignals,
+          dbusConnectionMethods,
           [this](const std::string& operation) {
               if (operation == "installing") {
                   std::lock_guard<std::mutex> lck(m_mtx);

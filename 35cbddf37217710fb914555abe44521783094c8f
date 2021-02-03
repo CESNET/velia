@@ -50,6 +50,24 @@
       "message": "I started wondering if it\u0027s OK to subscribe for \"everything\" here instead of just the installation subtree, but probably why not.",
       "revId": "35cbddf37217710fb914555abe44521783094c8f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91d26adf_16498aea",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-03T07:58:47Z",
+      "side": 1,
+      "message": "I thought this subscription could handle czechlight-system:firmware/firmware-slot in the next commit as well\n\nBut it still timeouting somewhere and I do not know the reason so anyway, this may be wrong",
+      "parentUuid": "555af6de_f09658f4",
+      "revId": "35cbddf37217710fb914555abe44521783094c8f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

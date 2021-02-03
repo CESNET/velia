@@ -17,7 +17,7 @@ namespace velia::system {
 
 class Firmware {
 public:
-    Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnection);
+    Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnectionSignals, sdbus::IConnection& dbusConnectionMethods);
 
 private:
     std::shared_ptr<::sysrepo::Connection> m_srConn;

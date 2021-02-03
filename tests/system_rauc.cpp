@@ -14,10 +14,11 @@ TEST_CASE("Fetch RAUC data over DBus")
 
     // setup separate connections for both client and server. Can be done using one connection only but this way it is more generic
     auto serverConnection = sdbus::createSessionBusConnection("de.pengutronix.rauc");
-    auto clientConnection = sdbus::createSessionBusConnection();
+    auto clientConnectionSignals = sdbus::createSessionBusConnection();
+    auto clientConnectionMethods = sdbus::createSessionBusConnection();
 
     // enter client and servers event loops
-    clientConnection->enterEventLoopAsync();
+    clientConnectionSignals->enterEventLoopAsync();
     serverConnection->enterEventLoopAsync();
 
     std::string primarySlot = "rootfs.1";
@@ -92,7 +93,8 @@ TEST_CASE("Fetch RAUC data over DBus")
 
     auto fakeRaucInstallCb = FakeRAUCInstallCb();
     auto rauc = std::make_shared<velia::system::RAUC>(
-        *clientConnection,
+        *clientConnectionSignals,
+        *clientConnectionMethods,
         [&fakeRaucInstallCb](const std::string& operation) { fakeRaucInstallCb.operationCallback(operation); },
         [&fakeRaucInstallCb](int32_t perc, const std::string& msg) { fakeRaucInstallCb.progressCallback(perc, msg); },
         [&fakeRaucInstallCb](int32_t retVal, const std::string& lastError) { fakeRaucInstallCb.completedCallback(retVal, lastError); });

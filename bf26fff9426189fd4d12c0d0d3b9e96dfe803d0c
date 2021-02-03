@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "93825df3_f57c873f",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-03T23:52:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c68c3303_069b1714",
+      "revId": "bf26fff9426189fd4d12c0d0d3b9e96dfe803d0c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa138b98_9baf8c74",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-02-03T10:07:53Z",
       "side": 1,
       "message": "The same integer constant provided at two different places is a recipe for future bugs",
+      "range": {
+        "startLine": 90,
+        "startChar": 60,
+        "endLine": 90,
+        "endChar": 65
+      },
+      "revId": "bf26fff9426189fd4d12c0d0d3b9e96dfe803d0c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28c728d0_e9280ec9",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-03T23:52:33Z",
+      "side": 1,
+      "message": "oh snap",
+      "parentUuid": "aa138b98_9baf8c74",
       "range": {
         "startLine": 90,
         "startChar": 60,
@@ -64,6 +106,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c7ecf66_752e31b1",
+        "filename": "src/utils/io.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-03T23:52:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52ad71c2_4ba66f79",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 5
+      },
+      "revId": "bf26fff9426189fd4d12c0d0d3b9e96dfe803d0c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1316c2e5_c1caa4ad",
@@ -77,6 +143,24 @@
       "writtenOn": "2021-02-03T10:07:53Z",
       "side": 1,
       "message": "cppreference suggests that you do not want std::rename (which is implementation-defined), but std::filesystem::rename (which they say follows the POSIX semantics of atomic renames). Weird, but I think that makes sense.",
+      "revId": "bf26fff9426189fd4d12c0d0d3b9e96dfe803d0c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "975e24be_3a449e0a",
+        "filename": "src/utils/io.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-03T23:52:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1316c2e5_c1caa4ad",
       "revId": "bf26fff9426189fd4d12c0d0d3b9e96dfe803d0c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

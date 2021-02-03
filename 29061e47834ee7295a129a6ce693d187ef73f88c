@@ -54,6 +54,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "28f3b414_94ca915e",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-03T23:52:33Z",
+      "side": 1,
+      "message": "Yes, it is PRIVATE",
+      "parentUuid": "a5c6b847_41523da6",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59ddb3de_c3da8310",
@@ -288,6 +306,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "46e76076_9e78c2f8",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-03T23:52:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9b78b43_dd82371c",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1ab95e3c_510cc4a9",
@@ -366,6 +402,24 @@
       "side": 1,
       "message": "I\u0027m not sure what you mean, but I added a new exception",
       "parentUuid": "3e0605ec_6cb66bbe",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca44f171_bcbc8c15",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-03T23:52:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b3412c1_100ac4dd",
       "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },

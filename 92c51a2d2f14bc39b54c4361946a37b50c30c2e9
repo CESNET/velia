@@ -16,6 +16,40 @@
       "message": "recheck",
       "revId": "92c51a2d2f14bc39b54c4361946a37b50c30c2e9",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb0ae080_1ba6d42b",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:49:15Z",
+      "side": 1,
+      "message": "Instead of a comment reminding people not to do something, IMHO it\u0027s better to make sure that that thing cannot happen. What about moving (as in, std::move) the lock to the input parameters of this function?",
+      "revId": "92c51a2d2f14bc39b54c4361946a37b50c30c2e9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "180f51da_f2d5ea08",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:49:15Z",
+      "side": 1,
+      "message": "Is this intentionally called while that lock is held?",
+      "revId": "92c51a2d2f14bc39b54c4361946a37b50c30c2e9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

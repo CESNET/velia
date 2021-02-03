@@ -5,9 +5,9 @@
 using namespace std::literals;
 
 namespace {
-static const std::string interfaceUnit = "cz.cesnet.systemd1.Unit";
-static const std::string interfaceManager = "cz.cesnet.systemd1.Manager";
-static const std::string objectPathManager = "/cz/cesnet/systemd1";
+static const std::string interfaceUnit = "org.freedesktop.systemd1.Unit";
+static const std::string interfaceManager = "org.freedesktop.systemd1.Manager";
+static const std::string objectPathManager = "/org/freedesktop/systemd1";
 }
 
 /** @brief Create a dbus server on the connection */

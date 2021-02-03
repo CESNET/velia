@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a5c6b847_41523da6",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T10:07:53Z",
+      "side": 1,
+      "message": "Please use PRIVATE for fmt, it is not \"exported\" to the callers in any way",
+      "parentUuid": "db99b9e2_a217d7ab",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "59ddb3de_c3da8310",
         "filename": "CMakeLists.txt",
         "patchSetId": 7

@@ -1,0 +1,243 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc4303fe_e189d177",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "This will need something like:\n \nfind_package(fmt)\ntarget_link_libraries(velia-utils PRIVATE fmt::fmt)\n\nCurrently this was kinda masked because there\u0027s spdlog which depends on fmt internally, but it broke horribly in libc++ in the CI. That\u0027s because libc++ uses a different ABI than libstdc++, which means that using systemwide spdlog (or fmt) won\u0027t work (basically, the mangled name is completely different due to libc++\u0027 internal __1 namespaces, etc). Here\u0027s what the CI is doing behind the scenes: https://gerrit.cesnet.cz/plugins/gitiles/CzechLight/velia/+/refs/heads/master/ci/build.sh#24\n\nThis will need a small tweak, something like:\n \n-e \u0027s/fmt::fmt/fmt::fmt-header-only/\u0027 \\",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59ddb3de_c3da8310",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "Allow {USER} (for username) and {HOME} (for homedir), please",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f40cb54_959bf312",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "check the regex for presence of {USER} or {HOME} if you feel like doing this \"properly\"",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3385ce0a_38e86603",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "let\u0027s call this BACKUP_ETC_SHADOW, and \"Path to where /etc/shadow gets copied to upon each change\"",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d781616_772c445f",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "\"authorizedKeysPath\"?",
+      "range": {
+        "startLine": 32,
+        "startChar": 12,
+        "endLine": 32,
+        "endChar": 32
+      },
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5747b00_6ac147fe",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "since there are more threads (sysrepo,...) and getpwent is not thread safe, I\u0027m afraid you\u0027ll have to go via getpwent_r",
+      "range": {
+        "startLine": 79,
+        "startChar": 24,
+        "endLine": 79,
+        "endChar": 32
+      },
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdac7e9f_4723661a",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "would be nice to do this as an unprivileged user instead of root. Should be easy via on_exec_setup from the posix BP executor",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ab95e3c_510cc4a9",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "nit: please make this more readable, such as:\n \n\"Key is not a valid SSH public key: {stderr}\\n{key}\"",
+      "range": {
+        "startLine": 95,
+        "startChar": 34,
+        "endLine": 95,
+        "endChar": 69
+      },
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e0605ec_6cb66bbe",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "...and turn this into a dedicated exception, and propagate that exception via setting a sysrepo-level error. If not done that way, these errors would result in unhandled exceptions, and that in a \"crash\" via std::terminate, and eventually a systemd-managed restart that goes along with purging of the SHM segment and therefore a copy from startup to running as well as breaking all NETCONF sessions. That\u0027s not nice.\n\nAlso do that for all other user-level exceptions please.",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce22330e_947d2194",
+        "filename": "src/system/system_vars.h.in",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "I would prefer if the C++-ish bits were used in C++ files, and these raw defines stuck to using C-level string literals. Just move the std::string vs. string_view difference into the place where it\u0027s being used.",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b6a7cc8_90f02fff",
+        "filename": "src/utils/io.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "fsync() on the directory which holds that file is needed as well AFAIU",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bcc1377e_9316a94a",
+        "filename": "src/utils/libyang.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "as of this patch you can depend on fmt, perhaps use it here as well",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "073d3da8_d52f4fb5",
+        "filename": "tests/fs-helpers/utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:37:50Z",
+      "side": 1,
+      "message": "is this modification still needed?",
+      "revId": "29061e47834ee7295a129a6ce693d187ef73f88c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

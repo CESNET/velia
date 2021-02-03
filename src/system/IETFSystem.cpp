@@ -7,6 +7,7 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
+#include <sdbus-c++/sdbus-c++.h>
 #include "IETFSystem.h"
 #include "utils/io.h"
 #include "utils/log.h"
@@ -58,8 +59,10 @@ std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path
 namespace velia::system {
 
 /** @brief Reads some OS-identification data from osRelease file and publishes them via ietf-system model */
-IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
+IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, sdbus::IConnection& dbusConnection, const std::string& systemdBusname, const std::filesystem::path& osRelease)
     : m_srSession(std::move(srSession))
+    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+    , m_dbusSystemdManager(sdbus::createProxy(dbusConnection, systemdBusname, "/org/freedesktop/systemd1"))
     , m_log(spdlog::get("system"))
 {
     std::map<std::string, std::string> osReleaseContents = parseKeyValueFile(osRelease);
@@ -71,5 +74,20 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
     };
 
     utils::valuesPush(opsSystemStateData, m_srSession, SR_DS_OPERATIONAL);
+
+    m_srSubscribe->rpc_subscribe(
+        ("/" + IETF_SYSTEM_MODULE_NAME + ":system-restart").c_str(),
+        [this](::sysrepo::S_Session session, [[maybe_unused]] const char* op_path, [[maybe_unused]] const ::sysrepo::S_Vals input, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id, [[maybe_unused]] ::sysrepo::S_Vals_Holder output) {
+            try {
+                m_dbusSystemdManager->callMethod("Reboot").onInterface("org.freedesktop.systemd1.Manager");
+            } catch (sdbus::Error& e) {
+                m_log->error("Invoking system restart failed: '{}'", e.what());
+                session->set_error(e.getMessage().c_str(), nullptr);
+                return SR_ERR_OPERATION_FAILED;
+            }
+            return SR_ERR_OK;
+        },
+        0,
+        SR_SUBSCR_CTX_REUSE);
 }
 }

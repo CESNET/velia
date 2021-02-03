@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 
         // initialize ietf-system
         spdlog::get("main")->debug("Initializing Sysrepo for system models");
-        auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release");
+        auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, *g_dbusConnection, "org.freedesktop.systemd1", "/etc/os-release");
 
         auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods). We don't have to start event loop for this one
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);

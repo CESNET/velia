@@ -17,6 +17,7 @@ DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection)
     // create manager object
     m_manager->registerMethod("Subscribe").onInterface(interfaceManager).implementedAs([] {}).withNoReply(); // no-op for us
     m_manager->registerMethod("ListUnits").onInterface(interfaceManager).implementedAs([this]() { return ListUnits(); });
+    m_manager->registerMethod("Reboot").onInterface(interfaceManager).implementedAs([]{}); // returns, but empty message (busctl monitor observation)
     m_manager->registerSignal("UnitNew").onInterface(interfaceManager).withParameters<std::string, sdbus::ObjectPath>();
     m_manager->finishRegistration();
 }

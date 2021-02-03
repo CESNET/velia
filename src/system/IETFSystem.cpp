@@ -6,6 +6,7 @@
  */
 
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/process.hpp>
 #include <fstream>
 #include "IETFSystem.h"
 #include "utils/io.h"
@@ -60,6 +61,7 @@ namespace velia::system {
 /** @brief Reads some OS-identification data from osRelease file and publishes them via ietf-system model */
 IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
     : m_srSession(std::move(srSession))
+    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
     , m_log(spdlog::get("system"))
 {
     std::map<std::string, std::string> osReleaseContents = parseKeyValueFile(osRelease);
@@ -71,5 +73,30 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
     };
 
     utils::valuesPush(opsSystemStateData, m_srSession, SR_DS_OPERATIONAL);
+
+    m_srSubscribe->rpc_subscribe(
+        ("/" + IETF_SYSTEM_MODULE_NAME + ":system-restart").c_str(),
+        [](::sysrepo::S_Session session, [[maybe_unused]] const char* op_path, [[maybe_unused]] const ::sysrepo::S_Vals input, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id, [[maybe_unused]] ::sysrepo::S_Vals_Holder output) {
+            spdlog::get("system")->debug("rebooting");
+            boost::process::ipstream stderrStream;
+            boost::process::child c(boost::process::search_path("systemctl"), "reboot", boost::process::std_err > stderrStream);
+
+            spdlog::get("system")->trace("reboot process started");
+            c.wait();
+            spdlog::get("system")->trace("reboot process exited");
+
+            if (c.exit_code()) {
+                std::istreambuf_iterator<char> begin(stderrStream), end;
+                std::string stderrOutput(begin, end);
+                spdlog::get("system")->error("systemctl reboot ended with a non-zero exit code ({}). stderr: {}", c.exit_code(), stderrOutput);
+
+                session->set_error("Reboot procedure failed.", nullptr);
+                return SR_ERR_OPERATION_FAILED;
+            }
+
+            return SR_ERR_OK;
+        },
+        0,
+        SR_SUBSCR_CTX_REUSE);
 }
 }

@@ -145,6 +145,7 @@ target_link_libraries(velia-system
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
         SDBusCpp::sdbus-c++
+        Boost::filesystem
     )
 
 # - firewall

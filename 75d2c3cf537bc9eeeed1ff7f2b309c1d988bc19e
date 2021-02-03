@@ -33,6 +33,29 @@
       "message": "recheck",
       "revId": "75d2c3cf537bc9eeeed1ff7f2b309c1d988bc19e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a510efb_1d8403a7",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-03T01:40:58Z",
+      "side": 1,
+      "message": "This is not needed \"yet\", and doing so would have implications for the br2-external.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 3
+      },
+      "revId": "75d2c3cf537bc9eeeed1ff7f2b309c1d988bc19e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -304,7 +304,7 @@ if(BUILD_TESTING)
     velia_test(system_rauc velia-system DbusTesting)
     set_tests_properties(
             test-system_rauc
-            PROPERTIES RESOURCE_LOCK dbus-rauc
+            PROPERTIES RESOURCE_LOCK dbus-rauc TIMEOUT 20
     )
 
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)

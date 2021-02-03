@@ -18,8 +18,9 @@ TEST_CASE("Firmware in czechlight-system")
     TEST_SYSREPO_INIT_CLIENT;
 
     auto dbusServerConnection = sdbus::createSessionBusConnection("de.pengutronix.rauc");
-    auto dbusClientConnection = sdbus::createSessionBusConnection();
-    dbusClientConnection->enterEventLoopAsync();
+    auto dbusClientConnectionSignals = sdbus::createSessionBusConnection();
+    auto dbusClientConnectionMethods = sdbus::createSessionBusConnection();
+    dbusClientConnectionSignals->enterEventLoopAsync();
     dbusServerConnection->enterEventLoopAsync();
 
     std::map<std::string, velia::system::RAUC::SlotProperties> dbusRaucStatus = {
@@ -89,7 +90,7 @@ TEST_CASE("Firmware in czechlight-system")
                   }},
     };
     auto raucServer = DBusRAUCServer(*dbusServerConnection, "rootfs.1", dbusRaucStatus);
-    auto sysrepo = std::make_shared<velia::system::Firmware>(srConn, *dbusClientConnection);
+    auto sysrepo = std::make_shared<velia::system::Firmware>(srConn, *dbusClientConnectionSignals, *dbusClientConnectionMethods);
 
     REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == std::map<std::string, std::string>{
         {"/installation", ""},

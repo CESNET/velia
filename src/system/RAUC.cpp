@@ -34,20 +34,29 @@ std::variant<std::string, uint64_t, uint32_t> sdbusVariantToCPPVariant(const sdb
 
 namespace velia::system {
 
-RAUC::RAUC(sdbus::IConnection& connection, std::function<void(const std::string&)> operCb, std::function<void(int32_t, const std::string&)> progressCb, std::function<void(int32_t, const std::string&)> completedCb)
-    : m_dbusObjectProxy(sdbus::createProxy(connection, BUS, OBJPATH))
+/** @brief Constructs a class communicating with RAUC via D-Bus.
+ *
+ * @param signalConnection A D-Bus connection running event loop. Used for handling signals on the object.
+ * @param methodConnection A D-Bus connection (does not require to be running event loop). Used for calling D-Bus methods on the object.
+ * @param operCb A function to execute whene RAUC's operation status changes.
+ * @param progressCb A function to execute when RAUC's installation makes progress.
+ * @param completedCb A function to execute when RAUC's installation completes.
+ */
+RAUC::RAUC(sdbus::IConnection& signalConnection, sdbus::IConnection& methodConnection, std::function<void(const std::string&)> operCb, std::function<void(int32_t, const std::string&)> progressCb, std::function<void(int32_t, const std::string&)> completedCb)
+    : m_dbusObjectProxySignals(sdbus::createProxy(signalConnection, BUS, OBJPATH))
+    , m_dbusObjectProxyMethods(sdbus::createProxy(methodConnection, BUS, OBJPATH))
     , m_operCb(std::move(operCb))
     , m_progressCb(std::move(progressCb))
     , m_completedCb(std::move(completedCb))
     , m_log(spdlog::get("system"))
 {
-    m_dbusObjectProxy->uponSignal("Completed").onInterface(INTERFACE).call([this](int32_t returnValue) {
-        std::string lastError = m_dbusObjectProxy->getProperty("LastError").onInterface(INTERFACE);
+    m_dbusObjectProxySignals->uponSignal("Completed").onInterface(INTERFACE).call([this](int32_t returnValue) {
+        std::string lastError = m_dbusObjectProxySignals->getProperty("LastError").onInterface(INTERFACE);
         m_log->info("InstallBundle completed. Return value {}, last error: '{}'", returnValue, lastError);
         m_completedCb(returnValue, lastError);
     });
 
-    m_dbusObjectProxy->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([this](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {
+    m_dbusObjectProxySignals->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([this](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {
         if (iface != INTERFACE) {
             return;
         }
@@ -69,7 +78,7 @@ RAUC::RAUC(sdbus::IConnection& connection, std::function<void(const std::string&
         }
     });
 
-    m_dbusObjectProxy->finishRegistration();
+    m_dbusObjectProxySignals->finishRegistration();
 }
 
 /** @brief Get current primary slot.
@@ -80,7 +89,7 @@ RAUC::RAUC(sdbus::IConnection& connection, std::function<void(const std::string&
 std::string RAUC::primarySlot() const
 {
     std::string primarySlot;
-    m_dbusObjectProxy->callMethod("GetPrimary").onInterface(INTERFACE).storeResultsTo(primarySlot);
+    m_dbusObjectProxyMethods->callMethod("GetPrimary").onInterface(INTERFACE).storeResultsTo(primarySlot);
     return primarySlot;
 }
 
@@ -93,7 +102,7 @@ std::string RAUC::primarySlot() const
 std::map<std::string, RAUC::SlotProperties> RAUC::slotStatus() const
 {
     std::vector<sdbus::Struct<std::string, std::map<std::string, sdbus::Variant>>> slots;
-    m_dbusObjectProxy->callMethod("GetSlotStatus").onInterface(INTERFACE).storeResultsTo(slots);
+    m_dbusObjectProxyMethods->callMethod("GetSlotStatus").onInterface(INTERFACE).storeResultsTo(slots);
 
     std::map<std::string, SlotProperties> res;
     for (const auto& slot : slots) {
@@ -118,16 +127,16 @@ std::map<std::string, RAUC::SlotProperties> RAUC::slotStatus() const
  */
 void RAUC::install(const std::string& source)
 {
-    m_dbusObjectProxy->callMethod("InstallBundle").onInterface(INTERFACE).withArguments(source, std::map<std::string, sdbus::Variant> {});
+    m_dbusObjectProxyMethods->callMethod("InstallBundle").onInterface(INTERFACE).withArguments(source, std::map<std::string, sdbus::Variant> {});
 }
 
 std::string RAUC::operation() const
 {
-    return m_dbusObjectProxy->getProperty("Operation").onInterface(INTERFACE);
+    return m_dbusObjectProxyMethods->getProperty("Operation").onInterface(INTERFACE);
 }
 
 std::string RAUC::lastError() const
 {
-    return m_dbusObjectProxy->getProperty("LastError").onInterface(INTERFACE);
+    return m_dbusObjectProxyMethods->getProperty("LastError").onInterface(INTERFACE);
 }
 }

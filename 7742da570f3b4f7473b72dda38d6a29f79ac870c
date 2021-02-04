@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "7742da570f3b4f7473b72dda38d6a29f79ac870c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2201b67_b4916f8d",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-04T17:45:22Z",
+      "side": 1,
+      "message": "https://gerrit.cesnet.cz/c/CzechLight/velia/+/3590/ should (once merged) simplify this. However, I think that the recent trend of having rather long lambdas in this project is worth reconsidering :).\n\nanyway, let\u0027s rebase this on top of that exec refactoring.",
+      "revId": "7742da570f3b4f7473b72dda38d6a29f79ac870c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

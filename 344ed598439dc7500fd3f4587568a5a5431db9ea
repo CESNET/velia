@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ba4a912_051c4a57",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-04T18:18:22Z",
+      "side": 1,
+      "message": "I had a feeling you won\u0027t like it, but this was just *easier* to implement.\n\nAlso I did not really want to take the actual dbus call out of the updateSlot function because that is something that can throw and I\u0027d have to sort it at multiple places or creating some wrappers. TBH I was just lazy and this worked.\n\nThanks for the input, I am going to think about it tomorrow and I will send (hopefully) a better patch.",
+      "parentUuid": "db602dcc_4a81cdba",
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8e3704f_2e8d07cf",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-02-04T17:36:20Z",
       "side": 1,
       "message": "why is that a weak_ptr? As far as I can tell it\u0027s always initialized from a shared_ptr, so when will it be a nullptr?",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03f3bede_f643e2c7",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-04T18:18:22Z",
+      "side": 1,
+      "message": "I encountered some races in tests. The oper data callback was executed (from validation in sysrepo notifications) while m_rauc was already gone.",
+      "parentUuid": "d8e3704f_2e8d07cf",
       "range": {
         "startLine": 23,
         "startChar": 0,

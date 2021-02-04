@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db602dcc_4a81cdba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-04T17:36:20Z",
+      "side": 1,
+      "message": "I might be missing something obvious, but the locking semantics did not feel natural to me, see the comments. We can have a chat about this if you\u0027d prefer.",
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8e3704f_2e8d07cf",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-04T17:36:20Z",
+      "side": 1,
+      "message": "why is that a weak_ptr? As far as I can tell it\u0027s always initialized from a shared_ptr, so when will it be a nullptr?",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73dec829_382c2fa6",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-04T17:36:20Z",
+      "side": 1,
+      "message": "When I suggested changing this function to \"take a lock as a parameter\", I also suggested to move this querying of the RAUC backend outside of this function. I.e., instead of passing a some_ptr\u003cvelia::system::RAUC\u003e, pass a map\u003cstring, RAUC::SlotProperties\u003e, and query for that data outside of this function.\n\nThis re-locking looks rather fragile to me, TBH.\n\nAnd looking into this further, you can make this function go without any locking at all because it can be made essentially side-effect-free -- see the next comment block.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9f4c470_5caa7522",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-04T17:36:20Z",
+      "side": 1,
+      "message": "...here, this is the only real part if I understand the code correctly. So just use this signature:\n \nmap\u003cstring, string\u003e raucSlotStatusToMap(map\u003cstring, RAUC::SlotProperties\u003e)",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1dd7e4b_fbe9393b",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-04T17:36:20Z",
+      "side": 1,
+      "message": "nit: I\u0027m not sure what a reasonable threshold for class member initialization complexity is, but perhaps at 26 LoC this is already past that :)",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 13
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "294109ce_f4f65924",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-04T17:36:20Z",
+      "side": 1,
+      "message": "...as an example what I mean by my comment above for updateSLotStatus, this block could then read:\n \n auto raucOperation \u003d m_rauc-\u003eoperation();\n auto raucLastError \u003d m_rauc-\u003elastError();\n auto slotStatus \u003d m_rauc-\u003eslotStatus();\n \n std::unique_lock\u003cstd::mutex\u003e lck(m_mtx);\n \n m_installMessage \u003d raucLastError;\n if (raucOperation \u003d\u003d \"installing\") {\n     m_installStatus \u003d \"in-progress\";\n } else if (!raucLastError.empty()) {\n     m_installStatus \u003d \"failed\";\n } else {\n     m_installStatus \u003d \"none\";\n }\n m_slotStatus \u003d raucSlotStatusToMap(slotStatus);",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 70
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

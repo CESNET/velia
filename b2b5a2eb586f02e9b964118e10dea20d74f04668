@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce621f50_39bd2eff",
+        "filename": "src/utils/exec.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-04T13:40:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d16e7f4_2ac403d3",
+      "revId": "b2b5a2eb586f02e9b964118e10dea20d74f04668",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5f7d35bc_d5cb4c8a",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-02-04T12:53:31Z",
       "side": 1,
       "message": "I thought that 65534 was the way to go, but apparently it\u0027s better to make this configurable. Make this a CMake option defaulting to 65534, please, and similarly for the GID. Read https://systemd.io/UIDS-GIDS/ for an inspiration.",
+      "range": {
+        "startLine": 33,
+        "startChar": 27,
+        "endLine": 33,
+        "endChar": 28
+      },
+      "revId": "b2b5a2eb586f02e9b964118e10dea20d74f04668",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9d9d9e4_6319882a",
+        "filename": "src/utils/exec.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-04T13:40:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f7d35bc_d5cb4c8a",
       "range": {
         "startLine": 33,
         "startChar": 27,

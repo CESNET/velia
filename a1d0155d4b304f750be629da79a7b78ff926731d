@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "43dd8178_6db9c244",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-05T08:23:09Z",
+      "side": 1,
+      "message": "How do I test this 🤔",
+      "parentUuid": "a5fa3511_be6afa7f",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "75e0c1de_f8a478b5",
         "filename": "src/system/Authentication.cpp",
         "patchSetId": 12
@@ -31,6 +49,30 @@
       "writtenOn": "2021-02-05T06:55:54Z",
       "side": 1,
       "message": "this can easily be trace or debug, because what\u0027s IMHO more important is the outcome of the operation, so...",
+      "range": {
+        "startLine": 243,
+        "startChar": 16,
+        "endLine": 243,
+        "endChar": 20
+      },
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aed7da13_638e17f0",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-05T08:23:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75e0c1de_f8a478b5",
       "range": {
         "startLine": 243,
         "startChar": 16,
@@ -58,6 +100,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9add2e1_71120ea3",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-05T08:23:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8ed654f_124c4e82",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "02c2cd38_4d311859",
@@ -75,6 +135,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "727d3072_f946aef9",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-05T08:23:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02c2cd38_4d311859",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2300f5af_069b0a94",
@@ -88,6 +166,24 @@
       "writtenOn": "2021-02-05T06:55:54Z",
       "side": 1,
       "message": "There\u0027s no need to track this differently from other fields in the password database -- getspnam_r is probably your best bet here.",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa932e03_e8ba9726",
+        "filename": "src/system/Authentication.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-05T08:23:09Z",
+      "side": 1,
+      "message": "Tests won\u0027t work without root if I use getspnam. I thought about as just a sanity check that tells you whether your password change RPC worked.",
+      "parentUuid": "2300f5af_069b0a94",
       "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

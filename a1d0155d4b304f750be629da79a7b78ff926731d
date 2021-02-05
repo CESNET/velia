@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2ac3d386_f03f6b37",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-05T08:37:00Z",
+      "side": 1,
+      "message": "So I should add an argument called `homeDir` and let the caller supply it?",
+      "parentUuid": "74cd88e5_5c860e18",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "75e0c1de_f8a478b5",
         "filename": "src/system/Authentication.cpp",
         "patchSetId": 12
@@ -220,6 +238,24 @@
       "side": 1,
       "message": "Good point, so I went looking and found `nss_wrapper`:\n- https://cwrap.org/nss_wrapper.html\n- https://developers.redhat.com/blog/2015/05/05/testing-your-software-stack-without-root-privileges-using-cwrap/\n\nThis will require installing the nss_wrapper package, just add a new task into the Ansible file at https://gerrit.cesnet.cz/plugins/gitiles/CzechLight/velia/+/refs/heads/master/ci/pre.yaml . Then LD_PRELOAD that into this particular test via CMake, and provide some fake data for nss_wrap. Also check for that via CMake when testing is enabled.\n\nSorry, I understand this makes the test a bit more complex, but I think it\u0027s the way to go.",
       "parentUuid": "fa932e03_e8ba9726",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6efee85a_cac74d2e",
+        "filename": "src/system/Authentication.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-05T08:37:00Z",
+      "side": 1,
+      "message": ":( okay :(",
+      "parentUuid": "551742c4_c2199592",
       "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

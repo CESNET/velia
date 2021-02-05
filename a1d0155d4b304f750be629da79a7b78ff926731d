@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "74cd88e5_5c860e18",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-05T08:31:40Z",
+      "side": 1,
+      "message": "test this function on its own, no need to mess with *real* home",
+      "parentUuid": "43dd8178_6db9c244",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "75e0c1de_f8a478b5",
         "filename": "src/system/Authentication.cpp",
         "patchSetId": 12
@@ -184,6 +202,24 @@
       "side": 1,
       "message": "Tests won\u0027t work without root if I use getspnam. I thought about as just a sanity check that tells you whether your password change RPC worked.",
       "parentUuid": "2300f5af_069b0a94",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "551742c4_c2199592",
+        "filename": "src/system/Authentication.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-05T08:31:40Z",
+      "side": 1,
+      "message": "Good point, so I went looking and found `nss_wrapper`:\n- https://cwrap.org/nss_wrapper.html\n- https://developers.redhat.com/blog/2015/05/05/testing-your-software-stack-without-root-privileges-using-cwrap/\n\nThis will require installing the nss_wrapper package, just add a new task into the Ansible file at https://gerrit.cesnet.cz/plugins/gitiles/CzechLight/velia/+/refs/heads/master/ci/pre.yaml . Then LD_PRELOAD that into this particular test via CMake, and provide some fake data for nss_wrap. Also check for that via CMake when testing is enabled.\n\nSorry, I understand this makes the test a bit more complex, but I think it\u0027s the way to go.",
+      "parentUuid": "fa932e03_e8ba9726",
       "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

@@ -173,6 +173,30 @@
       },
       "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "596ed557_9281d7b6",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-06T17:59:28Z",
+      "side": 1,
+      "message": "This won\u0027t exactly work because  I have to handle a situation when the slotStatus() call fails.",
+      "parentUuid": "294109ce_f4f65924",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 70
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

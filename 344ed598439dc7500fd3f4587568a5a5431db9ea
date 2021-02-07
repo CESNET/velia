@@ -108,6 +108,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "685fc1ef_1a09eee2",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-07T19:02:19Z",
+      "side": 1,
+      "message": "I moved the slotStatus call outside the function to get rid of the relocking.\nRegarding the sides effect: When slotStatus call fails, we have to preserve the state of the current cache.\nI can either introduce some branching so the \"side-effects-free\" version is not called (but we call it at many places), or I can let the function to have side-effects and make our life easier.",
+      "parentUuid": "73dec829_382c2fa6",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c9f4c470_5caa7522",
         "filename": "src/system/Firmware.cpp",
         "patchSetId": 5

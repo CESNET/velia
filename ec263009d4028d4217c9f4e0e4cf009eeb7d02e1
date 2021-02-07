@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cac35e7_9e3ada4c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-07T14:46:50Z",
+      "side": 1,
+      "message": "this needs some NACM rules, obviously, but the code looks good",
+      "revId": "ec263009d4028d4217c9f4e0e4cf009eeb7d02e1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -16,6 +16,24 @@
       "message": "I would prefer something like \"dbusWatcher\" and \"dbusExec\", but that\u0027s just bikeshedding at this point I guess.",
       "revId": "b0f3c63f5201a76903fe85c682dfaa396384bb57",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9c08ea8_c799fc14",
+        "filename": "src/system/RAUC.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-08T09:24:51Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c8fe5b66_e6ce986a",
+      "revId": "b0f3c63f5201a76903fe85c682dfaa396384bb57",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

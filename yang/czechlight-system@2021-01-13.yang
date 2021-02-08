@@ -69,6 +69,12 @@ module czechlight-system {
     }
   }
 
+  typedef password-type {
+    type string {
+      pattern "[^\\r\\n]*";
+    }
+  }
+
   grouping authentication-rpc-result {
     leaf result {
       mandatory true;
@@ -126,7 +132,7 @@ module czechlight-system {
           leaf password-cleartext {
             mandatory true;
             description "This is supposed to be a plaintext password. Make sure it's not logged anywhere.";
-            type string;
+            type password-type;
           }
         }
 

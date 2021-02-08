@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include "VELIA_VERSION.h"
 #include "firewall/Firewall.h"
+#include "system_vars.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
 #include "utils/journal.h"
@@ -69,7 +70,7 @@ int main(int argc, char* argv[])
         auto srSess = std::make_shared<sysrepo::Session>(srConn);
         velia::firewall::SysrepoFirewall firewall(srSess, [] (const auto& config) {
             spdlog::get("firewall")->debug("running nft...");
-            velia::utils::execAndWait(spdlog::get("firewall"), "nft", {"-f", "-"}, config);
+            velia::utils::execAndWait(spdlog::get("firewall"), NFT_EXECUTABLE, {"-f", "-"}, config);
 
             spdlog::get("firewall")->debug("nft config applied.");
         });

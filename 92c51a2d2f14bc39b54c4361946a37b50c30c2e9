@@ -35,6 +35,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1d78f64_74932c9d",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T10:32:40Z",
+      "side": 1,
+      "message": "this no longer applies",
+      "parentUuid": "eb0ae080_1ba6d42b",
+      "revId": "92c51a2d2f14bc39b54c4361946a37b50c30c2e9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "180f51da_f2d5ea08",
@@ -48,6 +66,24 @@
       "writtenOn": "2021-02-03T01:49:15Z",
       "side": 1,
       "message": "Is this intentionally called while that lock is held?",
+      "revId": "92c51a2d2f14bc39b54c4361946a37b50c30c2e9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed594fc3_fdc33c10",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T10:32:40Z",
+      "side": 1,
+      "message": "this doesn\u0027t apply anymore either, I guess",
+      "parentUuid": "180f51da_f2d5ea08",
       "revId": "92c51a2d2f14bc39b54c4361946a37b50c30c2e9",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

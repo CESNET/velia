@@ -85,6 +85,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a64028c9_2a56a843",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T10:32:40Z",
+      "side": 1,
+      "message": "Right, that makes sense -- but if the problem is that the sysrepo ops pull subscription can outlive RAUC, it\u0027s easier to make sure that the RAUC backend instance outlives the sysrepo subscription. Everything is handled just in this single class, there aren\u0027t many complex scenarios to think of, so what about just reordering the members around in the .h file so that the RAUC thing comes first, and only then the SR connections?",
+      "parentUuid": "03f3bede_f643e2c7",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "73dec829_382c2fa6",
         "filename": "src/system/Firmware.cpp",
         "patchSetId": 5
@@ -120,6 +144,30 @@
       "side": 1,
       "message": "I moved the slotStatus call outside the function to get rid of the relocking.\nRegarding the sides effect: When slotStatus call fails, we have to preserve the state of the current cache.\nI can either introduce some branching so the \"side-effects-free\" version is not called (but we call it at many places), or I can let the function to have side-effects and make our life easier.",
       "parentUuid": "73dec829_382c2fa6",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0ecdb4b_76e59387",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T10:32:40Z",
+      "side": 1,
+      "message": "During today\u0027s call we discussed having this function (to become a method) create and return a lock. That way, the caller can \"keep\" the lock while it updates other members. Let\u0027s hope that this will fly.",
+      "parentUuid": "685fc1ef_1a09eee2",
       "range": {
         "startLine": 31,
         "startChar": 0,

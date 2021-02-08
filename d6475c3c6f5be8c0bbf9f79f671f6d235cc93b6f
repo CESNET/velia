@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c95ae85_0fa6aa69",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T10:32:40Z",
+      "side": 1,
+      "message": "nit: consider something like \"applySlotStatus\" to make it clear that this thing does not read anything, it just writes",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 21
+      },
+      "revId": "d6475c3c6f5be8c0bbf9f79f671f6d235cc93b6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a9036ab_179a96ff",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T10:32:40Z",
+      "side": 1,
+      "message": "make fetchSlotStatus() a method, so that you don\u0027t have to pass m_rauc and m_log around",
+      "range": {
+        "startLine": 84,
+        "startChar": 48,
+        "endLine": 84,
+        "endChar": 61
+      },
+      "revId": "d6475c3c6f5be8c0bbf9f79f671f6d235cc93b6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec05fdb6_fbf37364",
+        "filename": "src/system/Firmware.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T10:32:40Z",
+      "side": 1,
+      "message": "perhaps something like \"slotCache\"? That way I can stop wondering what is the relation between \"m_slotStatus\" and \"slotStatus\" later on in the implementation.",
+      "range": {
+        "startLine": 29,
+        "startChar": 39,
+        "endLine": 29,
+        "endChar": 51
+      },
+      "revId": "d6475c3c6f5be8c0bbf9f79f671f6d235cc93b6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

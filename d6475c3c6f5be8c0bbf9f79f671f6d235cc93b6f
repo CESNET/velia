@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "83069640_30335bff",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T16:01:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c95ae85_0fa6aa69",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 21
+      },
+      "revId": "d6475c3c6f5be8c0bbf9f79f671f6d235cc93b6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a9036ab_179a96ff",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-02-08T10:32:40Z",
       "side": 1,
       "message": "make fetchSlotStatus() a method, so that you don\u0027t have to pass m_rauc and m_log around",
+      "range": {
+        "startLine": 84,
+        "startChar": 48,
+        "endLine": 84,
+        "endChar": 61
+      },
+      "revId": "d6475c3c6f5be8c0bbf9f79f671f6d235cc93b6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "143c1b85_fd94ae3f",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T16:01:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a9036ab_179a96ff",
       "range": {
         "startLine": 84,
         "startChar": 48,

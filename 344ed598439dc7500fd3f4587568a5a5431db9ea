@@ -107,6 +107,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9007bd7a_b3562ffd",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T16:01:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a64028c9_2a56a843",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "73dec829_382c2fa6",
@@ -178,6 +202,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "774ef7d4_db17540c",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T16:01:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0ecdb4b_76e59387",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c9f4c470_5caa7522",
@@ -191,6 +239,30 @@
       "writtenOn": "2021-02-04T17:36:20Z",
       "side": 1,
       "message": "...here, this is the only real part if I understand the code correctly. So just use this signature:\n \nmap\u003cstring, string\u003e raucSlotStatusToMap(map\u003cstring, RAUC::SlotProperties\u003e)",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 5
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3ddbf8c_88d09286",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T16:01:09Z",
+      "side": 1,
+      "message": "not needed anymore",
+      "parentUuid": "c9f4c470_5caa7522",
       "range": {
         "startLine": 42,
         "startChar": 0,
@@ -261,6 +333,30 @@
       "side": 1,
       "message": "This won\u0027t exactly work because  I have to handle a situation when the slotStatus() call fails.",
       "parentUuid": "294109ce_f4f65924",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 70
+      },
+      "revId": "344ed598439dc7500fd3f4587568a5a5431db9ea",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e6b3b1e_005c3869",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T16:01:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "596ed557_9281d7b6",
       "range": {
         "startLine": 92,
         "startChar": 0,

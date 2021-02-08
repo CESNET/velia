@@ -28,7 +28,7 @@ prepare_git_version(VELIA_VERSION "0.0")
 find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
-find_package(Boost REQUIRED COMPONENTS filesystem)
+find_package(Boost REQUIRED)
 find_package(docopt REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ REQUIRED)
@@ -137,6 +137,10 @@ target_link_libraries(velia-ietf-hardware-sysrepo
 set(NOBODY_UID 65534 CACHE STRING "UID which refers to 'nobody'. Used for dropping root privileges.")
 set(NOBODY_GID 65534 CACHE STRING "GID which refers to 'nobody'. Used for dropping root privileges.")
 
+if(NOT NFT_EXECUTABLE)
+    find_program(NFT_EXECUTABLE nft)
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/system/system_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/system_vars.h @ONLY)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -202,7 +206,6 @@ target_link_libraries(veliad-firewall
     PUBLIC
         velia-firewall
         velia-utils
-        Boost::filesystem
         docopt
     )
 add_dependencies(veliad-firewall target-VELIA_VERSION)

@@ -14,7 +14,7 @@
 
 void velia::utils::execAndWait(
         velia::Log logger,
-        const std::string& program,
+        const std::string& executableFilename,
         std::initializer_list<std::string> args,
         std::string_view std_in,
         const std::set<ExecOptions> opts)
@@ -39,9 +39,9 @@ void velia::utils::execAndWait(
         }
     };
 
-    logger->trace("exec: {} {}", program, boost::algorithm::join(args, " "));
+    logger->trace("exec: {} {}", executableFilename, boost::algorithm::join(args, " "));
     bp::child c(
-            bp::search_path(program),
+            executableFilename,
             boost::process::args=std::move(args),
             bp::std_in < stdinPipe, bp::std_out > bp::null, bp::std_err > stderrStream,
             bp::extend::on_exec_setup=onExecSetup);
@@ -50,13 +50,13 @@ void velia::utils::execAndWait(
     stdinPipe.close();
 
     c.wait();
-    logger->trace("{} exited", program);
+    logger->trace("{} exited", executableFilename);
 
     if (c.exit_code()) {
         std::istreambuf_iterator<char> begin(stderrStream), end;
         std::string stderrOutput(begin, end);
-        logger->critical("{} ended with a non-zero exit code. stderr: {}", program, stderrOutput);
+        logger->critical("{} ended with a non-zero exit code. stderr: {}", executableFilename, stderrOutput);
 
-        throw std::runtime_error(program + " returned non-zero exit code " + std::to_string(c.exit_code()));
+        throw std::runtime_error(executableFilename + " returned non-zero exit code " + std::to_string(c.exit_code()));
     }
 }

@@ -90,6 +90,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "59bdec12_5a55de0e",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-08T08:50:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6af7a817_9eb28bb3",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "75e0c1de_f8a478b5",
@@ -292,6 +310,24 @@
       "side": 1,
       "message": "just repeating what we agreed to during the call: because getpwent_r is not MT-safe, this will be done via passing paths to /etc/passwd and /etc/shadow to the implementation. Please put that into the commit message as well.",
       "parentUuid": "6efee85a_cac74d2e",
+      "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60b4f8af_a0194051",
+        "filename": "src/system/Authentication.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-08T08:50:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7868738e_df91b289",
       "revId": "a1d0155d4b304f750be629da79a7b78ff926731d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

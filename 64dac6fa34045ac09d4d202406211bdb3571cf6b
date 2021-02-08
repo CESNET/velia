@@ -95,6 +95,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4150e459_0b763888",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T18:01:57Z",
+      "side": 1,
+      "message": "Yes, but it\u0027s taking a string that originates \"somwehere in the system\" and passes it in its raw form to an XPath. If the rest of the system works properly, this will not be exploitable, but if \"something else\" creates a user with a wrong name, this part suddenly becomes vulnerable. Perhaps you do not have to deal with it, but I think it would be nice to have a way of escaping these. However, I\u0027ve marked that comment as resolved when I wrote it, so I won\u0027t insist on changing this.",
+      "parentUuid": "bbdd348d_f1c6fd24",
+      "range": {
+        "startLine": 211,
+        "startChar": 61,
+        "endLine": 211,
+        "endChar": 70
+      },
+      "revId": "64dac6fa34045ac09d4d202406211bdb3571cf6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f0ffaf04_8890fa1f",

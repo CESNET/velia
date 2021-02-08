@@ -48,6 +48,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3ea2ebd_daff3059",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-08T18:02:04Z",
+      "side": 1,
+      "message": "Is it enough to just disallow new lines in YANG?",
+      "parentUuid": "fc62d9b5_f9bc9617",
+      "range": {
+        "startLine": 48,
+        "startChar": 84,
+        "endLine": 48,
+        "endChar": 92
+      },
+      "revId": "64dac6fa34045ac09d4d202406211bdb3571cf6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9cbf024c_0ae32583",

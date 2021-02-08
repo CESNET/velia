@@ -64,6 +64,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c12f700d_3332de3b",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-08T20:05:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bff47db_3533bd93",
+      "range": {
+        "startLine": 104,
+        "startChar": 21,
+        "endLine": 104,
+        "endChar": 22
+      },
+      "revId": "ff5cd70c21a4f8228459a5006c4ba292cb4bcb3a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "188c051c_e506d826",
@@ -77,6 +101,30 @@
       "writtenOn": "2021-02-08T19:31:05Z",
       "side": 1,
       "message": "I cannot reproduce the TSAN-reported crash, but I hope it will go away if you move these to the end of the struct (and therefore they get deleted before the other members get invalidated)",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 31
+      },
+      "revId": "ff5cd70c21a4f8228459a5006c4ba292cb4bcb3a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8979762_4e598bc5",
+        "filename": "src/system/Authentication.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-08T20:05:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "188c051c_e506d826",
       "range": {
         "startLine": 45,
         "startChar": 0,

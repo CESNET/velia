@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d267d43_9a536206",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-08T19:55:57Z",
+      "side": 1,
+      "message": "Out of curiosity, what troubles are there? Except for that weird fail concerning std::locale when working with PATH env var on real devices.",
+      "range": {
+        "startLine": 9,
+        "startChar": 28,
+        "endLine": 9,
+        "endChar": 40
+      },
+      "revId": "558a5b3c9e2f5ca7f25ab9eda41e798f239bd024",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e4a7bbac_6ef5b3e3",
@@ -14,6 +37,47 @@
       "writtenOn": "2021-02-08T17:29:33Z",
       "side": 1,
       "message": "@Tomas: your reboot patch will need an update.",
+      "revId": "558a5b3c9e2f5ca7f25ab9eda41e798f239bd024",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47d78f22_c8583ab1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-08T19:55:57Z",
+      "side": 1,
+      "message": "OK, I am on it.",
+      "parentUuid": "e4a7bbac_6ef5b3e3",
+      "revId": "558a5b3c9e2f5ca7f25ab9eda41e798f239bd024",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63e5492f_68bfdff6",
+        "filename": "src/utils/exec.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-08T19:55:57Z",
+      "side": 1,
+      "message": "This confused me a little, because I wouldn\u0027t expect something called \"filename\" to store a full path to the file, probably just a basename.\n\nI\u0027m giving CR-1 but I won\u0027t block it (I have a hunch that you will send me some link explaining that filenames can be also fully qualified names :D).",
+      "range": {
+        "startLine": 19,
+        "startChar": 10,
+        "endLine": 19,
+        "endChar": 56
+      },
       "revId": "558a5b3c9e2f5ca7f25ab9eda41e798f239bd024",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

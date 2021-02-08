@@ -72,6 +72,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce0ff5a3_86c27c72",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T18:09:21Z",
+      "side": 1,
+      "message": "I think that both CR and LF are best excluded; the rest is, hopefully, safe.",
+      "parentUuid": "c3ea2ebd_daff3059",
+      "range": {
+        "startLine": 48,
+        "startChar": 84,
+        "endLine": 48,
+        "endChar": 92
+      },
+      "revId": "64dac6fa34045ac09d4d202406211bdb3571cf6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9cbf024c_0ae32583",

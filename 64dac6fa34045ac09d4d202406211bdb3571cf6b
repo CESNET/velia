@@ -167,6 +167,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef2edb79_e085faf8",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-08T18:09:52Z",
+      "side": 1,
+      "message": "I still don\u0027t understand. You mean if someone created a username with a special XPath meaning?",
+      "parentUuid": "4150e459_0b763888",
+      "range": {
+        "startLine": 211,
+        "startChar": 61,
+        "endLine": 211,
+        "endChar": 70
+      },
+      "revId": "64dac6fa34045ac09d4d202406211bdb3571cf6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f0ffaf04_8890fa1f",

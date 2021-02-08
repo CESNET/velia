@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec518cd9_a2498a91",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T19:28:45Z",
+      "side": 1,
+      "message": "sorry for this ping-pong, but the \"l\" is especially nasty I think (yes, my font distinguishes between l1I just fine, but meh)",
+      "revId": "ff5cd70c21a4f8228459a5006c4ba292cb4bcb3a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0bc813c_fe57e244",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T19:28:45Z",
+      "side": 1,
+      "message": "When I saw this (and a similar loop below) I started wondering if it makes sense to unify these implementations somehow, but perhaps it\u0027s not possible or not worth trying. Nothing to fix, just commenting.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 5
+      },
+      "revId": "ff5cd70c21a4f8228459a5006c4ba292cb4bcb3a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bff47db_3533bd93",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T19:28:45Z",
+      "side": 1,
+      "message": "nah, please pick a better variable name. Or don\u0027t even pick one and just do it inline (and use a 24h literal if you\u0027re fed of these::long::lines)",
+      "range": {
+        "startLine": 104,
+        "startChar": 21,
+        "endLine": 104,
+        "endChar": 22
+      },
+      "revId": "ff5cd70c21a4f8228459a5006c4ba292cb4bcb3a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

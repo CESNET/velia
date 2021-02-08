@@ -215,6 +215,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0417c3fb_f10ead34",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T19:28:45Z",
+      "side": 1,
+      "message": "Yes. You wouldn\u0027t construct a JSON without passing all strings through a string escaper, and you wouldn\u0027t construct an SQL query like this, either. This is in a context where correct escaping matters, and yet the code \"just trusts\" an external component. Not awesome if you ask me.",
+      "parentUuid": "ef2edb79_e085faf8",
+      "range": {
+        "startLine": 211,
+        "startChar": 61,
+        "endLine": 211,
+        "endChar": 70
+      },
+      "revId": "64dac6fa34045ac09d4d202406211bdb3571cf6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f0ffaf04_8890fa1f",

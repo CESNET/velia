@@ -41,6 +41,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "014805a4_3959ad37",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-08T19:44:39Z",
+      "side": 1,
+      "message": "I was thinking about that when I wrote it and I was not sure whether `auto lock` is better than `unique_lock\u003cstd::mutex\u003e lock`. The second says more about what kind of lock that is.\n\nBut I probably don\u0027t care, so let it be `auto`.",
+      "parentUuid": "e2d77946_7d2978d6",
+      "range": {
+        "startLine": 49,
+        "startChar": 12,
+        "endLine": 49,
+        "endChar": 40
+      },
+      "revId": "2b241b7bb02c35f008c4ee09e68b5bbe267db42f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f0fb7434_f28da65d",
@@ -64,6 +88,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ea81524_3616c520",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-08T19:44:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0fb7434_f28da65d",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 13
+      },
+      "revId": "2b241b7bb02c35f008c4ee09e68b5bbe267db42f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "369c5359_8289d074",
@@ -77,6 +125,24 @@
       "writtenOn": "2021-02-08T16:01:09Z",
       "side": 1,
       "message": "All callers are now always invoking applySlotStatus() right after fetchSlotStatus() was called. The results of fetchSlotStatus is never used directly, it\u0027s always passed to applySlotStatus(). Let\u0027s just merge these two, now there\u0027s no need to keep them separate. (And the lock can be created in the middle of this new function just fine.)\n\nI think this would not have been possible prior to this cleanup that you made -- nice work.",
+      "revId": "2b241b7bb02c35f008c4ee09e68b5bbe267db42f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e79f3781_a1546955",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-08T19:44:39Z",
+      "side": 1,
+      "message": "And updateSlotStatus appears again.\nDone.",
+      "parentUuid": "369c5359_8289d074",
       "revId": "2b241b7bb02c35f008c4ee09e68b5bbe267db42f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

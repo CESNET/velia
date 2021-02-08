@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4a7bbac_6ef5b3e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T17:29:33Z",
+      "side": 1,
+      "message": "@Tomas: your reboot patch will need an update.",
+      "revId": "558a5b3c9e2f5ca7f25ab9eda41e798f239bd024",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

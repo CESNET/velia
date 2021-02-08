@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c895dcd_a7ecc066",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T19:59:37Z",
+      "side": 1,
+      "message": "The CI uses -stdlib\u003dlibc++ for LLVM builds, and the symbol names in libstdc++ (gnu) are different from libc++ (libc++ uses stuff like std::__1::blah). Effectively this means that we cannot use any systemwide C++ API. I\u0027ve put in place hacks for spdlog and fmt, but now there\u0027s Boost::system, and it was segfaulting.\n\nI haven\u0027t yet got around to your std::locale report, sorry.\n\n@Vasek, please explain this better in the commit message.",
+      "parentUuid": "1d267d43_9a536206",
+      "range": {
+        "startLine": 9,
+        "startChar": 28,
+        "endLine": 9,
+        "endChar": 40
+      },
+      "revId": "558a5b3c9e2f5ca7f25ab9eda41e798f239bd024",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e4a7bbac_6ef5b3e3",
@@ -72,6 +96,30 @@
       "writtenOn": "2021-02-08T19:55:57Z",
       "side": 1,
       "message": "This confused me a little, because I wouldn\u0027t expect something called \"filename\" to store a full path to the file, probably just a basename.\n\nI\u0027m giving CR-1 but I won\u0027t block it (I have a hunch that you will send me some link explaining that filenames can be also fully qualified names :D).",
+      "range": {
+        "startLine": 19,
+        "startChar": 10,
+        "endLine": 19,
+        "endChar": 56
+      },
+      "revId": "558a5b3c9e2f5ca7f25ab9eda41e798f239bd024",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b05a40c_10553492",
+        "filename": "src/utils/exec.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-08T19:59:37Z",
+      "side": 1,
+      "message": "I agree that calling it absolutePath is better.",
+      "parentUuid": "63e5492f_68bfdff6",
       "range": {
         "startLine": 19,
         "startChar": 10,

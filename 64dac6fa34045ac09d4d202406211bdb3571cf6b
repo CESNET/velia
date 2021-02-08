@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc62d9b5_f9bc9617",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-08T17:59:39Z",
+      "side": 1,
+      "message": "that seems dangerous yeah",
+      "parentUuid": "804e4a38_9492d4b0",
+      "range": {
+        "startLine": 48,
+        "startChar": 84,
+        "endLine": 48,
+        "endChar": 92
+      },
+      "revId": "64dac6fa34045ac09d4d202406211bdb3571cf6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9cbf024c_0ae32583",
@@ -47,6 +71,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbdd348d_f1c6fd24",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-08T17:59:39Z",
+      "side": 1,
+      "message": "What do you mean? The code cannot create users",
+      "parentUuid": "9cbf024c_0ae32583",
+      "range": {
+        "startLine": 211,
+        "startChar": 61,
+        "endLine": 211,
+        "endChar": 70
+      },
+      "revId": "64dac6fa34045ac09d4d202406211bdb3571cf6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f0ffaf04_8890fa1f",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-02-08T17:49:00Z",
       "side": 1,
       "message": "there\u0027s no such variable in CMake, it\u0027s called VELIA_BACKUP_ETC_SHADOW",
+      "range": {
+        "startLine": 7,
+        "startChar": 33,
+        "endLine": 7,
+        "endChar": 55
+      },
+      "revId": "64dac6fa34045ac09d4d202406211bdb3571cf6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8d59e00_b9d472d5",
+        "filename": "src/system/system_vars.h.in",
+        "patchSetId": 18
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-08T17:59:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0ffaf04_8890fa1f",
       "range": {
         "startLine": 7,
         "startChar": 33,

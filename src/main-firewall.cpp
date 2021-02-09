@@ -19,6 +19,7 @@ static const char usage[] =
 
 Usage:
   veliad-firewall
+    [--log-level=<Level>]
     [--sysrepo-log-level=<Level>]
     [--firewall-log-level=<Level>]
   veliad-firewall (-h | --help)
@@ -27,6 +28,7 @@ Usage:
 Options:
   -h --help                         Show this screen.
   --version                         Show version.
+  --log-level=<N>                   Log level for the firewall [default: 3]
   --firewall-log-level=<N>          Log level for the firewall [default: 3]
   --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
 )";
@@ -46,6 +48,7 @@ int main(int argc, char* argv[])
     spdlog::set_level(spdlog::level::info);
 
     try {
+        spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
         spdlog::get("firewall")->set_level(parseLogLevel("Firewall logging", args["--firewall-log-level"]));
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 

@@ -5,6 +5,10 @@ module czechlight-system {
 
   prefix "cla-sys";
 
+  import ietf-yang-types {
+    prefix yang;
+  }
+
   organization "CESNET";
   contact "photonic@cesnet.cz";
   description
@@ -16,6 +20,41 @@ module czechlight-system {
 
   container firmware {
     config false;
+
+    list firmware-slot {
+      key name;
+
+      leaf name {
+        description "Identifier of the slot.";
+        type string;
+      }
+
+      leaf version {
+        description "Firmware version installed in the slot.";
+        type string;
+      }
+
+      leaf installed {
+        description "Datetime of the last installation performed in this slot.";
+        type yang:date-and-time;
+      }
+
+      leaf state {
+        description "Current state of the slot.";
+        type enumeration {
+          enum inactive;
+          enum booted;
+        }
+      }
+
+      leaf boot-status {
+        description "Boot status.";
+        type enumeration {
+          enum good;
+          enum bad;
+        }
+      }
+    }
 
     container installation {
       leaf status {

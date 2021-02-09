@@ -79,7 +79,10 @@ int main(int argc, char* argv[])
         // initialize ietf-system
         spdlog::get("main")->debug("Initializing Sysrepo for system models");
         auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release");
-        auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection);
+
+        auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
+        dbusConnection->enterEventLoopAsync();
+        auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 
         auto srSess2 = std::make_shared<sysrepo::Session>(srConn);
         auto authentication = velia::system::Authentication(srSess2, REAL_ETC_PASSWD_FILE, REAL_ETC_SHADOW_FILE, AUTHORIZED_KEYS_FORMAT, velia::system::impl::changePassword);

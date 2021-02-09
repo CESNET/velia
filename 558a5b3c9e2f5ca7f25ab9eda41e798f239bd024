@@ -50,6 +50,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "f406e3cb_d3e730af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-09T05:20:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c895dcd_a7ecc066",
+      "range": {
+        "startLine": 9,
+        "startChar": 28,
+        "endLine": 9,
+        "endChar": 40
+      },
+      "revId": "558a5b3c9e2f5ca7f25ab9eda41e798f239bd024",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "e4a7bbac_6ef5b3e3",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -120,6 +144,30 @@
       "side": 1,
       "message": "I agree that calling it absolutePath is better.",
       "parentUuid": "63e5492f_68bfdff6",
+      "range": {
+        "startLine": 19,
+        "startChar": 10,
+        "endLine": 19,
+        "endChar": 56
+      },
+      "revId": "558a5b3c9e2f5ca7f25ab9eda41e798f239bd024",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15b49258_5adc88b1",
+        "filename": "src/utils/exec.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-09T05:20:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b05a40c_10553492",
       "range": {
         "startLine": 19,
         "startChar": 10,

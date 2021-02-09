@@ -20,7 +20,6 @@ static const char usage[] =
 Usage:
   veliad-health
     [--appliance=<Model>]
-    [--log-level=<Level>]
     [--health-log-level=<Level>]
     [--systemd-ignore-unit=<Unit>]...
   veliad-health (-h | --help)
@@ -29,10 +28,9 @@ Usage:
 Options:
   -h --help                         Show this screen.
   --version                         Show version.
-  --log-level=<N>                   Log level for everything [default: 3]
+  --health-log-level=<N>            Log level for the health monitoring [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
-  --health-log-level=<N>            Log level for the health monitoring [default: 3]
   --systemd-ignore-unit=<Unit>      Ignore state of systemd's unit in systemd state tracker. Can be specified multiple times.
 )";
 
@@ -53,8 +51,6 @@ int main(int argc, char* argv[])
     spdlog::set_level(spdlog::level::info);
 
     try {
-        spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
-
         DBUS_EVENTLOOP_START
 
         // health

@@ -20,6 +20,7 @@ namespace {
 
 const auto IETF_SYSTEM_MODULE_NAME = "ietf-system"s;
 const auto IETF_SYSTEM_STATE_MODULE_PREFIX = "/"s + IETF_SYSTEM_MODULE_NAME + ":system-state/"s;
+const auto IETF_SYSTEM_HOSTNAME_PATH = "/ietf-system:system/hostname";
 
 /** @brief Returns key=value pairs from (e.g. /etc/os-release) as a std::map */
 std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path& path)
@@ -65,6 +66,8 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
     , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
     , m_log(spdlog::get("system"))
 {
+    utils::ensureModuleImplemented(m_srSession, IETF_SYSTEM_MODULE_NAME, "2014-08-06");
+
     std::map<std::string, std::string> osReleaseContents = parseKeyValueFile(osRelease);
 
     std::map<std::string, std::string> opsSystemStateData {
@@ -89,5 +92,33 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
         },
         0,
         SR_SUBSCR_CTX_REUSE);
+
+    sysrepo::ModuleChangeCb hostNameCb = [] (
+            sysrepo::S_Session session,
+            [[maybe_unused]] const char *module_name,
+            [[maybe_unused]] const char *xpath,
+            [[maybe_unused]] sr_event_t event,
+            [[maybe_unused]] uint32_t request_id) {
+
+        auto data = session->get_changes_iter(IETF_SYSTEM_HOSTNAME_PATH);
+
+
+        while (auto change = session->get_change_tree_next(data)) {
+            auto node = change->node();
+            if (node->path() == IETF_SYSTEM_HOSTNAME_PATH) {
+                auto leaf = std::make_shared<libyang::Data_Node_Leaf_List>(node);
+                std::string_view value = leaf->value_str();
+                // TODO: how to test?
+                sethostname(value.data(), value.size());
+            } else {
+                throw std::runtime_error("Unknown XPath" + node->path());
+            }
+
+        }
+
+        return SR_ERR_OK;
+    };
+
+    m_srSubscribe->module_change_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCb, IETF_SYSTEM_HOSTNAME_PATH, 0, SR_SUBSCR_DONE_ONLY | SR_SUBSCR_ENABLED);
 }
 }

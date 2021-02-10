@@ -188,6 +188,8 @@ add_library(velia-system STATIC
         src/system/IETFSystem.h
         src/system/Authentication.cpp
         src/system/Authentication.h
+        src/system/Hostname.cpp
+        src/system/Hostname.h
         )
 target_link_libraries(velia-system
     PUBLIC

@@ -134,6 +134,11 @@ module czechlight-system {
     type string;
   }
 
+  typedef hostname-type {
+    type string;
+    pattern "[a-z0-9-]{1,64}";
+  }
+
 
   container authentication {
     list users {
@@ -192,6 +197,12 @@ module czechlight-system {
           uses authentication-rpc-result;
         }
       }
+    }
+  }
+
+  container hostname {
+    leaf hostname {
+      type hostname-type;
     }
   }
 }

@@ -20,6 +20,7 @@ namespace {
 
 const auto IETF_SYSTEM_MODULE_NAME = "ietf-system"s;
 const auto IETF_SYSTEM_STATE_MODULE_PREFIX = "/"s + IETF_SYSTEM_MODULE_NAME + ":system-state/"s;
+const auto IETF_SYSTEM_HOSTNAME_PATH = "/ietf-system:system/hostname";
 
 /** @brief Returns key=value pairs from (e.g. /etc/os-release) as a std::map */
 std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path& path)
@@ -55,16 +56,41 @@ std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path
     return res;
 }
 
+std::optional<std::string> getHostnameFromChange(const std::shared_ptr<sysrepo::Session> session)
+{
+    auto data = session->get_changes_iter(IETF_SYSTEM_HOSTNAME_PATH);
+    std::optional<std::string> res;
+
+    while (auto change = session->get_change_tree_next(data)) {
+        auto node = change->node();
+        if (node->path() == IETF_SYSTEM_HOSTNAME_PATH) {
+            auto leaf = std::make_shared<libyang::Data_Node_Leaf_List>(node);
+            res = leaf->value_str();
+        } else {
+            throw std::runtime_error("Unknown XPath" + node->path());
+        }
+
+    }
+
+    return res;
+}
 }
 
 namespace velia::system {
 
 /** @brief Reads some OS-identification data from osRelease file and publishes them via ietf-system model */
-IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
-    : m_srSession(std::move(srSession))
-    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Connection> srConn, const std::filesystem::path& osRelease)
+    : m_srSessionRunning(std::make_shared<sysrepo::Session>(srConn))
+    , m_srSessionStartup(std::make_shared<sysrepo::Session>(srConn))
+    , m_srSubscribeRunning(std::make_shared<::sysrepo::Subscribe>(m_srSessionRunning))
     , m_log(spdlog::get("system"))
 {
+    utils::ensureModuleImplemented(m_srSessionRunning, IETF_SYSTEM_MODULE_NAME, "2014-08-06");
+    m_srSessionStartup->session_switch_ds(SR_DS_STARTUP);
+
+    // FIXME: find out whether it is really needed to have two sessions and subscriptions
+    m_srSubscribeStartup = std::make_shared<::sysrepo::Subscribe>(m_srSessionRunning);
+
     std::map<std::string, std::string> osReleaseContents = parseKeyValueFile(osRelease);
 
     std::map<std::string, std::string> opsSystemStateData {
@@ -73,9 +99,9 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
         {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-version", osReleaseContents.at("VERSION")},
     };
 
-    utils::valuesPush(opsSystemStateData, m_srSession, SR_DS_OPERATIONAL);
+    utils::valuesPush(opsSystemStateData, m_srSessionRunning, SR_DS_OPERATIONAL);
 
-    m_srSubscribe->rpc_subscribe(
+    m_srSubscribeRunning->rpc_subscribe(
         ("/" + IETF_SYSTEM_MODULE_NAME + ":system-restart").c_str(),
         [this](::sysrepo::S_Session session, [[maybe_unused]] const char* op_path, [[maybe_unused]] const ::sysrepo::S_Vals input, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id, [[maybe_unused]] ::sysrepo::S_Vals_Holder output) {
             try {
@@ -89,5 +115,34 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
         },
         0,
         SR_SUBSCR_CTX_REUSE);
+
+    sysrepo::ModuleChangeCb hostNameCbRunning = [this] (
+            sysrepo::S_Session session,
+            [[maybe_unused]] const char *module_name,
+            [[maybe_unused]] const char *xpath,
+            [[maybe_unused]] sr_event_t event,
+            [[maybe_unused]] uint32_t request_id) {
+
+        if (auto newHostname = getHostnameFromChange(session)) {
+            velia::utils::execAndWait(m_log, HOSTNAMECTL_EXECUTABLE, {"set-hostname", *newHostname}, "");
+        }
+        return SR_ERR_OK;
+    };
+
+    sysrepo::ModuleChangeCb hostNameCbStartup = [] (
+            sysrepo::S_Session session,
+            [[maybe_unused]] const char *module_name,
+            [[maybe_unused]] const char *xpath,
+            [[maybe_unused]] sr_event_t event,
+            [[maybe_unused]] uint32_t request_id) {
+
+        if (auto newHostname = getHostnameFromChange(session)) {
+            utils::safeWriteFile(BACKUP_ETC_HOSTNAME_FILE, *newHostname);
+        }
+        return SR_ERR_OK;
+    };
+
+    m_srSubscribeRunning->module_change_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbRunning, IETF_SYSTEM_HOSTNAME_PATH, 0, SR_SUBSCR_DONE_ONLY);
+    m_srSubscribeStartup->module_change_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbStartup, IETF_SYSTEM_HOSTNAME_PATH, 0, SR_SUBSCR_DONE_ONLY);
 }
 }

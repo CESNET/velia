@@ -60,20 +60,20 @@ TEST_CASE("Sysrepo ietf-system")
                 };
             }
 
-            auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, file);
+            auto sysrepo = std::make_shared<velia::system::IETFSystem>(srConn, file);
             REQUIRE(dataFromSysrepo(client, modulePrefix, SR_DS_OPERATIONAL) == expected);
         }
 
         SECTION("Invalid data (missing VERSION and NAME keys)")
         {
-            REQUIRE_THROWS_AS(std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys"), std::out_of_range);
+            REQUIRE_THROWS_AS(std::make_shared<velia::system::IETFSystem>(srConn, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys"), std::out_of_range);
         }
     }
 
 #ifdef TEST_RPC_SYSTEM_REBOOT
     SECTION("RPC system-restart")
     {
-        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release");
+        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srConn, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release");
 
         auto rpcInput = std::make_shared<sysrepo::Vals>(0);
         auto res = client->rpc_send("/ietf-system:system-restart", rpcInput);

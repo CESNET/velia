@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 
         // initialize ietf-system
         spdlog::get("main")->debug("Initializing Sysrepo for system models");
-        auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release");
+        auto sysrepoIETFSystem = velia::system::IETFSystem(srConn, "/etc/os-release");
 
         auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
         dbusConnection->enterEventLoopAsync();

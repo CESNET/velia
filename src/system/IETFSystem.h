@@ -19,6 +19,7 @@ public:
 private:
     void initStaticProperties(const std::filesystem::path& osRelease);
     void initSystemRestart();
+    void initHostname();
 
     std::shared_ptr<::sysrepo::Session> m_srSession;
     std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;

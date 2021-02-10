@@ -33,7 +33,7 @@ TEST_CASE("Authentication")
     std::string authorized_keys_format = testDir / "authorized_keys/{USER}";
     std::string etc_passwd = testDir / "etc_passwd";
     std::string etc_shadow = testDir / "etc_shadow";
-    velia::system::Authentication auth(srSess, etc_passwd, etc_shadow, authorized_keys_format, [&mock] (const auto& user, const auto& password) { mock.changePassword(user, password); });
+    velia::system::Authentication auth(srSess, etc_passwd, etc_shadow, authorized_keys_format, [&mock] (const auto& user, const auto& password, const auto& etc_shadow) { mock.changePassword(user, password, etc_shadow); });
 
     auto test_srConn = std::make_shared<sysrepo::Connection>();
     auto test_srSess = std::make_shared<sysrepo::Session>(test_srConn, SR_DS_OPERATIONAL);
@@ -80,7 +80,7 @@ TEST_CASE("Authentication")
             SECTION("changePassword is successful")
             {
                 rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
-                expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password"));
+                expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow));
                 expected = {
                     {"/result", "success"}
                 };
@@ -92,7 +92,7 @@ TEST_CASE("Authentication")
             SECTION("changePassword throws")
             {
                 rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
-                expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password")).THROW(std::runtime_error("Task failed succesfully."));
+                expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow)).THROW(std::runtime_error("Task failed succesfully."));
                 expected = {
                     {"/result", "failure"},
                     {"/message", "Task failed succesfully."}

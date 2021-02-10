@@ -22,5 +22,5 @@ public:
 
 struct FakeAuthentication {
 public:
-    MAKE_CONST_MOCK2(changePassword, void(const std::string&, const std::string&));
+    MAKE_CONST_MOCK3(changePassword, void(const std::string&, const std::string&, const std::string&));
 };

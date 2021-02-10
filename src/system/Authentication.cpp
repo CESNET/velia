@@ -43,10 +43,10 @@ void writeKeys(const std::string& filename, const std::vector<std::string>& keys
 }
 
 namespace impl {
-void changePassword(const std::string& name, const std::string& password)
+void changePassword(const std::string& name, const std::string& password, const std::string& etc_shadow)
 {
     utils::execAndWait(spdlog::get("system"), CHPASSWD_EXECUTABLE, {}, name + ":" + password);
-    auto shadow = velia::utils::readFileToString("/etc/shadow");
+    auto shadow = velia::utils::readFileToString(etc_shadow);
     utils::safeWriteFile(BACKUP_ETC_SHADOW_FILE, shadow);
 }
 }
@@ -273,7 +273,7 @@ velia::system::Authentication::Authentication(
         auto password = getValueAsString(getSubtree(userNode, "change-password/password-cleartext"));
         m_log->debug("Changing password for {}", name);
         try {
-            changePassword(name, password);
+            changePassword(name, password, m_etc_shadow);
             output->new_path(session->get_context(), "result", "success", LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
             m_log->info("Changed password for {}", name);
         } catch (std::runtime_error& ex) {

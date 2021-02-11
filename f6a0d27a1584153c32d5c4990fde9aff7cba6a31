@@ -16,6 +16,24 @@
       "message": "This option doesn\u0027t actually do anything I think",
       "revId": "f6a0d27a1584153c32d5c4990fde9aff7cba6a31",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06f9f960_c1ce7803",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-11T03:00:07Z",
+      "side": 1,
+      "message": "It does something in the next patch",
+      "parentUuid": "94ecc57a_99444de3",
+      "revId": "f6a0d27a1584153c32d5c4990fde9aff7cba6a31",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

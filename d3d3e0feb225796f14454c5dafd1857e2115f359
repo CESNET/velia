@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6737c00c_f6385bea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-11T12:27:05Z",
+      "side": 1,
+      "message": "This is a trade off: before this patch, it was possible to use docopt\u0027s usual options for setting the default log verbosity at a different level for each logger, but it was not possible to modify all loggers via one option. With this patch, it\u0027s the other way round -- there is now a single global verbosity that is shown via --help, but it is not possible to default to logging the sysrepo interaction with little verbosity, and debug the firewall operations.\n\nIn a perfect world I would expect a flag for sysrepo\u0027s verbosity (by default, low), a libyang verbosity (by default, even lower), and the actual \"business logic\" verbosity (by default, high enough to see what\u0027s going on, but not necessarily to debug it). Then there should be a way for the sysadmin to increase the verbosity of the debug log, while not being drown in libyang\u0027s hash table trace messages. I\u0027m not sure this patch brings us any closer to that goal, so I wonder how you would describe the desired mode of operation. For now, a CR-1 from me.",
+      "revId": "d3d3e0feb225796f14454c5dafd1857e2115f359",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

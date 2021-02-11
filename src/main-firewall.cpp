@@ -28,7 +28,9 @@ Options:
   -h --help                         Show this screen.
   --version                         Show version.
   --firewall-log-level=<N>          Log level for the firewall [default: 3]
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 1]
+                                    (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
+                                    4 -> debug, 5 -> trace)
 )";
 
 int main(int argc, char* argv[])

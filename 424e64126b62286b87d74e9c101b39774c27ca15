@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd22b0da_4a39a5aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-11T12:16:28Z",
+      "side": 1,
+      "message": "I think that /ietf-system:system/hostname is the way to go here, sorry for not saying that before.",
+      "revId": "424e64126b62286b87d74e9c101b39774c27ca15",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

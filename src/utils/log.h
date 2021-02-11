@@ -13,3 +13,10 @@
 
 //#define SPDLOG_ENABLE_SYSLOG
 #include <spdlog/spdlog.h>
+
+namespace docopt {
+    class value;
+}
+
+/** @short Extract log level from a CLI option */
+spdlog::level::level_enum parseLogLevel(const std::string& name, const docopt::value& option);

@@ -77,6 +77,7 @@ add_library(velia-utils STATIC
     src/utils/libyang.cpp
     src/utils/libyang.h
     src/utils/log.h
+    src/utils/log.cpp
     src/utils/log-fwd.h
     src/utils/log-init.cpp
     src/utils/log-init.h
@@ -87,7 +88,7 @@ add_library(velia-utils STATIC
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::SYSREPO fmt::fmt)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::SYSREPO fmt::fmt docopt)
 
 # - health
 add_library(velia-health STATIC

@@ -34,6 +34,24 @@
       "parentUuid": "6737c00c_f6385bea",
       "revId": "d3d3e0feb225796f14454c5dafd1857e2115f359",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c0342d6_2a824bc8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-11T14:05:29Z",
+      "side": 1,
+      "message": "\u003e Maybe the solution is to move around the default log levels and get rid of the --log-level option?\n\nyes, that looks as the best proposed thing so far to me",
+      "parentUuid": "ce82829a_5089ff7c",
+      "revId": "d3d3e0feb225796f14454c5dafd1857e2115f359",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

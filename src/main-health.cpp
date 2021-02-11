@@ -32,7 +32,7 @@ Options:
   --log-level=<N>                   Log level for everything [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
-  --health-log-level=<N>            Log level for the health monitoring [default: 3]
+  --health-log-level=<N>            Log level for the health monitoring
   --systemd-ignore-unit=<Unit>      Ignore state of systemd's unit in systemd state tracker. Can be specified multiple times.
 )";
 
@@ -54,6 +54,8 @@ int main(int argc, char* argv[])
 
     try {
         spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
+        auto heLogLevel = args["--health-log-level"] ? args["--health-log-level"] : args["--log-level"];
+        spdlog::get("health")->set_level(parseLogLevel("Health logging", heLogLevel));
 
         DBUS_EVENTLOOP_START
 

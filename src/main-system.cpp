@@ -30,8 +30,8 @@ Options:
   --log-level=<N>                   Log level for everything [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
-  --system-log-level=<N>            Log level for the system stuff [default: 3]
+  --sysrepo-log-level=<N>           Log level for the sysrepo library
+  --system-log-level=<N>            Log level for the system stuff
 )";
 
 DBUS_EVENTLOOP_INIT
@@ -52,7 +52,10 @@ int main(int argc, char* argv[])
 
     try {
         spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
-        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
+        auto srLogLevel = args["--sysrepo-log-level"] ? args["--sysrepo-log-level"] : args["--log-level"];
+        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", srLogLevel));
+        auto sysLogLevel = args["--system-log-level"] ? args["--system-log-level"] : args["--log-level"];
+        spdlog::get("system")->set_level(parseLogLevel("System", srLogLevel));
 
         spdlog::get("main")->debug("Opening Sysrepo connection");
         auto srConn = std::make_shared<sysrepo::Connection>();

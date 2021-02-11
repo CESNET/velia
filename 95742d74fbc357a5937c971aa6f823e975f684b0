@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "692e662d_9218dce4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-11T12:22:16Z",
+      "side": 1,
+      "message": "On its own, I believe that this patch is misleading because it suggests that it\u0027s manipulating a default log level, while it is not actually doing that. Because all the other options have their default values, these defaults will overwrite whatever gets passed via the --log-level option.\n\nI see that you\u0027re trying to change that in the next patch, but that doesn\u0027t change the fact that this patch provides a flag to the user which doesn\u0027t do what it says it is supposed to do.",
+      "revId": "95742d74fbc357a5937c971aa6f823e975f684b0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

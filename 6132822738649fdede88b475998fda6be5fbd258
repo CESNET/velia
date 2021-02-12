@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64dbe542_5e79a3bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-12T10:23:38Z",
+      "side": 1,
+      "message": "I\u0027ve seen ",
+      "revId": "6132822738649fdede88b475998fda6be5fbd258",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36103380_80ee7c10",
+        "filename": "src/main-firewall.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-12T10:23:38Z",
+      "side": 1,
+      "message": "I\u0027ve seen failures in the past which were, IIRC, reported as warnings. Unless there\u0027s some particular reason to avoid seeing warnings (please explain, then), I would prefer to set it to 2.",
+      "revId": "6132822738649fdede88b475998fda6be5fbd258",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

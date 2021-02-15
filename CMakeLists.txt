@@ -150,6 +150,9 @@ endif()
 if(NOT SYSTEMCTL_EXECUTABLE)
     find_program(SYSTEMCTL_EXECUTABLE systemctl)
 endif()
+if(NOT NETWORKCTL_EXECUTABLE)
+    find_program(NETWORKCTL_EXECUTABLE networkctl)
+endif()
 
 set(VELIA_AUTHORIZED_KEYS_FORMAT "{HOME}/.ssh/authorized_keys" CACHE STRING "pattern for determining path to users' SSH authorized_keys file. Must at least one of '{USER}' or '{HOME}' which will get replaced by the name of the user and the home directory of the user respectively.")
 if(NOT VELIA_AUTHORIZED_KEYS_FORMAT)
@@ -188,6 +191,8 @@ add_library(velia-system STATIC
         src/system/IETFSystem.h
         src/system/Authentication.cpp
         src/system/Authentication.h
+        src/system/Network.cpp
+        src/system/Network.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -380,6 +385,14 @@ if(BUILD_TESTING)
 
     set_tests_properties(
             test-sysrepo_authentication
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
+            RESOURCE_LOCK sysrepo
+    )
+
+    velia_test(sysrepo_system-network velia-system)
+    target_link_libraries(test-sysrepo_system-network FsTestUtils)
+    set_tests_properties(
+            test-sysrepo_system-network
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
             RESOURCE_LOCK sysrepo
     )

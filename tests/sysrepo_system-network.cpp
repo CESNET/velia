@@ -7,6 +7,7 @@
 
 #include "trompeloeil_doctest.h"
 #include <filesystem>
+#include <thread>
 #include "fs-helpers/utils.h"
 #include "pretty_printers.h"
 #include "system/Network.h"
@@ -48,15 +49,21 @@ EmitLLDP=nearest-bridge
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
+    auto clientStartupDs = std::make_shared<sysrepo::Session>(clientConn, SR_DS_STARTUP);
+
     trompeloeil::sequence seq1;
     std::string expectedContent;
     auto fake = FakeNetworkReload();
     auto fakeRunDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/run"s;
-    auto expectedFilePath = fakeRunDir / "eth1.network"s;
+    auto fakeCfgDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/cfg"s;
+    auto expectedRuntimeFilePath = fakeRunDir / "eth1.network"s;
+    auto expectedPersistentFilePath = fakeCfgDir / "eth1.network"s;
 
     // reset
     removeDirectoryTreeIfExists(fakeRunDir);
+    removeDirectoryTreeIfExists(fakeCfgDir);
     std::filesystem::create_directories(fakeRunDir);
+    std::filesystem::create_directories(fakeCfgDir);
 
     SECTION("Container not present. Start with bridge configuration")
     {
@@ -64,12 +71,12 @@ EmitLLDP=nearest-bridge
         client->apply_changes();
 
         REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth1"})).IN_SEQUENCE(seq1);
-        auto network = std::make_shared<velia::system::Network>(srConn, fakeRunDir, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
+        auto network = std::make_shared<velia::system::Network>(srConn, fakeRunDir, fakeCfgDir, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
 
         waitForCompletionAndBitMore(seq1);
 
-        REQUIRE(std::filesystem::exists(expectedFilePath));
-        REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_BRIDGE);
+        REQUIRE(std::filesystem::exists(expectedRuntimeFilePath));
+        REQUIRE(velia::utils::readFileToString(expectedRuntimeFilePath) == EXPECTED_CONTENT_BRIDGE);
 
         SECTION("Nothing happens")
         {
@@ -83,8 +90,26 @@ EmitLLDP=nearest-bridge
             client->apply_changes();
             waitForCompletionAndBitMore(seq1);
 
-            REQUIRE(std::filesystem::exists(expectedFilePath));
-            REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_DHCP);
+            REQUIRE(std::filesystem::exists(expectedRuntimeFilePath));
+            REQUIRE(velia::utils::readFileToString(expectedRuntimeFilePath) == EXPECTED_CONTENT_DHCP);
+        }
+        SECTION("Change in startup datastore: Persist DHCP configuration")
+        {
+            clientStartupDs->set_item(PRESENCE_CONTAINER);
+            clientStartupDs->apply_changes();
+            std::this_thread::sleep_for(10ms); // wait until processed
+
+            REQUIRE(std::filesystem::exists(expectedPersistentFilePath));
+            REQUIRE(velia::utils::readFileToString(expectedPersistentFilePath) == EXPECTED_CONTENT_DHCP);
+        }
+        SECTION("Change in startup datastore: Persist bridge configuration")
+        {
+            clientStartupDs->delete_item(PRESENCE_CONTAINER);
+            clientStartupDs->apply_changes();
+            std::this_thread::sleep_for(10ms); // wait until processed
+
+            REQUIRE(std::filesystem::exists(expectedPersistentFilePath));
+            REQUIRE(velia::utils::readFileToString(expectedPersistentFilePath) == EXPECTED_CONTENT_BRIDGE);
         }
     }
     SECTION("Container present. Start with DHCP configuration")
@@ -93,12 +118,12 @@ EmitLLDP=nearest-bridge
         client->apply_changes();
 
         REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth1"})).IN_SEQUENCE(seq1);
-        auto network = std::make_shared<velia::system::Network>(srConn, fakeRunDir, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
+        auto network = std::make_shared<velia::system::Network>(srConn, fakeRunDir, fakeCfgDir, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
 
         waitForCompletionAndBitMore(seq1);
 
-        REQUIRE(std::filesystem::exists(expectedFilePath));
-        REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_DHCP);
+        REQUIRE(std::filesystem::exists(expectedRuntimeFilePath));
+        REQUIRE(velia::utils::readFileToString(expectedRuntimeFilePath) == EXPECTED_CONTENT_DHCP);
 
         SECTION("Nothing happens")
         {
@@ -112,8 +137,8 @@ EmitLLDP=nearest-bridge
             client->apply_changes();
             waitForCompletionAndBitMore(seq1);
 
-            REQUIRE(std::filesystem::exists(expectedFilePath));
-            REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_BRIDGE);
+            REQUIRE(std::filesystem::exists(expectedRuntimeFilePath));
+            REQUIRE(velia::utils::readFileToString(expectedRuntimeFilePath) == EXPECTED_CONTENT_BRIDGE);
         }
     }
 }

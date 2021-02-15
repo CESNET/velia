@@ -86,9 +86,10 @@ int main(int argc, char* argv[])
         dbusConnection->enterEventLoopAsync();
 
         // initialize czechlight-system:networking
-        const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network");
+        const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network"), persistentNetworkDirectory("/cfg/network/");
         std::filesystem::create_directories(runtimeNetworkDirectory);
-        auto sysrepoNetwork = velia::system::Network(srConn, runtimeNetworkDirectory, [](const std::vector<std::string>& reconfiguredInterfaces) {
+        std::filesystem::create_directories(persistentNetworkDirectory);
+        auto sysrepoNetwork = velia::system::Network(srConn, runtimeNetworkDirectory, persistentNetworkDirectory, [](const std::vector<std::string>& reconfiguredInterfaces) {
             auto log = spdlog::get("system");
 
             /* Bring all the updated interfaces down (they will later be brought up by executing `networkctl reload`).

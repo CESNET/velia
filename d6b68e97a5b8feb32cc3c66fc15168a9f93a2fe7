@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fd50a48_62880838",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-15T21:00:48Z",
+      "side": 1,
+      "message": "Please let me know about your preference on how the model should look like.",
+      "revId": "d6b68e97a5b8feb32cc3c66fc15168a9f93a2fe7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

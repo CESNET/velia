@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c6cacbb_3046cd37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-15T21:56:19Z",
+      "side": 1,
+      "message": "I think this belongs to br2-external, but perhaps I\u0027m wrong. Let\u0027s chat about this tomorrow.",
+      "revId": "560cb4b402a6f09ed144eeeed8d6b5161718b6b3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

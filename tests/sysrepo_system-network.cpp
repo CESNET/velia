@@ -48,6 +48,7 @@ EmitLLDP=nearest-bridge
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
+
     trompeloeil::sequence seq1;
     std::string expectedContent;
     auto fake = FakeNetworkReload();
@@ -58,54 +59,84 @@ EmitLLDP=nearest-bridge
     removeDirectoryTreeIfExists(fakeDir);
     std::filesystem::create_directories(fakeDir);
 
-    SECTION("Container not present. Start with bridge configuration")
+    SECTION("Running DS")
     {
-        client->delete_item(PRESENCE_CONTAINER);
-        client->apply_changes();
-
-        REQUIRE_CALL(fake, cb(std::vector<std::string> {"eth1"})).IN_SEQUENCE(seq1);
-        auto network = std::make_shared<velia::system::Network>(srSess, fakeDir, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
-
-        REQUIRE(std::filesystem::exists(expectedFilePath));
-        REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_BRIDGE);
-
-        SECTION("Nothing happens")
+        SECTION("Container not present. Start with bridge configuration")
         {
+            client->delete_item(PRESENCE_CONTAINER);
+            client->apply_changes();
+
+            REQUIRE_CALL(fake, cb(std::vector<std::string> {"eth1"})).IN_SEQUENCE(seq1);
+            auto network = std::make_shared<velia::system::Network>(srSess, fakeDir, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
+
+            REQUIRE(std::filesystem::exists(expectedFilePath));
+            REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_BRIDGE);
+
+            SECTION("Nothing happens")
+            {
+            }
+
+            SECTION("Change: Container present. Switch to DHCP configuration")
+            {
+                REQUIRE_CALL(fake, cb(std::vector<std::string> {"eth1"})).IN_SEQUENCE(seq1);
+
+                client->set_item(PRESENCE_CONTAINER);
+                client->apply_changes();
+                waitForCompletionAndBitMore(seq1);
+
+                REQUIRE(std::filesystem::exists(expectedFilePath));
+                REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_DHCP);
+            }
 
         }
 
-        SECTION("Change: Container present. Switch to DHCP configuration")
+        SECTION("Container present. Start with DHCP configuration")
         {
-            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth1"})).IN_SEQUENCE(seq1);
+            client->set_item(PRESENCE_CONTAINER);
+            client->apply_changes();
 
+            REQUIRE_CALL(fake, cb(std::vector<std::string> {"eth1"})).IN_SEQUENCE(seq1);
+            auto network = std::make_shared<velia::system::Network>(srSess, fakeDir, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
+
+            REQUIRE(std::filesystem::exists(expectedFilePath));
+            REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_DHCP);
+
+            SECTION("Nothing happens")
+            {
+            }
+
+            SECTION("Change: Container not present. Switch to bridge configuration")
+            {
+                REQUIRE_CALL(fake, cb(std::vector<std::string> {"eth1"})).IN_SEQUENCE(seq1);
+
+                client->delete_item(PRESENCE_CONTAINER);
+                client->apply_changes();
+                waitForCompletionAndBitMore(seq1);
+
+                REQUIRE(std::filesystem::exists(expectedFilePath));
+                REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_BRIDGE);
+            }
+        }
+    }
+
+    SECTION("Startup DS")
+    {
+        srSess->session_switch_ds(SR_DS_STARTUP);
+        client->session_switch_ds(SR_DS_STARTUP);
+
+        auto network = std::make_shared<velia::system::Network>(srSess, fakeDir, []([[maybe_unused]] const std::vector<std::string>& updatedInterfaces) {});
+
+        SECTION("Change in startup datastore: Persist DHCP configuration")
+        {
             client->set_item(PRESENCE_CONTAINER);
             client->apply_changes();
 
             REQUIRE(std::filesystem::exists(expectedFilePath));
             REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_DHCP);
         }
-    }
 
-    SECTION("Container present. Start with DHCP configuration")
-    {
-        client->set_item(PRESENCE_CONTAINER);
-        client->apply_changes();
-
-        REQUIRE_CALL(fake, cb(std::vector<std::string> {"eth1"})).IN_SEQUENCE(seq1);
-        auto network = std::make_shared<velia::system::Network>(srSess, fakeDir, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
-
-        REQUIRE(std::filesystem::exists(expectedFilePath));
-        REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_DHCP);
-
-        SECTION("Nothing happens")
+        SECTION("Change in startup datastore: Persist bridge configuration")
         {
-
-        }
-
-        SECTION("Change: Container not present. Switch to bridge configuration")
-        {
-            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth1"})).IN_SEQUENCE(seq1);
-
             client->delete_item(PRESENCE_CONTAINER);
             client->apply_changes();
 

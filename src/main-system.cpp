@@ -6,9 +6,11 @@
 #include "main.h"
 #include "system/Firmware.h"
 #include "system/Authentication.h"
+#include "system/Network.h"
 #include "system_vars.h"
 #include "system/IETFSystem.h"
 #include "utils/exceptions.h"
+#include "utils/exec.h"
 #include "utils/journal.h"
 #include "utils/log-init.h"
 
@@ -82,6 +84,30 @@ int main(int argc, char* argv[])
 
         auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
         dbusConnection->enterEventLoopAsync();
+
+        // initialize czechlight-system:networking
+        const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network");
+        std::filesystem::create_directories(runtimeNetworkDirectory);
+        auto sysrepoNetworkRunning = velia::system::Network(srSess, runtimeNetworkDirectory, [](const std::vector<std::string>& reconfiguredInterfaces) {
+            auto log = spdlog::get("system");
+
+            /* Bring all the updated interfaces down (they will later be brought up by executing `networkctl reload`).
+             *
+             * This is required when transitioning from bridge to DHCP configuration. systemd-networkd apparently does not reset many
+             * interface properties when reconfiguring the interface into new "bridge-less" configuration (the interface stays in the
+             * bridge and it also does not obtain link local address).
+             *
+             * This doesn't seem to be required when transitioning from DHCP to bridge configuration. It's just a "precaution" because
+             * there might be hidden some caveats that I am unable to see now (some leftover setting). Bringing the interface
+             * down seems to reset the interface (and it is something we can afford in the interface reconfiguration process).
+             */
+            for (const auto& interfaceName : reconfiguredInterfaces) {
+                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+            }
+
+            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
+        });
+
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 
         auto srSess2 = std::make_shared<sysrepo::Session>(srConn);

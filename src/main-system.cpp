@@ -6,6 +6,7 @@
 #include "main.h"
 #include "system/Firmware.h"
 #include "system/Authentication.h"
+#include "system/Network.h"
 #include "system_vars.h"
 #include "system/IETFSystem.h"
 #include "utils/exceptions.h"
@@ -82,6 +83,10 @@ int main(int argc, char* argv[])
 
         auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
         dbusConnection->enterEventLoopAsync();
+
+        std::filesystem::create_directories("/run/systemd/network");
+        auto sysrepoNetwork = velia::system::Network(srConn, "/run/systemd/network");
+
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 
         auto srSess2 = std::make_shared<sysrepo::Session>(srConn);

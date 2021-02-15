@@ -74,11 +74,13 @@ std::string createNetworkFile(const NetworkConfiguration& conf, const std::optio
 
 namespace velia::system {
 
-Network::Network(std::shared_ptr<::sysrepo::Connection> srConn, const std::filesystem::path& runtimeNetworkDirectory)
+Network::Network(std::shared_ptr<::sysrepo::Connection> srConn, const std::filesystem::path& runtimeNetworkDirectory, const std::filesystem::path& persistentNetworkDirectory)
     : m_log(spdlog::get("system"))
     , m_srConn(std::move(srConn))
     , m_srSessionRunning(std::make_shared<::sysrepo::Session>(m_srConn, SR_DS_RUNNING))
+    , m_srSessionStartup(std::make_shared<::sysrepo::Session>(m_srConn, SR_DS_STARTUP))
     , m_srSubscribeRunning(std::make_shared<sysrepo::Subscribe>(m_srSessionRunning))
+    , m_srSubscribeStartup(std::make_shared<sysrepo::Subscribe>(m_srSessionStartup))
 {
     utils::ensureModuleImplemented(m_srSessionRunning, CZECHLIGHT_SYSTEM_MODULE_NAME, "2021-01-13");
 
@@ -98,7 +100,15 @@ Network::Network(std::shared_ptr<::sysrepo::Connection> srConn, const std::files
         return SR_ERR_OK;
     };
 
+    auto cb2 = [&, persistentNetworkDirectory](sysrepo::S_Session session, [[maybe_unused]] const char *module_name, [[maybe_unused]] const char *xpath, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id)
+    {
+        // change in running datastore: only save the new configuration into /cfg
+        velia::utils::safeWriteFile(persistentNetworkDirectory / NETWORK_FILENAME, std::apply(createNetworkFile, getNetworkConfiguration(session, m_log)));
+        return SR_ERR_OK;
+    };
+
     m_srSubscribeRunning->module_change_subscribe(CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(), cb, CZECHLIGHT_SYSTEM_NOBRIDGE_PREFIX.c_str(), 0, SR_SUBSCR_DONE_ONLY | SR_SUBSCR_ENABLED);
+    m_srSubscribeStartup->module_change_subscribe(CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(), cb2, CZECHLIGHT_SYSTEM_NOBRIDGE_PREFIX.c_str(), 0, SR_SUBSCR_DONE_ONLY | SR_SUBSCR_ENABLED);
 }
 
 }

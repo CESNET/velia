@@ -85,7 +85,8 @@ int main(int argc, char* argv[])
         dbusConnection->enterEventLoopAsync();
 
         std::filesystem::create_directories("/run/systemd/network");
-        auto sysrepoNetwork = velia::system::Network(srConn, "/run/systemd/network");
+        std::filesystem::create_directories("/cfg/network");
+        auto sysrepoNetwork = velia::system::Network(srConn, "/run/systemd/network", "/cfg/network");
 
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 

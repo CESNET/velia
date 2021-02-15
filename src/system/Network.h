@@ -14,12 +14,12 @@ namespace velia::system {
 
 class Network {
 public:
-    Network(std::shared_ptr<::sysrepo::Connection> srConn, const std::filesystem::path& runtimeNetworkDirectory);
+    Network(std::shared_ptr<::sysrepo::Connection> srConn, const std::filesystem::path& runtimeNetworkDirectory, const std::filesystem::path& persistentNetworkDirectory);
 
 private:
     velia::Log m_log;
     std::shared_ptr<::sysrepo::Connection> m_srConn;
-    std::shared_ptr<::sysrepo::Session> m_srSessionRunning;
-    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribeRunning;
+    std::shared_ptr<::sysrepo::Session> m_srSessionRunning, m_srSessionStartup;
+    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribeRunning, m_srSubscribeStartup;
 };
 }

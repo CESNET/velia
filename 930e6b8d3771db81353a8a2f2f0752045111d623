@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df7ab96d_5e290a5c",
+        "filename": "tests/sysrepo_system-network.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-15T21:04:00Z",
+      "side": 1,
+      "message": "This part is still WIP (though I\u0027m not labelling the commit as WIP so it is brought to your attention).\n\nI can\u0027t run the actual test because it would run networkctl/ip. I can probably pass the \"reconfigure\" function to Network class from the outside (the real func. from main and some dummy func. from here) but Jan said (in some of the previous commits) that he does not like passing large lambdas into the Sysrepo-implementing classes :-)",
+      "revId": "930e6b8d3771db81353a8a2f2f0752045111d623",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

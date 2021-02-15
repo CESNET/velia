@@ -16,6 +16,23 @@
       "message": "Please let me know about your preference on how the model should look like.",
       "revId": "d6b68e97a5b8feb32cc3c66fc15168a9f93a2fe7",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74ef1b2e_86328c78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-15T21:35:41Z",
+      "side": 1,
+      "message": "I would prefer if this started a bit simpler, just with a toggle for \"bridge eth1 into br0, or make it a separate one\". Doing that via a presence container, perhaps as a first step before we go with ietf-interfaces (hehehe) is a good idea, IMHO.\n\nMy recommendation is therefore to go with a \"/czechlight-system:network/standalone-eth1\" presence container, and still enable DHCP for that one. Once this part (which is, as you\u0027ve discovered, hard with systemd-networkd) is done, toggling between a DHCP for IPv4 and some static address should be \"rather easy\", \"just\" a matter of swapping a few lines in the resulting config file.",
+      "revId": "d6b68e97a5b8feb32cc3c66fc15168a9f93a2fe7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

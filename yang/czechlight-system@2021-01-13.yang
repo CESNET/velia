@@ -9,6 +9,10 @@ module czechlight-system {
     prefix yang;
   }
 
+  import ietf-inet-types {
+    prefix inet;
+  }
+
   organization "CESNET";
   contact "photonic@cesnet.cz";
   description
@@ -191,6 +195,17 @@ module czechlight-system {
         output {
           uses authentication-rpc-result;
         }
+      }
+    }
+  }
+
+  container networking {
+    container eth1-ip {
+      presence "Overrides default settings and removes eth1 interface from bridge.";
+
+      leaf static-ip-address {
+        description "Specifies a static IP for the interface. If not present, address should configured be via DHCP.";
+        type inet:ip-address;
       }
     }
   }

@@ -86,8 +86,13 @@ int main(int argc, char* argv[])
         dbusConnection->enterEventLoopAsync();
 
         // initialize czechlight-system:networking
-        const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network");
+        const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network"), persistentNetworkDirectory("/cfg/network/");
         std::filesystem::create_directories(runtimeNetworkDirectory);
+        std::filesystem::create_directories(persistentNetworkDirectory);
+
+        auto srSessStartup = std::make_shared<sysrepo::Session>(srConn, SR_DS_STARTUP);
+
+        auto sysrepoNetworkStartup = velia::system::Network(srSess, persistentNetworkDirectory, []([[maybe_unused]] const std::vector<std::string>& reconfiguredInterfaces) {});
         auto sysrepoNetworkRunning = velia::system::Network(srSess, runtimeNetworkDirectory, [](const std::vector<std::string>& reconfiguredInterfaces) {
             auto log = spdlog::get("system");
 

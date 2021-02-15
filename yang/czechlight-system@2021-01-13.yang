@@ -9,6 +9,10 @@ module czechlight-system {
     prefix yang;
   }
 
+  import ietf-inet-types {
+    prefix inet;
+  }
+
   organization "CESNET";
   contact "photonic@cesnet.cz";
   description
@@ -192,6 +196,12 @@ module czechlight-system {
           uses authentication-rpc-result;
         }
       }
+    }
+  }
+
+  container networking {
+    container standalone-eth1 {
+      presence "Presence of this container should make eth1 network interface standalone (not in any bridge).";
     }
   }
 }

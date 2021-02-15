@@ -194,4 +194,10 @@ module czechlight-system {
       }
     }
   }
+
+  container networking {
+    container standalone-eth1 {
+      presence "Presence of this container should make eth1 network interface standalone (not in any bridge).";
+    }
+  }
 }

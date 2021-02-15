@@ -43,11 +43,13 @@ std::map<std::string, std::string> getNetworkConfiguration(std::shared_ptr<::sys
 
 namespace velia::system {
 
-Network::Network(std::shared_ptr<::sysrepo::Connection> srConn, std::filesystem::path runtimeNetworkDirectory, std::function<void(const std::vector<std::string>&)> networkReloadCallback)
+Network::Network(std::shared_ptr<::sysrepo::Connection> srConn, std::filesystem::path runtimeNetworkDirectory, std::filesystem::path persistentNetworkDirectory, std::function<void(const std::vector<std::string>&)> networkReloadCallback)
     : m_log(spdlog::get("system"))
     , m_srConn(std::move(srConn))
     , m_srSessionRunning(std::make_shared<::sysrepo::Session>(m_srConn, SR_DS_RUNNING))
+    , m_srSessionStartup(std::make_shared<::sysrepo::Session>(m_srConn, SR_DS_STARTUP))
     , m_srSubscribeRunning(std::make_shared<sysrepo::Subscribe>(m_srSessionRunning))
+    , m_srSubscribeStartup(std::make_shared<sysrepo::Subscribe>(m_srSessionStartup))
 {
     utils::ensureModuleImplemented(m_srSessionRunning, CZECHLIGHT_SYSTEM_MODULE_NAME, "2021-01-13");
 
@@ -62,6 +64,20 @@ Network::Network(std::shared_ptr<::sysrepo::Connection> srConn, std::filesystem:
             std::vector<std::string> interfaces;
             std::transform(config.begin(), config.end(), std::back_inserter(interfaces), [](const auto& kv) { return kv.first; });
             networkReloadCallback(interfaces);
+
+            return SR_ERR_OK;
+        },
+        CZECHLIGHT_SYSTEM_STANDALONE_ETH1.c_str(),
+        0,
+        SR_SUBSCR_DONE_ONLY | SR_SUBSCR_ENABLED);
+
+    m_srSubscribeStartup->module_change_subscribe(
+        CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(),
+        [&, persistentNetworkDirectory = std::move(persistentNetworkDirectory)](sysrepo::S_Session session, [[maybe_unused]] const char* module_name, [[maybe_unused]] const char* xpath, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id) {
+            auto config = getNetworkConfiguration(session, m_log);
+            for (const auto& [interface, networkFileContents] : config) {
+                velia::utils::safeWriteFile(persistentNetworkDirectory / (interface + ".network"), networkFileContents);
+            }
 
             return SR_ERR_OK;
         },

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7f3c2ab_78a28579",
+        "filename": "src/system/Network.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-15T21:55:40Z",
+      "side": 1,
+      "message": "\"cb2\" and \"cb\" are not terribly descriptive names, are they. IMHO, a lambda\u0027s benefit is that you do not have to assign a name to something. If you\u0027re assigning a name, make it a descriptive one, and consider whether a function or a lambda is better.\n\nIn this case I think the difference between handling changes to startup and running is:\n\n- writing out config to a different location,\n- skipping the restart of sd-nd\n- not calling iproute2\n\nThe code should match that.",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 181
+      },
+      "revId": "9b514274cdddecc4cc7628fef6f55c97eb964526",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

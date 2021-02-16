@@ -125,6 +125,30 @@
       },
       "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf3a5dd6_54f2b0bd",
+        "filename": "tests/sysrepo_system-network.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-16T19:47:33Z",
+      "side": 1,
+      "message": "Yep, I will fix in the morning. \nI have not setup clang-format-patch pre-commit hook yet (shame on me) so I was waiting for the CI to do it for me.",
+      "parentUuid": "02232115_8cf87363",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 9
+      },
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -3,6 +3,52 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d51895f2_2b3445af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T19:41:49Z",
+      "side": 1,
+      "message": "nit, feel free to ignore: typo: \"i\"",
+      "range": {
+        "startLine": 10,
+        "startChar": 47,
+        "endLine": 10,
+        "endChar": 48
+      },
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbe1c0f1_73eedb0d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T19:41:49Z",
+      "side": 1,
+      "message": "nit, feel free to ignore: typo: \u0027bringing\u0027",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 14
+      },
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "edff95e4_19357f98",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -14,6 +60,69 @@
       "writtenOn": "2021-02-16T19:19:16Z",
       "side": 1,
       "message": "It turned out that the `ip link set \u003ciface\u003e nomaster`  was unnecessary because bringing the interface down works as well (and must be done). Therefore I changed the code a bit.",
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a169e02e_e4f7064e",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T19:41:49Z",
+      "side": 1,
+      "message": "nit: I think this comment doesn\u0027t add value, but just my two cents",
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "966adf45_e6b6d6be",
+        "filename": "src/system/Network.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T19:41:49Z",
+      "side": 1,
+      "message": "if I was writing this, I would use just !, but no need to change this",
+      "range": {
+        "startLine": 33,
+        "startChar": 68,
+        "endLine": 33,
+        "endChar": 79
+      },
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02232115_8cf87363",
+        "filename": "tests/sysrepo_system-network.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T19:41:49Z",
+      "side": 1,
+      "message": "nit: I would have expected a little different formatting:\n \nSECTION(\"nothing happens\")\n{\n}\n \nSECTION(blah blah)\n{\n    ...\n}",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 9
+      },
       "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1eb1e1f_7b18e805",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T19:43:46Z",
+      "side": 1,
+      "message": "looks good to me, just wondering about the sleep part",
+      "revId": "8b1d054129bbcba9f56d49a92f2bd8d2fac434dc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36951912_4eae73f0",
+        "filename": "tests/sysrepo_system-network.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T19:43:46Z",
+      "side": 1,
+      "message": "Why is this sleep needed?",
+      "revId": "8b1d054129bbcba9f56d49a92f2bd8d2fac434dc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

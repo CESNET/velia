@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22849693_e2e50fed",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T17:41:20Z",
+      "side": 1,
+      "message": "I don\u0027t understand this algorithm -- I think that there\u0027s a bunch of other CBs in this project where the modification CB ignores the changes iterator and just retrieves the current value, whatever it is, via a a simple call directly to the session. Any reason why this code is not doing that?\n\nAlso, this is a while cycle, but at each iteration it\u0027s supposed to throw if the XPath doesn\u0027t match. Is that intentional?\n\nAnd finally, the return value is optional\u003cstring\u003e. When is this CB actually invoked, when does it return a nullopt?",
+      "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba18efb0_d6809dfe",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T17:41:20Z",
+      "side": 1,
+      "message": "nit: missing space",
+      "range": {
+        "startLine": 70,
+        "startChar": 46,
+        "endLine": 70,
+        "endChar": 52
+      },
+      "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9275df98_e71e8043",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-16T17:41:20Z",
+      "side": 1,
+      "message": "Yes, it is, as far as I know. What\u0027s your plan for getting rid of this FIXME?",
+      "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

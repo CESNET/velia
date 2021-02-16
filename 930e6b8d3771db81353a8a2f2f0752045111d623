@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "63af1e82_4b0c4e41",
+        "filename": "src/system/Network.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-16T19:19:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f6b754b_bcaf4f10",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 72
+      },
+      "revId": "930e6b8d3771db81353a8a2f2f0752045111d623",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce25c2dd_8268c6ba",
@@ -59,6 +83,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e39905b_0c97a11e",
+        "filename": "src/system/Network.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-16T19:19:16Z",
+      "side": 1,
+      "message": "I have redesigned it.",
+      "parentUuid": "60b9ccc2_f15fa3ae",
+      "revId": "930e6b8d3771db81353a8a2f2f0752045111d623",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bf7a4983_0a9a3171",
@@ -72,6 +114,30 @@
       "writtenOn": "2021-02-15T21:52:17Z",
       "side": 1,
       "message": "I think only the `nomaster` is needed, and that systemd-networkd will automatically enslave those interfaces which now belong to a bridge behind the scenes. It\u0027s just that removal from the bridge that\u0027s needed.",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 9
+      },
+      "revId": "930e6b8d3771db81353a8a2f2f0752045111d623",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "645acda0_9d4edc91",
+        "filename": "src/system/Network.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-16T19:19:16Z",
+      "side": 1,
+      "message": "Well, we have to bring the interfaces down anyway (so they can obtain local link address when starting). The ip command turned out to be unnecessary.",
+      "parentUuid": "bf7a4983_0a9a3171",
       "range": {
         "startLine": 92,
         "startChar": 0,
@@ -113,6 +179,24 @@
       "side": 1,
       "message": "What I said was not against callbacks and functors. I dislike initializing these std:function class members via the member initializer list in the constructor; I think that\u0027s not readable code.\n\nIt looks that this patch currently (in its \"combined form\" where you do both to-bridge-or-not-to-bridge and to-DHCP-or-to-static-address) needs two interaction points with the rest of the system:\n\n- putting files somewhere into the filesystem, and calling `networkctl restart` when done,\n- doing a manual fixup to remove an interface from a bridge.\n\nI think it\u0027s reasonable to test the code exactly like that. Once a new configuration arrives, do two things:\n\n- Return a list of config files that correspond to the new configuration in its complete form. This patch deals just with eth1, so it will be a map\u003cstring, string\u003e where the key is the interface name, and the value it the content of that config file.\n\n- Return a list of interfaces to call `nomaster` on.\n\nThen your \"real executor called from main()\" will:\n\n- nuke all config files from /run/systemd/network/,\n- put the new files in there,\n- release the previously enslaved interfaces which should not longer be enslaved,\n- restart systemd-networkd.\n\n...while the test code would just take a look at the strings with config files, and a list of actions to take.",
       "parentUuid": "df7ab96d_5e290a5c",
+      "revId": "930e6b8d3771db81353a8a2f2f0752045111d623",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "323d09a5_59b4b541",
+        "filename": "tests/sysrepo_system-network.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-16T19:19:16Z",
+      "side": 1,
+      "message": "\u003e nuke all config files from /run/systemd/network/,\n\u003e put the new files in there,\nI don\u0027t think removing files is neccessary, only eth1 is configured through /run and it will always get rewritten.",
+      "parentUuid": "65c3c771_ede77f72",
       "revId": "930e6b8d3771db81353a8a2f2f0752045111d623",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

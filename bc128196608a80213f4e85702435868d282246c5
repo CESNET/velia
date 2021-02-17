@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "314d75b6_2cb98a49",
+        "filename": "src/system/Network.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-17T09:13:16Z",
+      "side": 1,
+      "message": "I would suggest a debug/trace for these",
+      "range": {
+        "startLine": 34,
+        "startChar": 13,
+        "endLine": 34,
+        "endChar": 17
+      },
+      "revId": "bc128196608a80213f4e85702435868d282246c5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

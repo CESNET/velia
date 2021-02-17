@@ -76,6 +76,9 @@ DBusRAUCServer::DBusRAUCServer(sdbus::IConnection& connection, std::string prima
         std::lock_guard<std::mutex> lock(m_mtx);
         if (!m_operationInProgress) {
             m_operationInProgress = true;
+
+            if (m_installThread.joinable())
+                m_installThread.join();
             m_installThread = std::thread(&DBusRAUCServer::installBundle, this);
         } else {
             throw sdbus::Error("org.gtk.GDBus.UnmappedGError.Quark._g_2dio_2derror_2dquark.Code30", "Already processing a different method");

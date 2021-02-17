@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37d44bab_a5d96230",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-17T09:21:45Z",
+      "side": 1,
+      "message": "Actually, when I\u0027m looking at the next patch in this series, I have a suggestion for improvement -- do not encode any awareness of runnings vs. startup DS into the Network class. Let that class work with just two callbacks, one that stores the generated configs, and the other one for bringing ifaces down+reloading sd-nd. When that\u0027s done, the next patch in this series will become just (in the main.cpp):\n \n-auto net \u003d make_shared\u003cNetwork\u003e(runningSession, \"/run/systemd/network\", restartingHandler);\n+auto netRunning \u003d make_shared\u003cNetwork\u003e(runningSession, \"/run/systemd/network\", restartingHandler);\n+auto netStartup \u003d make_shared\u003cNetwork\u003e(startupSession, \"/cfg/network\", [](const auto\u0026) {});\n\nNo need to change anything in the sysrepo callback class, then.",
+      "revId": "bc128196608a80213f4e85702435868d282246c5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "314d75b6_2cb98a49",

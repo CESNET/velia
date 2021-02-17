@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e78b719d_4f452566",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-17T16:05:05Z",
+      "side": 1,
+      "message": "Can you please also add a pull subscription for operational DS which returns the current system hostname, no matter how it\u0027s been set? I missed that that leaf is not mandatory, which of course makes sense.",
+      "revId": "f1c466da8fc6ffc53a4dce2678cd5f6146ccb889",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

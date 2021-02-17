@@ -36,6 +36,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "515d31fe_9585d69e",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-17T16:05:05Z",
+      "side": 1,
+      "message": "Thanks for changing that while, and thanks for explaining the reason for std::optional, that makes sense.",
+      "parentUuid": "a996d22e_af4df94b",
+      "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ba18efb0_d6809dfe",
@@ -114,6 +132,24 @@
       "side": 1,
       "message": "I tried testing and it is actually not needed to have two sessions. This kind of code works: https://rakac.anip.icu/startup_running_sub.cpp\n\nSo: I will either get rid of the FIXME and leave the two sessions, or get rid of one.",
       "parentUuid": "9275df98_e71e8043",
+      "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26eb58c5_5dbd3da4",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-17T16:05:05Z",
+      "side": 1,
+      "message": "we talked about this in the call -- if you can test it more thoroughly (like a permutation of the order of these changes), then that sounds good",
+      "parentUuid": "ee7c7e1e_c9a3e39c",
       "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "e1bfa91d_57aae06c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-17T08:25:57Z",
+      "side": 1,
+      "message": "I\u0027m creating new patch anyway, so I have fixed it. Thanks.",
+      "parentUuid": "d51895f2_2b3445af",
+      "range": {
+        "startLine": 10,
+        "startChar": 47,
+        "endLine": 10,
+        "endChar": 48
+      },
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "cbe1c0f1_73eedb0d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2021-02-16T19:41:49Z",
       "side": 1,
       "message": "nit, feel free to ignore: typo: \u0027bringing\u0027",
+      "range": {
+        "startLine": 29,
+        "startChar": 13,
+        "endLine": 29,
+        "endChar": 14
+      },
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31131896_a0914481",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-17T08:25:57Z",
+      "side": 1,
+      "message": "I\u0027m creating new patch anyway, so I have fixed it. Thanks.",
+      "parentUuid": "cbe1c0f1_73eedb0d",
       "range": {
         "startLine": 29,
         "startChar": 13,
@@ -77,6 +125,24 @@
       "writtenOn": "2021-02-16T19:41:49Z",
       "side": 1,
       "message": "nit: I think this comment doesn\u0027t add value, but just my two cents",
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa3e25c8_ba8f4ab8",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-17T08:25:57Z",
+      "side": 1,
+      "message": "Well, you are right, it duplicates the first sentence from the previous comment.",
+      "parentUuid": "a169e02e_e4f7064e",
       "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -165,6 +231,30 @@
       "side": 1,
       "message": "That\u0027s gonna be a long wait, we\u0027re currently running at the whopping capacity of two concurrent jobs :\u0027(.",
       "parentUuid": "bf3a5dd6_54f2b0bd",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 9
+      },
+      "revId": "bcd874bf39d51c7dd7d2377bacba0676d15b4391",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af60871b_7a868fcb",
+        "filename": "tests/sysrepo_system-network.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-17T08:25:57Z",
+      "side": 1,
+      "message": "Sad.\nDone.",
+      "parentUuid": "a6c3bd78_7661e2bb",
       "range": {
         "startLine": 74,
         "startChar": 0,

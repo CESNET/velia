@@ -18,7 +18,6 @@ static const char usage[] =
 Usage:
   veliad-hardware
     [--appliance=<Model>]
-    [--log-level=<Level>]
     [--sysrepo-log-level=<Level>]
     [--hardware-log-level=<Level>]
   veliad-hardware (-h | --help)
@@ -28,11 +27,10 @@ Options:
   -h --help                         Show this screen.
   --version                         Show version.
   --appliance=<Model>               Initialize IETF Hardware and outputs for specific appliance.
-  --log-level=<N>                   Log level for everything [default: 3]
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
+  --hardware-log-level=<N>          Log level for the hardware drivers [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
-  --hardware-log-level=<N>          Log level for the hardware drivers [default: 3]
 )";
 
 int main(int argc, char* argv[])
@@ -50,7 +48,6 @@ int main(int argc, char* argv[])
     spdlog::set_level(spdlog::level::info);
 
     try {
-        spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
         spdlog::get("hardware")->set_level(parseLogLevel("Hardware loggers", args["--hardware-log-level"]));
 

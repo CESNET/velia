@@ -20,7 +20,6 @@ static const char usage[] =
 
 Usage:
   veliad-system
-    [--log-level=<Level>]
     [--sysrepo-log-level=<Level>]
     [--system-log-level=<Level>]
   veliad-system (-h | --help)
@@ -29,11 +28,10 @@ Usage:
 Options:
   -h --help                         Show this screen.
   --version                         Show version.
-  --log-level=<N>                   Log level for everything [default: 3]
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
+  --system-log-level=<N>            Log level for the system stuff [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
-  --system-log-level=<N>            Log level for the system stuff [default: 3]
 )";
 
 DBUS_EVENTLOOP_INIT
@@ -53,7 +51,6 @@ int main(int argc, char* argv[])
     spdlog::set_level(spdlog::level::info);
 
     try {
-        spdlog::set_level(parseLogLevel("Generic", args["--log-level"]));
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
         spdlog::get("main")->debug("Opening Sysrepo connection");

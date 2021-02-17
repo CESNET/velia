@@ -22,6 +22,30 @@
       },
       "revId": "b602a3aa9978bf040da29e73f22f51cb625e7b34",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3bd4f1e_fbed1888",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-17T08:25:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1966b101_9b8350f9",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 3
+      },
+      "revId": "b602a3aa9978bf040da29e73f22f51cb625e7b34",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

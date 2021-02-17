@@ -28,6 +28,7 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
         [this](const std::string& operation) {
             if (operation == "installing") {
                 std::lock_guard<std::mutex> lck(m_mtx);
+                m_installMessage = "";
                 m_installStatus = "in-progress";
             }
         },

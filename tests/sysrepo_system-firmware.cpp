@@ -177,6 +177,40 @@ TEST_CASE("Firmware in czechlight-system")
             }
         }
 
+        SECTION("Unsuccessfull install followed by successfull install")
+        {
+            std::map<std::string, std::string> expected;
+
+            // invoke unsuccessfull install
+            raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::FAILURE);
+            client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+
+            expected = {
+                {"/message", "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number"},
+                {"/status", "failed"},
+            };
+            std::this_thread::sleep_for(2s); // lets wait a while, so the installation can finish
+            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expected);
+
+            // invoke successfull install
+            raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK);
+            client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+
+            expected = {
+                {"/message", ""},
+                {"/status", "in-progress"},
+            };
+            std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
+            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expected);
+
+            expected = {
+                {"/message", ""},
+                {"/status", "succeeded"},
+            };
+            std::this_thread::sleep_for(2s); // lets wait a while, so the installation can finish
+            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expected);
+
+        }
         SECTION("Installation in progress")
         {
             client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);

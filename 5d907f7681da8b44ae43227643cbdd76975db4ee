@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a996d22e_af4df94b",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-17T01:21:30Z",
+      "side": 1,
+      "message": "1-2) I used this catch potential bugs inside subcriptions (if I got more data than I subscribed for). But I guess it doesn\u0027t make too much sense.\n3) The hostname leaf inside ietf-system is not mandatory. Maybe I should check for the value and supply a default if there\u0027s nothing?",
+      "parentUuid": "22849693_e2e50fed",
+      "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ba18efb0_d6809dfe",
         "filename": "src/system/IETFSystem.cpp",
         "patchSetId": 6
@@ -31,6 +49,30 @@
       "writtenOn": "2021-02-16T17:41:20Z",
       "side": 1,
       "message": "nit: missing space",
+      "range": {
+        "startLine": 70,
+        "startChar": 46,
+        "endLine": 70,
+        "endChar": 52
+      },
+      "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1776820_d77cb54e",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-17T01:21:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba18efb0_d6809dfe",
       "range": {
         "startLine": 70,
         "startChar": 46,
@@ -54,6 +96,24 @@
       "writtenOn": "2021-02-16T17:41:20Z",
       "side": 1,
       "message": "Yes, it is, as far as I know. What\u0027s your plan for getting rid of this FIXME?",
+      "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee7c7e1e_c9a3e39c",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-17T01:21:30Z",
+      "side": 1,
+      "message": "I tried testing and it is actually not needed to have two sessions. This kind of code works: https://rakac.anip.icu/startup_running_sub.cpp\n\nSo: I will either get rid of the FIXME and leave the two sessions, or get rid of one.",
+      "parentUuid": "9275df98_e71e8043",
       "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

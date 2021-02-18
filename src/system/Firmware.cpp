@@ -75,7 +75,7 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
 
     m_srSubscribeRPC->rpc_subscribe(
         (CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/install").c_str(),
-        [this](::sysrepo::S_Session session, [[maybe_unused]] const char* op_path, const ::sysrepo::S_Vals input, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id, [[maybe_unused]] ::sysrepo::S_Vals_Holder output) {
+        [this](auto session, auto, auto input, auto, auto, [[maybe_unused]] auto output) {
             auto lock = updateSlotStatus();
 
             try {
@@ -93,7 +93,7 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
 
     m_srSubscribeOps->oper_get_items_subscribe(
         CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(),
-        [this](::sysrepo::S_Session session, [[maybe_unused]] const char* module_name, [[maybe_unused]] const char* path, [[maybe_unused]] const char* request_xpath, [[maybe_unused]] uint32_t request_id, libyang::S_Data_Node& parent) {
+        [this](auto session, auto, auto, auto, auto, auto& parent) {
             std::map<std::string, std::string> data;
 
             {

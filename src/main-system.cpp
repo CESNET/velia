@@ -71,8 +71,8 @@ int main(int argc, char* argv[])
 
         auto srSessStartup = std::make_shared<sysrepo::Session>(srConn, SR_DS_STARTUP);
 
-        auto sysrepoNetworkStartup = velia::system::Network(srSess, persistentNetworkDirectory, []([[maybe_unused]] const std::vector<std::string>& reconfiguredInterfaces) {});
-        auto sysrepoNetworkRunning = velia::system::Network(srSess, runtimeNetworkDirectory, [](const std::vector<std::string>& reconfiguredInterfaces) {
+        auto sysrepoNetworkStartup = velia::system::Network(srSess, persistentNetworkDirectory, [](const auto&) {});
+        auto sysrepoNetworkRunning = velia::system::Network(srSess, runtimeNetworkDirectory, [](const auto& reconfiguredInterfaces) {
             auto log = spdlog::get("system");
 
             /* Bring all the updated interfaces down (they will later be brought up by executing `networkctl reload`).

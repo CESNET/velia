@@ -112,13 +112,7 @@ velia::firewall::SysrepoFirewall::SysrepoFirewall(sysrepo::S_Session srSess, Nft
     utils::ensureModuleImplemented(srSess, "ietf-access-control-list", "2019-03-04");
     utils::ensureModuleImplemented(srSess, "czechlight-firewall", "2021-01-25");
 
-    sysrepo::ModuleChangeCb cb = [logger = m_log, consumer = std::move(consumer)] (
-            sysrepo::S_Session session,
-            [[maybe_unused]] const char *module_name,
-            [[maybe_unused]] const char *xpath,
-            [[maybe_unused]] sr_event_t event,
-            [[maybe_unused]] uint32_t request_id) {
-
+    sysrepo::ModuleChangeCb cb = [logger = m_log, consumer = std::move(consumer)] (auto session, auto, auto, auto, auto) {
         logger->debug("Applying new data from sysrepo");
         auto data = session->get_data(("/" + (ietf_acl_module + ":*")).c_str());
         // The data from sysrepo aren't guaranteed to be sorted according to the schema, but generateNftConfig depends

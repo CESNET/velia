@@ -22,21 +22,10 @@ const auto IETF_HARDWARE_MODULE_PREFIX = "/"s + IETF_HARDWARE_MODULE_NAME + ":ha
 Sysrepo::Sysrepo(std::shared_ptr<::sysrepo::Subscribe> srSubscribe, std::shared_ptr<IETFHardware> hwState)
     : m_hwState(std::move(hwState))
     , m_srSubscribe(std::move(srSubscribe))
-    , m_srLastRequestId(0)
 {
     m_srSubscribe->oper_get_items_subscribe(
         IETF_HARDWARE_MODULE_NAME.c_str(),
-        [this](std::shared_ptr<::sysrepo::Session> session, [[maybe_unused]] const char* module_name, const char* xpath, const char* request_xpath, uint32_t request_id, std::shared_ptr<libyang::Data_Node>& parent) {
-            spdlog::get("main")->debug("operational data callback: XPath {} req {} orig-XPath {}", xpath, request_id, request_xpath);
-
-            // when asking for something in the subtree of THIS request
-            if (m_srLastRequestId == request_id) {
-                spdlog::trace(" ops data request already handled");
-                return SR_ERR_OK;
-            }
-
-            m_srLastRequestId = request_id;
-
+        [this](std::shared_ptr<::sysrepo::Session> session, [[maybe_unused]] const char* module_name, [[maybe_unused]] const char* xpath, [[maybe_unused]] const char* request_xpath, [[maybe_unused]] uint32_t request_id, std::shared_ptr<libyang::Data_Node>& parent) {
             auto hwStateValues = m_hwState->process();
             utils::valuesToYang(hwStateValues, session, parent);
 

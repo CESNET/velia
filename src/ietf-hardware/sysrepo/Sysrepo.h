@@ -30,6 +30,5 @@ public:
 private:
     std::shared_ptr<IETFHardware> m_hwState;
     std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
-    uint64_t m_srLastRequestId;
 };
 }

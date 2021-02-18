@@ -39,7 +39,7 @@ private:
     void addKey(const std::string& username, const std::string& key);
     void removeKey(const std::string& username, const int index);
     std::string homeDirectory(const std::string& username);
-    std::optional<std::string> lastPasswordChange(const std::string& username);
+    std::map<std::string, std::optional<std::string>> lastPasswordChanges();
 
 
     velia::Log m_log;

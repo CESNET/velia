@@ -49,70 +49,86 @@ void changePassword(const std::string& name, const std::string& password, const 
     auto shadow = velia::utils::readFileToString(etc_shadow);
     utils::safeWriteFile(BACKUP_ETC_SHADOW_FILE, shadow);
 }
+
+auto file_open(const char* filename, const char* mode)
+{
+    auto res = std::unique_ptr<std::FILE, decltype(&std::fclose)>(std::fopen(filename, mode), std::fclose);
+    if (!res.get()) {
+        throw std::system_error{errno, std::system_category(), "fopen("s + filename + ") failed"};
+    }
+    return res;
+}
 }
 
 std::string Authentication::homeDirectory(const std::string& username)
 {
-    auto passwdFile = std::fopen(m_etc_passwd.c_str(), "r");
-    if (!passwdFile) {
-        throw std::runtime_error("can't open passwd file: "s + strerror(errno));
-    }
+    auto passwdFile = impl::file_open(m_etc_passwd.c_str(), "r");
     passwd entryBuf;
     size_t bufLen = 10;
     auto buffer = std::make_unique<char[]>(bufLen);
     passwd* entry;
 
     while (true) {
-        auto ret = fgetpwent_r(passwdFile, &entryBuf, buffer.get(), bufLen, &entry);
+        auto ret = fgetpwent_r(passwdFile.get(), &entryBuf, buffer.get(), bufLen, &entry);
         if (ret == ERANGE) {
             bufLen += 100;
             buffer = std::make_unique<char[]>(bufLen);
             continue;
         }
-        if (ret == 0) {
-            if (username == entry->pw_name) {
-                return entry->pw_dir;
-            } else {
-                continue;
-            }
+
+        if (ret == ENOENT) {
+            break;
         }
 
-        break;
+        if (ret != 0) {
+            throw std::system_error{ret, std::system_category(), "fgetpwent_r() failed"};
+        }
+
+        assert(entry);
+
+        if (username != entry->pw_name) {
+            continue;
+        }
+
+        return entry->pw_dir;
     }
 
     throw std::runtime_error("User " + username + " doesn't exist");
 }
 
-std::optional<std::string> Authentication::lastPasswordChange(const std::string& username)
+std::map<std::string, std::optional<std::string>> Authentication::lastPasswordChanges()
 {
-    auto shadowFile = std::fopen(m_etc_shadow.c_str(), "r");
+    auto shadowFile = impl::file_open(m_etc_shadow.c_str(), "r");
     spwd entryBuf;
     size_t bufLen = 10;
     auto buffer = std::make_unique<char[]>(bufLen);
     spwd* entry;
 
+    std::map<std::string, std::optional<std::string>> res;
     while (true) {
-        auto ret = fgetspent_r(shadowFile, &entryBuf, buffer.get(), bufLen, &entry);
+        auto ret = fgetspent_r(shadowFile.get(), &entryBuf, buffer.get(), bufLen, &entry);
         if (ret == ERANGE) {
             bufLen += 100;
             buffer = std::make_unique<char[]>(bufLen);
             continue;
         }
 
-        if (ret == 0) {
-            if (username == entry->sp_namp) {
-                using namespace std::chrono_literals;
-                using TimeType = std::chrono::time_point<std::chrono::system_clock>;
-                return velia::utils::yangTimeFormat(TimeType(24h * entry->sp_lstchg));
-            } else {
-                continue;
-            }
+        if (ret == ENOENT) {
+            break;
         }
 
-        break;
+        if (ret != 0) {
+            throw std::system_error{ret, std::system_category(), "fgetspent_r() failed"};
+        }
+
+        assert(entry);
+
+        using namespace std::chrono_literals;
+        using TimeType = std::chrono::time_point<std::chrono::system_clock>;
+        res.emplace(entry->sp_namp, velia::utils::yangTimeFormat(TimeType(24h * entry->sp_lstchg)));
     }
 
-    return std::nullopt;
+    return res;
 }
 
 std::string Authentication::authorizedKeysPath(const std::string& username)
@@ -143,17 +159,15 @@ std::vector<std::string> Authentication::listKeys(const std::string& username)
 std::vector<User> Authentication::listUsers()
 {
     std::vector<User> res;
-    auto passwdFile = std::fopen(m_etc_passwd.c_str(), "r");
-    if (!passwdFile) {
-        throw std::runtime_error("can't open passwd file: "s + strerror(errno));
-    }
+    auto passwdFile = impl::file_open(m_etc_passwd.c_str(), "r");
     passwd entryBuf;
     size_t bufLen = 10;
     auto buffer = std::make_unique<char[]>(bufLen);
     passwd* entry;
 
+    auto pwChanges = lastPasswordChanges();
     while (true) {
-        auto ret = fgetpwent_r(passwdFile, &entryBuf, buffer.get(), bufLen, &entry);
+        auto ret = fgetpwent_r(passwdFile.get(), &entryBuf, buffer.get(), bufLen, &entry);
         if (ret == ERANGE) {
             bufLen += 100;
             buffer = std::make_unique<char[]>(bufLen);
@@ -163,14 +177,20 @@ std::vector<User> Authentication::listUsers()
         if (ret == ENOENT) {
             break;
         }
+
+        if (ret != 0) {
+            throw std::system_error{ret, std::system_category(), "fgetpwent_r() failed"};
+        }
+
+        assert(entry);
         User user;
         user.name = entry->pw_name;
         user.authorizedKeys = listKeys(user.name);
-        user.lastPasswordChange = lastPasswordChange(user.name);
+        if (auto it = pwChanges.find(user.name); it != pwChanges.end()) {
+            user.lastPasswordChange = it->second;
+        }
         res.emplace_back(user);
     }
-
-    fclose(passwdFile);
 
     return res;
 }

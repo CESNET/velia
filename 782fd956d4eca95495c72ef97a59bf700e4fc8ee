@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dce338c3_140c7992",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-18T10:25:06Z",
+      "side": 1,
+      "message": "Tbh I\u0027m starting to feel that [[maybe_unused]] is worse than not naming variables (except that you don\u0027t know what the variable is for) exactly because of this.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 37
+      },
+      "revId": "782fd956d4eca95495c72ef97a59bf700e4fc8ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88d57dfc_6b6fd152",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-18T14:43:58Z",
+      "side": 1,
+      "message": "doesn\u0027t crash anymore (well, at least when I\u0027m testing this as before)",
+      "revId": "b25ef249f6a339428fa718bf22776c941eb975f6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

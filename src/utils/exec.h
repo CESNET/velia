@@ -19,9 +19,10 @@ namespace velia::utils {
  * @param absolutePath Full path to the excutable.
  * @param args Arguments to pass to the program. Can be {} if no arguments should be passed.
  * @param std_in stdin input fo the program.
+ * @return stdout of the command
  */
 enum class ExecOptions {
     DropRoot
 };
-void execAndWait(velia::Log logger, const std::string& absolutePath, std::initializer_list<std::string> args, std::string_view std_in, const std::set<ExecOptions> opts = {});
+std::string execAndWait(velia::Log logger, const std::string& absolutePath, std::initializer_list<std::string> args, std::string_view std_in, const std::set<ExecOptions> opts = {});
 }

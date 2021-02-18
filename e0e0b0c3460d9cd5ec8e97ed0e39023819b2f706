@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "308b095d_bb0cd057",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-18T09:08:51Z",
+      "side": 1,
+      "message": "This one is used, which -- I think -- strongly suggests that our current way of treating these parameters is misleading and full of boilerplate. See https://gerrit.cesnet.cz/c/CzechLight/velia/+/3840 .",
+      "range": {
+        "startLine": 138,
+        "startChar": 12,
+        "endLine": 138,
+        "endChar": 28
+      },
+      "revId": "e0e0b0c3460d9cd5ec8e97ed0e39023819b2f706",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94a7225a_3f307848",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-18T09:08:51Z",
+      "side": 1,
+      "message": "I\u0027m a little bit nervous about forking and execing something each time someone requests a hostname, but perhaps it\u0027s a non-issue. However, I actually think that for *reading* the hostname, it\u0027s perfectly OK to bypass systemd and just call gethostname() here.",
+      "revId": "e0e0b0c3460d9cd5ec8e97ed0e39023819b2f706",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

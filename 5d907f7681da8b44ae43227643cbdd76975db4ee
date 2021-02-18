@@ -170,6 +170,24 @@
       "parentUuid": "26eb58c5_5dbd3da4",
       "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1229f21_e3f77d2d",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-18T09:08:51Z",
+      "side": 1,
+      "message": "So the important part is the DS selected at a time an actual subscription is created (not the sysrepo::Subscribe class, but the call to *_subscribe). OK, thanks.\n\nI wonder which approach is more readable in the code, but why not I guess. Can you please ask upstream to confirm this *and* capture that in the docs? A good approach would be sending them a PR which documents this behavior and waiting for a reaction.",
+      "parentUuid": "5dc232a0_24f8ceaa",
+      "revId": "5d907f7681da8b44ae43227643cbdd76975db4ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

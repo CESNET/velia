@@ -12,7 +12,7 @@
 #include "log.h"
 #include "system_vars.h"
 
-void velia::utils::execAndWait(
+std::string velia::utils::execAndWait(
         velia::Log logger,
         const std::string& absolutePath,
         std::initializer_list<std::string> args,
@@ -21,6 +21,7 @@ void velia::utils::execAndWait(
 {
     namespace bp = boost::process;
     bp::pipe stdinPipe;
+    bp::ipstream stdoutStream;
     bp::ipstream stderrStream;
 
     auto onExecSetup = [opts] (const auto&) {
@@ -43,7 +44,7 @@ void velia::utils::execAndWait(
     bp::child c(
             absolutePath,
             boost::process::args=std::move(args),
-            bp::std_in < stdinPipe, bp::std_out > bp::null, bp::std_err > stderrStream,
+            bp::std_in < stdinPipe, bp::std_out > stdoutStream, bp::std_err > stderrStream,
             bp::extend::on_exec_setup=onExecSetup);
 
     stdinPipe.write(std_in.data(), std_in.size());
@@ -59,4 +60,7 @@ void velia::utils::execAndWait(
 
         throw std::runtime_error(absolutePath + " returned non-zero exit code " + std::to_string(c.exit_code()));
     }
+
+    std::istreambuf_iterator<char> begin(stdoutStream), end;
+    return {begin, end};
 }

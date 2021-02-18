@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16207037_12b01cd5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-18T16:00:29Z",
+      "side": 1,
+      "message": "Looks good to me, please test it on some HW and merge if it\u0027s OK.\n\nConsidering the fact that it\u0027s coming form /etc/shadow, perhaps we should try this info confidentially. Would it make sense to protect this leaf via nacm:default-deny-any?",
+      "revId": "8ea630e2a165780af394bad21278a50813883784",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

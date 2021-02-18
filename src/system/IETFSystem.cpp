@@ -6,6 +6,7 @@
  */
 
 #include <boost/algorithm/string/predicate.hpp>
+#include <cassert>
 #include <fstream>
 #include "IETFSystem.h"
 #include "system_vars.h"
@@ -147,6 +148,18 @@ void IETFSystem::initHostname()
     m_srSubscribe->oper_get_items_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbOperational, IETF_SYSTEM_HOSTNAME_PATH);
 }
 
+/** @short Acknowledge writes to dummy fields so that they're visible in the operational DS */
+void IETFSystem::initDummies()
+{
+    m_srSession->session_switch_ds(SR_DS_RUNNING);
+    auto ignore = [] (auto, auto, auto, auto, auto) {
+        return SR_ERR_OK;
+    };
+    for (const auto xpath : {"/ietf-system:system/location", "/ietf-system:system/contact"}) {
+        m_srSubscribe->module_change_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), ignore, xpath, 0, SR_SUBSCR_CTX_REUSE | SR_SUBSCR_DONE_ONLY);
+    }
+}
+
 /** This class handles multiple system properties and publishes them via the ietf-system model:
  * - OS-identification data from osRelease file
  * - Rebooting
@@ -160,5 +173,6 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
     initStaticProperties(osRelease);
     initSystemRestart();
     initHostname();
+    initDummies();
 }
 }

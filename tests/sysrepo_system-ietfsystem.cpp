@@ -70,6 +70,28 @@ TEST_CASE("Sysrepo ietf-system")
         }
     }
 
+    SECTION("dummy values")
+    {
+        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release");
+        const char* xpath;
+
+        SECTION("location") {
+            xpath = "/ietf-system:system/location";
+        }
+
+        SECTION("contact") {
+            xpath = "/ietf-system:system/contact";
+        }
+
+        client->session_switch_ds(SR_DS_OPERATIONAL);
+        REQUIRE_THROWS_WITH(client->get_item(xpath), "Item not found");
+
+        client->session_switch_ds(SR_DS_RUNNING);
+        client->set_item_str(xpath, "lamparna");
+
+        REQUIRE(!!client->get_item(xpath));
+    }
+
 #ifdef TEST_RPC_SYSTEM_REBOOT
     SECTION("RPC system-restart")
     {

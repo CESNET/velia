@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f82f5bf6_0aa67d3c",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-18T11:35:45Z",
+      "side": 1,
+      "message": "you chose a big enough size, but apparently there\u0027s a HOST_NAME_MAX define for this",
+      "range": {
+        "startLine": 126,
+        "startChar": 28,
+        "endLine": 126,
+        "endChar": 31
+      },
+      "revId": "842ea3b2e31b23d90130268dfae5347f719c39d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c9b8ff8_016993c1",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-18T11:35:45Z",
+      "side": 1,
+      "message": "Probably not a big deal, the size is already in a variable, but I would prefer an even more robust approach where you don\u0027t need that integer, such as:\n \nstd::array\u003cchar, HOST_NAME_NAME\u003e buf;\nif (gethostname(buf.data(), buf.size() !\u003d 0) {\n  ...\n}",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 129,
+        "endChar": 54
+      },
+      "revId": "842ea3b2e31b23d90130268dfae5347f719c39d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3c2a029_d9d3b5a0",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-18T11:35:45Z",
+      "side": 1,
+      "message": "You can loose the explicit log and just do it like this:\n \n#include \u003ccerrno\u003e\n#include \u003csystem_error\u003e\n \nthrow std::system_error(errno, std::system_category(), \"gethostname() failed\");",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 67
+      },
+      "revId": "842ea3b2e31b23d90130268dfae5347f719c39d6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -21,6 +21,7 @@ private:
     void initSystemRestart();
     void initHostname();
     void initDummies();
+    void initClock();
 
     std::shared_ptr<::sysrepo::Session> m_srSession;
     std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;

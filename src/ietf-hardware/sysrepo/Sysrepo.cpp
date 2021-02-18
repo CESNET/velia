@@ -29,7 +29,7 @@ Sysrepo::Sysrepo(std::shared_ptr<::sysrepo::Subscribe> srSubscribe, std::shared_
             auto hwStateValues = m_hwState->process();
             utils::valuesToYang(hwStateValues, session, parent);
 
-            spdlog::get("main")->trace("Pushing to sysrepo (JSON): {}", parent->print_mem(LYD_FORMAT::LYD_JSON, 0));
+            spdlog::get("hardware")->trace("Pushing to sysrepo (JSON): {}", parent->print_mem(LYD_FORMAT::LYD_JSON, 0));
 
             return SR_ERR_OK;
         },

@@ -54,8 +54,6 @@ void initLogsSysrepo()
 void valuesToYang(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)
 {
     for (const auto& [propertyName, value] : values) {
-        spdlog::get("main")->trace("propertyName: {}, value: {}", propertyName, value.c_str());
-
         if (!parent) {
             parent = std::make_shared<libyang::Data_Node>(
                 session->get_context(),

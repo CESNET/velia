@@ -51,13 +51,11 @@ int main(int argc, char* argv[])
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
         spdlog::get("hardware")->set_level(parseLogLevel("Hardware loggers", args["--hardware-log-level"]));
 
-        spdlog::get("main")->debug("Opening Sysrepo connection");
         auto srConn = std::make_shared<sysrepo::Connection>();
         auto srSess = std::make_shared<sysrepo::Session>(srConn);
         auto srSubscription = std::make_shared<sysrepo::Subscribe>(srSess);
 
         // initialize ietf-hardware
-        spdlog::get("main")->debug("Initializing IETFHardware module");
         std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware;
         if (const auto& appliance = args["--appliance"]) {
             ietfHardware = velia::ietf_hardware::create(appliance.asString());
@@ -65,7 +63,6 @@ int main(int argc, char* argv[])
             ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
         }
 
-        spdlog::get("main")->debug("Initializing Sysrepo ietf-hardware callback");
         auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSubscription, ietfHardware);
 
         waitUntilSignaled();

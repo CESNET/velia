@@ -53,14 +53,12 @@ int main(int argc, char* argv[])
     try {
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
-        spdlog::get("main")->debug("Opening Sysrepo connection");
         auto srConn = std::make_shared<sysrepo::Connection>();
         auto srSess = std::make_shared<sysrepo::Session>(srConn);
 
         DBUS_EVENTLOOP_START
 
         // initialize ietf-system
-        spdlog::get("main")->debug("Initializing Sysrepo for system models");
         auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release");
 
         auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).

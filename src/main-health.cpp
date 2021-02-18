@@ -58,21 +58,19 @@ int main(int argc, char* argv[])
 
         // output configuration
         if (const auto& appliance = args["--appliance"]) {
-            spdlog::get("main")->debug("Initializing LED drivers");
+            spdlog::get("health")->debug("Initializing LED drivers");
             manager->m_outputSignal.connect(velia::health::createOutput(appliance.asString()));
         }
 
-        spdlog::get("main")->debug("All outputs initialized.");
+        spdlog::get("health")->debug("All outputs initialized.");
 
         // input configuration
         std::set<std::string> ignoredUnits(args["--systemd-ignore-unit"].asStringList().begin(), args["--systemd-ignore-unit"].asStringList().end());
-        spdlog::get("main")->debug("Starting DBus systemd watcher");
+        spdlog::get("health")->debug("Starting DBus systemd watcher");
         if (!ignoredUnits.empty()) {
-            spdlog::get("main")->debug("Systemd input will ignore changes of the following units: {}", args["--systemd-ignore-unit"]);
+            spdlog::get("health")->debug("Systemd input will ignore changes of the following units: {}", args["--systemd-ignore-unit"]);
         }
         auto inputSystemdDbus = std::make_shared<velia::health::DbusSystemdInput>(manager, ignoredUnits, *g_dbusConnection);
-
-        spdlog::get("main")->debug("All inputs initialized.");
 
         DBUS_EVENTLOOP_END;
 

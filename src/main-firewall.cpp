@@ -51,7 +51,6 @@ int main(int argc, char* argv[])
         spdlog::get("firewall")->set_level(parseLogLevel("Firewall logging", args["--firewall-log-level"]));
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
-        spdlog::get("main")->debug("Opening Sysrepo connection");
         auto srConn = std::make_shared<sysrepo::Connection>();
         auto srSess = std::make_shared<sysrepo::Session>(srConn);
         velia::firewall::SysrepoFirewall firewall(srSess, [] (const auto& config) {
@@ -62,8 +61,6 @@ int main(int argc, char* argv[])
         });
 
         waitUntilSignaled();
-
-        spdlog::get("main")->info("Exiting.");
 
         return 0;
     } catch (std::exception& e) {

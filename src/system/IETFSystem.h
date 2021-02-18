@@ -17,6 +17,9 @@ public:
     IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease);
 
 private:
+    void initStaticProperties(const std::filesystem::path& osRelease);
+    void initSystemRestart();
+
     std::shared_ptr<::sysrepo::Session> m_srSession;
     std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
     velia::Log m_log;

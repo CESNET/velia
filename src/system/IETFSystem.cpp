@@ -59,11 +59,7 @@ std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path
 
 namespace velia::system {
 
-/** @brief Reads some OS-identification data from osRelease file and publishes them via ietf-system model */
-IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
-    : m_srSession(std::move(srSession))
-    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
-    , m_log(spdlog::get("system"))
+void IETFSystem::initStaticProperties(const std::filesystem::path& osRelease)
 {
     std::map<std::string, std::string> osReleaseContents = parseKeyValueFile(osRelease);
 
@@ -74,7 +70,10 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
     };
 
     utils::valuesPush(opsSystemStateData, m_srSession, SR_DS_OPERATIONAL);
+}
 
+void IETFSystem::initSystemRestart()
+{
     m_srSubscribe->rpc_subscribe(
         ("/" + IETF_SYSTEM_MODULE_NAME + ":system-restart").c_str(),
         [this](::sysrepo::S_Session session, [[maybe_unused]] const char* op_path, [[maybe_unused]] const ::sysrepo::S_Vals input, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id, [[maybe_unused]] ::sysrepo::S_Vals_Holder output) {
@@ -89,5 +88,15 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
         },
         0,
         SR_SUBSCR_CTX_REUSE);
+}
+
+/** @brief Reads some OS-identification data from osRelease file and publishes them via ietf-system model */
+IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
+    : m_srSession(std::move(srSession))
+    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+    , m_log(spdlog::get("system"))
+{
+    initStaticProperties(osRelease);
+    initSystemRestart();
 }
 }

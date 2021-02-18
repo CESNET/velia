@@ -9,6 +9,10 @@ module czechlight-system {
     prefix yang;
   }
 
+  import ietf-netconf-acm {
+    prefix nacm;
+  }
+
   organization "CESNET";
   contact "photonic@cesnet.cz";
   description
@@ -91,6 +95,7 @@ module czechlight-system {
       }
 
       action install {
+        nacm:default-deny-all;
         input {
           leaf url {
             description "URL or path to the new firmware.";
@@ -167,6 +172,7 @@ module czechlight-system {
       }
 
       action change-password {
+        nacm:default-deny-all;
         input {
           leaf password-cleartext {
             mandatory true;
@@ -181,6 +187,7 @@ module czechlight-system {
       }
 
       action add-authorized-key {
+        nacm:default-deny-all;
         input {
           leaf key {
             mandatory true;
@@ -196,6 +203,7 @@ module czechlight-system {
   }
 
   container networking {
+    nacm:default-deny-write;
     container standalone-eth1 {
       presence "Presence of this container should make eth1 network interface standalone (not in any bridge).";
     }

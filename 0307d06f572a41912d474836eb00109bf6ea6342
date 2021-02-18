@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79848ab5_096cb664",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-18T09:12:30Z",
+      "side": 1,
+      "message": "default-deny-write, there\u0027s no point in limiting reads here IMHO",
+      "revId": "0307d06f572a41912d474836eb00109bf6ea6342",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -39,6 +39,24 @@
       "message": "I\u0027m a little bit nervous about forking and execing something each time someone requests a hostname, but perhaps it\u0027s a non-issue. However, I actually think that for *reading* the hostname, it\u0027s perfectly OK to bypass systemd and just call gethostname() here.",
       "revId": "e0e0b0c3460d9cd5ec8e97ed0e39023819b2f706",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81872324_8b82f95a",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-18T09:39:33Z",
+      "side": 1,
+      "message": "Alternatively you can connect to hostname service via D-Bus, there is an object /org/freedesktop/hostname1 which has a \u0027Hostname\u0027 property published via org.freedesktop.hostname1 interface.\n\nYou can cache the value in constructor and get updates via DBus\u0027 PropertyChanges signal.",
+      "parentUuid": "94a7225a_3f307848",
+      "revId": "e0e0b0c3460d9cd5ec8e97ed0e39023819b2f706",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -90,7 +90,10 @@ void IETFSystem::initSystemRestart()
         SR_SUBSCR_CTX_REUSE);
 }
 
-/** @brief Reads some OS-identification data from osRelease file and publishes them via ietf-system model */
+/** This class handles multiple system and publishes them via the ietf-system model:
+ * - OS-identification data from osRelease file
+ * - Rebooting
+ */
 IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
     : m_srSession(std::move(srSession))
     , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))

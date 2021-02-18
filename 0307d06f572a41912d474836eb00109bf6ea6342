@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "65359f94_e2d8f36c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-18T12:19:34Z",
+      "side": 1,
+      "message": "I thought I would need something for ietf-system but default is deny write, so I think it\u0027s fine",
+      "parentUuid": "67f0b13c_c8eebafd",
+      "revId": "0307d06f572a41912d474836eb00109bf6ea6342",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "79848ab5_096cb664",
         "filename": "yang/czechlight-system@2021-01-13.yang",
         "patchSetId": 1
@@ -31,6 +49,24 @@
       "writtenOn": "2021-02-18T09:12:30Z",
       "side": 1,
       "message": "default-deny-write, there\u0027s no point in limiting reads here IMHO",
+      "revId": "0307d06f572a41912d474836eb00109bf6ea6342",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a912ff81_ce3f636f",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-18T12:19:34Z",
+      "side": 1,
+      "message": "deny write is actually the default for NACM, but Done anyay",
+      "parentUuid": "79848ab5_096cb664",
       "revId": "0307d06f572a41912d474836eb00109bf6ea6342",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

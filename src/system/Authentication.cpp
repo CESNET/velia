@@ -245,12 +245,12 @@ velia::system::Authentication::Authentication(
     utils::ensureModuleImplemented(srSess, "czechlight-system", "2021-01-13");
 
     sysrepo::OperGetItemsCb listUsersCb = [this] (
-            [[maybe_unused]] sysrepo::S_Session session,
-            [[maybe_unused]] const char *module_name,
-            [[maybe_unused]] const char *path,
-            [[maybe_unused]] const char *request_xpath,
-            [[maybe_unused]] uint32_t request_id,
-            libyang::S_Data_Node& out) {
+            auto session,
+            auto,
+            auto,
+            auto,
+            auto,
+            auto& out) {
         m_log->debug("Listing users");
 
         auto users = listUsers();
@@ -261,12 +261,12 @@ velia::system::Authentication::Authentication(
     };
 
     sysrepo::RpcTreeCb changePasswordCb = [this, changePassword] (
-            [[maybe_unused]] sysrepo::S_Session session,
-            [[maybe_unused]] const char *op_path,
-            [[maybe_unused]] const libyang::S_Data_Node input,
-            [[maybe_unused]] sr_event_t event,
-            [[maybe_unused]] uint32_t request_id,
-            libyang::S_Data_Node output) {
+            auto session,
+            auto,
+            auto input,
+            auto,
+            auto,
+            auto output) {
 
         auto userNode = getSubtree(input, (authentication_container + "/users" ).c_str());
         auto name = getValueAsString(getSubtree(userNode, "name"));
@@ -286,12 +286,12 @@ velia::system::Authentication::Authentication(
     };
 
     sysrepo::RpcTreeCb addKeyCb = [this] (
-            [[maybe_unused]] sysrepo::S_Session session,
-            [[maybe_unused]] const char *op_path,
-            [[maybe_unused]] const libyang::S_Data_Node input,
-            [[maybe_unused]] sr_event_t event,
-            [[maybe_unused]] uint32_t request_id,
-            libyang::S_Data_Node output) {
+            auto session,
+            auto,
+            auto input,
+            auto,
+            auto,
+            auto output) {
 
         auto userNode = getSubtree(input, (authentication_container + "/users").c_str());
         auto name = getValueAsString(getSubtree(userNode, "name"));
@@ -311,12 +311,12 @@ velia::system::Authentication::Authentication(
     };
 
     sysrepo::RpcTreeCb removeKeyCb = [this] (
-            [[maybe_unused]] sysrepo::S_Session session,
-            [[maybe_unused]] const char *op_path,
-            [[maybe_unused]] const libyang::S_Data_Node input,
-            [[maybe_unused]] sr_event_t event,
-            [[maybe_unused]] uint32_t request_id,
-            libyang::S_Data_Node output) {
+            auto session,
+            auto,
+            auto input,
+            auto,
+            auto,
+            auto output) {
 
         auto userNode = getSubtree(input, (authentication_container + "/users").c_str());
         auto name = getValueAsString(getSubtree(userNode, "name"));

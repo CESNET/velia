@@ -96,7 +96,7 @@ std::string Authentication::homeDirectory(const std::string& username)
     throw std::runtime_error("User " + username + " doesn't exist");
 }
 
-std::optional<std::string> Authentication::lastPasswordChange(const std::string& username)
+std::map<std::string, std::optional<std::string>> Authentication::lastPasswordChanges()
 {
     auto shadowFile = impl::file_open(m_etc_shadow.c_str(), "r");
     spwd entryBuf;
@@ -104,6 +104,7 @@ std::optional<std::string> Authentication::lastPasswordChange(const std::string&
     auto buffer = std::make_unique<char[]>(bufLen);
     spwd* entry;
 
+    std::map<std::string, std::optional<std::string>> res;
     while (true) {
         auto ret = fgetspent_r(shadowFile.get(), &entryBuf, buffer.get(), bufLen, &entry);
         if (ret == ERANGE) {
@@ -122,16 +123,12 @@ std::optional<std::string> Authentication::lastPasswordChange(const std::string&
 
         assert(entry);
 
-        if (username != entry->sp_namp) {
-            continue;
-        }
-
         using namespace std::chrono_literals;
         using TimeType = std::chrono::time_point<std::chrono::system_clock>;
-        return velia::utils::yangTimeFormat(TimeType(24h * entry->sp_lstchg));
+        res.emplace(entry->sp_namp, velia::utils::yangTimeFormat(TimeType(24h * entry->sp_lstchg)));
     }
 
-    return std::nullopt;
+    return res;
 }
 
 std::string Authentication::authorizedKeysPath(const std::string& username)
@@ -168,6 +165,7 @@ std::vector<User> Authentication::listUsers()
     auto buffer = std::make_unique<char[]>(bufLen);
     passwd* entry;
 
+    auto pwChanges = lastPasswordChanges();
     while (true) {
         auto ret = fgetpwent_r(passwdFile.get(), &entryBuf, buffer.get(), bufLen, &entry);
         if (ret == ERANGE) {
@@ -188,7 +186,9 @@ std::vector<User> Authentication::listUsers()
         User user;
         user.name = entry->pw_name;
         user.authorizedKeys = listKeys(user.name);
-        user.lastPasswordChange = lastPasswordChange(user.name);
+        if (auto it = pwChanges.find(user.name); it != pwChanges.end()) {
+            user.lastPasswordChange = it->second;
+        }
         res.emplace_back(user);
     }
 

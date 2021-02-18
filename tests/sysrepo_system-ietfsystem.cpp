@@ -28,11 +28,9 @@ TEST_CASE("Sysrepo ietf-system")
             {
                 file = CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release";
                 expected = {
-                    {"/clock", ""},
-                    {"/platform", ""},
-                    {"/platform/os-name", "CzechLight"},
-                    {"/platform/os-release", "v4-105-g8294175-dirty"},
-                    {"/platform/os-version", "v4-105-g8294175-dirty"},
+                    {"/os-name", "CzechLight"},
+                    {"/os-release", "v4-105-g8294175-dirty"},
+                    {"/os-version", "v4-105-g8294175-dirty"},
                 };
             }
 
@@ -40,11 +38,9 @@ TEST_CASE("Sysrepo ietf-system")
             {
                 file = CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-equal";
                 expected = {
-                    {"/clock", ""},
-                    {"/platform", ""},
-                    {"/platform/os-name", ""},
-                    {"/platform/os-release", ""},
-                    {"/platform/os-version", ""},
+                    {"/os-name", ""},
+                    {"/os-release", ""},
+                    {"/os-version", ""},
                 };
             }
 
@@ -52,16 +48,14 @@ TEST_CASE("Sysrepo ietf-system")
             {
                 file = CMAKE_CURRENT_SOURCE_DIR "/tests/system/empty-values";
                 expected = {
-                    {"/clock", ""},
-                    {"/platform", ""},
-                    {"/platform/os-name", ""},
-                    {"/platform/os-release", ""},
-                    {"/platform/os-version", ""},
+                    {"/os-name", ""},
+                    {"/os-release", ""},
+                    {"/os-version", ""},
                 };
             }
 
             auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, file);
-            REQUIRE(dataFromSysrepo(client, modulePrefix, SR_DS_OPERATIONAL) == expected);
+            REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", SR_DS_OPERATIONAL) == expected);
         }
 
         SECTION("Invalid data (missing VERSION and NAME keys)")
@@ -90,6 +84,13 @@ TEST_CASE("Sysrepo ietf-system")
         client->set_item_str(xpath, "lamparna");
 
         REQUIRE(!!client->get_item(xpath));
+    }
+
+    SECTION("clock")
+    {
+        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release");
+        client->session_switch_ds(SR_DS_OPERATIONAL);
+        REQUIRE(!!client->get_item("/ietf-system:system-state/clock/current-datetime"));
     }
 
 #ifdef TEST_RPC_SYSTEM_REBOOT

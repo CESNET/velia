@@ -13,6 +13,7 @@
 #include "utils/io.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
+#include "utils/time.h"
 
 using namespace std::literals;
 
@@ -21,6 +22,7 @@ namespace {
 const auto IETF_SYSTEM_MODULE_NAME = "ietf-system"s;
 const auto IETF_SYSTEM_STATE_MODULE_PREFIX = "/"s + IETF_SYSTEM_MODULE_NAME + ":system-state/"s;
 const auto IETF_SYSTEM_HOSTNAME_PATH = "/ietf-system:system/hostname";
+const auto IETF_SYSTEM_STATE_CLOCK_PATH = "/ietf-system:system-state/clock";
 
 /** @brief Returns key=value pairs from (e.g. /etc/os-release) as a std::map */
 std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path& path)
@@ -159,6 +161,23 @@ void IETFSystem::initDummies()
     }
 }
 
+/** @short Time and clock callbacks */
+void IETFSystem::initClock()
+{
+    m_srSubscribe->oper_get_items_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(),
+            [this] (auto session, auto, auto, auto, auto, auto& parent) {
+                m_log->critical("yay");
+                parent->new_path(session->get_context(),
+                        (IETF_SYSTEM_STATE_CLOCK_PATH + "/current-datetime"s).c_str(),
+                        utils::yangTimeFormat(std::chrono::system_clock::now()).c_str(),
+                        LYD_ANYDATA_CONSTSTRING,
+                        0);
+                return SR_ERR_OK;
+            },
+            IETF_SYSTEM_STATE_CLOCK_PATH,
+            SR_SUBSCR_OPER_MERGE);
+}
+
 /** This class handles multiple system properties and publishes them via the ietf-system model:
  * - OS-identification data from osRelease file
  * - Rebooting
@@ -173,5 +192,6 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
     initSystemRestart();
     initHostname();
     initDummies();
+    initClock();
 }
 }

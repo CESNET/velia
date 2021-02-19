@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e08b462a_3fb38931",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-19T00:26:43Z",
+      "side": 1,
+      "message": "I\u0027ve tried to explain that better in the updated commit message.",
+      "parentUuid": "e6e0b879_d0c259a5",
+      "revId": "2f1c4a0ed4e8d714ba1bcf60cb244725e3f4f1e5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aef25bad_14e7e3d9",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-02-18T23:57:01Z",
       "side": 1,
       "message": "Is this needed?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 18
+      },
+      "revId": "2f1c4a0ed4e8d714ba1bcf60cb244725e3f4f1e5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86dad67c_11db22e5",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-19T00:26:43Z",
+      "side": 1,
+      "message": "not anymore, thanks (at first I assert()ed that the DS is \"correct\", then I figured out that it\u0027s better to just make it correct)",
+      "parentUuid": "aef25bad_14e7e3d9",
       "range": {
         "startLine": 9,
         "startChar": 0,

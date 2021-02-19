@@ -13,6 +13,10 @@ module czechlight-system {
     prefix nacm;
   }
 
+  import ietf-system {
+    prefix "sys";
+  }
+
   organization "CESNET";
   contact "photonic@cesnet.cz";
   description
@@ -207,4 +211,6 @@ module czechlight-system {
       presence "Presence of this container should make eth1 network interface standalone (not in any bridge).";
     }
   }
+
+  deviation /sys:system-shutdown { deviate not-supported; }
 }

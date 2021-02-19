@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ef20e93_20e9738e",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-02-19T00:04:19Z",
+      "side": 1,
+      "message": "Hmm... I wonder what\u0027s the difference between subbing to operational and running when it comes to state data",
+      "range": {
+        "startLine": 168,
+        "startChar": 35,
+        "endLine": 168,
+        "endChar": 52
+      },
+      "revId": "103f023a9172891da07875537d8d0dd16f26ea11",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

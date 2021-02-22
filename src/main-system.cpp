@@ -70,8 +70,7 @@ int main(int argc, char* argv[])
         std::filesystem::create_directories(persistentNetworkDirectory);
 
         auto srSessStartup = std::make_shared<sysrepo::Session>(srConn, SR_DS_STARTUP);
-
-        auto sysrepoNetworkStartup = velia::system::Network(srSess, persistentNetworkDirectory, [](const auto&) {});
+        auto sysrepoNetworkStartup = velia::system::Network(srSessStartup, persistentNetworkDirectory, [](const auto&) {});
         auto sysrepoNetworkRunning = velia::system::Network(srSess, runtimeNetworkDirectory, [](const auto& reconfiguredInterfaces) {
             auto log = spdlog::get("system");
 

@@ -61,6 +61,9 @@ set(YANG_SRCS
     yang/ietf-packet-fields@2019-03-04.yang
     yang/ietf-access-control-list@2019-03-04.yang
     yang/czechlight-firewall@2021-01-25.yang
+    yang/czechlight-network@2021-02-22.yang
+    yang/iana-if-type@2017-01-19.yang
+    yang/ietf-ip@2018-02-22.yang
     )
 
 # Targets

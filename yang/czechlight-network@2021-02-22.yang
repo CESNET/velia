@@ -1,0 +1,35 @@
+module czechlight-network {
+    yang-version 1.1;
+    namespace "http://czechlight.cesnet.cz/yang/czechlight-network";
+    prefix cla-network;
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    import ietf-ip {
+        prefix ip;
+    }
+
+    import iana-if-type {
+        prefix ianaift;
+    }
+
+    revision 2021-02-22 {
+        description
+            "Initial version. Disables interface statistics in ietf-interfaces model and makes the nodes in
+             ietf-interfaces model config false.";
+    }
+
+    // We don't support interface statistics (yet)
+    deviation /if:interfaces/if:interface/if:statistics { deviate not-supported; }
+
+    // As of now we implement the model to contain operational data only
+    deviation /if:interfaces { deviate add { config false; } }
+    deviation /if:interfaces/if:interface { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/if:name { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/if:description { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/if:type { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/if:enabled { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/if:link-up-down-trap-enable { deviate add { config false; } }
+}

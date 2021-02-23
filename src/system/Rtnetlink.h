@@ -31,7 +31,7 @@ public:
     };
 
     Rtnetlink();
-    std::vector<LinkInfo> links() const;
+    virtual std::vector<LinkInfo> links() const;
 
 private:
     std::unique_ptr<nl_sock, std::function<void(nl_sock*)>> m_nlSocket;

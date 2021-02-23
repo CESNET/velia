@@ -63,6 +63,30 @@
       },
       "revId": "529860ba03b83d245cbf8356aec12bbc4e3ed456",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea6a708a_3031e678",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-23T15:05:01Z",
+      "side": 1,
+      "message": "I think it is a bug, filed as https://github.com/CESNET/libyang/issues/1429",
+      "parentUuid": "9eb5ce78_a92f1f61",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 103
+      },
+      "revId": "529860ba03b83d245cbf8356aec12bbc4e3ed456",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

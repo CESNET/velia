@@ -39,6 +39,30 @@
       },
       "revId": "529860ba03b83d245cbf8356aec12bbc4e3ed456",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9eb5ce78_a92f1f61",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-23T11:09:05Z",
+      "side": 1,
+      "message": "I thought that as well, but when I set only the top-level node to be `config false` and then ran `yanglint -m -f tree` over ietf-interfaces, ietf-ip and czechlight-network, some of the nodes were marked as rw. Is this a bug in yanglint?",
+      "parentUuid": "942d13b4_cca63b56",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 103
+      },
+      "revId": "529860ba03b83d245cbf8356aec12bbc4e3ed456",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

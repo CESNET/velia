@@ -8,6 +8,7 @@
 #include "trompeloeil_doctest.h"
 #include "system/Authentication.h"
 #include "system/RAUC.h"
+#include "system/Rtnetlink.h"
 
 struct FakeRAUCInstallCb {
 public:
@@ -19,6 +20,12 @@ public:
 #define FAKE_RAUC_OPERATION(OP) REQUIRE_CALL(fakeRaucInstallCb, operationCallback(OP)).IN_SEQUENCE(seq1)
 #define FAKE_RAUC_PROGRESS(PERCENT, MSG) REQUIRE_CALL(fakeRaucInstallCb, progressCallback(PERCENT, MSG)).IN_SEQUENCE(seq1)
 #define FAKE_RAUC_COMPLETED(RETVAL, LASTERROR) REQUIRE_CALL(fakeRaucInstallCb, completedCallback(RETVAL, LASTERROR)).IN_SEQUENCE(seq1)
+
+
+struct FakeRtnetlink : public velia::system::Rtnetlink {
+public:
+    MAKE_CONST_MOCK0(links, (std::vector<velia::system::Rtnetlink::LinkInfo>)(), override);
+};
 
 struct FakeAuthentication {
 public:

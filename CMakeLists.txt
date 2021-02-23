@@ -208,6 +208,8 @@ add_library(velia-system STATIC
         src/system/Network.h
         src/system/Rtnetlink.cpp
         src/system/Rtnetlink.h
+        src/system/IETFInterfaces.cpp
+        src/system/IETFInterfaces.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -410,6 +412,18 @@ if(BUILD_TESTING)
     set_tests_properties(
             test-sysrepo_system-network
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
+            RESOURCE_LOCK sysrepo
+    )
+
+    sysrepo_fixture_env(sysrepo-czechlight-network
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
+    velia_test(sysrepo_system-ietfinterfaces velia-system)
+    set_tests_properties(
+            test-sysrepo_system-ietfinterfaces
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-network
             RESOURCE_LOCK sysrepo
     )
 

@@ -8,6 +8,7 @@
 #include "trompeloeil_doctest.h"
 #include "system/Authentication.h"
 #include "system/RAUC.h"
+#include "system/Rtnetlink.h"
 
 struct FakeRAUCInstallCb {
 public:

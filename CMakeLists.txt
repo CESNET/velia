@@ -42,6 +42,7 @@ endif()
 
 pkg_check_modules(SYSREPO REQUIRED sysrepo-cpp>=1.4.103 IMPORTED_TARGET sysrepo)
 pkg_check_modules(LIBYANG REQUIRED libyang-cpp>=1.0.215 IMPORTED_TARGET libyang)
+pkg_check_modules(LIBNL REQUIRED IMPORTED_TARGET libnl-route-3.0)
 
 include(GNUInstallDirs)
 
@@ -205,12 +206,15 @@ add_library(velia-system STATIC
         src/system/Authentication.h
         src/system/Network.cpp
         src/system/Network.h
+        src/system/Rtnetlink.cpp
+        src/system/Rtnetlink.h
         )
 target_link_libraries(velia-system
     PUBLIC
         velia-utils
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
+        PkgConfig::LIBNL
         SDBusCpp::sdbus-c++
     )
 

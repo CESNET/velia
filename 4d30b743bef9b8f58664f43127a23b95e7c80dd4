@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "203579e9_3ce60064",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-24T07:48:38Z",
+      "side": 1,
+      "message": "Consider not building the C++ interface (that will have to be constantly updated as you add more implemented bits to YANG anyway), but instead taking the C-ish data structures as an input, and transforming them directly to libyang data structures as an output.\n\nI like wrapping the C bits in unique_ptr etc, as you\u0027ve already done. My advice is however against designing C++ classes such as  Rtnetlink::Netinfo.",
+      "revId": "4d30b743bef9b8f58664f43127a23b95e7c80dd4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e3a06b6_1445ec8f",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-24T07:48:38Z",
+      "side": 1,
+      "message": "This should be available in that struct that\u0027s returned by RTM_GETLINK, the `struct ifinfomsg`, parameter `ifi_type`. Match that against ARPHDR_ETHER (https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/if_arp.h#L31). In sysfs, it\u0027s /sys/class/net/*/type.",
+      "revId": "4d30b743bef9b8f58664f43127a23b95e7c80dd4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

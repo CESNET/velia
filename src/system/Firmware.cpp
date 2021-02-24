@@ -133,12 +133,23 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
     for (const auto& slotName : FIRMWARE_SLOTS) {
         if (auto it = slotStatus.find(slotName); it != slotStatus.end()) { // if there is an update for the slot "slotName"
             const auto& props = it->second;
-            auto xpathPrefix = CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot[name='" + std::get<std::string>(props.at("bootname")) + "']/";
+            std::string xpathPrefix;
 
-            m_slotStatusCache[xpathPrefix + "state"] = std::get<std::string>(props.at("state"));
-            m_slotStatusCache[xpathPrefix + "version"] = std::get<std::string>(props.at("bundle.version"));
-            m_slotStatusCache[xpathPrefix + "installed"] = std::get<std::string>(props.at("installed.timestamp"));
-            m_slotStatusCache[xpathPrefix + "boot-status"] = std::get<std::string>(props.at("boot-status"));
+            // Better be defensive about provided properties. If somebody removes /slot.raucs, RAUC doesn't provide all the data (at least bundle.version and installed.timestamp).
+            if (auto pit = props.find("bootname"); pit != props.end()) {
+                xpathPrefix = CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot[name='" + std::get<std::string>(pit->second) + "']/";
+            } else {
+                m_log->error("RAUC didn't provide 'bootname' property for slot '{}'. Skipping update for that slot.");
+                continue;
+            }
+
+            for (const auto& [yangKey, raucKey] : {std::pair{"state", "state"}, {"boot-status", "boot-status"}, {"version", "bundle.version"}, {"installed", "installed.timestamp"}}) {
+                if (auto pit = props.find(raucKey); pit != props.end()) {
+                    m_slotStatusCache[xpathPrefix + yangKey] = std::get<std::string>(pit->second);
+                } else {
+                    m_log->warn("RAUC didn't provide '{}' property for slot '{}'.", raucKey, slotName);
+                }
+            }
         }
     }
 

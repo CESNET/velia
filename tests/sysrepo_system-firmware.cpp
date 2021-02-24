@@ -9,7 +9,7 @@
 
 using namespace std::literals;
 
-TEST_CASE("Firmware in czechlight-system")
+TEST_CASE("Firmware in czechlight-system, RPC")
 {
     trompeloeil::sequence seq1;
 
@@ -244,4 +244,199 @@ TEST_CASE("Firmware in czechlight-system")
             }
         }
     }
+}
+
+TEST_CASE("Firmware in czechlight-system, slot status")
+{
+    trompeloeil::sequence seq1;
+
+    TEST_SYSREPO_INIT_LOGS;
+    TEST_SYSREPO_INIT;
+    TEST_SYSREPO_INIT_CLIENT;
+
+    auto dbusServerConnection = sdbus::createSessionBusConnection("de.pengutronix.rauc");
+    auto dbusClientConnectionSignals = sdbus::createSessionBusConnection();
+    auto dbusClientConnectionMethods = sdbus::createSessionBusConnection();
+    dbusClientConnectionSignals->enterEventLoopAsync();
+    dbusClientConnectionMethods->enterEventLoopAsync();
+    dbusServerConnection->enterEventLoopAsync();
+
+    std::map<std::string, velia::system::RAUC::SlotProperties> dbusRaucStatus;
+    std::map<std::string, std::string> expected;
+
+    SECTION("Complete data")
+    {
+        dbusRaucStatus = {
+            {"rootfs.1", {
+                             {"activated.count", uint32_t {39}},
+                             {"activated.timestamp", "2021-01-13T17:20:18Z"},
+                             {"bootname", "B"},
+                             {"boot-status", "good"},
+                             {"bundle.compatible", "czechlight-clearfog"},
+                             {"bundle.version", "v4-103-g34d2f48"},
+                             {"class", "rootfs"},
+                             {"device", "/dev/mmcblk0p3"},
+                             {"installed.count", uint32_t {39}},
+                             {"installed.timestamp", "2021-01-13T17:20:15Z"},
+                             {"mountpoint", "/"},
+                             {"sha256", "07b30d065c7aad64d2006ce99fd339c929d3ca97b666fca4584b9ef726469fc4"},
+                             {"size", uint64_t {45601892}},
+                             {"state", "booted"},
+                             {"status", "ok"},
+                             {"type", "ext4"},
+                         }},
+            {"rootfs.0", {
+                             {"activated.count", uint32_t {41}},
+                             {"activated.timestamp", "2021-01-13T17:15:54Z"},
+                             {"bootname", "A"},
+                             {"boot-status", "bad"},
+                             {"bundle.compatible", "czechlight-clearfog"},
+                             {"bundle.version", "v4-104-ge80fcd4"},
+                             {"class", "rootfs"},
+                             {"device", "/dev/mmcblk0p1"},
+                             {"installed.count", uint32_t {41}},
+                             {"installed.timestamp", "2021-01-13T17:15:50Z"},
+                             {"sha256", "6d81e8f341edd17c127811f7347c7e23d18c2fc25c0bdc29ac56999cc9c25629"},
+                             {"size", uint64_t {45647664}},
+                             {"state", "inactive"},
+                             {"status", "ok"},
+                             {"type", "ext4"},
+                         }},
+            {"cfg.1", {
+                             {"bundle.compatible", "czechlight-clearfog"},
+                             {"bundle.version", "v4-103-g34d2f48"},
+                             {"class", "cfg"},
+                             {"device", "/dev/mmcblk0p4"},
+                             {"installed.count", uint32_t {39}},
+                             {"installed.timestamp", "2021-01-13T17:20:18Z"},
+                             {"mountpoint", "/cfg"},
+                             {"parent", "rootfs.1"},
+                             {"sha256", "5ca1b6c461fc194055d52b181f57c63dc1d34c19d041f6395e6f6abc039692bb"},
+                             {"size", uint64_t {108}},
+                             {"state", "active"},
+                             {"status", "ok"},
+                             {"type", "ext4"},
+                         }},
+            {"cfg.0", {
+                             {"bundle.compatible", "czechlight-clearfog"},
+                             {"bundle.version", "v4-104-ge80fcd4"},
+                             {"class", "cfg"},
+                             {"device", "/dev/mmcblk0p2"},
+                             {"installed.count", uint32_t {41}},
+                             {"installed.timestamp", "2021-01-13T17:15:54Z"},
+                             {"parent", "rootfs.0"},
+                             {"sha256", "5ca1b6c461fc194055d52b181f57c63dc1d34c19d041f6395e6f6abc039692bb"},
+                             {"size", uint64_t {108}},
+                             {"state", "inactive"},
+                             {"status", "ok"},
+                             {"type", "ext4"},
+                         }},
+        };
+
+        expected = {
+            {"[name='A']/boot-status", "bad"},
+            {"[name='A']/installed", "2021-01-13T17:15:50Z"},
+            {"[name='A']/name", "A"},
+            {"[name='A']/state", "inactive"},
+            {"[name='A']/version", "v4-104-ge80fcd4"},
+            {"[name='B']/boot-status", "good"},
+            {"[name='B']/installed", "2021-01-13T17:20:15Z"},
+            {"[name='B']/name", "B"},
+            {"[name='B']/state", "booted"},
+            {"[name='B']/version", "v4-103-g34d2f48"},
+        };
+    }
+
+    SECTION("Missing data in rootfs.0")
+    {
+        dbusRaucStatus = {
+            {"rootfs.1", {
+                             {"activated.count", uint32_t {39}},
+                             {"activated.timestamp", "2021-01-13T17:20:18Z"},
+                             {"bootname", "B"},
+                             {"boot-status", "good"},
+                             {"bundle.compatible", "czechlight-clearfog"},
+                             {"bundle.version", "v4-103-g34d2f48"},
+                             {"class", "rootfs"},
+                             {"device", "/dev/mmcblk0p3"},
+                             {"installed.count", uint32_t {39}},
+                             {"installed.timestamp", "2021-01-13T17:20:15Z"},
+                             {"mountpoint", "/"},
+                             {"sha256", "07b30d065c7aad64d2006ce99fd339c929d3ca97b666fca4584b9ef726469fc4"},
+                             {"size", uint64_t {45601892}},
+                             {"state", "booted"},
+                             {"status", "ok"},
+                             {"type", "ext4"},
+                         }},
+            {"rootfs.0", {
+                             {"bootname", "A"},
+                             {"boot-status", "bad"},
+                             {"class", "rootfs"},
+                             {"device", "/dev/mmcblk0p1"},
+                             {"sha256", "6d81e8f341edd17c127811f7347c7e23d18c2fc25c0bdc29ac56999cc9c25629"},
+                             {"size", uint64_t {45647664}},
+                             {"state", "inactive"},
+                             {"status", "ok"},
+                             {"type", "ext4"},
+                         }},
+        };
+
+        expected = {
+            {"[name='A']/boot-status", "bad"},
+            {"[name='A']/name", "A"},
+            {"[name='A']/state", "inactive"},
+            {"[name='B']/boot-status", "good"},
+            {"[name='B']/installed", "2021-01-13T17:20:15Z"},
+            {"[name='B']/name", "B"},
+            {"[name='B']/state", "booted"},
+            {"[name='B']/version", "v4-103-g34d2f48"},
+        };
+    }
+
+    SECTION("Missing bootname in rootfs.0")
+    {
+        dbusRaucStatus = {
+            {"rootfs.1", {
+                             {"activated.count", uint32_t {39}},
+                             {"activated.timestamp", "2021-01-13T17:20:18Z"},
+                             {"bootname", "B"},
+                             {"boot-status", "good"},
+                             {"bundle.compatible", "czechlight-clearfog"},
+                             {"bundle.version", "v4-103-g34d2f48"},
+                             {"class", "rootfs"},
+                             {"device", "/dev/mmcblk0p3"},
+                             {"installed.count", uint32_t {39}},
+                             {"installed.timestamp", "2021-01-13T17:20:15Z"},
+                             {"mountpoint", "/"},
+                             {"sha256", "07b30d065c7aad64d2006ce99fd339c929d3ca97b666fca4584b9ef726469fc4"},
+                             {"size", uint64_t {45601892}},
+                             {"state", "booted"},
+                             {"status", "ok"},
+                             {"type", "ext4"},
+                         }},
+            {"rootfs.0", {
+                             {"boot-status", "bad"},
+                             {"class", "rootfs"},
+                             {"device", "/dev/mmcblk0p1"},
+                             {"sha256", "6d81e8f341edd17c127811f7347c7e23d18c2fc25c0bdc29ac56999cc9c25629"},
+                             {"size", uint64_t {45647664}},
+                             {"state", "inactive"},
+                             {"status", "ok"},
+                             {"type", "ext4"},
+                         }},
+        };
+
+        expected = {
+            {"[name='B']/boot-status", "good"},
+            {"[name='B']/installed", "2021-01-13T17:20:15Z"},
+            {"[name='B']/name", "B"},
+            {"[name='B']/state", "booted"},
+            {"[name='B']/version", "v4-103-g34d2f48"},
+        };
+    }
+
+    auto raucServer = DBusRAUCServer(*dbusServerConnection, "rootfs.1", dbusRaucStatus);
+    auto sysrepo = std::make_shared<velia::system::Firmware>(srConn, *dbusClientConnectionSignals, *dbusClientConnectionMethods);
+
+    REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/firmware-slot", SR_DS_OPERATIONAL) == expected);
 }

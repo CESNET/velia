@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "83ed28b0_e700aff5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-24T11:18:49Z",
+      "side": 1,
+      "message": "How about providing the links method as in PS3? IetfInterfaces object will call rtnetlink-\u003eiterLinks() with a callback specifying the operation for every link found.\n\nThe Rtnetlink class is now just a \"lifetime guard\" managing only the socket lifetime and providing the lifetime.\n\nHowever, I feel like this is untestable. And I am not sure about using libnl-route functions inside IetfInterfaces.\nThe other way would be to directly return the map\u003cstring,string\u003e from Rtnetlink::links() (but this way the Rtnetlink class must know about the YANG model structure).\n\nAlso I have now realized the instance doesn\u0027t have to be passed via constructor to IetfInterfaces (which was for testing purposes only) :-)",
+      "parentUuid": "203579e9_3ce60064",
+      "revId": "4d30b743bef9b8f58664f43127a23b95e7c80dd4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4e3a06b6_1445ec8f",
         "filename": "src/system/IETFInterfaces.cpp",
         "patchSetId": 1
@@ -31,6 +49,24 @@
       "writtenOn": "2021-02-24T07:48:38Z",
       "side": 1,
       "message": "This should be available in that struct that\u0027s returned by RTM_GETLINK, the `struct ifinfomsg`, parameter `ifi_type`. Match that against ARPHDR_ETHER (https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/if_arp.h#L31). In sysfs, it\u0027s /sys/class/net/*/type.",
+      "revId": "4d30b743bef9b8f58664f43127a23b95e7c80dd4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d08e5d73_97d84a85",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-24T11:18:49Z",
+      "side": 1,
+      "message": "Done.\n\nThe function extracting the type is actually there but under different name than I expected.",
+      "parentUuid": "4e3a06b6_1445ec8f",
       "revId": "4d30b743bef9b8f58664f43127a23b95e7c80dd4",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

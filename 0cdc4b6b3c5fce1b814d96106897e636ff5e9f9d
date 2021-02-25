@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2042934c_d9f594f8",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-25T10:52:55Z",
+      "side": 1,
+      "message": "I\u0027ll push a fix that changes this to `pit-\u003esecond`.",
+      "range": {
+        "startLine": 140,
+        "startChar": 120,
+        "endLine": 140,
+        "endChar": 140
+      },
+      "revId": "0cdc4b6b3c5fce1b814d96106897e636ff5e9f9d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

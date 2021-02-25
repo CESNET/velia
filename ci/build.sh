@@ -19,13 +19,6 @@ if [[ $ZUUL_JOB_NAME =~ .*-clang.* ]]; then
     export CC=clang
     export CXX=clang++
     export LD=clang
-    export CXXFLAGS="-stdlib=libc++"
-    # spdlog passes std::string instances, and it's built against GCC's libstdc++ on the CI
-    sed -i \
-        -e 's/spdlog::spdlog/spdlog::spdlog_header_only/' \
-        -e '/find_package(spdlog/ a add_definitions(-DFMT_HEADER_ONLY)' \
-        -e 's/fmt::fmt/fmt::fmt-header-only/' \
-        ${ZUUL_PROJECT_SRC_DIR}/CMakeLists.txt
 fi
 
 if [[ $ZUUL_JOB_NAME =~ .*-ubsan ]]; then

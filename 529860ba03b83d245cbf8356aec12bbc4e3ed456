@@ -87,6 +87,30 @@
       },
       "revId": "529860ba03b83d245cbf8356aec12bbc4e3ed456",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "becc951d_85025089",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-26T15:25:26Z",
+      "side": 1,
+      "message": "Just FYI, that one got fixed upstream. We\u0027ll be updating via https://gerrit.cesnet.cz/c/CzechLight/dependencies/+/3972 when the other issue with an internal error in LYB reading gets fixed.",
+      "parentUuid": "ea6a708a_3031e678",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 103
+      },
+      "revId": "529860ba03b83d245cbf8356aec12bbc4e3ed456",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

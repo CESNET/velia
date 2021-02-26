@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6481a5a7_fc00b205",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-26T13:17:57Z",
+      "side": 1,
+      "message": "I think it\u0027s better to write it out into an expression, like this:\n \n... \u003d 6 * 2 /* two characters for each byte in the MAC address */ + 5 /* delimiters */\n\nAnd looking at the code where you\u0027re using this, you need a trailing \\0, so why not make it like this:\n \n... \u003d 6 /* six bytes in the MAC address */ * (2 /* two hex chars per each byte in the address */ + 1 /* separator \":\", and the trailing \\0 terminator */)\n\nand then you can suggest via the name that it\u0027s intended as a buffer size, therefore with the trailing \\0 already accounted for:\n \nconst auto PHYS_ADDR_BUF_SIZE \u003d ...",
+      "revId": "eda021d8eee21d2c501d8ff457f07d2f3f1e439c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdd0c17f_2238bb7e",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-26T13:17:57Z",
+      "side": 1,
+      "message": "I think there\u0027s little need for an #ifdef here -- let\u0027s only add it if we learn that this thing fails on some real system with a reasonable configuration.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 23
+      },
+      "revId": "eda021d8eee21d2c501d8ff457f07d2f3f1e439c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5fe42b3_55f535b8",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-26T13:17:57Z",
+      "side": 1,
+      "message": "I *think* it should be safe to assume that there\u0027s always at least one loopback and that it\u0027s named `lo` on Linux. Please add a basic sanity check that it returns something useful for lo. But otherwise I agree that yeah, this is basically untestable because there are no reasonable mock for rtnetlink.",
+      "revId": "eda021d8eee21d2c501d8ff457f07d2f3f1e439c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

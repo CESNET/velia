@@ -36,6 +36,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "76b4a778_9e0daf91",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-02-26T13:17:57Z",
+      "side": 1,
+      "message": "I like this approach, callbacks are fine with me.",
+      "parentUuid": "83ed28b0_e700aff5",
+      "revId": "4d30b743bef9b8f58664f43127a23b95e7c80dd4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e3a06b6_1445ec8f",

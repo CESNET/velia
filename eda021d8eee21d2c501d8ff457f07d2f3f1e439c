@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49626e53_24165a0a",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-28T17:28:45Z",
+      "side": 1,
+      "message": "Done but I think prefer the first version with + 1.",
+      "parentUuid": "6481a5a7_fc00b205",
+      "revId": "eda021d8eee21d2c501d8ff457f07d2f3f1e439c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bdd0c17f_2238bb7e",
@@ -41,6 +59,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b79381fc_1ff3e40f",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-28T17:28:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdd0c17f_2238bb7e",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 23
+      },
+      "revId": "eda021d8eee21d2c501d8ff457f07d2f3f1e439c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5fe42b3_55f535b8",
@@ -54,6 +96,24 @@
       "writtenOn": "2021-02-26T13:17:57Z",
       "side": 1,
       "message": "I *think* it should be safe to assume that there\u0027s always at least one loopback and that it\u0027s named `lo` on Linux. Please add a basic sanity check that it returns something useful for lo. But otherwise I agree that yeah, this is basically untestable because there are no reasonable mock for rtnetlink.",
+      "revId": "eda021d8eee21d2c501d8ff457f07d2f3f1e439c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd3c2964_129b8f31",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-28T17:28:45Z",
+      "side": 1,
+      "message": "I like this idea. Done",
+      "parentUuid": "e5fe42b3_55f535b8",
       "revId": "eda021d8eee21d2c501d8ff457f07d2f3f1e439c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

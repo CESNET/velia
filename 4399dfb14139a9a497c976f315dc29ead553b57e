@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4054413f_b1e5bb64",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-28T17:26:06Z",
+      "side": 1,
+      "message": "I don\u0027t think this is true and I do not see it in the docs.\n\nI wrote a sample program that constructs the cache and prints linkname and link operational status.\n\nUse case: Construct cache, print, sleep for 5 seconds (in the meantime i disconnect the ethernet cable), print.\nResult: after the cable is disconnected, the operational status *does not* change\n\nUse case: Construct cache, print, sleep for 5 seconds (in the meantime i disconnect the ethernet cable), construct cache, print.\nResult: after the cable is disconnected, the operational status *does* change",
+      "parentUuid": "5bf3b8b5_0ac701b2",
+      "revId": "4399dfb14139a9a497c976f315dc29ead553b57e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "85fd1ced_c193b478",
@@ -35,6 +53,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f1f6c86_d2578250",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-28T17:26:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85fd1ced_c193b478",
+      "revId": "4399dfb14139a9a497c976f315dc29ead553b57e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f4fc54b_0081c6c7",
@@ -48,6 +84,24 @@
       "writtenOn": "2021-02-26T12:44:46Z",
       "side": 1,
       "message": "the error code should be captured and translated as well",
+      "revId": "4399dfb14139a9a497c976f315dc29ead553b57e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40cba94e_1e703be8",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-02-28T17:26:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f4fc54b_0081c6c7",
       "revId": "4399dfb14139a9a497c976f315dc29ead553b57e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

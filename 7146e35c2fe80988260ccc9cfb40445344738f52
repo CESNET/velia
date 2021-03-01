@@ -22,6 +22,30 @@
       },
       "revId": "7146e35c2fe80988260ccc9cfb40445344738f52",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d14e5ddf_2b1de87a",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-01T08:12:21Z",
+      "side": 1,
+      "message": "I\u0027m sorry, I do not understand what exactly looks fishy? `ip link` says the same. I think you are looking at link flags (flags are reported in \u003c \u003e brackets), not operational status.\n\n $ ip link\n 1: lo: (...) state UNKNOWN (...)\n\nAlso see https://unix.stackexchange.com/questions/180256/state-of-network-loopback and https://www.kernel.org/doc/html/latest/networking/operstates.html",
+      "parentUuid": "8d755e40_5ede039b",
+      "range": {
+        "startLine": 28,
+        "startChar": 34,
+        "endLine": 28,
+        "endChar": 41
+      },
+      "revId": "7146e35c2fe80988260ccc9cfb40445344738f52",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

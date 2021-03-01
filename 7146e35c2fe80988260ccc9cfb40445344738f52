@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d755e40_5ede039b",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-01T08:07:05Z",
+      "side": 1,
+      "message": "This looks fishy, even if my /sys/class/net/lo/operstate also says \"unknown\" (and so does my wireguard interface). Is there a better field to obtain that value from, perhaps? `ip link` says `lo: \u003cLOOPBACK,UP,LOWER_UP\u003e`, and `fitlab: \u003cPOINTOPOINT,NOARP,UP,LOWER_UP\u003e` for the wg interface (which doesn\u0027t have to be supported by this code, but lo probably should be, and both say \"unknown\" in sysfs for me).",
+      "range": {
+        "startLine": 28,
+        "startChar": 34,
+        "endLine": 28,
+        "endChar": 41
+      },
+      "revId": "7146e35c2fe80988260ccc9cfb40445344738f52",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

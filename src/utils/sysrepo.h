@@ -12,9 +12,9 @@
 
 namespace velia::utils {
 
-void valuesToYang(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent);
-void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore);
-void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session);
+void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent);
+void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session);
+void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore);
 void initLogsSysrepo();
 void ensureModuleImplemented(std::shared_ptr<::sysrepo::Session> session, const std::string& module, const std::string& revision);
 

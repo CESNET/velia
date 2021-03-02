@@ -27,7 +27,7 @@ Sysrepo::Sysrepo(std::shared_ptr<::sysrepo::Subscribe> srSubscribe, std::shared_
         IETF_HARDWARE_MODULE_NAME.c_str(),
         [this](std::shared_ptr<::sysrepo::Session> session, [[maybe_unused]] const char* module_name, [[maybe_unused]] const char* xpath, [[maybe_unused]] const char* request_xpath, [[maybe_unused]] uint32_t request_id, std::shared_ptr<libyang::Data_Node>& parent) {
             auto hwStateValues = m_hwState->process();
-            utils::valuesToYang(hwStateValues, session, parent);
+            utils::valuesToYang(hwStateValues, {}, session, parent);
 
             spdlog::get("hardware")->trace("Pushing to sysrepo (JSON): {}", parent->print_mem(LYD_FORMAT::LYD_JSON, 0));
 

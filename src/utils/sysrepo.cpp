@@ -54,8 +54,11 @@ void initLogsSysrepo()
 void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)
 {
     auto netconf = session->get_context()->get_module("ietf-netconf");
+    auto log = spdlog::get("main");
 
     for (const auto& propertyName : removePaths) {
+        log->trace("Processing node deletion {}", propertyName);
+
         if (!parent) {
             parent = std::make_shared<libyang::Data_Node>(
                 session->get_context(),
@@ -80,6 +83,8 @@ void valuesToYang(const std::map<std::string, std::string>& values, const std::v
     }
 
     for (const auto& [propertyName, value] : values) {
+        log->trace("Processing node update {} -> {}", propertyName, value);
+
         if (!parent) {
             parent = std::make_shared<libyang::Data_Node>(
                 session->get_context(),

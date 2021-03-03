@@ -46,6 +46,30 @@
       },
       "revId": "7146e35c2fe80988260ccc9cfb40445344738f52",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a34bb727_4d00feac",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-03T14:10:23Z",
+      "side": 1,
+      "message": "during the call we agreed that the code will export \"the status\" from the kernel, and that the \"lo\" in an \"unknown\" state doesn\u0027t really matter",
+      "parentUuid": "d14e5ddf_2b1de87a",
+      "range": {
+        "startLine": 28,
+        "startChar": 34,
+        "endLine": 28,
+        "endChar": 41
+      },
+      "revId": "7146e35c2fe80988260ccc9cfb40445344738f52",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

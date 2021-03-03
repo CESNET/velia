@@ -34,6 +34,24 @@
       "parentUuid": "20ec25ca_95a836de",
       "revId": "b61b98b52d590aed74f74ac4a10111fc717c62ee",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "855716a1_2cf851ff",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-03T15:50:32Z",
+      "side": 1,
+      "message": "Thanks, please put that (the wifi interface losing an address) into a comment so that I remember this :).\n\nI think that it\u0027s fine not to cache anything -- just change the deletion mode to \"delete if it\u0027s there, otherwise a no-op\". sysrpeo already has this cache, the problem is that the current version of this code \"fights\" with the deletion semantics. Let\u0027s just relax that one.",
+      "parentUuid": "1d8fb7a0_2a15ea94",
+      "revId": "b61b98b52d590aed74f74ac4a10111fc717c62ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

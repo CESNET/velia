@@ -16,6 +16,24 @@
       "message": "pass the error code to this constructor and let it call nl_geterror(), that way the code\u0027s gonna be simpler",
       "revId": "b1bfa6c7b39e80d0d69e1c3aa01da78c171d5b0c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4faa4c3a_c054471d",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-03T09:07:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d787eca4_92fbca4f",
+      "revId": "b1bfa6c7b39e80d0d69e1c3aa01da78c171d5b0c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

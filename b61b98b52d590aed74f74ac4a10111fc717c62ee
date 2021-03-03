@@ -16,6 +16,24 @@
       "message": "When does it happen that the code tries to remove something that is not present in sysrepo? If it is a realistic scenario, I think it is better to perform the batch edit with \"ietf-netconf:remove\" instead of \"ietf-netconf:delete\" and get rid of sysrepoPathExists.\n\nAt first I was thinking that perhaps this is only trying to guard against a possible race if an interface is removed before this callback had a chance to push it to the ops store, but that doesn\u0027t look like the case here. So it must be about an interface which used to have an address, and then it somehow lost one. Can you trigger that?",
       "revId": "b61b98b52d590aed74f74ac4a10111fc717c62ee",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d8fb7a0_2a15ea94",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-03T15:26:03Z",
+      "side": 1,
+      "message": "I have encountered a situation where my (wireless) interface lost an physical address and the next change callback did not set it back, i.e., I got address \"(none)\" twice in a row.\n\nJust thinking out loud: Perhaps I can introduce a local cache for an interface and check what should be updated in Sysrepo? The change callback does not specify (AFAIK) which properties have changed so I have to update all anyway.",
+      "parentUuid": "20ec25ca_95a836de",
+      "revId": "b61b98b52d590aed74f74ac4a10111fc717c62ee",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

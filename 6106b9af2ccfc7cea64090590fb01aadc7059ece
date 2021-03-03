@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae2cf0e5_b42bfd22",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-03T13:37:35Z",
+      "side": 1,
+      "message": "I dislike this (comparing strings for checking if a particular structure is of an expected type), but I see that that\u0027s all that libnl gives you. It\u0027s probably better suited than trying to be smart via nl_object_get_msgtype(), OK.",
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "364715f4_f3b935cc",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-03T13:37:35Z",
+      "side": 1,
+      "message": "I think this comment doesn\u0027t add value, it doesn\u0027t explain any \"weird\" operation in my opinion.",
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e58477a_2de64d85",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-03T13:37:35Z",
+      "side": 1,
+      "message": "(...while this comment is useful because it explains why that particular code is necessary.)",
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6e8eb65_59d52b36",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-03T13:37:35Z",
+      "side": 1,
+      "message": "I don\u0027t understand this pattern. The way I understand that behavior, if an error happens, the code will log it, and then keep running. Who reacts to that failure? Besides that, it will very likely keep running, potentially turning this into a busy loop in a bg thread. What is the goal here? Have you seen an exception like that during your testing? Why not let the code crash via std::terminate when this bg thread throws an unhandled exception?",
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7462205d_2420947a",
+        "filename": "src/system/Rtnetlink.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-03T13:37:35Z",
+      "side": 1,
+      "message": "Use std::atomic\u003cbool\u003e, that way you can remove shouldTerminate() as well and just do `while (!terminate) { ... }`.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 25
+      },
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42b18701_033b3935",
+        "filename": "src/system/Rtnetlink.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-03T13:37:35Z",
+      "side": 1,
+      "message": "This is an implementation detail, so I would prefer to move it to the .cpp file. The outer class holds it via a unique_ptr already, so at most you\u0027ll need a non-inline destructor.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

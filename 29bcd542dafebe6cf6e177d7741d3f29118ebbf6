@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8bf4981c_be2d0cd3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-03T12:15:11Z",
+      "side": 1,
+      "message": "Since 3da1467 there\u0027s no way to control the log level of the main logger, so this is only visible in the unit tests. Sounds fair to me.",
+      "revId": "29bcd542dafebe6cf6e177d7741d3f29118ebbf6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

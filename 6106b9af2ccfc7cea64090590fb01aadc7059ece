@@ -37,6 +37,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "3a312bb7_a80c70f7",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-07T11:31:35Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "364715f4_f3b935cc",
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "5e58477a_2de64d85",
         "filename": "src/system/Rtnetlink.cpp",
         "patchSetId": 8
@@ -69,6 +87,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce2e5244_7855c86a",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-07T11:31:35Z",
+      "side": 1,
+      "message": "Sorry, I don\u0027t recall why am I doing this pattern which is obviously wrong. Probably some debugging leftovers from sysrepo exceptions when dealing with deletions (from the the next commit).\nRemoved.",
+      "parentUuid": "e6e8eb65_59d52b36",
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7462205d_2420947a",
@@ -92,6 +128,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "342e183a_5a38fadf",
+        "filename": "src/system/Rtnetlink.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-07T11:31:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7462205d_2420947a",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 25
+      },
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "42b18701_033b3935",
@@ -105,6 +165,30 @@
       "writtenOn": "2021-03-03T13:37:35Z",
       "side": 1,
       "message": "This is an implementation detail, so I would prefer to move it to the .cpp file. The outer class holds it via a unique_ptr already, so at most you\u0027ll need a non-inline destructor.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "6106b9af2ccfc7cea64090590fb01aadc7059ece",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ceb71b1c_17262813",
+        "filename": "src/system/Rtnetlink.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-07T11:31:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42b18701_033b3935",
       "range": {
         "startLine": 28,
         "startChar": 0,

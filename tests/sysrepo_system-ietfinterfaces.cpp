@@ -27,5 +27,13 @@ TEST_CASE("ietf-interfaces localhost")
                 {"/type", "iana-if-type:softwareLoopback"},
                 {"/phys-address", "00:00:00:00:00:00"},
                 {"/oper-status", "unknown"},
+                {"/ietf-ip:ipv4", ""},
+                {"/ietf-ip:ipv4/address[ip='127.0.0.1']", ""},
+                {"/ietf-ip:ipv4/address[ip='127.0.0.1']/ip", "127.0.0.1"},
+                {"/ietf-ip:ipv4/address[ip='127.0.0.1']/prefix-length", "8"},
+                {"/ietf-ip:ipv6", ""},
+                {"/ietf-ip:ipv6/address[ip='::1']", ""},
+                {"/ietf-ip:ipv6/address[ip='::1']/ip", "::1"},
+                {"/ietf-ip:ipv6/address[ip='::1']/prefix-length", "128"},
             });
 }

@@ -5,6 +5,7 @@
  *
  */
 
+#include <arpa/inet.h>
 #include <linux/if_arp.h>
 #include <linux/netdevice.h>
 #include "IETFInterfaces.h"
@@ -82,6 +83,41 @@ std::string nlActionToString(int action)
     }
 }
 
+std::string binaddrToString(void* binaddr, int addrFamily)
+{
+    // ipv6 address string reprensetation should be of the same length than ipv4 string representation, create buffer with length of ipv6 address
+    static_assert(INET6_ADDRSTRLEN >= INET_ADDRSTRLEN);
+
+    std::array<char, INET6_ADDRSTRLEN> buf;
+
+    if (const char* res = inet_ntop(addrFamily, binaddr, buf.data(), buf.size()); res != nullptr) {
+        return res;
+    } else {
+        int errsv = errno;
+
+        if (errsv == EAFNOSUPPORT) {
+            throw std::runtime_error("Failed translating address (inet_ntop). Not a valid address family.");
+        } else if (errsv == ENOSPC) {
+            throw std::runtime_error("Failed translating address (inet_ntop). String address length exceeds provided buffer length.");
+        } else {
+            throw std::runtime_error("Failed translating address (inet_ntop). (errno=" + std::to_string(errsv) + ")");
+        }
+    }
+}
+
+std::string getIPVersion(int addrFamily)
+{
+    switch (addrFamily) {
+    case AF_INET:
+        return "ipv4";
+    case AF_INET6:
+        return "ipv6";
+    default:
+        throw std::runtime_error("Unexpected address family " + std::to_string(addrFamily));
+    }
+}
+
+
 }
 
 namespace velia::system {
@@ -89,7 +125,7 @@ namespace velia::system {
 IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
     : m_srSession(std::move(srSess))
     , m_log(spdlog::get("system"))
-    , m_rtnetlink(std::make_shared<Rtnetlink>([this](rtnl_link* link, int action) { onLinkUpdate(link, action); }))
+    , m_rtnetlink(std::make_shared<Rtnetlink>([this](rtnl_link* link, int action) { onLinkUpdate(link, action); }, [this](rtnl_addr* link, int action) { onAddrUpdate(link, action); }))
 {
     utils::ensureModuleImplemented(m_srSession, IETF_INTERFACES_MODULE_NAME, "2018-02-20");
     utils::ensureModuleImplemented(m_srSession, IETF_IP_MODULE_NAME, "2018-02-22");
@@ -124,6 +160,35 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
     } else {
         m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
     }
+}
+
+void IETFInterfaces::onAddrUpdate(rtnl_addr* addr, int action)
+{
+    std::unique_ptr<rtnl_link, std::function<void(rtnl_link*)>> link(rtnl_addr_get_link(addr), [](rtnl_link* obj) { nl_object_put(OBJ_CAST(obj)); });
+
+    auto addrFamily = rtnl_addr_get_family(addr);
+    auto linkName = rtnl_link_get_name(link.get());
+
+    if (addrFamily != AF_INET && addrFamily != AF_INET6) {
+        return;
+    }
+
+    m_log->trace("Netlink update on address of link '{}', action {}", linkName, nlActionToString(action));
+
+    auto nlAddr = rtnl_addr_get_local(addr);
+    std::string ipAddress = binaddrToString(nl_addr_get_binary_addr(nlAddr), addrFamily); // We don't use libnl's nl_addr2str because adds a prefix to string format
+    std::string ipVersion = getIPVersion(addrFamily);
+
+    std::map<std::string, std::string> values;
+    std::vector<std::string> deletePaths;
+
+    if (action == NL_ACT_DEL) {
+        deletePaths.push_back({IETF_INTERFACES + "/interface[name='" + linkName + "']/ietf-ip:" + ipVersion + "/address[ip='" + ipAddress + "']"});
+    } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
+        values[IETF_INTERFACES + "/interface[name='" + linkName + "']/ietf-ip:" + ipVersion + "/address[ip='" + ipAddress + "']/prefix-length"] = std::to_string(rtnl_addr_get_prefixlen(addr));
+    }
+
+    utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);
 }
 
 }

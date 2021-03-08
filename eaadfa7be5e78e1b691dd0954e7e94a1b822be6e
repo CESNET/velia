@@ -41,6 +41,23 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3509b820_fd41ff6e",
+        "filename": "src/system/Rtnetlink.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-08T09:18:39Z",
+      "side": 1,
+      "message": "class, not struct.",
+      "revId": "eaadfa7be5e78e1b691dd0954e7e94a1b822be6e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a609b9e9_14dce0e3",

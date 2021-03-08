@@ -29,4 +29,7 @@ module czechlight-network {
 
     // As of now we implement the model to contain operational data only
     deviation /if:interfaces { deviate add { config false; } }
+
+    // IPv6 address autoconfiguration is not supported
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:autoconf { deviate not-supported; }
 }

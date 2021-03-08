@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6e58399_fa74ce25",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-08T19:41:32Z",
+      "side": 1,
+      "message": "If I understand this correctly, perhaps the intent can be better described by:\n \n// any IPv4 address fits into a buffer allocated for an IPv6 address",
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1a2e391_bc75242f",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-08T19:41:32Z",
+      "side": 1,
+      "message": "I\u0027ve seen some compilers (well, perhaps it was `clazy` or something like that) issue a warning for an else-after-return, but I think it\u0027s perfectly OK here.",
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0522b3f_102ed84f",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-08T19:41:32Z",
+      "side": 1,
+      "message": "this can be simplified:\n \nthrow std::system_error{errno, std::generic_category(), \"inet_ntop\"};\n\nI had to look it up a few weeks ago, and today I re-checked if it\u0027s system_category or generic_category, and while I\u0027m still surprised by the result, apparently generic_category is what one is supposed to use. Anyway, both handle the usual POSIX errno semantics.",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 9
+      },
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fee06813_50ad3e44",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-08T19:41:32Z",
+      "side": 1,
+      "message": "please insert some newlines here, this is IMHO beyond the complexity threshold for a one-liner",
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95ee86e9_2cdf600a",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-08T19:41:32Z",
+      "side": 1,
+      "message": "I like this wrapping, but I felt that it\u0027s too verbose, so I started googling and found some template exercise at https://stackoverflow.com/questions/51252087/using-automatic-deduction-with-unique-ptr-and-custom-deleter , which eventually led me to specializationf of std::default_delete here: https://stackoverflow.com/a/50957671/2245623\n\nIs that something that\u0027s appropriate here? IOW, will you always call `nl_object_put(OBJ_CAST(obj))` to destroy a rtnl_link? If so, then specialize std::default_delete.",
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4397ef23_982877b9",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-08T19:41:32Z",
+      "side": 1,
+      "message": "- s/prefix/prefix size/, because I understood this comment as that function returning something like \"ip4:192...\" or \"ip6:2001:...\", which is not the case\n- nit: \"...because IT adds a...\"",
+      "range": {
+        "startLine": 179,
+        "startChar": 141,
+        "endLine": 179,
+        "endChar": 147
+      },
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dfc07cc_daa57481",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-08T19:41:32Z",
+      "side": 1,
+      "message": "this part is common for insertion and deletion, and it feels non-trivial, so better use a const variable for that and define it just once",
+      "range": {
+        "startLine": 186,
+        "startChar": 31,
+        "endLine": 186,
+        "endChar": 144
+      },
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

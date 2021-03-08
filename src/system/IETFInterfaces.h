@@ -10,6 +10,7 @@
 #include "utils/log-fwd.h"
 
 struct rtnl_link;
+struct rtnl_addr;
 
 namespace velia::system {
 
@@ -21,6 +22,7 @@ public:
 
 private:
     void onLinkUpdate(rtnl_link* link, int action);
+    void onAddrUpdate(rtnl_addr* addr, int action);
 
     std::shared_ptr<::sysrepo::Session> m_srSession;
     velia::Log m_log;

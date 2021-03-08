@@ -15,12 +15,13 @@ using namespace std::string_literals;
 
 namespace {
 
-void nlCacheForeachWrapper(nl_cache* cache, std::function<void(rtnl_link*)> cb)
+template <class T>
+void nlCacheForeachWrapper(nl_cache* cache, std::function<void(T*)> cb)
 {
     nl_cache_foreach(
         cache, [](nl_object* obj, void* data) {
-            auto& cb = *static_cast<std::function<void(rtnl_link*)>*>(data);
-            auto link = reinterpret_cast<rtnl_link*>(obj);
+            auto& cb = *static_cast<std::function<void(T*)>*>(data);
+            auto link = reinterpret_cast<T*>(obj);
             cb(link);
         },
         &cb);
@@ -33,6 +34,9 @@ void nlCacheMngrCallbackWrapper(struct nl_cache*, struct nl_object* obj, int act
     if (objType == "route/link"s) {
         auto* cb = static_cast<velia::system::Rtnetlink::LinkCB*>(data);
         (*cb)(reinterpret_cast<rtnl_link*>(obj), action);
+    } else if (objType == "route/addr"s) {
+        auto* cb = static_cast<velia::system::Rtnetlink::AddrCB*>(data);
+        (*cb)(reinterpret_cast<rtnl_addr*>(obj), action);
     } else {
         throw velia::system::RtnetlinkException("Unknown netlink object type in cache: '"s + objType + "'");
     }
@@ -90,9 +94,10 @@ RtnetlinkException::RtnetlinkException(const std::string& funcName, int error)
 {
 }
 
-Rtnetlink::Rtnetlink(LinkCB cbLink)
+Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
     : m_log(spdlog::get("system"))
     , m_cbLink(std::move(cbLink))
+    , m_cbAddr(std::move(cbAddr))
 {
     {
         nl_cache_mngr* tmpManager;
@@ -111,10 +116,19 @@ Rtnetlink::Rtnetlink(LinkCB cbLink)
         throw RtnetlinkException("nl_cache_mngr_add", err);
     }
 
+    nl_cache* cacheRouteAddr;
+    if (auto err = nl_cache_mngr_add(m_nlCacheManager.get(), "route/addr", nlCacheMngrCallbackWrapper, &m_cbAddr, &cacheRouteAddr); err < 0) {
+        throw RtnetlinkException("nl_cache_mngr_add", err);
+    }
+
     // fire callbacks after getting the initial data into the cache.
     // populating the cache with nl_cache_mngr_add doesn't fire any cache change events
-    nlCacheForeachWrapper(cacheRouteLink, [this](rtnl_link* link) {
+    nlCacheForeachWrapper<rtnl_link>(cacheRouteLink, [this](rtnl_link* link) {
         m_cbLink(link, NL_ACT_NEW);
+    });
+
+    nlCacheForeachWrapper<rtnl_addr>(cacheRouteAddr, [this](rtnl_addr* link) {
+        m_cbAddr(link, NL_ACT_NEW);
     });
 }
 

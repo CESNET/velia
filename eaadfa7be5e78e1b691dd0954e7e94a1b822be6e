@@ -56,6 +56,24 @@
       "message": "This non-trivial signature is repeated a few times, so I suggest adding a `using` for that. When you do that, I found out it\u0027s possible to also specify name for function arguments, so that you can do something like:\n \nusing LinkCB \u003d std::function\u003cvoid(rtnl_link* link, int cacheAction)\u003e; /// cacheAction: NL_ACT_*\n\nHopefully that will show up in doxygen, too (hence the funny \"///\" comment).",
       "revId": "eaadfa7be5e78e1b691dd0954e7e94a1b822be6e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cec131be_d996a38c",
+        "filename": "src/system/Rtnetlink.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-08T08:56:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a609b9e9_14dce0e3",
+      "revId": "eaadfa7be5e78e1b691dd0954e7e94a1b822be6e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

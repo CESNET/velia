@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e32afafc_55630fa0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-08T19:12:39Z",
+      "side": 1,
+      "message": "This is caused by a not-so-intuitive interaction of our config:false deviation and YANG\u0027s definition of what is a container (or perhaps sysrepo\u0027s interpretation thereof). In YANG, it doesn\u0027t matter whether a container \"is there\" or not, so sysrepo chose to always \"show\" containers when their parent exists. This might indeed look \"strange\" when showing a non-presence container within state data.",
+      "revId": "14e663e00b6876bc61502e91fd36e3b95ae57059",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

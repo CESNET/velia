@@ -118,6 +118,8 @@ void valuesPush(const std::map<std::string, std::string>& values, const std::vec
 /** @brief Set or remove paths in Sysrepo's current datastore. */
 void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session)
 {
+    if (values.empty() && removePaths.empty()) return;
+
     libyang::S_Data_Node edit;
     valuesToYang(values, removePaths, session, edit);
 

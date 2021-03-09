@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eabc55f7_4969cb08",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-09T12:34:08Z",
+      "side": 1,
+      "message": "The priority of resolving that CI failure in my TODO list keeps increasing.",
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b6e58399_fa74ce25",
@@ -14,6 +31,24 @@
       "writtenOn": "2021-03-08T19:41:32Z",
       "side": 1,
       "message": "If I understand this correctly, perhaps the intent can be better described by:\n \n// any IPv4 address fits into a buffer allocated for an IPv6 address",
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "345a07d6_b9b18f05",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-09T12:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6e58399_fa74ce25",
       "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -58,6 +93,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a8862fc_00d47d07",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-09T12:34:08Z",
+      "side": 1,
+      "message": "Thanks for this. It really seems that std::generic_category is the one.",
+      "parentUuid": "e0522b3f_102ed84f",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 9
+      },
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fee06813_50ad3e44",
@@ -75,6 +134,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd56bd83_fe9c9135",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-09T12:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fee06813_50ad3e44",
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "95ee86e9_2cdf600a",
@@ -88,6 +165,24 @@
       "writtenOn": "2021-03-08T19:41:32Z",
       "side": 1,
       "message": "I like this wrapping, but I felt that it\u0027s too verbose, so I started googling and found some template exercise at https://stackoverflow.com/questions/51252087/using-automatic-deduction-with-unique-ptr-and-custom-deleter , which eventually led me to specializationf of std::default_delete here: https://stackoverflow.com/a/50957671/2245623\n\nIs that something that\u0027s appropriate here? IOW, will you always call `nl_object_put(OBJ_CAST(obj))` to destroy a rtnl_link? If so, then specialize std::default_delete.",
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4135aeb_365f0ea1",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-09T12:34:08Z",
+      "side": 1,
+      "message": "Every rtnl_link that must be destroyed will be destroyed using this code (decrementing refcnt).\n\nI\u0027m not changing the code in the next PS yet. I will read and experminent on that more.",
+      "parentUuid": "95ee86e9_2cdf600a",
       "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -115,6 +210,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a66bc84_53c0da69",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-09T12:34:08Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "4397ef23_982877b9",
+      "range": {
+        "startLine": 179,
+        "startChar": 141,
+        "endLine": 179,
+        "endChar": 147
+      },
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8dfc07cc_daa57481",
@@ -128,6 +247,30 @@
       "writtenOn": "2021-03-08T19:41:32Z",
       "side": 1,
       "message": "this part is common for insertion and deletion, and it feels non-trivial, so better use a const variable for that and define it just once",
+      "range": {
+        "startLine": 186,
+        "startChar": 31,
+        "endLine": 186,
+        "endChar": 144
+      },
+      "revId": "05cf38b136a7334ad6ac0f11edd2fc0233372464",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80639a65_cec3392e",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-09T12:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dfc07cc_daa57481",
       "range": {
         "startLine": 186,
         "startChar": 31,

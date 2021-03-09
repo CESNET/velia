@@ -52,6 +52,7 @@ int main(int argc, char* argv[])
 
     try {
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
+        spdlog::get("system")->set_level(parseLogLevel("System logging", args["--system-log-level"]));
 
         auto srConn = std::make_shared<sysrepo::Connection>();
         auto srSess = std::make_shared<sysrepo::Session>(srConn);

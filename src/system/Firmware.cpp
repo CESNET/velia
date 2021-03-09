@@ -41,7 +41,7 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
             libyang::S_Data_Node dataNode;
             auto session = std::make_shared<::sysrepo::Session>(m_srConn);
 
-            utils::valuesToYang(data, session, dataNode);
+            utils::valuesToYang(data, {}, session, dataNode);
             session->event_notif_send(dataNode);
         },
         [this](int32_t retVal, const std::string& lastError) {
@@ -104,7 +104,7 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
                 data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message"] = m_installMessage;
             }
 
-            utils::valuesToYang(data, session, parent);
+            utils::valuesToYang(data, {}, session, parent);
             return SR_ERR_OK;
         },
         (CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "*").c_str(),

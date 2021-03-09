@@ -51,9 +51,40 @@ void initLogsSysrepo()
     sr_log_set_cb(spdlog_sr_log_cb);
 }
 
-void valuesToYang(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)
+void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)
 {
+    auto netconf = session->get_context()->get_module("ietf-netconf");
+    auto log = spdlog::get("main");
+
+    for (const auto& propertyName : removePaths) {
+        log->trace("Processing node deletion {}", propertyName);
+
+        if (!parent) {
+            parent = std::make_shared<libyang::Data_Node>(
+                session->get_context(),
+                propertyName.c_str(),
+                nullptr,
+                LYD_ANYDATA_CONSTSTRING,
+                LYD_PATH_OPT_EDIT);
+        } else {
+            parent->new_path(
+                session->get_context(),
+                propertyName.c_str(),
+                nullptr,
+                LYD_ANYDATA_CONSTSTRING,
+                LYD_PATH_OPT_EDIT);
+        }
+
+        auto deletion = parent->find_path(propertyName.c_str());
+        if (deletion->number() != 1) {
+            throw std::logic_error {"Cannot find XPath " + propertyName + " for deletion in libyang's new_path() output"};
+        }
+        deletion->data()[0]->insert_attr(netconf, "operation", "remove");
+    }
+
     for (const auto& [propertyName, value] : values) {
+        log->trace("Processing node update {} -> {}", propertyName, value);
+
         if (!parent) {
             parent = std::make_shared<libyang::Data_Node>(
                 session->get_context(),
@@ -72,23 +103,25 @@ void valuesToYang(const std::map<std::string, std::string>& values, std::shared_
     }
 }
 
-/** @brief Set values into Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
-void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore)
+/** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
+void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore)
 {
     sr_datastore_t oldDatastore = session->session_get_ds();
     session->session_switch_ds(datastore);
 
-    valuesPush(values, session);
+    valuesPush(values, removePaths, session);
 
     session->apply_changes();
     session->session_switch_ds(oldDatastore);
 }
 
-/** @brief Set values into Sysrepo's current datastore. */
-void valuesPush(const std::map<std::string, std::string>& values, std::shared_ptr<::sysrepo::Session> session)
+/** @brief Set or remove paths in Sysrepo's current datastore. */
+void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session)
 {
+    if (values.empty() && removePaths.empty()) return;
+
     libyang::S_Data_Node edit;
-    valuesToYang(values, session, edit);
+    valuesToYang(values, removePaths, session, edit);
 
     session->edit_batch(edit, "merge");
     session->apply_changes();

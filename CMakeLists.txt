@@ -42,6 +42,7 @@ endif()
 
 pkg_check_modules(SYSREPO REQUIRED sysrepo-cpp>=1.4.103 IMPORTED_TARGET sysrepo)
 pkg_check_modules(LIBYANG REQUIRED libyang-cpp>=1.0.215 IMPORTED_TARGET libyang)
+pkg_check_modules(LIBNL REQUIRED IMPORTED_TARGET libnl-route-3.0)
 
 include(GNUInstallDirs)
 
@@ -61,6 +62,9 @@ set(YANG_SRCS
     yang/ietf-packet-fields@2019-03-04.yang
     yang/ietf-access-control-list@2019-03-04.yang
     yang/czechlight-firewall@2021-01-25.yang
+    yang/czechlight-network@2021-02-22.yang
+    yang/iana-if-type@2017-01-19.yang
+    yang/ietf-ip@2018-02-22.yang
     )
 
 # Targets
@@ -202,12 +206,17 @@ add_library(velia-system STATIC
         src/system/Authentication.h
         src/system/Network.cpp
         src/system/Network.h
+        src/system/Rtnetlink.cpp
+        src/system/Rtnetlink.h
+        src/system/IETFInterfaces.cpp
+        src/system/IETFInterfaces.h
         )
 target_link_libraries(velia-system
     PUBLIC
         velia-utils
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
+        PkgConfig::LIBNL
         SDBusCpp::sdbus-c++
     )
 
@@ -403,6 +412,18 @@ if(BUILD_TESTING)
     set_tests_properties(
             test-sysrepo_system-network
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system
+            RESOURCE_LOCK sysrepo
+    )
+
+    sysrepo_fixture_env(sysrepo-czechlight-network
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
+    velia_test(sysrepo_system-ietfinterfaces velia-system)
+    set_tests_properties(
+            test-sysrepo_system-ietfinterfaces
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-network
             RESOURCE_LOCK sysrepo
     )
 

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "227e27e3_1d526ec6",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-10T13:47:30Z",
+      "side": 1,
+      "message": "this looks the same helper as in the function above, right? can you make a utility function for that, please?",
+      "range": {
+        "startLine": 185,
+        "startChar": 0,
+        "endLine": 193,
+        "endChar": 5
+      },
+      "revId": "06bbdcbabded8470dfce04b195dae40336313a2a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c3066a1_dd656a2f",
+        "filename": "src/system/Rtnetlink.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-10T13:47:30Z",
+      "side": 1,
+      "message": "I hope this can be improved, because what I see here is eseentialy:\n \nconstructUnniquePtr(clone(val), deleter)\n\nI would prefer to change this to something like:\n \ntemplate\u003c\u003e nlObject ...;\nnlObject(val);\n\n...where nlObject would deduce the type of the object you\u0027re passing, add an appropriate deleter without explicit code for that, etc. Here\u0027s how the whole line could look then:\n \nres.emplace_back(wrap(neigh), wrap(link));\n\nJust my two cents here, feel free to reject this -- you spent more time trying to address this than I did, of course :).",
+      "range": {
+        "startLine": 212,
+        "startChar": 25,
+        "endLine": 212,
+        "endChar": 64
+      },
+      "revId": "06bbdcbabded8470dfce04b195dae40336313a2a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

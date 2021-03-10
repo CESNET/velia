@@ -119,6 +119,38 @@ std::string getIPVersion(int addrFamily)
     }
 }
 
+/** @brief Returns YANG structure for ietf-ip:ipv(4|6)/neighbours. Set requestedAddrFamily to required ip version (AF_INET for ipv4 or AF_INET6 for ipv6). */
+std::map<std::string, std::string> collectNeighboursIP(std::shared_ptr<velia::system::Rtnetlink> rtnetlink, int requestedAddrFamily, velia::Log log)
+{
+    std::map<std::string, std::string> values;
+
+    for (const auto& [neigh, link] : rtnetlink->getNeighbours()) {
+        if (rtnl_neigh_get_state(neigh.get()) == NUD_NOARP) {
+            continue;
+        }
+
+        auto linkName = rtnl_link_get_name(link.get());
+
+        auto ipAddr = rtnl_neigh_get_dst(neigh.get());
+        auto ipAddrFamily = nl_addr_get_family(ipAddr);
+
+        if (ipAddrFamily != requestedAddrFamily) {
+            continue;
+        }
+
+        auto ipAddress = binaddrToString(nl_addr_get_binary_addr(ipAddr), ipAddrFamily);
+
+        auto llAddr = rtnl_neigh_get_lladdr(neigh.get());
+        std::array<char, PHYS_ADDR_BUF_SIZE> llAddrBuf {};
+        if (auto llAddress = nl_addr2str(llAddr, llAddrBuf.data(), llAddrBuf.size()); llAddress != "none"s) {
+            values[IETF_INTERFACES + "/interface[name='" + linkName + "']/ietf-ip:" + getIPVersion(ipAddrFamily) + "/neighbor[ip='" + ipAddress + "']/link-layer-address"] = llAddress;
+        } else {
+            log->warn("Neighbor '{}' on link '{}' returned link layer address 'none'", ipAddress, linkName);
+        }
+    }
+
+    return values;
+}
 }
 
 namespace velia::system {
@@ -157,6 +189,20 @@ IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
             return SR_ERR_OK;
         },
         (IETF_INTERFACES + "/interface/statistics").c_str());
+
+    m_srSubscribe->oper_get_items_subscribe(
+        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto& parent) {
+            utils::valuesToYang(collectNeighboursIP(m_rtnetlink, AF_INET, m_log), {}, session, parent);
+            return SR_ERR_OK;
+        },
+        (IETF_INTERFACES + "/interface/ietf-ip:ipv4/neighbor").c_str());
+
+    m_srSubscribe->oper_get_items_subscribe(
+        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto& parent) {
+            utils::valuesToYang(collectNeighboursIP(m_rtnetlink, AF_INET6, m_log), {}, session, parent);
+            return SR_ERR_OK;
+        },
+        (IETF_INTERFACES + "/interface/ietf-ip:ipv6/neighbor").c_str());
 }
 
 void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)

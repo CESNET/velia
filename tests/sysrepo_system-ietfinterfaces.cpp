@@ -48,4 +48,5 @@ TEST_CASE("ietf-interfaces localhost")
                 {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements", ""},
                 {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements/prefix-list", ""},
             });
+    // NOTE: There are no neighbours on loopback
 }

@@ -6,6 +6,7 @@
  */
 
 #include <netlink/route/link.h>
+#include <netlink/route/neighbour.h>
 #include <utility>
 #include "Rtnetlink.h"
 #include "utils/log.h"
@@ -176,4 +177,41 @@ std::vector<Rtnetlink::nlLink> Rtnetlink::getLinks()
     return res;
 }
 
+std::vector<std::pair<Rtnetlink::nlNeigh, Rtnetlink::nlLink>> Rtnetlink::getNeighbours()
+{
+    nlCache linkCache;
+    nlCache neighCache;
+
+    {
+        nl_cache* tmpCache;
+
+        if (auto err = rtnl_link_alloc_cache(m_nlSocket.get(), AF_UNSPEC, &tmpCache); err < 0) {
+            throw RtnetlinkException("rtnl_link_alloc_cache", err);
+        }
+
+        linkCache = nlCache(tmpCache, nl_cache_free);
+    }
+
+    {
+        nl_cache* tmpCache;
+
+        if (auto err = rtnl_neigh_alloc_cache(m_nlSocket.get(), &tmpCache); err < 0) {
+            throw RtnetlinkException("rtnl_neigh_alloc_cache", err);
+        }
+
+        neighCache = nlCache(tmpCache, nl_cache_free);
+    }
+
+    auto rtnlDeleter = [](auto* obj) { nl_object_put(OBJ_CAST(obj)); };
+
+    std::vector<std::pair<Rtnetlink::nlNeigh, Rtnetlink::nlLink>> res;
+
+    nlCacheForeachWrapper<rtnl_neigh>(neighCache.get(), [&res, &linkCache, rtnlDeleter](rtnl_neigh* neigh) {
+        auto link = rtnl_link_get(linkCache.get(), rtnl_neigh_get_ifindex(neigh));
+
+        res.emplace_back(nlNeigh(nlObjClone(neigh), rtnlDeleter), nlLink(link, rtnlDeleter));
+    });
+
+    return res;
+}
 }

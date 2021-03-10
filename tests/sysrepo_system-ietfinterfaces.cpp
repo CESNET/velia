@@ -16,13 +16,25 @@ TEST_CASE("ietf-interfaces localhost")
 {
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
+    auto srConn2 = std::make_shared<sysrepo::Connection>();
+    auto srSess2 = std::make_shared<sysrepo::Session>(srConn2);
+
     TEST_SYSREPO_INIT_CLIENT;
 
-    auto network = std::make_shared<velia::system::IETFInterfaces>(srSess);
+    auto network = std::make_shared<velia::system::IETFInterfaces>(srSess, srSess2);
 
     // We didn't came up with some way of mocking netlink. At least check that there is the loopback
     // interface with expected values. It is *probably* safe to assume that there is at least the lo device.
-    REQUIRE(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='lo']", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+    auto lo = dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='lo']", SR_DS_OPERATIONAL);
+
+    // ensure statistics keys exist and remove them ; we can't really predict the content
+    for (const auto& key : {"/statistics", "/statistics/in-discards", "/statistics/in-errors", "/statistics/in-octets", "/statistics/out-discards", "/statistics/out-errors", "/statistics/out-octets"}) {
+        auto it = lo.find(key);
+        REQUIRE(it != lo.end());
+        lo.erase(it);
+    }
+
+    REQUIRE(lo == std::map<std::string, std::string> {
                 {"/name", "lo"},
                 {"/type", "iana-if-type:softwareLoopback"},
                 {"/phys-address", "00:00:00:00:00:00"},

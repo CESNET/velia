@@ -112,16 +112,37 @@ std::string getIPVersion(int addrFamily)
 
 namespace velia::system {
 
-IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
-    : m_srSession(std::move(srSess))
+IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSessPush, std::shared_ptr<::sysrepo::Session> srSessPull)
+    : m_srSessionPush(std::move(srSessPush))
+    , m_srSessionPull(std::move(srSessPull))
+    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSessionPull))
     , m_log(spdlog::get("system"))
     , m_rtnetlink(std::make_shared<Rtnetlink>(
           [this](rtnl_link* link, int action) { onLinkUpdate(link, action); },
           [this](rtnl_addr* addr, int action) { onAddrUpdate(addr, action); }))
 {
-    utils::ensureModuleImplemented(m_srSession, IETF_INTERFACES_MODULE_NAME, "2018-02-20");
-    utils::ensureModuleImplemented(m_srSession, IETF_IP_MODULE_NAME, "2018-02-22");
-    utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_NETWORK_MODULE_NAME, "2021-02-22");
+    utils::ensureModuleImplemented(m_srSessionPush, IETF_INTERFACES_MODULE_NAME, "2018-02-20");
+    utils::ensureModuleImplemented(m_srSessionPush, IETF_IP_MODULE_NAME, "2018-02-22");
+    utils::ensureModuleImplemented(m_srSessionPush, CZECHLIGHT_NETWORK_MODULE_NAME, "2021-02-22");
+
+    m_srSubscribe->oper_get_items_subscribe(
+        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto& parent) {
+            std::map<std::string, std::string> values;
+            for (const auto& link : m_rtnetlink->getLinks()) {
+                const auto yangPrefix = IETF_INTERFACES + "/interface[name='" + rtnl_link_get_name(link.get()) + "']/statistics";
+
+                values[yangPrefix + "/in-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_BYTES));
+                values[yangPrefix + "/out-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_BYTES));
+                values[yangPrefix + "/in-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_DROPPED));
+                values[yangPrefix + "/out-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_DROPPED));
+                values[yangPrefix + "/in-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_ERRORS));
+                values[yangPrefix + "/out-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_ERRORS));
+            }
+
+            utils::valuesToYang(values, {}, session, parent);
+            return SR_ERR_OK;
+        },
+        (IETF_INTERFACES + "/interface/statistics").c_str());
 }
 
 void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
@@ -130,7 +151,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
     m_log->trace("Netlink update on link '{}', action {}", name, nlActionToString(action));
 
     if (action == NL_ACT_DEL) {
-        utils::valuesPush({}, {IETF_INTERFACES + "/interface[name='" + name + "']/"}, m_srSession, SR_DS_OPERATIONAL);
+        utils::valuesPush({}, {IETF_INTERFACES + "/interface[name='" + name + "']/"}, m_srSessionPush, SR_DS_OPERATIONAL);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
         std::map<std::string, std::string> values;
         std::vector<std::string> deletePaths;
@@ -149,7 +170,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
         values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = arpTypeToString(rtnl_link_get_arptype(link), m_log);
         values[IETF_INTERFACES + "/interface[name='" + name + "']/oper-status"] = operStatusToString(rtnl_link_get_operstate(link), m_log);
 
-        utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);
+        utils::valuesPush(values, deletePaths, m_srSessionPush, SR_DS_OPERATIONAL);
     } else {
         m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
     }
@@ -183,6 +204,6 @@ void IETFInterfaces::onAddrUpdate(rtnl_addr* addr, int action)
         m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
     }
 
-    utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);
+    utils::valuesPush(values, deletePaths, m_srSessionPush, SR_DS_OPERATIONAL);
 }
 }

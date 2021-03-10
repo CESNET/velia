@@ -27,6 +27,7 @@ private:
     void onRouteUpdate(rtnl_route* addr, int action);
 
     std::shared_ptr<::sysrepo::Session> m_srSession;
+    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
     velia::Log m_log;
     std::shared_ptr<Rtnetlink> m_rtnetlink; // first to destroy, because the callback to rtnetlink uses m_srSession and m_log
 };

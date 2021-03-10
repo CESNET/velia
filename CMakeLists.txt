@@ -40,7 +40,7 @@ if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
     message(FATAL_ERROR "Systemd 245 has a bug affecting DBus method calls using sdbus-c++. Please see https://github.com/Kistler-Group/sdbus-cpp/issues/106.")
 endif()
 
-pkg_check_modules(SYSREPO REQUIRED sysrepo-cpp>=1.4.103 IMPORTED_TARGET sysrepo)
+pkg_check_modules(SYSREPO REQUIRED sysrepo-cpp>=1.4.127 IMPORTED_TARGET sysrepo)
 pkg_check_modules(LIBYANG REQUIRED libyang-cpp>=1.0.215 IMPORTED_TARGET libyang)
 pkg_check_modules(LIBNL REQUIRED IMPORTED_TARGET libnl-route-3.0)
 

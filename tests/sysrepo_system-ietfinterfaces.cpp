@@ -48,4 +48,5 @@ TEST_CASE("ietf-interfaces localhost")
                 {"/ietf-ip:ipv6/address[ip='::1']/ip", "::1"},
                 {"/ietf-ip:ipv6/address[ip='::1']/prefix-length", "128"},
             });
+    // NOTE: There are no neighbours on loopback
 }

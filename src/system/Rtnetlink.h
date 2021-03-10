@@ -17,6 +17,9 @@
 #include <thread>
 #include "utils/log-fwd.h"
 
+class rtnl_link;
+class rtnl_neigh;
+
 namespace velia::system {
 
 namespace impl {
@@ -29,6 +32,7 @@ public:
     using nlCacheManager = std::shared_ptr<nl_cache_mngr>;
     using nlCache = std::unique_ptr<nl_cache, std::function<void(nl_cache*)>>;
     using nlLink = std::unique_ptr<rtnl_link, std::function<void(rtnl_link*)>>;
+    using nlNeigh = std::unique_ptr<rtnl_neigh, std::function<void(rtnl_neigh*)>>;
 
     using LinkCB = std::function<void(rtnl_link* link, int cacheAction)>; /// cacheAction: NL_ACT_*
     using AddrCB = std::function<void(rtnl_addr* addr, int cacheAction)>; /// cacheAction: NL_ACT_*
@@ -36,6 +40,7 @@ public:
     Rtnetlink(LinkCB cbLink, AddrCB cbAddr);
     ~Rtnetlink();
     std::vector<nlLink> getLinks();
+    std::vector<std::pair<nlNeigh, nlLink>> getNeighbours();
 
 private:
     velia::Log m_log;

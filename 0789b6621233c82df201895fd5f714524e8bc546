@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "470c15fa_a78cbe07",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-10T13:51:27Z",
+      "side": 1,
+      "message": "please explain why two sessions are needed (you mentioned you haven\u0027t seen it crash or lock up, so perhaps it is not needed); when in doubt, please ask upstream and link the reply (or the issue) here",
+      "revId": "0789b6621233c82df201895fd5f714524e8bc546",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26763a41_434ccc6f",
+        "filename": "src/system/IETFInterfaces.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-10T13:51:27Z",
+      "side": 1,
+      "message": "there\u0027s still a reason to keep `explicit` in there since C++11 and uniform construction via {}, so I recommend keeping this in. Not a big deal, though.",
+      "revId": "0789b6621233c82df201895fd5f714524e8bc546",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

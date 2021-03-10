@@ -42,6 +42,19 @@ void nlCacheMngrCallbackWrapper(struct nl_cache*, struct nl_object* obj, int act
     }
 }
 
+/** @brief Wraps rtnl object with unique_ptr and adds an appropriate deleter. */
+template <class T>
+std::unique_ptr<T, std::function<void(T*)>> nlObjectWrap(T* obj)
+{
+    return std::unique_ptr<T, std::function<void(T*)>>(obj, [] (T* obj) { nl_object_put(OBJ_CAST(obj)); });
+}
+
+template <class T>
+T* nlObjectClone(T* obj)
+{
+    return reinterpret_cast<T*>(nl_object_clone(OBJ_CAST(obj)));
+}
+
 }
 
 namespace velia::system {
@@ -96,9 +109,18 @@ RtnetlinkException::RtnetlinkException(const std::string& funcName, int error)
 
 Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
     : m_log(spdlog::get("system"))
+    , m_nlSocket(nl_socket_alloc(), nl_socket_free)
     , m_cbLink(std::move(cbLink))
     , m_cbAddr(std::move(cbAddr))
 {
+    if (!m_nlSocket) {
+        throw RtnetlinkException("nl_socket_alloc failed");
+    }
+
+    if (auto err = nl_connect(m_nlSocket.get(), NETLINK_ROUTE); err < 0) {
+        throw RtnetlinkException("nl_connect", err);
+    }
+
     {
         nl_cache_mngr* tmpManager;
         if (auto err = nl_cache_mngr_alloc(nullptr /* alloc and manage new netlink socket */, NETLINK_ROUTE, NL_AUTO_PROVIDE, &tmpManager); err < 0) {
@@ -130,8 +152,33 @@ Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
     nlCacheForeachWrapper<rtnl_addr>(cacheRouteAddr, [this](rtnl_addr* addr) {
         m_cbAddr(addr, NL_ACT_NEW);
     });
+
+    {
+        nl_cache* tmpCache;
+        if (auto err = rtnl_link_alloc_cache(m_nlSocket.get(), AF_UNSPEC, &tmpCache); err < 0) {
+            throw RtnetlinkException("rtnl_link_alloc_cache", err);
+        }
+        m_nlCacheLink = nlCache(tmpCache, nl_cache_free);
+    }
 }
 
 Rtnetlink::~Rtnetlink() = default;
+
+std::vector<Rtnetlink::nlLink> Rtnetlink::getLinks()
+{
+    resyncCache(m_nlCacheLink);
+
+    std::vector<Rtnetlink::nlLink> res;
+    nlCacheForeachWrapper<rtnl_link>(m_nlCacheLink.get(), [&res](rtnl_link* link) {
+        res.emplace_back(nlObjectWrap(nlObjectClone(link)));
+    });
+
+    return res;
+}
+
+void Rtnetlink::resyncCache(const nlCache& cache)
+{
+    nl_cache_resync(m_nlSocket.get(), cache.get(), [](nl_cache*, nl_object*, int, void*){}, nullptr);
+}
 
 }

@@ -135,8 +135,9 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
         std::map<std::string, std::string> values;
         std::vector<std::string> deletePaths;
 
+        auto linkAddr = rtnl_link_get_addr(link);
         std::array<char, PHYS_ADDR_BUF_SIZE> buf;
-        if (auto physAddr = nl_addr2str(rtnl_link_get_addr(link), buf.data(), buf.size()); physAddr != "none"s) { // set physical address if the link has one
+        if (auto physAddr = nl_addr2str(linkAddr, buf.data(), buf.size()); physAddr != "none"s && nl_addr_get_family(linkAddr) == AF_LLC) { // set physical address if the link has one
             values[IETF_INTERFACES + "/interface[name='" + name + "']/phys-address"] = physAddr;
         } else {
             // delete physical address from sysrepo if not provided by rtnetlink

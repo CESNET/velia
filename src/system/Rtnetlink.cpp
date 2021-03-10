@@ -6,6 +6,7 @@
  */
 
 #include <netlink/route/link.h>
+#include <netlink/route/neighbour.h>
 #include <utility>
 #include "Rtnetlink.h"
 #include "utils/log.h"
@@ -53,6 +54,16 @@ template <class T>
 T* nlObjectClone(T* obj)
 {
     return reinterpret_cast<T*>(nl_object_clone(OBJ_CAST(obj)));
+}
+
+velia::system::Rtnetlink::nlCache nlLinkCache(const velia::system::Rtnetlink::nlSocket& socket)
+{
+    nl_cache* tmpCache;
+    if (auto err = rtnl_link_alloc_cache(socket.get(), AF_UNSPEC, &tmpCache); err < 0) {
+        throw velia::system::RtnetlinkException("rtnl_link_alloc_cache", err);
+    }
+
+    return velia::system::Rtnetlink::nlCache(tmpCache, nl_cache_free);
 }
 
 }
@@ -158,15 +169,7 @@ Rtnetlink::~Rtnetlink() = default;
 
 std::vector<Rtnetlink::nlLink> Rtnetlink::getLinks()
 {
-    nlCache linkCache;
-    {
-        nl_cache* tmpCache;
-        if (auto err = rtnl_link_alloc_cache(m_nlSocket.get(), AF_UNSPEC, &tmpCache); err < 0) {
-            throw RtnetlinkException("rtnl_link_alloc_cache", err);
-        }
-
-        linkCache = nlCache(tmpCache, nl_cache_free);
-    }
+    nlCache linkCache = nlLinkCache(m_nlSocket);
 
     std::vector<Rtnetlink::nlLink> res;
 
@@ -177,4 +180,29 @@ std::vector<Rtnetlink::nlLink> Rtnetlink::getLinks()
     return res;
 }
 
+std::vector<std::pair<Rtnetlink::nlNeigh, Rtnetlink::nlLink>> Rtnetlink::getNeighbours()
+{
+    nlCache linkCache = nlLinkCache(m_nlSocket);
+    nlCache neighCache;
+
+    {
+        nl_cache* tmpCache;
+
+        if (auto err = rtnl_neigh_alloc_cache(m_nlSocket.get(), &tmpCache); err < 0) {
+            throw RtnetlinkException("rtnl_neigh_alloc_cache", err);
+        }
+
+        neighCache = nlCache(tmpCache, nl_cache_free);
+    }
+
+    std::vector<std::pair<Rtnetlink::nlNeigh, Rtnetlink::nlLink>> res;
+
+    nlCacheForeachWrapper<rtnl_neigh>(neighCache.get(), [&res, &linkCache](rtnl_neigh* neigh) {
+        auto link = rtnl_link_get(linkCache.get(), rtnl_neigh_get_ifindex(neigh));
+
+        res.emplace_back(nlObjectWrap(nlObjectClone(neigh)), nlObjectWrap(link));
+    });
+
+    return res;
+}
 }

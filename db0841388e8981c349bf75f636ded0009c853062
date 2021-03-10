@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e42fca53_177d86cc",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-10T13:37:19Z",
+      "side": 1,
+      "message": "I would have expected this as a first check, but this is of course valid (assuming nl_addr2str uses the buffer size, which I suppose it does).",
+      "range": {
+        "startLine": 140,
+        "startChar": 98,
+        "endLine": 140,
+        "endChar": 136
+      },
+      "revId": "db0841388e8981c349bf75f636ded0009c853062",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5b07a45_a9dca7af",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-10T13:37:19Z",
+      "side": 1,
+      "message": "...but it will always try to remove that address even if it was not removed. Not an issue, though, but if I was writing this, I would have just used an early return before even checking if it\u0027s a change or something.",
+      "revId": "db0841388e8981c349bf75f636ded0009c853062",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

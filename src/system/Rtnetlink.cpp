@@ -42,6 +42,18 @@ void nlCacheMngrCallbackWrapper(struct nl_cache*, struct nl_object* obj, int act
     }
 }
 
+template <class T>
+T* nlObjClone(T* obj)
+{
+    return reinterpret_cast<T*>(nl_object_clone(OBJ_CAST(obj)));
+}
+
+template <class T>
+std::function<void(T*)> nlObjDeleter()
+{
+    return [](T* obj) { nl_object_put(OBJ_CAST(obj)); };
+}
+
 }
 
 namespace velia::system {
@@ -96,9 +108,18 @@ RtnetlinkException::RtnetlinkException(const std::string& funcName, int error)
 
 Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
     : m_log(spdlog::get("system"))
+    , m_nlSocket(nl_socket_alloc(), nl_socket_free)
     , m_cbLink(std::move(cbLink))
     , m_cbAddr(std::move(cbAddr))
 {
+    if (!m_nlSocket) {
+        throw RtnetlinkException("nl_socket_alloc failed");
+    }
+
+    if (auto err = nl_connect(m_nlSocket.get(), NETLINK_ROUTE); err < 0) {
+        throw RtnetlinkException("nl_connect", err);
+    }
+
     {
         nl_cache_mngr* tmpManager;
         if (auto err = nl_cache_mngr_alloc(nullptr /* alloc and manage new netlink socket */, NETLINK_ROUTE, NL_AUTO_PROVIDE, &tmpManager); err < 0) {
@@ -133,5 +154,26 @@ Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
 }
 
 Rtnetlink::~Rtnetlink() = default;
+
+std::vector<Rtnetlink::nlLink> Rtnetlink::getLinks()
+{
+    nlCache linkCache;
+    {
+        nl_cache* tmpCache;
+        if (auto err = rtnl_link_alloc_cache(m_nlSocket.get(), AF_UNSPEC, &tmpCache); err < 0) {
+            throw RtnetlinkException("rtnl_link_alloc_cache", err);
+        }
+
+        linkCache = nlCache(tmpCache, nl_cache_free);
+    }
+
+    std::vector<Rtnetlink::nlLink> res;
+
+    nlCacheForeachWrapper<rtnl_link>(linkCache.get(), [&res](rtnl_link* link) {
+        res.emplace_back(nlLink(nlObjClone<rtnl_link>(link), nlObjDeleter<rtnl_link>()));
+    });
+
+    return res;
+}
 
 }

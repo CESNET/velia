@@ -125,6 +125,7 @@ namespace velia::system {
 
 IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
     : m_srSession(std::move(srSess))
+    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
     , m_log(spdlog::get("system"))
     , m_rtnetlink(std::make_shared<Rtnetlink>(
           [this](rtnl_link* link, int action) { onLinkUpdate(link, action); },
@@ -137,6 +138,25 @@ IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
 
     m_rtnetlink->invokeInitialCallbacks();
     // TODO: Implement /ietf-routing:routing/interfaces and /ietf-routing:routing/router-id
+
+    m_srSubscribe->oper_get_items_subscribe(
+        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto& parent) {
+            std::map<std::string, std::string> values;
+            for (const auto& link : m_rtnetlink->getLinks()) {
+                const auto yangPrefix = IETF_INTERFACES + "/interface[name='" + rtnl_link_get_name(link.get()) + "']/statistics";
+
+                values[yangPrefix + "/in-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_BYTES));
+                values[yangPrefix + "/out-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_BYTES));
+                values[yangPrefix + "/in-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_DROPPED));
+                values[yangPrefix + "/out-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_DROPPED));
+                values[yangPrefix + "/in-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_ERRORS));
+                values[yangPrefix + "/out-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_ERRORS));
+            }
+
+            utils::valuesToYang(values, {}, session, parent);
+            return SR_ERR_OK;
+        },
+        (IETF_INTERFACES + "/interface/statistics").c_str());
 }
 
 void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)

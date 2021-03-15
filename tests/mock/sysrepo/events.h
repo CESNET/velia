@@ -14,19 +14,22 @@
 
 class EventWatcher {
 public:
-    ~EventWatcher();
-    void operator()(::sysrepo::S_Session session, const sr_ev_notif_type_t notif_type, const char* xpath, const ::sysrepo::S_Vals vals, time_t timestamp);
-
     struct Event {
         std::string xPath;
         std::map<std::string, std::string> data;
         std::chrono::time_point<std::chrono::steady_clock> received;
     };
 
+    explicit EventWatcher(std::function<void(Event)> callback);
+    EventWatcher();
+    ~EventWatcher();
+    void operator()(::sysrepo::S_Session session, const sr_ev_notif_type_t notif_type, const char* xpath, const ::sysrepo::S_Vals vals, time_t timestamp);
+
     Event peek(std::vector<Event>::size_type index) const;
     std::vector<Event>::size_type count() const;
 
 private:
+    std::function<void(Event)> notifRecvCb;
     mutable std::shared_ptr<std::mutex> mutex = std::make_shared<std::mutex>();
     std::shared_ptr<std::vector<Event>> events = std::make_shared<std::vector<Event>>();
 };

@@ -9,6 +9,50 @@
 
 using namespace std::literals;
 
+struct InstallProgressMock {
+    MAKE_CONST_MOCK2(update, void(int32_t, const std::string&));
+};
+
+std::vector<std::unique_ptr<trompeloeil::expectation>> expectationFactory(const DBusRAUCServer::InstallBehaviour& installType, const InstallProgressMock& eventMock, trompeloeil::sequence& seq1)
+{
+    std::vector<std::unique_ptr<trompeloeil::expectation>> expectations;
+
+    if (installType == DBusRAUCServer::InstallBehaviour::OK) {
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(0, "Installing")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(0, "Determining slot states")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Determining slot states done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Checking bundle")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Veryfing signature")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(40, "Veryfing signature done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(40, "Checking bundle done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(40, "Loading manifest file")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(60, "Loading manifest file done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(60, "Determining target install group")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(80, "Determining target install group done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(80, "Updating slots")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(80, "Checking slot rootfs.0")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(85, "Checking slot rootfs.0 done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(85, "Copying image to rootfs.0")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(90, "Copying image to rootfs.0 done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(90, "Checking slot cfg.0")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(95, "Checking slot cfg.0 done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(95, "Copying image to cfg.0")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(100, "Copying image to cfg.0 done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(100, "Updating slots done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(100, "Installing done.")).IN_SEQUENCE(seq1));
+    } else {
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(0, "Installing")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(0, "Determining slot states")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Determining slot states done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Checking bundle")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(40, "Checking bundle failed.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(100, "Installing failed.")).IN_SEQUENCE(seq1));
+    }
+
+    return expectations;
+}
+
+
 TEST_CASE("Firmware in czechlight-system, RPC")
 {
     trompeloeil::sequence seq1;
@@ -16,6 +60,12 @@ TEST_CASE("Firmware in czechlight-system, RPC")
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
+
+    // process install notifications
+    InstallProgressMock installProgressMock;
+    EventWatcher events([&installProgressMock](const EventWatcher::Event& event) {
+        installProgressMock.update(std::stoi(event.data.at("/czechlight-system:firmware/installation/update/progress")), event.data.at("/czechlight-system:firmware/installation/update/message"));
+    });
 
     auto dbusServerConnection = sdbus::createSessionBusConnection("de.pengutronix.rauc");
     auto dbusClientConnectionSignals = sdbus::createSessionBusConnection();
@@ -118,17 +168,13 @@ TEST_CASE("Firmware in czechlight-system, RPC")
 
         SECTION("Installation runs")
         {
+            subscription->event_notif_subscribe("czechlight-system", events, "/czechlight-system:firmware/installation/update");
+
             DBusRAUCServer::InstallBehaviour installType;
             std::map<std::string, std::string> expectedFinished, expectedInProgress = {
                 {"/message", ""},
                 {"/status", "in-progress"},
             };
-            size_t expectedNotificationsCount;
-            std::string expectedLastNotificationMsg;
-
-            // subscribe to notifications
-            EventWatcher events;
-            subscription->event_notif_subscribe("czechlight-system", events, "/czechlight-system:firmware/installation/update");
 
             SECTION("Successfull install")
             {
@@ -137,8 +183,6 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                     {"/message", ""},
                     {"/status", "succeeded"},
                 };
-                expectedNotificationsCount = 22;
-                expectedLastNotificationMsg = "Installing done.";
             }
 
             SECTION("Unsuccessfull install")
@@ -148,71 +192,60 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                     {"/message", "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number"},
                     {"/status", "failed"},
                 };
-                expectedNotificationsCount = 6;
-                expectedLastNotificationMsg = "Installing failed.";
             }
 
             raucServer.installBundleBehaviour(installType);
+            auto progressExpectations = expectationFactory(installType, installProgressMock, seq1);
             auto res = client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
             REQUIRE(res->val_cnt() == 0);
 
             std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
             REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expectedInProgress);
 
-            std::this_thread::sleep_for(2s); // lets wait a while, so the installation can finish
+            waitForCompletionAndBitMore(seq1); // wait for installation to complete
             REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expectedFinished);
-
-            // check updates notification count and that at least some of them are reasonable
-            REQUIRE(events.count() == expectedNotificationsCount);
-            REQUIRE(events.peek(0).data["/czechlight-system:firmware/installation/update/message"] == "Installing");
-            REQUIRE(events.peek(0).data["/czechlight-system:firmware/installation/update/progress"] == "0");
-            REQUIRE(events.peek(events.count() - 1).data["/czechlight-system:firmware/installation/update/message"] == expectedLastNotificationMsg);
-            REQUIRE(events.peek(events.count() - 1).data["/czechlight-system:firmware/installation/update/progress"] == "100");
-
-            // check updates notification progress is an increasing sequence
-            for (size_t i = 1; i < events.count(); i++) {
-                auto prevProgress = std::stoi(events.peek(i - 1).data["/czechlight-system:firmware/installation/update/progress"]);
-                auto currProgress = std::stoi(events.peek(i).data["/czechlight-system:firmware/installation/update/progress"]);
-                REQUIRE(prevProgress <= currProgress);
-            }
         }
 
         SECTION("Unsuccessfull install followed by successfull install")
         {
-            std::map<std::string, std::string> expected;
+            subscription->event_notif_subscribe("czechlight-system", events, "/czechlight-system:firmware/installation/update");
 
             // invoke unsuccessfull install
-            raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::FAILURE);
-            client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+            {
+                raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::FAILURE);
+                auto progressExpectations = expectationFactory(DBusRAUCServer::InstallBehaviour::FAILURE, installProgressMock, seq1);
+                client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
 
-            expected = {
-                {"/message", "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number"},
-                {"/status", "failed"},
-            };
-            std::this_thread::sleep_for(2s); // lets wait a while, so the installation can finish
-            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expected);
+                waitForCompletionAndBitMore(seq1); // wait for installation to complete
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+                    {"/message", "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number"},
+                    {"/status", "failed"},
+                });
+            }
 
             // invoke successfull install
-            raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK);
-            client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+            {
+                raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK);
+                auto progressExpectations = expectationFactory(DBusRAUCServer::InstallBehaviour::OK, installProgressMock, seq1);
+                client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
 
-            expected = {
-                {"/message", ""},
-                {"/status", "in-progress"},
-            };
-            std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
-            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expected);
+                std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+                    {"/message", ""},
+                    {"/status", "in-progress"},
+                });
 
-            expected = {
-                {"/message", ""},
-                {"/status", "succeeded"},
-            };
-            std::this_thread::sleep_for(2s); // lets wait a while, so the installation can finish
-            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expected);
-
+                waitForCompletionAndBitMore(seq1); // wait for installation to complete
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == std::map<std::string, std::string>{
+                    {"/message", ""},
+                    {"/status", "succeeded"},
+                });
+            }
         }
+
         SECTION("Installation in progress")
         {
+            raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK);
             client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
             std::this_thread::sleep_for(10ms);
 

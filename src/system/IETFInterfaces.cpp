@@ -5,6 +5,7 @@
  *
  */
 
+#include <arpa/inet.h>
 #include <linux/if_arp.h>
 #include <linux/netdevice.h>
 #include "IETFInterfaces.h"
@@ -82,6 +83,31 @@ std::string nlActionToString(int action)
     }
 }
 
+std::string binaddrToString(void* binaddr, int addrFamily)
+{
+    // any IPv4 address fits into a buffer allocated for an IPv6 address
+    static_assert(INET6_ADDRSTRLEN >= INET_ADDRSTRLEN);
+    std::array<char, INET6_ADDRSTRLEN> buf;
+
+    if (const char* res = inet_ntop(addrFamily, binaddr, buf.data(), buf.size()); res != nullptr) {
+        return res;
+    } else {
+        throw std::system_error {errno, std::generic_category(), "inet_ntop"};
+    }
+}
+
+std::string getIPVersion(int addrFamily)
+{
+    switch (addrFamily) {
+    case AF_INET:
+        return "ipv4";
+    case AF_INET6:
+        return "ipv6";
+    default:
+        throw std::runtime_error("Unexpected address family " + std::to_string(addrFamily));
+    }
+}
+
 }
 
 namespace velia::system {
@@ -89,7 +115,9 @@ namespace velia::system {
 IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
     : m_srSession(std::move(srSess))
     , m_log(spdlog::get("system"))
-    , m_rtnetlink(std::make_shared<Rtnetlink>([this](rtnl_link* link, int action) { onLinkUpdate(link, action); }))
+    , m_rtnetlink(std::make_shared<Rtnetlink>(
+          [this](rtnl_link* link, int action) { onLinkUpdate(link, action); },
+          [this](rtnl_addr* addr, int action) { onAddrUpdate(addr, action); }))
 {
     utils::ensureModuleImplemented(m_srSession, IETF_INTERFACES_MODULE_NAME, "2018-02-20");
     utils::ensureModuleImplemented(m_srSession, IETF_IP_MODULE_NAME, "2018-02-22");
@@ -107,8 +135,9 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
         std::map<std::string, std::string> values;
         std::vector<std::string> deletePaths;
 
+        auto linkAddr = rtnl_link_get_addr(link);
         std::array<char, PHYS_ADDR_BUF_SIZE> buf;
-        if (auto physAddr = nl_addr2str(rtnl_link_get_addr(link), buf.data(), buf.size()); physAddr != "none"s) { // set physical address if the link has one
+        if (auto physAddr = nl_addr2str(linkAddr, buf.data(), buf.size()); physAddr != "none"s && nl_addr_get_family(linkAddr) == AF_LLC) { // set physical address if the link has one
             values[IETF_INTERFACES + "/interface[name='" + name + "']/phys-address"] = physAddr;
         } else {
             // delete physical address from sysrepo if not provided by rtnetlink
@@ -126,4 +155,34 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
     }
 }
 
+void IETFInterfaces::onAddrUpdate(rtnl_addr* addr, int action)
+{
+    std::unique_ptr<rtnl_link, std::function<void(rtnl_link*)>> link(rtnl_addr_get_link(addr), [](rtnl_link* obj) { nl_object_put(OBJ_CAST(obj)); });
+
+    auto linkName = rtnl_link_get_name(link.get());
+    auto addrFamily = rtnl_addr_get_family(addr);
+    if (addrFamily != AF_INET && addrFamily != AF_INET6) {
+        return;
+    }
+
+    m_log->trace("Netlink update on address of link '{}', action {}", linkName, nlActionToString(action));
+
+    auto nlAddr = rtnl_addr_get_local(addr);
+    std::string ipAddress = binaddrToString(nl_addr_get_binary_addr(nlAddr), addrFamily); // We don't use libnl's nl_addr2str because it appends a prefix length to the string (e.g. 192.168.0.1/24)
+    std::string ipVersion = getIPVersion(addrFamily);
+
+    std::map<std::string, std::string> values;
+    std::vector<std::string> deletePaths;
+    const auto yangPrefix = IETF_INTERFACES + "/interface[name='" + linkName + "']/ietf-ip:" + ipVersion + "/address[ip='" + ipAddress + "']";
+
+    if (action == NL_ACT_DEL) {
+        deletePaths.push_back({yangPrefix});
+    } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
+        values[yangPrefix + "/prefix-length"] = std::to_string(rtnl_addr_get_prefixlen(addr));
+    } else {
+        m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
+    }
+
+    utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);
+}
 }

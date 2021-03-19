@@ -10,6 +10,7 @@
 #include <functional>
 #include <mutex>
 #include <netlink/netlink.h>
+#include <netlink/route/addr.h>
 #include <netlink/route/link.h>
 #include <stdexcept>
 #include <thread>
@@ -26,14 +27,16 @@ class Rtnetlink {
 public:
     using nlCacheManager = std::shared_ptr<nl_cache_mngr>;
     using LinkCB = std::function<void(rtnl_link* link, int cacheAction)>; /// cacheAction: NL_ACT_*
+    using AddrCB = std::function<void(rtnl_addr* addr, int cacheAction)>; /// cacheAction: NL_ACT_*
 
-    explicit Rtnetlink(LinkCB cbLink);
+    Rtnetlink(LinkCB cbLink, AddrCB cbAddr);
     ~Rtnetlink();
 
 private:
     velia::Log m_log;
     nlCacheManager m_nlCacheManager;
-    LinkCB m_cbLink; /* (link object ptr, cache action). Cache action specified in libnl's cache.h (NL_ACT_*) */
+    LinkCB m_cbLink;
+    AddrCB m_cbAddr;
     std::unique_ptr<impl::nlCacheMngrWatcher> m_nlCacheMngrWatcher; // first to destroy, because the thread uses m_nlCacheManager and m_log
 };
 

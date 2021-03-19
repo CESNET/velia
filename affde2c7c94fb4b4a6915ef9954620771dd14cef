@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecb68d73_1d734348",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-19T13:29:10Z",
+      "side": 1,
+      "message": "The cache gets re-created each time stuff is requested; is that required?",
+      "revId": "affde2c7c94fb4b4a6915ef9954620771dd14cef",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

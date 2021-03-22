@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c84b7de1_eca03c24",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-22T18:14:20Z",
+      "side": 1,
+      "message": "Weird, my vim normally wraps after column 72.",
+      "parentUuid": "6af44165_bc45f110",
+      "revId": "c42e67fb6ed166df31ad3725ad9a0515e1e2d14b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c18aff4_a77d354d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 4
@@ -31,6 +49,30 @@
       "writtenOn": "2021-03-22T18:01:14Z",
       "side": 1,
       "message": "Please document what concurrent access this is about because I do not follow. What confuses me is that there\u0027s this \"cache manager thread\" which is apparently doing some work behind the scenes, but I have no clue what it is -- and there\u0027s certainly no locking there.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 41
+      },
+      "revId": "c42e67fb6ed166df31ad3725ad9a0515e1e2d14b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "079f53b1_fb4e0680",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-22T18:14:20Z",
+      "side": 1,
+      "message": "I don\u0027t think there is anything to do with the cache manager (it\u0027s not even mentioned anywhere).\n\nThis is about concurrent invocations from sysrepo\u0027s cb threads. If these two methods were executed in parallel, some nasty data races while resyncing the cache would appear.\n\nOr is it guaranteed that sysrepo\u0027s callbacks run inside one thread? I couldn\u0027t find it in the docs.\nIf so, then the lock is indeed not needed for our purposes.",
+      "parentUuid": "7c18aff4_a77d354d",
       "range": {
         "startLine": 14,
         "startChar": 0,

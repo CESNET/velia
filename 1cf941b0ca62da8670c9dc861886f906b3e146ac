@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "1cf941b0ca62da8670c9dc861886f906b3e146ac",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e73c1ed_65302144",
+        "filename": "tests/mock/sysrepo/events.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-22T18:09:58Z",
+      "side": 1,
+      "message": "If notifRecvCb is default-contsructed (and that happens when EvenWatcher\u0027s default ctor was used), then this ends up with a std::bad_function_call. Either remove that constructor, or use https://en.cppreference.com/w/cpp/utility/functional/function/operator_bool here.\n\nLooking at the CI coverage, the second patch in the series removes invocation of EventWatcher\u0027s default ctor. If I understand this correctly and that default ctor won\u0027t be needed, just remove it and squash these patches together.",
+      "revId": "1cf941b0ca62da8670c9dc861886f906b3e146ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

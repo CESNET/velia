@@ -69,6 +69,24 @@
       "parentUuid": "2637bbd0_7101180e",
       "revId": "1cf941b0ca62da8670c9dc861886f906b3e146ac",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7719553e_47ef60cb",
+        "filename": "tests/mock/sysrepo/events.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-22T18:42:41Z",
+      "side": 1,
+      "message": "Once again, I am sorry. I\u0027m rather going back to bed before doing anything more wrong. Sigh.",
+      "parentUuid": "251614ec_b29e29b5",
+      "revId": "1cf941b0ca62da8670c9dc861886f906b3e146ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

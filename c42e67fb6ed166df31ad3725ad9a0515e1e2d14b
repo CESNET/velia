@@ -81,6 +81,30 @@
       },
       "revId": "c42e67fb6ed166df31ad3725ad9a0515e1e2d14b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "664f0d1e_b57f0f45",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-22T18:31:05Z",
+      "side": 1,
+      "message": "that\u0027s determined by the subscription structure (how you subscribe), see https://netopeer.liberouter.org/doc/sysrepo/master/html/index.html#threads",
+      "parentUuid": "079f53b1_fb4e0680",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 41
+      },
+      "revId": "c42e67fb6ed166df31ad3725ad9a0515e1e2d14b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

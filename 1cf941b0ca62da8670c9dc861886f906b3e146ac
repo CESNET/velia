@@ -51,6 +51,24 @@
       "parentUuid": "4e73c1ed_65302144",
       "revId": "1cf941b0ca62da8670c9dc861886f906b3e146ac",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "251614ec_b29e29b5",
+        "filename": "tests/mock/sysrepo/events.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-22T18:37:16Z",
+      "side": 1,
+      "message": "because this commit won\u0027t build because that default ctor is invoked at https://gerrit.cesnet.cz/plugins/gitiles/CzechLight/velia/+/441bd492602d114b0e8e7459eed7f80f09f6a862/tests/sysrepo_system-firmware.cpp#130",
+      "parentUuid": "2637bbd0_7101180e",
+      "revId": "1cf941b0ca62da8670c9dc861886f906b3e146ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

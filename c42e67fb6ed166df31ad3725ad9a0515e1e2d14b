@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6af44165_bc45f110",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-22T18:01:14Z",
+      "side": 1,
+      "message": "nit: gerrit renders some extra line wraps here, I think it uses git\u0027s default to wrap at 72 chars. Perhaps your editor wraps commit messages at 80 chars and could be reconfigured?",
+      "revId": "c42e67fb6ed166df31ad3725ad9a0515e1e2d14b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c18aff4_a77d354d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-22T18:01:14Z",
+      "side": 1,
+      "message": "Please document what concurrent access this is about because I do not follow. What confuses me is that there\u0027s this \"cache manager thread\" which is apparently doing some work behind the scenes, but I have no clue what it is -- and there\u0027s certainly no locking there.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 41
+      },
+      "revId": "c42e67fb6ed166df31ad3725ad9a0515e1e2d14b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -5,6 +5,58 @@
 
 namespace velia::ietf_hardware {
 
+namespace {
+void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware)
+{
+    if (auto pduDir = "/sys/bus/i2c/devices/2-0025/hwmon"; std::filesystem::is_directory(pduDir)) {
+        auto pdu = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(pduDir);
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::StaticData("ne:pdu", "ne", {{"class", "iana-hardware:power-supply"}}));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsVoltage("ne:pdu:voltage-12V", "ne:pdu", pdu, 1, data_reader::SysfsVoltage::DC));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsVoltage("ne:pdu:voltage-5V", "ne:pdu", pdu, 2, data_reader::SysfsVoltage::DC));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsVoltage("ne:pdu:voltage-3V3", "ne:pdu", pdu, 3, data_reader::SysfsVoltage::DC));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsCurrent("ne:pdu:current-12V", "ne:pdu", pdu, 1));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsCurrent("ne:pdu:current-5V", "ne:pdu", pdu, 2));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsCurrent("ne:pdu:current-3V3", "ne:pdu", pdu, 3));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:pdu:temperature-1", "ne:pdu", pdu, 1));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:pdu:temperature-2", "ne:pdu", pdu, 2));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:pdu:temperature-3", "ne:pdu", pdu, 3));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsPower("ne:pdu:power-12V", "ne:pdu", pdu, 1));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsPower("ne:pdu:power-5V", "ne:pdu", pdu, 2));
+        ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsPower("ne:pdu:power-3V3", "ne:pdu", pdu, 3));
+    }
+
+    const auto registerPsu = [&ietfHardware] (const auto dir, const auto name) {
+        if (std::filesystem::is_directory(dir)) {
+            const auto prefix = "ne:"s + name;
+            auto power = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(dir);
+            using velia::ietf_hardware::data_reader::StaticData;
+            using velia::ietf_hardware::data_reader::SysfsTemperature;
+            using velia::ietf_hardware::data_reader::SysfsVoltage;
+            using velia::ietf_hardware::data_reader::SysfsCurrent;
+            using velia::ietf_hardware::data_reader::Fans;
+            using velia::ietf_hardware::data_reader::SysfsPower;
+            ietfHardware->registerDataReader(StaticData(prefix, "ne", {{"class", "iana-hardware:power-supply"}}));
+            ietfHardware->registerDataReader(SysfsTemperature(prefix + ":temperature-1", prefix, power, 1));
+            ietfHardware->registerDataReader(SysfsTemperature(prefix + ":temperature-2", prefix, power, 2));
+            ietfHardware->registerDataReader(SysfsCurrent(prefix + ":current-in", prefix, power, 1));
+            ietfHardware->registerDataReader(SysfsCurrent(prefix + ":current-12V", prefix, power, 2));
+            ietfHardware->registerDataReader(SysfsCurrent(prefix + ":current-5V", prefix, power, 3));
+            ietfHardware->registerDataReader(SysfsVoltage(prefix + ":voltage-in", prefix, power, 1, data_reader::SysfsVoltage::AC));
+            ietfHardware->registerDataReader(SysfsVoltage(prefix + ":voltage-12V", prefix, power, 2, data_reader::SysfsVoltage::DC));
+            ietfHardware->registerDataReader(SysfsVoltage(prefix + ":voltage-5V", prefix, power, 3, data_reader::SysfsVoltage::DC));
+            ietfHardware->registerDataReader(SysfsPower(prefix + ":power-in", prefix, power, 1));
+            ietfHardware->registerDataReader(SysfsPower(prefix + ":power-out", prefix, power, 2));
+            ietfHardware->registerDataReader(Fans(prefix + ":fan", prefix, power, 1));
+        }
+    };
+
+    registerPsu("/sys/bus/i2c/devices/2-0058/hwmon", "psu1");
+    registerPsu("/sys/bus/i2c/devices/2-0059/hwmon", "psu2");
+
+}
+
+}
+
 std::shared_ptr<IETFHardware> create(const std::string& applianceName)
 {
     auto ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
@@ -26,6 +78,9 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-internal-0", "ne:ctrl", sysfsTempMII0, 1));
         ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-internal-1", "ne:ctrl", sysfsTempMII1, 1));
         ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
+
+        createPower(ietfHardware);
+
     } else if (applianceName == "czechlight-clearfog-g2") {
         auto fans = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/bus/i2c/devices/1-0020/hwmon/");
         auto tempMainBoard = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/bus/i2c/devices/1-0048/hwmon/");
@@ -49,6 +104,9 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-internal-0", "ne:ctrl", tempMII0, 1));
         ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-internal-1", "ne:ctrl", tempMII1, 1));
         ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
+
+        createPower(ietfHardware);
+
     } else {
         throw std::runtime_error("Unknown appliance '" + applianceName + "'");
     }

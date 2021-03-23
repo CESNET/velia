@@ -95,4 +95,14 @@ HWMon::Attributes HWMon::attributes() const
 
     return result;
 }
+
+int64_t HWMon::attribute(const std::string& propertyName) const
+{
+    Attributes result;
+    if (std::find(m_properties.begin(), m_properties.end(), propertyName) == m_properties.end()) {
+        throw std::logic_error("hwmon: attribute '" + propertyName + "' doesn't exist.");
+    }
+
+    return velia::utils::readFileInt64(m_root / propertyName);
+}
 }

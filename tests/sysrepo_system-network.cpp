@@ -41,7 +41,7 @@ EmitLLDP=nearest-bridge
 Name=eth1
 
 [Network]
-DHCP=yes
+DHCP=ipv6
 LLDP=true
 EmitLLDP=nearest-bridge
 )";

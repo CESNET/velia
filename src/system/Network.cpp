@@ -34,8 +34,8 @@ std::map<std::string, std::string> getNetworkConfiguration(std::shared_ptr<::sys
         log->debug("Container eth1-standalone not present. Generating bridge configuration for eth1.");
         return {{"eth1", fmt::format(NETWORK_FILE_CONTENT_TEMPLATE, "setting"_a = "Bridge=br0")}};
     } else {
-        log->debug("Container eth1-standalone is present. Generating DHCP configuration for eth1.");
-        return {{"eth1", fmt::format(NETWORK_FILE_CONTENT_TEMPLATE, "setting"_a = "DHCP=yes")}};
+        log->debug("Container eth1-standalone is present. Generating DHCPv6 configuration for eth1.");
+        return {{"eth1", fmt::format(NETWORK_FILE_CONTENT_TEMPLATE, "setting"_a = "DHCP=ipv6")}};
     }
 }
 

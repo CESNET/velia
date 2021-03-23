@@ -25,6 +25,11 @@ std::string sr_ev_notif_type_to_string(const sr_ev_notif_type_t notif_type)
 }
 }
 
+EventWatcher::EventWatcher(std::function<void(Event)> callback)
+    : notifRecvCb(std::move(callback))
+{
+}
+
 EventWatcher::~EventWatcher()
 {
 }
@@ -50,8 +55,12 @@ void EventWatcher::operator()(
         e.data[v->xpath()] = s;
     }
 
-    std::lock_guard<std::mutex> lock(*mutex);
-    events->push_back(e);
+    {
+        std::lock_guard<std::mutex> lock(*mutex);
+        events->push_back(e);
+    }
+
+    notifRecvCb(e);
 }
 
 std::vector<EventWatcher::Event>::size_type EventWatcher::count() const

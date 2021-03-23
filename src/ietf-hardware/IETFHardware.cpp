@@ -172,6 +172,87 @@ DataTree SysfsTemperature::operator()() const
     return res;
 }
 
+SysfsCurrent::SysfsCurrent(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr)
+    : DataReader(std::move(componentName), std::move(parent))
+    , m_hwmon(std::move(hwmon))
+    , m_sysfsCurrentFile("curr"s + std::to_string(sysfsChannelNr) + "_input")
+{
+    addComponent(m_staticData,
+                 m_componentName,
+                 m_parent,
+                 DataTree {
+                     {"class", "iana-hardware:sensor"},
+                     {"sensor-data/value-type", "amperes"},
+                     {"sensor-data/value-scale", "milli"},
+                     {"sensor-data/value-precision", "0"},
+                     {"sensor-data/oper-status", "ok"},
+                 });
+}
+
+DataTree SysfsCurrent::operator()() const
+{
+    DataTree res(m_staticData);
+
+    int64_t sensorValue = m_hwmon->attribute(m_sysfsCurrentFile);
+    addSensorValue(res, m_componentName, std::to_string(sensorValue));
+
+    return res;
+}
+
+SysfsPower::SysfsPower(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr)
+    : DataReader(std::move(componentName), std::move(parent))
+    , m_hwmon(std::move(hwmon))
+    , m_sysfsPowerFile("power"s + std::to_string(sysfsChannelNr) + "_input")
+{
+    addComponent(m_staticData,
+                 m_componentName,
+                 m_parent,
+                 DataTree {
+                     {"class", "iana-hardware:sensor"},
+                     {"sensor-data/value-type", "watts"},
+                     {"sensor-data/value-scale", "micro"},
+                     {"sensor-data/value-precision", "0"},
+                     {"sensor-data/oper-status", "ok"},
+                 });
+}
+
+DataTree SysfsPower::operator()() const
+{
+    DataTree res(m_staticData);
+
+    int64_t sensorValue = m_hwmon->attribute(m_sysfsPowerFile);
+    addSensorValue(res, m_componentName, std::to_string(sensorValue));
+
+    return res;
+}
+
+SysfsVoltage::SysfsVoltage(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr, const Type type)
+    : DataReader(std::move(componentName), std::move(parent))
+    , m_hwmon(std::move(hwmon))
+    , m_sysfsVoltageFile("in"s + std::to_string(sysfsChannelNr) + "_input")
+{
+    addComponent(m_staticData,
+                 m_componentName,
+                 m_parent,
+                 DataTree {
+                     {"class", "iana-hardware:sensor"},
+                     {"sensor-data/value-type", type == Type::AC ? "volts-AC" : "volts-DC"},
+                     {"sensor-data/value-scale", "micro"},
+                     {"sensor-data/value-precision", "0"},
+                     {"sensor-data/oper-status", "ok"},
+                 });
+}
+
+DataTree SysfsVoltage::operator()() const
+{
+    DataTree res(m_staticData);
+
+    int64_t sensorValue = m_hwmon->attribute(m_sysfsVoltageFile);
+    addSensorValue(res, m_componentName, std::to_string(sensorValue));
+
+    return res;
+}
+
 EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc)
     : DataReader(std::move(componentName), std::move(parent))
     , m_emmc(std::move(emmc))

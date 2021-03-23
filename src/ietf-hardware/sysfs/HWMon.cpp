@@ -90,9 +90,20 @@ HWMon::Attributes HWMon::attributes() const
 
     for (const auto& propertyName : m_properties) {
         // Read int64_t value because kernel seems to print numeric values as signed long ints (@see linux/drivers/hwmon/hwmon.c)
+        m_log->trace("reading {}", (m_root / propertyName).c_str());
         result.insert(std::make_pair(propertyName, velia::utils::readFileInt64(m_root / propertyName)));
     }
 
     return result;
+}
+
+int64_t HWMon::attribute(const std::string& propertyName) const
+{
+    Attributes result;
+    if (std::find(m_properties.begin(), m_properties.end(), propertyName) == m_properties.end()) {
+        throw std::logic_error("hwmon: attribute '" + propertyName + "' doesn't exist.");
+    }
+
+    return velia::utils::readFileInt64(m_root / propertyName);
 }
 }

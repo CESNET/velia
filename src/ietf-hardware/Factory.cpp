@@ -1,4 +1,5 @@
 #include "Factory.h"
+#include "FspYhPsu.h"
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/sysfs/EMMC.h"
 #include "ietf-hardware/sysfs/HWMon.h"
@@ -58,6 +59,13 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-0", "ne:ctrl", tempMII0, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-1", "ne:ctrl", tempMII1, 1));
         ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
+
+        ietfHardware->registerDataReader([psu = std::make_shared<velia::ietf_hardware::FspYhPsu>(2, 0x58, "/sys/bus/i2c/devices/2-0058/hwmon", "psu1")] {
+            return psu->readValues();
+        });
+        ietfHardware->registerDataReader([psu = std::make_shared<velia::ietf_hardware::FspYhPsu>(2, 0x59, "/sys/bus/i2c/devices/2-0059/hwmon", "psu2")] {
+            return psu->readValues();
+        });
     } else {
         throw std::runtime_error("Unknown appliance '" + applianceName + "'");
     }

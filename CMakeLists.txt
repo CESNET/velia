@@ -121,6 +121,8 @@ add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/sysfs/HWMon.h
     src/ietf-hardware/IETFHardware.cpp
     src/ietf-hardware/IETFHardware.h
+    src/ietf-hardware/FspYhPsu.cpp
+    src/ietf-hardware/FspYhPsu.h
     )
 target_link_libraries(velia-ietf-hardware
     PUBLIC

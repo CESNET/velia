@@ -150,6 +150,13 @@ std::string getSysfsFilename(const SensorType type, int sysfsChannelNr)
     switch (type) {
         case SensorType::Temperature:
             return "temp"s + std::to_string(sysfsChannelNr) + "_input";
+        case SensorType::Current:
+            return "curr"s + std::to_string(sysfsChannelNr) + "_input";
+        case SensorType::Power:
+            return "power"s + std::to_string(sysfsChannelNr) + "_input";
+        case SensorType::VoltageAC:
+        case SensorType::VoltageDC:
+            return "in"s + std::to_string(sysfsChannelNr) + "_input";
     }
 
     __builtin_unreachable();
@@ -162,6 +169,34 @@ template <> const DataTree sysfsStaticData<SensorType::Temperature> = {
     {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
     {"sensor-data/oper-status", "ok"},
+};
+template <> const DataTree sysfsStaticData<SensorType::Current> = {
+    {"class", "iana-hardware:sensor"},
+    {"sensor-data/value-type", "amperes"},
+    {"sensor-data/value-scale", "milli"},
+    {"sensor-data/value-precision", "0"},
+    {"sensor-data/oper-status", "ok"},
+};
+template <> const DataTree sysfsStaticData<SensorType::Power> = {
+    {"class", "iana-hardware:sensor"},
+    {"sensor-data/value-type", "watts"},
+    {"sensor-data/value-scale", "micro"},
+    {"sensor-data/value-precision", "0"},
+    {"sensor-data/oper-status", "ok"},
+};
+template <> const DataTree sysfsStaticData<SensorType::VoltageAC> = {
+    {"class", "iana-hardware:sensor"},
+    {"sensor-data/value-type", "volts-AC"},
+    {"sensor-data/value-scale", "micro"},
+    {"sensor-data/value-precision", "0"},
+    {"sensor-data/oper-status", "ok"}
+};
+template <> const DataTree sysfsStaticData<SensorType::VoltageDC> = {
+    {"class", "iana-hardware:sensor"},
+    {"sensor-data/value-type", "volts-DC"},
+    {"sensor-data/value-scale", "micro"},
+    {"sensor-data/value-precision", "0"},
+    {"sensor-data/oper-status", "ok"}
 };
 
 template <SensorType TYPE>
@@ -187,7 +222,11 @@ DataTree SysfsValue<TYPE>::operator()() const
     return res;
 }
 
+template struct SysfsValue<SensorType::Current>;
+template struct SysfsValue<SensorType::Power>;
 template struct SysfsValue<SensorType::Temperature>;
+template struct SysfsValue<SensorType::VoltageAC>;
+template struct SysfsValue<SensorType::VoltageDC>;
 
 EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc)
     : DataReader(std::move(componentName), std::move(parent))

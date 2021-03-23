@@ -23,6 +23,10 @@ TEST_CASE("HardwareState")
     auto sysfsTempFront = std::make_shared<FakeHWMon>();
     auto sysfsTempMII0 = std::make_shared<FakeHWMon>();
     auto sysfsTempMII1 = std::make_shared<FakeHWMon>();
+    auto sysfsVoltageAc = std::make_shared<FakeHWMon>();
+    auto sysfsVoltageDc = std::make_shared<FakeHWMon>();
+    auto sysfsPower = std::make_shared<FakeHWMon>();
+    auto sysfsCurrent = std::make_shared<FakeHWMon>();
     auto emmc = std::make_shared<FakeEMMC>();
 
     std::map<std::string, std::string> attributesEMMC;
@@ -54,6 +58,15 @@ TEST_CASE("HardwareState")
     attributesHWMon = {{"temp1_input", 36000}};
     FAKE_HWMON(sysfsTempMII1, attributesHWMon);
 
+    attributesHWMon = {{"in1_input", 220000}};
+    FAKE_HWMON(sysfsVoltageAc, attributesHWMon);
+    attributesHWMon = {{"in1_input", 12000}};
+    FAKE_HWMON(sysfsVoltageDc, attributesHWMon);
+    attributesHWMon = {{"power1_input", 14000000}};
+    FAKE_HWMON(sysfsPower, attributesHWMon);
+    attributesHWMon = {{"curr1_input", 200}};
+    FAKE_HWMON(sysfsCurrent, attributesHWMon);
+
     attributesEMMC = {{"life_time"s, "40"s}};
     FAKE_EMMC(emmc, attributesEMMC);
 
@@ -70,6 +83,10 @@ TEST_CASE("HardwareState")
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-0", "ne:ctrl", sysfsTempMII0, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-1", "ne:ctrl", sysfsTempMII1, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageAC>("ne:ctrl:voltage-in", "ne:ctrl", sysfsVoltageAc, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:ctrl:voltage-out", "ne:ctrl", sysfsVoltageDc, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Power>("ne:ctrl:power", "ne:ctrl", sysfsPower, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Current>("ne:ctrl:current", "ne:ctrl", sysfsCurrent, 1));
     ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
 
     SECTION("Test HardwareState without sysrepo")
@@ -148,6 +165,37 @@ TEST_CASE("HardwareState")
             {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value-precision", "0"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value-scale", "milli"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value-type", "celsius"},
+
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/class", "iana-hardware:sensor"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/parent", "ne:ctrl"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/oper-status", "ok"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value", "14000000"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-precision", "0"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-scale", "micro"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-type", "watts"},
+
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/class", "iana-hardware:sensor"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/parent", "ne:ctrl"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/oper-status", "ok"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value", "220000"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-precision", "0"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-scale", "micro"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-type", "volts-AC"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/class", "iana-hardware:sensor"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/parent", "ne:ctrl"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/oper-status", "ok"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value", "12000"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-precision", "0"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-scale", "micro"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-type", "volts-DC"},
+
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/class", "iana-hardware:sensor"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/parent", "ne:ctrl"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/oper-status", "ok"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value", "200"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-precision", "0"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-scale", "milli"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-type", "amperes"},
 
             {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/parent", "ne:ctrl"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/class", "iana-hardware:module"},
@@ -290,6 +338,45 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-precision", "0"},
                 {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-scale", "milli"},
                 {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-type", "celsius"},
+
+                {"[name='ne:ctrl:power']/name", "ne:ctrl:power"},
+                {"[name='ne:ctrl:power']/class", "iana-hardware:sensor"},
+                {"[name='ne:ctrl:power']/parent", "ne:ctrl"},
+                {"[name='ne:ctrl:power']/sensor-data", ""},
+                {"[name='ne:ctrl:power']/sensor-data/oper-status", "ok"},
+                {"[name='ne:ctrl:power']/sensor-data/value", "14000000"},
+                {"[name='ne:ctrl:power']/sensor-data/value-precision", "0"},
+                {"[name='ne:ctrl:power']/sensor-data/value-scale", "micro"},
+                {"[name='ne:ctrl:power']/sensor-data/value-type", "watts"},
+
+                {"[name='ne:ctrl:voltage-in']/name", "ne:ctrl:voltage-in"},
+                {"[name='ne:ctrl:voltage-in']/class", "iana-hardware:sensor"},
+                {"[name='ne:ctrl:voltage-in']/parent", "ne:ctrl"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data", ""},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/oper-status", "ok"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/value", "220000"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/value-precision", "0"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/value-scale", "micro"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/value-type", "volts-AC"},
+                {"[name='ne:ctrl:voltage-out']/name", "ne:ctrl:voltage-out"},
+                {"[name='ne:ctrl:voltage-out']/class", "iana-hardware:sensor"},
+                {"[name='ne:ctrl:voltage-out']/parent", "ne:ctrl"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data", ""},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/oper-status", "ok"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/value", "12000"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/value-precision", "0"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/value-scale", "micro"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/value-type", "volts-DC"},
+
+                {"[name='ne:ctrl:current']/name", "ne:ctrl:current"},
+                {"[name='ne:ctrl:current']/class", "iana-hardware:sensor"},
+                {"[name='ne:ctrl:current']/parent", "ne:ctrl"},
+                {"[name='ne:ctrl:current']/sensor-data", ""},
+                {"[name='ne:ctrl:current']/sensor-data/oper-status", "ok"},
+                {"[name='ne:ctrl:current']/sensor-data/value", "200"},
+                {"[name='ne:ctrl:current']/sensor-data/value-precision", "0"},
+                {"[name='ne:ctrl:current']/sensor-data/value-scale", "milli"},
+                {"[name='ne:ctrl:current']/sensor-data/value-type", "amperes"},
 
                 {"[name='ne:ctrl:emmc']/name", "ne:ctrl:emmc"},
                 {"[name='ne:ctrl:emmc']/parent", "ne:ctrl"},

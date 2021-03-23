@@ -1,9 +1,151 @@
+#include <fcntl.h>
+#include <fstream>
+#include <linux/i2c-dev.h>
+#include <sys/ioctl.h>
+#include <thread>
+#include <unistd.h>
 #include "Factory.h"
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/sysfs/EMMC.h"
 #include "ietf-hardware/sysfs/HWMon.h"
+#include "utils/log.h"
+#include "utils/UniqueResource.h"
 
 namespace velia::ietf_hardware {
+
+/**
+ * This class manages two things:
+ * 1) dynamic loading/unloading of the driver for the PSUs
+ * 2) reading of hwmon values for the PSUs
+ */
+struct SysfsPSU {
+public:
+    SysfsPSU(const std::string& i2cDevice, const int i2cAddress, const std::filesystem::path& hwmonDir, const std::string& psuName);
+    ~SysfsPSU();
+    DataTree operator()();
+private:
+    std::mutex m_mtx;
+    std::thread m_psuWatcher;
+    std::atomic<bool> m_exit;
+
+    std::string m_i2cDevice;
+    int m_i2cAddress;
+    std::filesystem::path m_hwmonDir;
+    std::string m_psuName;
+
+    std::shared_ptr<sysfs::HWMon> m_hwmon;
+    std::vector<std::function<DataTree()>> m_properties;
+
+    void createPower();
+};
+
+void SysfsPSU::createPower()
+{
+    m_hwmon = std::make_shared<sysfs::HWMon>(m_hwmonDir);
+    const auto prefix = "ne:"s + m_psuName;
+    using velia::ietf_hardware::data_reader::StaticData;
+    using velia::ietf_hardware::data_reader::SysfsValue;
+    using velia::ietf_hardware::data_reader::Fans;
+    using velia::ietf_hardware::data_reader::SensorType;
+    m_properties.push_back(StaticData(prefix, "ne", {{"class", "iana-hardware:power-supply"}}));
+    m_properties.push_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-1", prefix, m_hwmon, 1));
+    m_properties.push_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-2", prefix, m_hwmon, 2));
+    m_properties.push_back(SysfsValue<SensorType::Current>(prefix + ":current-in", prefix, m_hwmon, 1));
+    m_properties.push_back(SysfsValue<SensorType::Current>(prefix + ":current-12V", prefix, m_hwmon, 2));
+    m_properties.push_back(SysfsValue<SensorType::Current>(prefix + ":current-5Vsb", prefix, m_hwmon, 3));
+    m_properties.push_back(SysfsValue<SensorType::VoltageAC>(prefix + ":voltage-in", prefix, m_hwmon, 1));
+    m_properties.push_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-12V", prefix, m_hwmon, 2));
+    m_properties.push_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-5Vsb", prefix, m_hwmon, 3));
+    m_properties.push_back(SysfsValue<SensorType::Power>(prefix + ":power-in", prefix, m_hwmon, 1));
+    m_properties.push_back(SysfsValue<SensorType::Power>(prefix + ":power-out", prefix, m_hwmon, 2));
+    m_properties.push_back(Fans(prefix + ":fan", prefix, m_hwmon, 1));
+}
+
+bool i2cDevPresent(const std::string& devicePath, const int address)
+{
+    auto file = open(devicePath.c_str(), O_RDWR);
+    if (file < 0) {
+        throw std::runtime_error("i2cDevPresent: "s + strerror(errno));
+    }
+
+    auto fdClose = make_unique_resource([] {}, [file] {
+        close(file);
+    });
+
+    if (ioctl(file, I2C_SLAVE_FORCE, address) < 0) {
+        throw std::runtime_error("i2cDevPresent: "s + strerror(errno));
+    }
+
+    char bufferIn[1];
+    return read(file, bufferIn, 1) != -1;
+}
+
+void i2cLoadDriver(const std::string& i2cDevice, const std::string& address)
+{
+    std::ofstream ofs("/sys/bus/i2c/devices/i2c-" + i2cDevice + "/new_device");
+    ofs << "fsp3y_ym2151e " + address;
+}
+
+void i2cUnloadDriver(const std::string& i2cDevice, const std::string& address)
+{
+    std::ofstream ofs("/sys/bus/i2c/devices/i2c-" + i2cDevice + "/delete_device");
+    ofs << address;
+}
+
+SysfsPSU::SysfsPSU(const std::string& i2cDevice, const int i2cAddress, const std::filesystem::path& hwmonDir, const std::string& psuName)
+    : m_i2cDevice(i2cDevice)
+    , m_i2cAddress(i2cAddress)
+    , m_hwmonDir(hwmonDir)
+    , m_psuName(psuName)
+{
+    m_exit = false;
+    m_psuWatcher = std::thread([this] {
+        std::ostringstream addressString;
+        addressString << std::showbase << std::hex << m_i2cAddress;
+
+        while (!m_exit) {
+            if (i2cDevPresent("/dev/i2c-" + m_i2cDevice, m_i2cAddress)) {
+                if (!std::filesystem::is_directory(m_hwmonDir)) {
+                    spdlog::get("hardware")->info("Registering PSU at {}", addressString.str());
+                    i2cLoadDriver(m_i2cDevice, addressString.str());
+                }
+
+                if (!m_hwmon) {
+                    std::lock_guard lk(m_mtx);
+                    createPower();
+                }
+            } else if (std::filesystem::is_directory(m_hwmonDir)) {
+                {
+                    std::lock_guard lk(m_mtx);
+                    m_hwmon = nullptr;
+                    m_properties.clear();
+                }
+                spdlog::get("hardware")->info("Deregistering PSU from {}", addressString.str());
+                i2cLoadDriver(m_i2cDevice, addressString.str());
+            }
+
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+        }
+    });
+}
+
+SysfsPSU::~SysfsPSU()
+{
+    m_exit = true;
+    m_psuWatcher.join();
+}
+
+DataTree SysfsPSU::operator()()
+{
+    std::map<std::string, std::string> res;
+
+    std::lock_guard lk(m_mtx);
+    for (auto& reader : m_properties) {
+        res.merge(reader());
+    }
+
+    return res;
+}
 
 std::shared_ptr<IETFHardware> create(const std::string& applianceName)
 {
@@ -58,6 +200,13 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-0", "ne:ctrl", tempMII0, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-1", "ne:ctrl", tempMII1, 1));
         ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
+
+        ietfHardware->registerDataReader([psu = std::make_shared<SysfsPSU>("2", 0x58, "/sys/bus/i2c/devices/2-0058/hwmon", "psu1")] {
+            return (*psu)();
+        });
+        ietfHardware->registerDataReader([psu = std::make_shared<SysfsPSU>("2", 0x59, "/sys/bus/i2c/devices/2-0059/hwmon", "psu2")] {
+            return (*psu)();
+        });
     } else {
         throw std::runtime_error("Unknown appliance '" + applianceName + "'");
     }

@@ -23,6 +23,7 @@ public:
     virtual ~HWMon();
 
     virtual Attributes attributes() const;
+    int64_t attribute(const std::string& name) const;
 
 private:
     velia::Log m_log;

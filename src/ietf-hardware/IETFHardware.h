@@ -9,6 +9,8 @@
 
 #include <functional>
 #include <map>
+#include <mutex>
+#include <thread>
 #include <utility>
 #include "ietf-hardware/sysfs/EMMC.h"
 #include "ietf-hardware/sysfs/HWMon.h"
@@ -102,7 +104,12 @@ public:
 };
 
 enum class SensorType {
-   Temperature
+   Temperature,
+   Current,
+   VoltageDC,
+   VoltageAC,
+   Power
+
 };
 
 /** @brief Manages a single value from sysfs, data is provided by a sysfs::HWMon object. */

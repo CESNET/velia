@@ -1,5 +1,10 @@
+#include <iostream>
 #include "trompeloeil_doctest.h"
+#include <fstream>
+#include <future>
 #include <iterator>
+#include "fs-helpers/utils.h"
+#include "ietf-hardware/FspYhPsu.h"
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/sysrepo/Sysrepo.h"
 #include "mock/ietf_hardware.h"
@@ -23,6 +28,10 @@ TEST_CASE("HardwareState")
     auto sysfsTempFront = std::make_shared<FakeHWMon>();
     auto sysfsTempMII0 = std::make_shared<FakeHWMon>();
     auto sysfsTempMII1 = std::make_shared<FakeHWMon>();
+    auto sysfsVoltageAc = std::make_shared<FakeHWMon>();
+    auto sysfsVoltageDc = std::make_shared<FakeHWMon>();
+    auto sysfsPower = std::make_shared<FakeHWMon>();
+    auto sysfsCurrent = std::make_shared<FakeHWMon>();
     auto emmc = std::make_shared<FakeEMMC>();
 
     std::map<std::string, std::string> attributesEMMC;
@@ -50,6 +59,11 @@ TEST_CASE("HardwareState")
     REQUIRE_CALL(*sysfsTempMII0, attribute("temp1_input")).RETURN(39000);
     REQUIRE_CALL(*sysfsTempMII1, attribute("temp1_input")).RETURN(36000);
 
+    REQUIRE_CALL(*sysfsVoltageAc, attribute("in1_input")).RETURN(220000);
+    REQUIRE_CALL(*sysfsVoltageDc, attribute("in1_input")).RETURN(12000);
+    REQUIRE_CALL(*sysfsPower, attribute("power1_input")).RETURN(14000000);
+    REQUIRE_CALL(*sysfsCurrent, attribute("curr1_input")).RETURN(200);
+
     attributesEMMC = {{"life_time"s, "40"s}};
     FAKE_EMMC(emmc, attributesEMMC);
 
@@ -66,6 +80,10 @@ TEST_CASE("HardwareState")
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-0", "ne:ctrl", sysfsTempMII0, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-1", "ne:ctrl", sysfsTempMII1, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageAC>("ne:ctrl:voltage-in", "ne:ctrl", sysfsVoltageAc, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:ctrl:voltage-out", "ne:ctrl", sysfsVoltageDc, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Power>("ne:ctrl:power", "ne:ctrl", sysfsPower, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Current>("ne:ctrl:current", "ne:ctrl", sysfsCurrent, 1));
     ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
 
     SECTION("Test HardwareState without sysrepo")
@@ -144,6 +162,37 @@ TEST_CASE("HardwareState")
             {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value-precision", "0"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value-scale", "milli"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value-type", "celsius"},
+
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/class", "iana-hardware:sensor"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/parent", "ne:ctrl"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/oper-status", "ok"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value", "14000000"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-precision", "0"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-scale", "micro"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-type", "watts"},
+
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/class", "iana-hardware:sensor"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/parent", "ne:ctrl"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/oper-status", "ok"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value", "220000"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-precision", "0"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-scale", "micro"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-type", "volts-AC"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/class", "iana-hardware:sensor"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/parent", "ne:ctrl"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/oper-status", "ok"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value", "12000"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-precision", "0"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-scale", "micro"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-type", "volts-DC"},
+
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/class", "iana-hardware:sensor"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/parent", "ne:ctrl"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/oper-status", "ok"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value", "200"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-precision", "0"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-scale", "milli"},
+            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-type", "amperes"},
 
             {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/parent", "ne:ctrl"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/class", "iana-hardware:module"},
@@ -287,6 +336,45 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-scale", "milli"},
                 {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-type", "celsius"},
 
+                {"[name='ne:ctrl:power']/name", "ne:ctrl:power"},
+                {"[name='ne:ctrl:power']/class", "iana-hardware:sensor"},
+                {"[name='ne:ctrl:power']/parent", "ne:ctrl"},
+                {"[name='ne:ctrl:power']/sensor-data", ""},
+                {"[name='ne:ctrl:power']/sensor-data/oper-status", "ok"},
+                {"[name='ne:ctrl:power']/sensor-data/value", "14000000"},
+                {"[name='ne:ctrl:power']/sensor-data/value-precision", "0"},
+                {"[name='ne:ctrl:power']/sensor-data/value-scale", "micro"},
+                {"[name='ne:ctrl:power']/sensor-data/value-type", "watts"},
+
+                {"[name='ne:ctrl:voltage-in']/name", "ne:ctrl:voltage-in"},
+                {"[name='ne:ctrl:voltage-in']/class", "iana-hardware:sensor"},
+                {"[name='ne:ctrl:voltage-in']/parent", "ne:ctrl"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data", ""},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/oper-status", "ok"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/value", "220000"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/value-precision", "0"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/value-scale", "micro"},
+                {"[name='ne:ctrl:voltage-in']/sensor-data/value-type", "volts-AC"},
+                {"[name='ne:ctrl:voltage-out']/name", "ne:ctrl:voltage-out"},
+                {"[name='ne:ctrl:voltage-out']/class", "iana-hardware:sensor"},
+                {"[name='ne:ctrl:voltage-out']/parent", "ne:ctrl"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data", ""},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/oper-status", "ok"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/value", "12000"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/value-precision", "0"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/value-scale", "micro"},
+                {"[name='ne:ctrl:voltage-out']/sensor-data/value-type", "volts-DC"},
+
+                {"[name='ne:ctrl:current']/name", "ne:ctrl:current"},
+                {"[name='ne:ctrl:current']/class", "iana-hardware:sensor"},
+                {"[name='ne:ctrl:current']/parent", "ne:ctrl"},
+                {"[name='ne:ctrl:current']/sensor-data", ""},
+                {"[name='ne:ctrl:current']/sensor-data/oper-status", "ok"},
+                {"[name='ne:ctrl:current']/sensor-data/value", "200"},
+                {"[name='ne:ctrl:current']/sensor-data/value-precision", "0"},
+                {"[name='ne:ctrl:current']/sensor-data/value-scale", "milli"},
+                {"[name='ne:ctrl:current']/sensor-data/value-type", "amperes"},
+
                 {"[name='ne:ctrl:emmc']/name", "ne:ctrl:emmc"},
                 {"[name='ne:ctrl:emmc']/parent", "ne:ctrl"},
                 {"[name='ne:ctrl:emmc']/class", "iana-hardware:module"},
@@ -319,4 +407,213 @@ TEST_CASE("HardwareState")
             REQUIRE(val->data()->get_identityref() == "iana-hardware:sensor"s);
         }
     }
+}
+
+class FakeI2C : public velia::ietf_hardware::TransientI2C {
+public:
+    FakeI2C(const std::string& fakeHwmonRoot)
+        : TransientI2C({}, {}, {})
+        , m_fakeHwmonRoot(fakeHwmonRoot)
+    {
+    }
+
+    MAKE_CONST_MOCK0(isPresent, bool(), override);
+    MAKE_CONST_MOCK0(bind_mock, void());
+    MAKE_CONST_MOCK0(unbind_mock, void());
+
+    void removeHwmonFile(const std::string& name) const
+    {
+        std::filesystem::remove(m_fakeHwmonRoot / ("hwmon" + std::to_string(m_hwmonNo)) / name);
+    }
+
+    void bind() const override
+    {
+        bind_mock();
+        removeDirectoryTreeIfExists(m_fakeHwmonRoot);
+        std::filesystem::create_directory(m_fakeHwmonRoot);
+        std::filesystem::create_directory(m_fakeHwmonRoot / ("hwmon" + std::to_string(m_hwmonNo)));
+
+        for (const auto& filename : {"name", "temp1_input", "temp2_input", "curr1_input", "curr2_input", "curr3_input",
+                "in1_input", "in2_input", "in3_input", "power1_input", "power2_input", "fan1_input"} )
+        {
+            std::ofstream ofs(m_fakeHwmonRoot / ("hwmon" + std::to_string(m_hwmonNo)) / filename);
+            // I don't really care about the values here, I just need the HWMon class to think that the files exist.
+            ofs << 0 << "\n";
+        }
+    }
+    void unbind() const override
+    {
+        unbind_mock();
+        removeDirectoryTreeIfExists(m_fakeHwmonRoot);
+        m_hwmonNo++;
+    }
+
+private:
+
+    std::filesystem::path m_fakeHwmonRoot;
+    mutable int m_hwmonNo = 1;
+};
+
+TEST_CASE("FspYhPsu")
+{
+    TEST_INIT_LOGS;
+    bool retVal;
+    const auto fakeHwmonRoot = CMAKE_CURRENT_BINARY_DIR + "/tests/psu"s;
+    removeDirectoryTreeIfExists(fakeHwmonRoot);
+    auto fakeI2c = std::make_shared<FakeI2C>(fakeHwmonRoot);
+    trompeloeil::sequence seq1;
+    trompeloeil::sequence seq2;
+    std::condition_variable signal;
+    std::mutex mtx;
+    std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu;
+    std::vector<std::unique_ptr<trompeloeil::expectation>> expectations;
+
+    auto controller = [&, counter = 0] () mutable {
+        switch (counter) {
+        case 0: // At the start, the device isn't present.
+            retVal = false;
+            break;
+        case 1: { // Then it appears.
+            retVal = true;
+            expectations.push_back(NAMED_REQUIRE_CALL(*fakeI2c, bind_mock()).IN_SEQUENCE(seq2));
+            break;
+        }
+        case 2: { // Then it disappears.
+            retVal = false;
+            expectations.push_back(NAMED_REQUIRE_CALL(*fakeI2c, unbind_mock()).IN_SEQUENCE(seq2));
+            break;
+        }
+        case 3: { // Then it appears again.
+            retVal = true;
+            expectations.push_back(NAMED_REQUIRE_CALL(*fakeI2c, bind_mock()).IN_SEQUENCE(seq2));
+            break;
+        }
+        case 4: { // Then it disappears again. No expectation here, because it is set by the main thread when it simulates a read failure.
+            retVal = false;
+            break;
+        }
+        }
+        counter++;
+        signal.notify_all();
+    };
+
+    REQUIRE_CALL(*fakeI2c, isPresent()).LR_SIDE_EFFECT(controller()).LR_RETURN(retVal).TIMES(5);
+
+    psu = std::make_shared<velia::ietf_hardware::FspYhPsu>(fakeHwmonRoot, "psu", fakeI2c);
+
+    // After every isPresent() call, we test readValues in the 3 second window.
+    for (auto i : {0, 1, 2, 3, 4}) {
+        std::unique_lock lock(mtx);
+        signal.wait(lock);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        velia::ietf_hardware::DataTree expected;
+
+        switch (i) {
+        case 0:
+            break;
+        case 1:
+            expected = {
+                {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
+                {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-12V']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-12V']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-12V']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-12V']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-12V']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-12V']/sensor-data/value-scale", "milli"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-12V']/sensor-data/value-type", "amperes"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-5Vsb']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-5Vsb']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-5Vsb']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-5Vsb']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-5Vsb']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-5Vsb']/sensor-data/value-scale", "milli"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-5Vsb']/sensor-data/value-type", "amperes"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-in']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-in']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-in']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-in']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-in']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-in']/sensor-data/value-scale", "milli"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:current-in']/sensor-data/value-type", "amperes"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan']/class", "iana-hardware:module"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan:fan1']/class", "iana-hardware:fan"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan:fan1']/parent", "ne:psu:fan"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan:fan1:rpm']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan:fan1:rpm']/parent", "ne:psu:fan:fan1"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan:fan1:rpm']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan:fan1:rpm']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan:fan1:rpm']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan:fan1:rpm']/sensor-data/value-scale", "units"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:fan:fan1:rpm']/sensor-data/value-type", "rpm"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-in']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-in']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-in']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-in']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-in']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-in']/sensor-data/value-scale", "micro"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-in']/sensor-data/value-type", "watts"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-out']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-out']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-out']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-out']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-out']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-out']/sensor-data/value-scale", "micro"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:power-out']/sensor-data/value-type", "watts"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-1']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-1']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-1']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-1']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-1']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-1']/sensor-data/value-scale", "milli"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-1']/sensor-data/value-type", "celsius"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-2']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-2']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-2']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-2']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-2']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-2']/sensor-data/value-scale", "milli"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:temperature-2']/sensor-data/value-type", "celsius"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-12V']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-12V']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-12V']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-12V']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-12V']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-12V']/sensor-data/value-scale", "micro"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-12V']/sensor-data/value-type", "volts-DC"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-5Vsb']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-5Vsb']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-5Vsb']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-5Vsb']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-5Vsb']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-5Vsb']/sensor-data/value-scale", "micro"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-5Vsb']/sensor-data/value-type", "volts-DC"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/class", "iana-hardware:sensor"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/parent", "ne:psu"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/sensor-data/oper-status", "ok"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/sensor-data/value", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/sensor-data/value-precision", "0"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/sensor-data/value-scale", "micro"},
+                {"/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/sensor-data/value-type", "volts-AC"},
+            };
+            break;
+        case 2:
+            break;
+        case 3:
+            // Here I simulate read failure by a file from the hwmon directory. This happens when the user wants data from
+            // a PSU that's no longer there and the watcher thread didn't unbind it yet.
+            fakeI2c->removeHwmonFile("temp1_input");
+            expectations.push_back(NAMED_REQUIRE_CALL(*fakeI2c, unbind_mock()).IN_SEQUENCE(seq2));
+            break;
+        case 4:
+            break;
+        }
+
+        REQUIRE(psu->readValues() == expected);
+    }
+
+    waitForCompletionAndBitMore(seq1);
+    waitForCompletionAndBitMore(seq2);
 }

@@ -102,7 +102,12 @@ public:
 };
 
 enum class SensorType {
-   Temperature
+   Temperature,
+   Current,
+   VoltageDC,
+   VoltageAC,
+   Power
+
 };
 
 /** @brief Manages a single value from sysfs, data is provided by a sysfs::HWMon object. */

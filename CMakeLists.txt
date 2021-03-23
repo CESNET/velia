@@ -124,6 +124,8 @@ add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/sysfs/HWMon.h
     src/ietf-hardware/IETFHardware.cpp
     src/ietf-hardware/IETFHardware.h
+    src/ietf-hardware/FspYhPsu.cpp
+    src/ietf-hardware/FspYhPsu.h
     )
 target_link_libraries(velia-ietf-hardware
     PUBLIC
@@ -434,7 +436,7 @@ if(BUILD_TESTING)
     )
 
     sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
-    velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo)
+    velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo FsTestUtils)
     set_tests_properties(
             test-hardware_ietf-hardware
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-ietf-hardware

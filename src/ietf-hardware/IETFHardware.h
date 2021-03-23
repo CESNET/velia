@@ -112,6 +112,45 @@ public:
     DataTree operator()() const;
 };
 
+/** @brief Manages a single current sensor, data is provided by a sysfs::HWMon object. */
+struct SysfsCurrent : private DataReader {
+private:
+    std::shared_ptr<sysfs::HWMon> m_hwmon;
+    std::string m_sysfsCurrentFile;
+
+public:
+    SysfsCurrent(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr);
+    DataTree operator()() const;
+};
+
+/** @brief Manages a single power sensor, data is provided by a sysfs::HWMon object. */
+struct SysfsPower : private DataReader {
+private:
+    std::shared_ptr<sysfs::HWMon> m_hwmon;
+    std::string m_sysfsPowerFile;
+
+public:
+    SysfsPower(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr);
+    DataTree operator()() const;
+};
+
+// FIXME: could probably merge these Sysfs* classes later
+/** @brief Manages a single voltage sensor, data is provided by a sysfs::HWMon object. */
+struct SysfsVoltage : private DataReader {
+private:
+    std::shared_ptr<sysfs::HWMon> m_hwmon;
+    std::string m_sysfsVoltageFile;
+
+public:
+    enum Type {
+        AC,
+        DC
+    };
+
+    SysfsVoltage(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr, const Type type);
+    DataTree operator()() const;
+};
+
 /** @brief Manages a single eMMC block device hardware component. Data is provided by a sysfs::EMMC object. */
 struct EMMC : private DataReader {
 private:

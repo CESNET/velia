@@ -201,4 +201,16 @@ EmitLLDP=nearest-bridge
             REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_BRIDGE);
         }
     }
+
+    SECTION("state in the startup DS")
+    {
+        client->session_switch_ds(SR_DS_STARTUP);
+        client->set_item(PRESENCE_CONTAINER);
+        client->apply_changes();
+
+        srSess->session_switch_ds(SR_DS_STARTUP);
+        auto network = std::make_shared<velia::system::Network>(srSess, fakeDir, []([[maybe_unused]] const std::vector<std::string>& updatedInterfaces) {});
+        REQUIRE(std::filesystem::exists(expectedFilePath));
+        REQUIRE(velia::utils::readFileToString(expectedFilePath) == EXPECTED_CONTENT_DHCP);
+    }
 }

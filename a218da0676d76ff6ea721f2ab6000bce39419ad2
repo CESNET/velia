@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e0476f60_f7ceb709",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-24T11:27:16Z",
+      "side": 1,
+      "message": "\"5Vsb\" (and the same for the voltage)",
+      "range": {
+        "startLine": 43,
+        "startChar": 77,
+        "endLine": 43,
+        "endChar": 79
+      },
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cb43a9a7_9a974138",
         "filename": "src/ietf-hardware/Factory.cpp",
         "patchSetId": 2
@@ -48,6 +71,23 @@
       "writtenOn": "2021-03-24T10:28:50Z",
       "side": 1,
       "message": "nit: empty line",
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5132a748_24490ff1",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-24T11:27:16Z",
+      "side": 1,
+      "message": "Yes please; it looks that you\u0027re gonna need VoltageAC, VoltageDC, Current, Power, perhaps also Temperature. The Temperature should probably be unified with the other temperature reading from hwmon.",
       "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

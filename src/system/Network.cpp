@@ -28,13 +28,15 @@ LLDP=true
 EmitLLDP=nearest-bridge
 )";
 
-std::map<std::string, std::string> getNetworkConfiguration(std::shared_ptr<::sysrepo::Session> session, velia::Log log)
+constexpr auto LOG_NAME = "system";
+
+std::map<std::string, std::string> getNetworkConfiguration(std::shared_ptr<::sysrepo::Session> session)
 {
     if (session->get_data(CZECHLIGHT_SYSTEM_STANDALONE_ETH1.c_str()) == nullptr) { // the presence container is missing, bridge eth1
-        log->debug("Container eth1-standalone not present. Generating bridge configuration for eth1.");
+        spdlog::get(LOG_NAME)->debug("Container eth1-standalone not present. Generating bridge configuration for eth1.");
         return {{"eth1", fmt::format(NETWORK_FILE_CONTENT_TEMPLATE, "setting"_a = "Bridge=br0")}};
     } else {
-        log->debug("Container eth1-standalone is present. Generating DHCPv6 configuration for eth1.");
+        spdlog::get(LOG_NAME)->debug("Container eth1-standalone is present. Generating DHCPv6 configuration for eth1.");
         return {{"eth1", fmt::format(NETWORK_FILE_CONTENT_TEMPLATE, "setting"_a = "DHCP=ipv6")}};
     }
 }
@@ -42,35 +44,41 @@ std::map<std::string, std::string> getNetworkConfiguration(std::shared_ptr<::sys
 }
 
 namespace velia::system {
-
-Network::Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::path networkConfigDirectory, std::function<void(const std::vector<std::string>&)> networkReloadCallback)
-    : m_log(spdlog::get("system"))
-    , m_srSubscribe(std::make_shared<sysrepo::Subscribe>(srSess))
+Network::Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::path configDirectory, reload_cb_t reloadCallback)
+    : m_srSubscribe(std::make_shared<sysrepo::Subscribe>(srSess))
+    , configDirectory(std::move(configDirectory))
+    , reloadCallback(std::move(reloadCallback))
 {
     utils::ensureModuleImplemented(srSess, CZECHLIGHT_SYSTEM_MODULE_NAME, "2021-01-13");
 
     m_srSubscribe->module_change_subscribe(
         CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(),
-        [&, networkConfigDirectory = std::move(networkConfigDirectory), networkReloadCallback = std::move(networkReloadCallback)](sysrepo::S_Session session, [[maybe_unused]] const char* module_name, [[maybe_unused]] const char* xpath, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id) {
-            auto config = getNetworkConfiguration(session, m_log);
-            std::vector<std::string> changedInterfaces;
-
-            for (const auto& [interface, networkFileContents] : config) {
-                auto targetFile = networkConfigDirectory / (interface + ".network");
-
-                if (!std::filesystem::exists(targetFile) || velia::utils::readFileToString(targetFile) != networkFileContents) { // don't reload if the new file same as the already existing file
-                    velia::utils::safeWriteFile(targetFile, networkFileContents);
-                    changedInterfaces.push_back(interface);
-                }
-            }
-
-            networkReloadCallback(changedInterfaces);
-
-            return SR_ERR_OK;
+        [this](auto session, auto, auto, auto, auto) {
+            return generateConfig(session);
         },
         CZECHLIGHT_SYSTEM_STANDALONE_ETH1.c_str(),
         0,
         SR_SUBSCR_DONE_ONLY | SR_SUBSCR_ENABLED);
+}
+
+int Network::generateConfig(std::shared_ptr<sysrepo::Session> session)
+{
+    auto config = getNetworkConfiguration(session);
+    std::vector<std::string> changedInterfaces;
+
+    for (const auto& [interface, networkFileContents] : config) {
+        auto targetFile = configDirectory / (interface + ".network");
+
+        if (!std::filesystem::exists(targetFile) || velia::utils::readFileToString(targetFile) != networkFileContents) {
+            // don't reload if the new file same as the already existing file
+            velia::utils::safeWriteFile(targetFile, networkFileContents);
+            changedInterfaces.push_back(interface);
+        }
+    }
+
+    reloadCallback(changedInterfaces);
+
+    return SR_ERR_OK;
 }
 
 }

@@ -14,10 +14,14 @@ namespace velia::system {
 
 class Network {
 public:
-    Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::path networkConfigDirectory, std::function<void(const std::vector<std::string>&)> networkReloadCallback);
+    using reload_cb_t = std::function<void(const std::vector<std::string>&)>;
+    Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::path configDirectory, reload_cb_t reloadCallback);
 
 private:
-    velia::Log m_log;
     std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
+    std::filesystem::path configDirectory;
+    reload_cb_t reloadCallback;
+
+    int generateConfig(std::shared_ptr<::sysrepo::Session> session);
 };
 }

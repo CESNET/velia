@@ -59,6 +59,10 @@ Network::Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::pa
         CZECHLIGHT_SYSTEM_STANDALONE_ETH1.c_str(),
         0,
         SR_SUBSCR_DONE_ONLY | SR_SUBSCR_ENABLED);
+
+    if (srSess->session_get_ds() == SR_DS_STARTUP) {
+        generateConfig(srSess);
+    }
 }
 
 int Network::generateConfig(std::shared_ptr<sysrepo::Session> session)

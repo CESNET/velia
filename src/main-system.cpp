@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "veliad-system " VELIA_VERSION, true);
 
     velia::utils::initLogs(loggingSink);
-    spdlog::set_level(spdlog::level::info);
+    spdlog::set_level(spdlog::level::trace);
 
     try {
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));

@@ -52,6 +52,7 @@ Network::Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::pa
     m_srSubscribe->module_change_subscribe(
         CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(),
         [&, networkConfigDirectory = std::move(networkConfigDirectory), networkReloadCallback = std::move(networkReloadCallback)](sysrepo::S_Session session, [[maybe_unused]] const char* module_name, [[maybe_unused]] const char* xpath, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id) {
+            m_log->trace("DS {}: event", session->session_get_ds());
             auto config = getNetworkConfiguration(session, m_log);
             std::vector<std::string> changedInterfaces;
 
@@ -59,6 +60,7 @@ Network::Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::pa
                 auto targetFile = networkConfigDirectory / (interface + ".network");
 
                 if (!std::filesystem::exists(targetFile) || velia::utils::readFileToString(targetFile) != networkFileContents) { // don't reload if the new file same as the already existing file
+                    m_log->trace("Will write out {}: {}", targetFile.string(), networkFileContents);
                     velia::utils::safeWriteFile(targetFile, networkFileContents);
                     changedInterfaces.push_back(interface);
                 }

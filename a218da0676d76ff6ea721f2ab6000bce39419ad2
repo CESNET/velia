@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9af165d0_2f5ab8bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-24T10:28:50Z",
+      "side": 1,
+      "message": "Please add some tests so I can see whether the value-* values are correct :-)",
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb43a9a7_9a974138",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-24T10:28:50Z",
+      "side": 1,
+      "message": "nit: empty line",
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84bc2a77_a0875b1e",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-03-24T10:28:50Z",
+      "side": 1,
+      "message": "nit: empty line",
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -69,10 +69,12 @@ std::string Authentication::homeDirectory(const std::string& username)
     passwd* entry;
 
     while (true) {
+        auto pos = ftell(passwdFile.get());
         auto ret = fgetpwent_r(passwdFile.get(), &entryBuf, buffer.get(), bufLen, &entry);
         if (ret == ERANGE) {
             bufLen += 100;
             buffer = std::make_unique<char[]>(bufLen);
+            fseek(passwdFile.get(), pos, SEEK_SET);
             continue;
         }
 
@@ -106,10 +108,12 @@ std::map<std::string, std::optional<std::string>> Authentication::lastPasswordCh
 
     std::map<std::string, std::optional<std::string>> res;
     while (true) {
+        auto pos = ftell(shadowFile.get());
         auto ret = fgetspent_r(shadowFile.get(), &entryBuf, buffer.get(), bufLen, &entry);
         if (ret == ERANGE) {
             bufLen += 100;
             buffer = std::make_unique<char[]>(bufLen);
+            fseek(shadowFile.get(), pos, SEEK_SET);
             continue;
         }
 
@@ -167,10 +171,12 @@ std::vector<User> Authentication::listUsers()
 
     auto pwChanges = lastPasswordChanges();
     while (true) {
+        auto pos = ftell(passwdFile.get());
         auto ret = fgetpwent_r(passwdFile.get(), &entryBuf, buffer.get(), bufLen, &entry);
         if (ret == ERANGE) {
             bufLen += 100;
             buffer = std::make_unique<char[]>(bufLen);
+            fseek(passwdFile.get(), pos, SEEK_SET);
             continue;
         }
 

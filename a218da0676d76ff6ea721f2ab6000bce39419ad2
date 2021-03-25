@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "23246737_3f26dc3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-25T05:20:04Z",
+      "side": 1,
+      "message": "Will do",
+      "parentUuid": "9af165d0_2f5ab8bb",
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e0476f60_f7ceb709",
         "filename": "src/ietf-hardware/Factory.cpp",
         "patchSetId": 2
@@ -31,6 +49,30 @@
       "writtenOn": "2021-03-24T11:27:16Z",
       "side": 1,
       "message": "\"5Vsb\" (and the same for the voltage)",
+      "range": {
+        "startLine": 43,
+        "startChar": 77,
+        "endLine": 43,
+        "endChar": 79
+      },
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5931825_e2aa3e62",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-25T05:20:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0476f60_f7ceb709",
       "range": {
         "startLine": 43,
         "startChar": 77,
@@ -58,6 +100,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "76481bde_005dc832",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-25T05:20:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb43a9a7_9a974138",
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84bc2a77_a0875b1e",
@@ -75,6 +135,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "87ebd159_245bb4f6",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-25T05:20:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84bc2a77_a0875b1e",
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5132a748_24490ff1",
@@ -88,6 +166,24 @@
       "writtenOn": "2021-03-24T11:27:16Z",
       "side": 1,
       "message": "Yes please; it looks that you\u0027re gonna need VoltageAC, VoltageDC, Current, Power, perhaps also Temperature. The Temperature should probably be unified with the other temperature reading from hwmon.",
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b374a25_3a5952fb",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-25T05:20:04Z",
+      "side": 1,
+      "message": "I don\u0027t understand, what I meant was that I could merge these classes, because they mostly do the same.",
+      "parentUuid": "5132a748_24490ff1",
       "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

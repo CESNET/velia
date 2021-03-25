@@ -73,6 +73,7 @@ std::string Authentication::homeDirectory(const std::string& username)
         if (ret == ERANGE) {
             bufLen += 100;
             buffer = std::make_unique<char[]>(bufLen);
+            passwdFile = impl::file_open(m_etc_passwd.c_str(), "r");
             continue;
         }
 
@@ -110,6 +111,7 @@ std::map<std::string, std::optional<std::string>> Authentication::lastPasswordCh
         if (ret == ERANGE) {
             bufLen += 100;
             buffer = std::make_unique<char[]>(bufLen);
+            shadowFile = impl::file_open(m_etc_shadow.c_str(), "r");
             continue;
         }
 
@@ -171,6 +173,7 @@ std::vector<User> Authentication::listUsers()
         if (ret == ERANGE) {
             bufLen += 100;
             buffer = std::make_unique<char[]>(bufLen);
+            passwdFile = impl::file_open(m_etc_passwd.c_str(), "r");
             continue;
         }
 

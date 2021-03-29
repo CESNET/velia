@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "425dda03_ab129a2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-29T11:44:16Z",
+      "side": 1,
+      "message": "This is not strictly necessary, but I think it still cleans up the code a bit. Tomas, please either approve this or have me rebase the next commit which adds a test case for the bug I was getting.",
+      "revId": "cc647a20bf595c041693f436223ff38d2fe195f3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

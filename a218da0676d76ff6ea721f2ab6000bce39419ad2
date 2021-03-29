@@ -186,6 +186,24 @@
       "parentUuid": "5132a748_24490ff1",
       "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78f7d504_04ef7af7",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-29T08:24:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b374a25_3a5952fb",
+      "revId": "a218da0676d76ff6ea721f2ab6000bce39419ad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

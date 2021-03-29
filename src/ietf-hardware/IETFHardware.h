@@ -101,14 +101,19 @@ public:
     DataTree operator()() const;
 };
 
-/** @brief Manages a single temperature sensor, data is provided by a sysfs::HWMon object. */
-struct SysfsTemperature : private DataReader {
+enum class SensorType {
+   Temperature
+};
+
+/** @brief Manages a single value from sysfs, data is provided by a sysfs::HWMon object. */
+template<SensorType TYPE>
+struct SysfsValue : private DataReader {
 private:
     std::shared_ptr<sysfs::HWMon> m_hwmon;
-    std::string m_sysfsTemperatureFile;
+    std::string m_sysfsFile;
 
 public:
-    SysfsTemperature(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr);
+    SysfsValue(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr);
     DataTree operator()() const;
 };
 

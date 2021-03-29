@@ -57,15 +57,20 @@ TEST_CASE("HardwareState")
     attributesEMMC = {{"life_time"s, "40"s}};
     FAKE_EMMC(emmc, attributesEMMC);
 
+    using velia::ietf_hardware::data_reader::SensorType;
+    using velia::ietf_hardware::data_reader::StaticData;
+    using velia::ietf_hardware::data_reader::Fans;
+    using velia::ietf_hardware::data_reader::SysfsValue;
+    using velia::ietf_hardware::data_reader::EMMC;
     // register components into hw state
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::Fans("ne:fans", "ne", fans, 4));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-front", "ne:ctrl", sysfsTempFront, 1));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-internal-0", "ne:ctrl", sysfsTempMII0, 1));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-internal-1", "ne:ctrl", sysfsTempMII1, 1));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
+    ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
+    ietfHardware->registerDataReader(StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
+    ietfHardware->registerDataReader(Fans("ne:fans", "ne", fans, 4));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-front", "ne:ctrl", sysfsTempFront, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-0", "ne:ctrl", sysfsTempMII0, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-1", "ne:ctrl", sysfsTempMII1, 1));
+    ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
 
     SECTION("Test HardwareState without sysrepo")
     {

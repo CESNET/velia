@@ -41,6 +41,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7efb05d_c4711871",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-29T23:49:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14ba342b_b4bdd76b",
+      "range": {
+        "startLine": 21,
+        "startChar": 7,
+        "endLine": 21,
+        "endChar": 15
+      },
+      "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce9ebd92_60edd752",
@@ -87,6 +111,54 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4478486_3716326c",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-29T23:49:19Z",
+      "side": 1,
+      "message": "I like using ints, but sure",
+      "parentUuid": "ce9ebd92_60edd752",
+      "range": {
+        "startLine": 23,
+        "startChar": 49,
+        "endLine": 23,
+        "endChar": 52
+      },
+      "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdd4c91d_6f0e9b82",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-29T23:49:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "201951bf_f518dbe5",
+      "range": {
+        "startLine": 23,
+        "startChar": 13,
+        "endLine": 23,
+        "endChar": 41
+      },
+      "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e095f93d_898151b9",
@@ -100,6 +172,24 @@
       "writtenOn": "2021-03-29T14:37:26Z",
       "side": 1,
       "message": "This feels misleading to me. It\u0027s true that the interface that IETFHardware requires is based on type erasure and operator()(), but this class *cannot* be used directly as you reported back during Friday\u0027s call because it is not copyable. So there\u0027s a need for an instance of this SysfsPSU class, and then \"something callable\" (a lambda in this patch), but there\u0027s no need for this instance to have the call operator. Please use something like read() or readProperties() or something.",
+      "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ceff0cca_0d8c9d45",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-29T23:49:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e095f93d_898151b9",
       "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -129,6 +219,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4d83f0bf_145a0849",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-29T23:49:19Z",
+      "side": 1,
+      "message": "I\u0027m using open instead of fopen here, also, unique_ptr wouldn\u0027t really work for a file descriptor. What do you think?",
+      "parentUuid": "d841c380_36dc1034",
+      "range": {
+        "startLine": 65,
+        "startChar": 1,
+        "endLine": 73,
+        "endChar": 7
+      },
+      "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f942ee07_9bf9b1e7",
         "filename": "src/ietf-hardware/Factory.cpp",
         "patchSetId": 4
@@ -140,6 +254,24 @@
       "writtenOn": "2021-03-29T14:37:26Z",
       "side": 1,
       "message": "this probably deserves a comment why it isn\u0027t part of the i2cDevPresent if block above. It\u0027s true that the driver bind could fail (e.g. when the kernel defers that probe because something else isn\u0027t ready yet). I don\u0027t think it\u0027s likely to be observable outside of an early boot, prior to userspace starting up, but in either way, please add some comments why this is not done as a part of the check above.",
+      "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "555209c0_1684e0b5",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-29T23:49:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f942ee07_9bf9b1e7",
       "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

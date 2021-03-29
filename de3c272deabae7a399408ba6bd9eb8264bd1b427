@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc7f1952_e75c50fa",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-29T14:16:15Z",
+      "side": 1,
+      "message": "We talked about this on Friday call. The TL;DR summary looks correct, but the implementation looks a bit complex to me for two reasons:\n\n- If the file is reopened, it will use another FD, at least for a while (because fopen first opens a file, and only then will ~unique_ptr perform the cleanup). That is a tiny bit wasteful, but it could also change behavior (library functions called with another FD and such).\n\n- The code will now produce duplicate values because any error effectively restarts the process from the very first record. That\u0027s also not a big issue because it is effectively masked by the resulting std::map, but there\u0027s no need to do it that way.\n\nMy recommendation is to simply store the file offset position before each fgetpwent_r call, and then restore via fseek in case of ERANGE.",
+      "revId": "de3c272deabae7a399408ba6bd9eb8264bd1b427",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

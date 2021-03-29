@@ -145,32 +145,49 @@ DataTree Fans::operator()() const
     return res;
 }
 
-SysfsTemperature::SysfsTemperature(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr)
+std::string getSysfsFilename(const SensorType type, int sysfsChannelNr)
+{
+    switch (type) {
+        case SensorType::Temperature:
+            return "temp"s + std::to_string(sysfsChannelNr) + "_input";
+    }
+
+    __builtin_unreachable();
+}
+
+template <SensorType TYPE> const DataTree sysfsStaticData;
+template <> const DataTree sysfsStaticData<SensorType::Temperature> = {
+    {"class", "iana-hardware:sensor"},
+    {"sensor-data/value-type", "celsius"},
+    {"sensor-data/value-scale", "milli"},
+    {"sensor-data/value-precision", "0"},
+    {"sensor-data/oper-status", "ok"},
+};
+
+template <SensorType TYPE>
+SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr)
     : DataReader(std::move(componentName), std::move(parent))
     , m_hwmon(std::move(hwmon))
-    , m_sysfsTemperatureFile("temp"s + std::to_string(sysfsChannelNr) + "_input")
+    , m_sysfsFile(getSysfsFilename(TYPE, sysfsChannelNr))
 {
     addComponent(m_staticData,
                  m_componentName,
                  m_parent,
-                 DataTree {
-                     {"class", "iana-hardware:sensor"},
-                     {"sensor-data/value-type", "celsius"},
-                     {"sensor-data/value-scale", "milli"},
-                     {"sensor-data/value-precision", "0"},
-                     {"sensor-data/oper-status", "ok"},
-                 });
+                 sysfsStaticData<TYPE>);
 }
 
-DataTree SysfsTemperature::operator()() const
+template <SensorType TYPE>
+DataTree SysfsValue<TYPE>::operator()() const
 {
     DataTree res(m_staticData);
 
-    int64_t sensorValue = m_hwmon->attributes().at(m_sysfsTemperatureFile);
+    int64_t sensorValue = m_hwmon->attributes().at(m_sysfsFile);
     addSensorValue(res, m_componentName, std::to_string(sensorValue));
 
     return res;
 }
+
+template struct SysfsValue<SensorType::Temperature>;
 
 EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc)
     : DataReader(std::move(componentName), std::move(parent))

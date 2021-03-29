@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "0cc748696aa48d2e67623564409d794a1b22a160",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12edd93d_69bb04a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-29T22:44:03Z",
+      "side": 1,
+      "message": "Looks like I should have added a Depends-On the cla-sysrepo change. It has passed now after https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/4091 has been merged",
+      "revId": "0cc748696aa48d2e67623564409d794a1b22a160",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

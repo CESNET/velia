@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7955d1ef_fb57d00c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-29T21:43:11Z",
+      "side": 1,
+      "message": "this no longer matches the patch content",
+      "range": {
+        "startLine": 9,
+        "startChar": 36,
+        "endLine": 10,
+        "endChar": 38
+      },
+      "revId": "d3dcefff09eae05b5f1cc36f1382ceb397c086cc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a342ede4_445853d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-29T21:43:11Z",
+      "side": 1,
+      "message": "please fix the commit message and confirm that you tested on HW, after that it\u0027s good to go",
+      "revId": "d3dcefff09eae05b5f1cc36f1382ceb397c086cc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

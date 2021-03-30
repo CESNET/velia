@@ -16,6 +16,24 @@
       "message": "These tests do not appear to be related to the real hardware at all. The FspYhPsu class does not even get constructed, so I\u0027m not sure I understand the reasoning behind this change. Did you mean to test only that change of the new hwmon attribute extraction?",
       "revId": "6e31a330f042ddd04ede2eeef8341ef07cadd177",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37092312_5b631d69",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-30T19:01:03Z",
+      "side": 1,
+      "message": "the FspYhPsu class uses the new hwmon stuff (which now has tests), and also has the thread inside it. I don\u0027t know how to test the i2c communication and loading/unloading of the driver",
+      "parentUuid": "7ab52f49_76b7b63f",
+      "revId": "6e31a330f042ddd04ede2eeef8341ef07cadd177",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

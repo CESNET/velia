@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32c6569b_f3c5f09d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-30T09:14:12Z",
+      "side": 1,
+      "message": "PS3 went back to reopening the file, not the ftell+fseek approach. Please re-upload, and re-test to make sure that what you tested is what you uploaded.",
+      "revId": "c6f912266ae9192b612815627b5c2c228b14fc28",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

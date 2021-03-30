@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f217f0d_0b80f9be",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-30T09:24:08Z",
+      "side": 1,
+      "message": "Please move this class outside of Factory.cpp (add a proper .h + .cpp for that).",
+      "revId": "7367e457363500d0f5b307a79a61f8019b95b901",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "670a0052_e8513ec7",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-30T09:24:08Z",
+      "side": 1,
+      "message": "unused",
+      "revId": "7367e457363500d0f5b307a79a61f8019b95b901",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c52d6a4_615c81d8",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-30T09:24:08Z",
+      "side": 1,
+      "message": "unused",
+      "revId": "7367e457363500d0f5b307a79a61f8019b95b901",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94cecd85_2542d1ab",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-30T09:24:08Z",
+      "side": 1,
+      "message": "unused",
+      "revId": "7367e457363500d0f5b307a79a61f8019b95b901",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

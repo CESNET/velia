@@ -241,6 +241,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "833d5463_9a19322d",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-30T09:24:08Z",
+      "side": 1,
+      "message": "You\u0027re right, this is better.",
+      "parentUuid": "4d83f0bf_145a0849",
+      "range": {
+        "startLine": 65,
+        "startChar": 1,
+        "endLine": 73,
+        "endChar": 7
+      },
+      "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f942ee07_9bf9b1e7",

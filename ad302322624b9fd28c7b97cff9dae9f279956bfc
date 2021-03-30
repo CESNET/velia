@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "78f9b6e4_9b50f786",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-30T12:38:22Z",
+      "side": 1,
+      "message": "tests added",
+      "parentUuid": "4971629b_c3968e2f",
+      "revId": "ad302322624b9fd28c7b97cff9dae9f279956bfc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6887ded4_84f12f85",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-03-30T11:17:09Z",
       "side": 1,
       "message": "Looks like there\u0027s no error handling here (and in the unload function, too), and I think the iostream default is to not raise an exception. That means that if the driver binding fails for any reason, there will be no error message, and it will fail silently. Can you please check the failbit here and throw if the operation failed?",
+      "revId": "ad302322624b9fd28c7b97cff9dae9f279956bfc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92163af2_abe1efb5",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-30T12:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6887ded4_84f12f85",
       "revId": "ad302322624b9fd28c7b97cff9dae9f279956bfc",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

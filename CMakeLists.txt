@@ -419,6 +419,10 @@ if(BUILD_TESTING)
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
+            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-router-advertisements@2018-03-13.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
     velia_test(sysrepo_system-ietfinterfaces velia-system)
     set_tests_properties(

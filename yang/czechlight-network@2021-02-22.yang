@@ -7,6 +7,10 @@ module czechlight-network {
         prefix if;
     }
 
+    import ietf-routing {
+        prefix rt;
+    }
+
     import ietf-ip {
         prefix ip;
     }
@@ -24,7 +28,8 @@ module czechlight-network {
     // We don't support discontinuity time (yet)
     deviation /if:interfaces/if:interface/if:statistics/if:discontinuity-time { deviate not-supported; }
 
-    // Remove deprecated interfaces-state container
+    // Remove deprecated ietf-interfaces-state and ietf-routing containers. Beware, rt:routing-state references if:interfaces-state.
+    deviation /rt:routing-state { deviate not-supported; }
     deviation /if:interfaces-state { deviate not-supported; }
 
     // As of now we implement the model to contain operational data only

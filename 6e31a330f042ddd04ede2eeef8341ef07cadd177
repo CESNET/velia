@@ -34,6 +34,24 @@
       "parentUuid": "7ab52f49_76b7b63f",
       "revId": "6e31a330f042ddd04ede2eeef8341ef07cadd177",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77239bf9_c0a8aa40",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-30T19:36:26Z",
+      "side": 1,
+      "message": "What I\u0027m interested in is the behavior when the hwmon directory \"disappears\" and when the actual hwmon subdir changes its number. In other words, something like https://gerrit.cesnet.cz/plugins/gitiles/CzechLight/cla-sysrepo/+/f3a8246b9e001f583324097db241288de10a7e82/tests/sfp-hwmon.cpp .\n\nHow to test this? Define the interface, and implement a mock for that. Something like this should do the trick:\n \nclass TransientI2C {\npublic:\n  TransientI2C(const uint8 bus, const uint8 address, const std::string\u0026 driver);\n  virtual bool isPresent() const;\n  virtual void bind() const;\n  virtual void unbind() const;\n}\n\nAlso, a proper response to a \"no such device\" error code when reading from sysfs should be \"unbind that device\".",
+      "parentUuid": "37092312_5b631d69",
+      "revId": "6e31a330f042ddd04ede2eeef8341ef07cadd177",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

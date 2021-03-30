@@ -65,6 +65,10 @@ set(YANG_SRCS
     yang/czechlight-network@2021-02-22.yang
     yang/iana-if-type@2017-01-19.yang
     yang/ietf-ip@2018-02-22.yang
+    yang/ietf-routing@2018-03-13.yang
+    yang/ietf-ipv4-unicast-routing@2018-03-13.yang
+    yang/ietf-ipv6-unicast-routing@2018-03-13.yang
+    yang/ietf-ipv6-router-advertisements@2018-03-13.yang
     )
 
 # Targets

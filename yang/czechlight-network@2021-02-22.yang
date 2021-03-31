@@ -38,4 +38,13 @@ module czechlight-network {
 
     // IPv6 address autoconfiguration is not supported
     deviation /if:interfaces/if:interface/ip:ipv6/ip:autoconf { deviate not-supported; }
+
+    identity dhcp {
+        base rt:routing-protocol;
+        description "Identity for route installed by DHCP.";
+    }
+    identity ra {
+        base rt:routing-protocol;
+        description "Identity for route installed by router advertisement.";
+    }
 }

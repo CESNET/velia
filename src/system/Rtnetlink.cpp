@@ -142,6 +142,10 @@ Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
         throw RtnetlinkException("nl_cache_mngr_add", err);
     }
 
+    if (auto err = nl_cache_mngr_add(m_nlCacheManager.get(), "route/route", nlCacheMngrCallbackWrapper, &m_cbAddr, &m_nlManagedCacheRoute); err < 0) {
+        throw RtnetlinkException("nl_cache_mngr_add", err);
+    }
+
     {
         nl_cache* tmpCache;
 
@@ -160,6 +164,17 @@ Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
         }
 
         m_nlCacheNeighbour = nlCache(tmpCache, nl_cache_free);
+    }
+
+    {
+        nl_cache* tmpCache;
+
+        if (auto err = rtnl_route_alloc_cache(m_nlSocket.get(), AF_UNSPEC, ROUTE_CACHE_CONTENT, &tmpCache); err < 0) {
+            throw RtnetlinkException("rtnl_route_alloc_cache", err);
+        }
+
+        m_log->error("items: {}", nl_cache_nitems(tmpCache));
+        m_nlCacheRoute = nlCache(tmpCache, nl_cache_free);
     }
 }
 
@@ -202,6 +217,28 @@ std::vector<std::pair<Rtnetlink::nlNeigh, Rtnetlink::nlLink>> Rtnetlink::getNeig
         auto link = rtnl_link_get(m_nlCacheLink.get(), rtnl_neigh_get_ifindex(neigh));
 
         res.emplace_back(nlObjectWrap(nlObjectClone(neigh)), nlObjectWrap(link));
+    });
+
+    return res;
+}
+
+std::vector<Rtnetlink::nlRoute> Rtnetlink::getRoutes()
+{
+#if 0
+    resyncCache(m_nlCacheRoute); // first resync lowers the number of routes. It doesn't seem to recognize one particular route in ipv6. Possibly related to https://github.com/thom311/libnl/issues/224?
+#else
+    nl_cache* tmpCache;
+
+    if (auto err = rtnl_route_alloc_cache(m_nlSocket.get(), AF_UNSPEC, 0, &tmpCache); err < 0) {
+        throw RtnetlinkException("rtnl_route_alloc_cache", err);
+    }
+
+    m_nlCacheRoute = nlCache(tmpCache, nl_cache_free);
+#endif
+
+    std::vector<Rtnetlink::nlRoute> res;
+    nlCacheForeachWrapper<rtnl_route>(m_nlCacheRoute.get(), [&res](rtnl_route* route) {
+        res.emplace_back(nlObjectWrap(nlObjectClone(route)));
     });
 
     return res;

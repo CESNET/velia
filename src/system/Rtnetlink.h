@@ -35,8 +35,9 @@ public:
 
     using LinkCB = std::function<void(rtnl_link* link, int cacheAction)>; /// cacheAction: NL_ACT_*
     using AddrCB = std::function<void(rtnl_addr* addr, int cacheAction)>; /// cacheAction: NL_ACT_*
+    using RouteCB = std::function<void(rtnl_route* route, int cacheAction)>; /// cacheAction: NL_ACT_*
 
-    Rtnetlink(LinkCB cbLink, AddrCB cbAddr);
+    Rtnetlink(LinkCB cbLink, AddrCB cbAddr, RouteCB cbRoute);
     ~Rtnetlink();
     std::vector<nlLink> getLinks();
     std::vector<nlRoute> getRoutes();
@@ -58,6 +59,7 @@ private:
     nlCache m_nlCacheRoute; // for getRoutes
     LinkCB m_cbLink;
     AddrCB m_cbAddr;
+    RouteCB m_cbRoute;
     std::unique_ptr<impl::nlCacheMngrWatcher> m_nlCacheMngrWatcher; // first to destroy, because the thread uses m_nlCacheManager and m_log
 };
 

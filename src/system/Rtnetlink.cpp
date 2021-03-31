@@ -134,25 +134,13 @@ Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
     // FIXME: implement event loop instead of nlCacheMngrWatcher, maybe with https://www.freedesktop.org/software/systemd/man/sd-event.html
     m_nlCacheMngrWatcher = std::make_unique<impl::nlCacheMngrWatcher>(m_nlCacheManager);
 
-    nl_cache* cacheRouteLink;
-    if (auto err = nl_cache_mngr_add(m_nlCacheManager.get(), "route/link", nlCacheMngrCallbackWrapper, &m_cbLink, &cacheRouteLink); err < 0) {
+    if (auto err = nl_cache_mngr_add(m_nlCacheManager.get(), "route/link", nlCacheMngrCallbackWrapper, &m_cbLink, &m_nlManagedCacheLink); err < 0) {
         throw RtnetlinkException("nl_cache_mngr_add", err);
     }
 
-    nl_cache* cacheRouteAddr;
-    if (auto err = nl_cache_mngr_add(m_nlCacheManager.get(), "route/addr", nlCacheMngrCallbackWrapper, &m_cbAddr, &cacheRouteAddr); err < 0) {
+    if (auto err = nl_cache_mngr_add(m_nlCacheManager.get(), "route/addr", nlCacheMngrCallbackWrapper, &m_cbAddr, &m_nlManagedCacheAddr); err < 0) {
         throw RtnetlinkException("nl_cache_mngr_add", err);
     }
-
-    // fire callbacks after getting the initial data into the cache.
-    // populating the cache with nl_cache_mngr_add doesn't fire any cache change events
-    nlCacheForeachWrapper<rtnl_link>(cacheRouteLink, [this](rtnl_link* link) {
-        m_cbLink(link, NL_ACT_NEW);
-    });
-
-    nlCacheForeachWrapper<rtnl_addr>(cacheRouteAddr, [this](rtnl_addr* addr) {
-        m_cbAddr(addr, NL_ACT_NEW);
-    });
 
     {
         nl_cache* tmpCache;
@@ -176,6 +164,21 @@ Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
 }
 
 Rtnetlink::~Rtnetlink() = default;
+
+/* @brief Fire callbacks after getting the initial data into the cache; populating the cache with nl_cache_mngr_add doesn't fire any cache change events
+ *
+ * This code can't be in constructor because the callbacks can invoke other Rtnetlink methods while the instance is not yet constructed.
+ */
+void Rtnetlink::invokeInitialCallbacks()
+{
+    nlCacheForeachWrapper<rtnl_link>(m_nlManagedCacheLink, [this](rtnl_link* link) {
+        m_cbLink(link, NL_ACT_NEW);
+    });
+
+    nlCacheForeachWrapper<rtnl_addr>(m_nlManagedCacheAddr, [this](rtnl_addr* addr) {
+        m_cbAddr(addr, NL_ACT_NEW);
+    });
+}
 
 std::vector<Rtnetlink::nlLink> Rtnetlink::getLinks()
 {

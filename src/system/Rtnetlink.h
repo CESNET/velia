@@ -39,12 +39,16 @@ public:
     std::vector<nlLink> getLinks();
     std::vector<std::pair<nlNeigh, nlLink>> getNeighbours();
 
+    void invokeInitialCallbacks();
+
 private:
     void resyncCache(const nlCache& cache);
 
     velia::Log m_log;
     std::unique_ptr<nl_sock, std::function<void(nl_sock*)>> m_nlSocket;
     nlCacheManager m_nlCacheManager; // for updates
+    nl_cache* m_nlManagedCacheLink;
+    nl_cache* m_nlManagedCacheAddr;
     nlCache m_nlCacheLink; // for getLinks, getNeighbours
     nlCache m_nlCacheNeighbour; // for getNeighbours
     LinkCB m_cbLink;

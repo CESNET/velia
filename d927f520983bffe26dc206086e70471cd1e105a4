@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a48c8c4_326383bc",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-31T11:00:26Z",
+      "side": 1,
+      "message": "please print the output file name as well from here (and in all other exceptions)",
+      "revId": "d927f520983bffe26dc206086e70471cd1e105a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "648536ed_1d4fb66d",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-31T11:00:26Z",
+      "side": 1,
+      "message": "why not just:\n \nMAKE_CONST_MOCK0(isPresent, bool());",
+      "range": {
+        "startLine": 430,
+        "startChar": 0,
+        "endLine": 433,
+        "endChar": 5
+      },
+      "revId": "d927f520983bffe26dc206086e70471cd1e105a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f5778ec_147fffa7",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-31T11:00:26Z",
+      "side": 1,
+      "message": "Nothing tests that the code is actually reading from the correct hwmon entry. You\u0027ll need more than just the `name`, this will need all the individual sensors (well, at least one actual sensor).\n\nIn other words, nothing in the test suite triggers FspYhPsu::readValues(). What I asked for is making sure that readValues() produces reasonable results when the underlying hwmon device changes. Also include that case where the device disappears in the middle of that three-second poll (the test can simulate that via a `rm -rf` of the directory tree because it\u0027s hard to fake that error code that you get from hwmon when the i2c device stops responding).",
+      "revId": "d927f520983bffe26dc206086e70471cd1e105a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6fa25fcd_2356c979",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-03-31T11:00:26Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "range": {
+        "startLine": 480,
+        "startChar": 63,
+        "endLine": 480,
+        "endChar": 64
+      },
+      "revId": "d927f520983bffe26dc206086e70471cd1e105a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ccec6da_8e5a2a6f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-03-31T04:43:27Z",
+      "side": 1,
+      "message": "the hwmon number isn\u0027t hardcoded and I added a test which changes the hwmon number\nalthough the test is kind of weird, because threads and stuff",
+      "parentUuid": "0fb82ac9_92585fa0",
+      "revId": "8eff258ac0253a2538cdb0e60f2274dd86e7eb35",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "14ba342b_b4bdd76b",

@@ -38,6 +38,9 @@ void nlCacheMngrCallbackWrapper(struct nl_cache*, struct nl_object* obj, int act
     } else if (objType == "route/addr"s) {
         auto* cb = static_cast<velia::system::Rtnetlink::AddrCB*>(data);
         (*cb)(reinterpret_cast<rtnl_addr*>(obj), action);
+    } else if (objType == "route/route"s) {
+        auto* cb = static_cast<velia::system::Rtnetlink::RouteCB*>(data);
+        (*cb)(reinterpret_cast<rtnl_route*>(obj), action);
     } else {
         throw velia::system::RtnetlinkException("Unknown netlink object type in cache: '"s + objType + "'");
     }
@@ -108,11 +111,12 @@ RtnetlinkException::RtnetlinkException(const std::string& funcName, int error)
 {
 }
 
-Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
+Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr, RouteCB cbRoute)
     : m_log(spdlog::get("system"))
     , m_nlSocket(nl_socket_alloc(), nl_socket_free)
     , m_cbLink(std::move(cbLink))
     , m_cbAddr(std::move(cbAddr))
+    , m_cbRoute(std::move(cbRoute))
 {
     if (!m_nlSocket) {
         throw RtnetlinkException("nl_socket_alloc failed");
@@ -142,7 +146,7 @@ Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr)
         throw RtnetlinkException("nl_cache_mngr_add", err);
     }
 
-    if (auto err = nl_cache_mngr_add(m_nlCacheManager.get(), "route/route", nlCacheMngrCallbackWrapper, &m_cbAddr, &m_nlManagedCacheRoute); err < 0) {
+    if (auto err = nl_cache_mngr_add(m_nlCacheManager.get(), "route/route", nlCacheMngrCallbackWrapper, &m_cbRoute, &m_nlManagedCacheRoute); err < 0) {
         throw RtnetlinkException("nl_cache_mngr_add", err);
     }
 
@@ -193,6 +197,8 @@ void Rtnetlink::invokeInitialCallbacks()
     nlCacheForeachWrapper<rtnl_addr>(m_nlManagedCacheAddr, [this](rtnl_addr* addr) {
         m_cbAddr(addr, NL_ACT_NEW);
     });
+
+    m_cbRoute(nullptr, NL_ACT_NEW); // when a single route is changed, we fetch all anyway, so no need to call update on all routes (as of now)
 }
 
 std::vector<Rtnetlink::nlLink> Rtnetlink::getLinks()

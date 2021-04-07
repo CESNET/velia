@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "120f058a_52df3e2a",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-07T09:49:01Z",
+      "side": 1,
+      "message": "This will break if it\u0027s a scoped address (\"fe80::%eth0\"). Are you sure this will never be used with a scoped address? I have no clue of course.",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49c85fd6_cfb3aa95",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-07T09:49:01Z",
+      "side": 1,
+      "message": "This looks like an overengineered way of saying \"1\" in that XPath below on line 232. What am I missing?",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a65ac989_f85a5c8c",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-07T09:49:01Z",
+      "side": 1,
+      "message": "I don\u0027t follow this comment. If you\u0027re saying that the longest possible identifier is the null-terminated string \"redirect\", then that one takes 9 bytes, doesn\u0027t it? Why is it using 10 here?\n\nOf course I don\u0027t mind if it\u0027s 10 or 666, I just don\u0027t understand the intention here, and this particular comment doesn\u0027t help me because it doesn\u0027t seem to be aligned with the actual code.",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1cc6359_2d759ab9",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-07T09:49:01Z",
+      "side": 1,
+      "message": "Is that a hard guarantee form the kernel and from libnl that you won\u0027t ever see anything but these four values? If not, then __builtin_unreachable is wrong.",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b120af19_ef2edcc3",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-07T09:49:01Z",
+      "side": 1,
+      "message": "I\u0027m always nervous when I see an assert; I wonder if it\u0027s for CI tests. In this context that thing looks a bit fishy because I suspect that you might see several next hops when faced with multipath, won\u0027t you?",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fef8cfd6_c7e4d1ec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-07T09:22:09Z",
+      "side": 1,
+      "message": "I would have appreciated an example of the backtrace from the crash in the commit message, but it is not that important.",
+      "revId": "3d3cf615259ab5f8421c4113b122cd6857ab54a7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

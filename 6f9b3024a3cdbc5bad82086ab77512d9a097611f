@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45b79d8f_3c956d3b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-07T05:03:46Z",
+      "side": 1,
+      "message": "Please provide some meaningful descriptions of these identities; these are not from the RIP.",
+      "revId": "6f9b3024a3cdbc5bad82086ab77512d9a097611f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

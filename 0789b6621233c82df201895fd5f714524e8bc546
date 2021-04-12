@@ -33,6 +33,24 @@
       "message": "there\u0027s still a reason to keep `explicit` in there since C++11 and uniform construction via {}, so I recommend keeping this in. Not a big deal, though.",
       "revId": "0789b6621233c82df201895fd5f714524e8bc546",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27be864f_66ca7d86",
+        "filename": "src/system/IETFInterfaces.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-12T12:26:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26763a41_434ccc6f",
+      "revId": "0789b6621233c82df201895fd5f714524e8bc546",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

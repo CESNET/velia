@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5fa75e38_9257c19a",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-12T07:41:51Z",
+      "side": 1,
+      "message": "There can be multiple routes and the xpaths are separate for ipv4 and ipv6.\nThe list is key-less therefore I have to keep track of what index (for both ipv4 and ipv6) was last used when adding a new entry to the ipv4/ipv6 list.",
+      "parentUuid": "49c85fd6_cfb3aa95",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a65ac989_f85a5c8c",
         "filename": "src/system/IETFInterfaces.cpp",
         "patchSetId": 3
@@ -48,6 +66,24 @@
       "writtenOn": "2021-04-07T09:49:01Z",
       "side": 1,
       "message": "I don\u0027t follow this comment. If you\u0027re saying that the longest possible identifier is the null-terminated string \"redirect\", then that one takes 9 bytes, doesn\u0027t it? Why is it using 10 here?\n\nOf course I don\u0027t mind if it\u0027s 10 or 666, I just don\u0027t understand the intention here, and this particular comment doesn\u0027t help me because it doesn\u0027t seem to be aligned with the actual code.",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f019a4e_24d58190",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-12T07:41:51Z",
+      "side": 1,
+      "message": "I have altered the comment so it now says\n /* \"redirect\" is the longest value (9 bytes + \\0), see libnl/lib/route/route_utils.c: void init_proto_names() */",
+      "parentUuid": "a65ac989_f85a5c8c",
       "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -71,6 +107,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8b08c224_8d036d34",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-12T07:41:51Z",
+      "side": 1,
+      "message": "You are indeed right.\nIs just throwing an exception here a good idea?\n\nOr do you think I should just log an error and fallback to \"static\" so we don\u0027t keep crashing?",
+      "parentUuid": "a1cc6359_2d759ab9",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b120af19_ef2edcc3",
         "filename": "src/system/IETFInterfaces.cpp",
         "patchSetId": 3
@@ -82,6 +136,24 @@
       "writtenOn": "2021-04-07T09:49:01Z",
       "side": 1,
       "message": "I\u0027m always nervous when I see an assert; I wonder if it\u0027s for CI tests. In this context that thing looks a bit fishy because I suspect that you might see several next hops when faced with multipath, won\u0027t you?",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77f693f7_805156ab",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-12T07:41:51Z",
+      "side": 1,
+      "message": "I thought that we can\u0027t have multihop on a \"simple host\" but that is clearly wrong. I am going to fix this.",
+      "parentUuid": "b120af19_ef2edcc3",
       "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

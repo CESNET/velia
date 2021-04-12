@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a1a0b2a4_30ed5e1d",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-12T13:46:12Z",
+      "side": 1,
+      "message": "Can you please check this one?",
+      "parentUuid": "120f058a_52df3e2a",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "49c85fd6_cfb3aa95",
         "filename": "src/system/IETFInterfaces.cpp",
         "patchSetId": 3
@@ -49,6 +67,24 @@
       "side": 1,
       "message": "There can be multiple routes and the xpaths are separate for ipv4 and ipv6.\nThe list is key-less therefore I have to keep track of what index (for both ipv4 and ipv6) was last used when adding a new entry to the ipv4/ipv6 list.",
       "parentUuid": "49c85fd6_cfb3aa95",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30d70c31_b123903b",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-12T13:46:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5fa75e38_9257c19a",
       "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -90,6 +126,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1cd19766_acb77c58",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-12T13:46:12Z",
+      "side": 1,
+      "message": "\"redirect\" still has only eight chars; that\u0027s nine chars when including the trailing NUL byte. What\u0027s the purpose of the tenth byte?\n\nPlease use a compile-time thingy for this.",
+      "parentUuid": "0f019a4e_24d58190",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a1cc6359_2d759ab9",
         "filename": "src/system/IETFInterfaces.cpp",
         "patchSetId": 3
@@ -119,6 +173,24 @@
       "side": 1,
       "message": "You are indeed right.\nIs just throwing an exception here a good idea?\n\nOr do you think I should just log an error and fallback to \"static\" so we don\u0027t keep crashing?",
       "parentUuid": "a1cc6359_2d759ab9",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba8f542c_4d9be5ad",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-12T13:46:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b08c224_8d036d34",
       "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -154,6 +226,24 @@
       "side": 1,
       "message": "I thought that we can\u0027t have multihop on a \"simple host\" but that is clearly wrong. I am going to fix this.",
       "parentUuid": "b120af19_ef2edcc3",
+      "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddba65e8_0dd88cdb",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-12T13:46:12Z",
+      "side": 1,
+      "message": "Done (assuming that you tested this)",
+      "parentUuid": "77f693f7_805156ab",
       "revId": "5949c797487d8bb3e8e3cc67e1603d80ae797686",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

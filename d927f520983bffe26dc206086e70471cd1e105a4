@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "79b04206_b6271f19",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-13T10:16:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a48c8c4_326383bc",
+      "revId": "d927f520983bffe26dc206086e70471cd1e105a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "648536ed_1d4fb66d",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-03-31T11:00:26Z",
       "side": 1,
       "message": "why not just:\n \nMAKE_CONST_MOCK0(isPresent, bool());",
+      "range": {
+        "startLine": 430,
+        "startChar": 0,
+        "endLine": 433,
+        "endChar": 5
+      },
+      "revId": "d927f520983bffe26dc206086e70471cd1e105a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3537a1b4_3355b354",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-13T10:16:07Z",
+      "side": 1,
+      "message": "I like the uniformity of the names. Although I guess I can change",
+      "parentUuid": "648536ed_1d4fb66d",
       "range": {
         "startLine": 430,
         "startChar": 0,
@@ -58,6 +100,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b5f3caa_2971b7ea",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-13T10:16:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f5778ec_147fffa7",
+      "revId": "d927f520983bffe26dc206086e70471cd1e105a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6fa25fcd_2356c979",
@@ -71,6 +131,30 @@
       "writtenOn": "2021-03-31T11:00:26Z",
       "side": 1,
       "message": "nit: extra space",
+      "range": {
+        "startLine": 480,
+        "startChar": 63,
+        "endLine": 480,
+        "endChar": 64
+      },
+      "revId": "d927f520983bffe26dc206086e70471cd1e105a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76451fee_f3805db3",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-13T10:16:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6fa25fcd_2356c979",
       "range": {
         "startLine": 480,
         "startChar": 63,

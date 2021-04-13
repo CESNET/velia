@@ -10,7 +10,7 @@ ZUUL_PROJECT_SHORT_NAME=$(jq < ~/zuul-env.json -r '.project.short_name')
 ZUUL_GERRIT_HOSTNAME=$(jq < ~/zuul-env.json -r '.project.canonical_hostname')
 
 CI_PARALLEL_JOBS=$(awk -vcpu=$(getconf _NPROCESSORS_ONLN) 'BEGIN{printf "%.0f", cpu*1.3+1}')
-CMAKE_OPTIONS=""
+CMAKE_OPTIONS="-DTEST_NETWORK_WITH_SUDO=ON"
 CFLAGS=""
 CXXFLAGS=""
 LDFLAGS=""

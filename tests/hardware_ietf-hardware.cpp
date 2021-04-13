@@ -45,27 +45,28 @@ TEST_CASE("HardwareState")
     };
     FAKE_HWMON(fans, attributesHWMon);
 
-    attributesHWMon = {{"temp1_input", 30800}};
-    FAKE_HWMON(sysfsTempFront, attributesHWMon);
-    attributesHWMon = {{"temp1_input", 41800}};
-    FAKE_HWMON(sysfsTempCpu, attributesHWMon);
-    attributesHWMon = {{"temp1_input", 39000}};
-    FAKE_HWMON(sysfsTempMII0, attributesHWMon);
-    attributesHWMon = {{"temp1_input", 36000}};
-    FAKE_HWMON(sysfsTempMII1, attributesHWMon);
+    REQUIRE_CALL(*sysfsTempFront, attribute("temp1_input")).RETURN(30800);
+    REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800);
+    REQUIRE_CALL(*sysfsTempMII0, attribute("temp1_input")).RETURN(39000);
+    REQUIRE_CALL(*sysfsTempMII1, attribute("temp1_input")).RETURN(36000);
 
     attributesEMMC = {{"life_time"s, "40"s}};
     FAKE_EMMC(emmc, attributesEMMC);
 
+    using velia::ietf_hardware::data_reader::SensorType;
+    using velia::ietf_hardware::data_reader::StaticData;
+    using velia::ietf_hardware::data_reader::Fans;
+    using velia::ietf_hardware::data_reader::SysfsValue;
+    using velia::ietf_hardware::data_reader::EMMC;
     // register components into hw state
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::Fans("ne:fans", "ne", fans, 4));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-front", "ne:ctrl", sysfsTempFront, 1));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-internal-0", "ne:ctrl", sysfsTempMII0, 1));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::SysfsTemperature("ne:ctrl:temperature-internal-1", "ne:ctrl", sysfsTempMII1, 1));
-    ietfHardware->registerDataReader(velia::ietf_hardware::data_reader::EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
+    ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
+    ietfHardware->registerDataReader(StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
+    ietfHardware->registerDataReader(Fans("ne:fans", "ne", fans, 4));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-front", "ne:ctrl", sysfsTempFront, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-0", "ne:ctrl", sysfsTempMII0, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-1", "ne:ctrl", sysfsTempMII1, 1));
+    ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
 
     SECTION("Test HardwareState without sysrepo")
     {

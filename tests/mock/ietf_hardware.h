@@ -26,6 +26,7 @@ public:
     FakeHWMon()
         : HWMon(CMAKE_CURRENT_SOURCE_DIR "/tests/sysfs/hwmon/device1/hwmon") {}; // FIXME
     MAKE_CONST_MOCK0(attributes, (std::map<std::string, int64_t>)(), override);
+    MAKE_CONST_MOCK1(attribute, int64_t(const std::string&), override);
 };
 
 #define FAKE_EMMC(DEVICE, VALUE) REQUIRE_CALL(*DEVICE, attributes()).IN_SEQUENCE(seq1).RETURN(std::map<std::string, std::string>(VALUE))

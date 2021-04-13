@@ -293,6 +293,8 @@ if(BUILD_TESTING)
     find_package(trompeloeil 33 REQUIRED)
     find_package(doctest 2.3.1 REQUIRED)
 
+    option(TEST_NETWORK_WITH_SUDO "Include ietf-routing and ietf-interfaces tests that require root privileges" "OFF")
+
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/configure.cmake.h.in ${CMAKE_CURRENT_BINARY_DIR}/tests/configure.cmake.h)
 
     add_library(DoctestIntegration STATIC
@@ -426,12 +428,31 @@ if(BUILD_TESTING)
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
+
     velia_test(sysrepo_system-ietfinterfaces velia-system)
     set_tests_properties(
             test-sysrepo_system-ietfinterfaces
-            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-network
+            PROPERTIES FIXTURES_REQUIRED "sysrepo:env:sysrepo-czechlight-network"
             RESOURCE_LOCK sysrepo
     )
+
+    if(TEST_NETWORK_WITH_SUDO)
+        find_program(SUDO_EXECUTABLE sudo)
+        find_program(IPROUTE2_EXECUTABLE ip)
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/test_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/test_vars.h @ONLY)
+
+        add_test(NAME network-czechlight0-prepare COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_system-ietfinterfaces-sudo.sh ${SUDO_EXECUTABLE})
+        add_test(NAME network-czechlight0-cleanup COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_system-ietfinterfaces-sudo.sh ${SUDO_EXECUTABLE})
+        set_tests_properties(network-czechlight0-prepare PROPERTIES FIXTURES_SETUP network-czechlight0)
+        set_tests_properties(network-czechlight0-cleanup PROPERTIES FIXTURES_CLEANUP network-czechlight0)
+
+        velia_test(sysrepo_system-ietfinterfaces-sudo velia-system)
+        set_tests_properties(
+                test-sysrepo_system-ietfinterfaces-sudo
+                PROPERTIES FIXTURES_REQUIRED "sysrepo:env:sysrepo-czechlight-network;network-czechlight0"
+                RESOURCE_LOCK sysrepo
+        )
+    endif()
 
     sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
     velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo)

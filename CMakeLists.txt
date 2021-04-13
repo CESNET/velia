@@ -418,20 +418,22 @@ if(BUILD_TESTING)
             RESOURCE_LOCK sysrepo
     )
 
-    sysrepo_fixture_env(sysrepo-czechlight-network
-            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
-            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
-            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
-            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
-            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
-            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
-            YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
-    velia_test(sysrepo_system-ietfinterfaces velia-system)
-    set_tests_properties(
-            test-sysrepo_system-ietfinterfaces
-            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-network
-            RESOURCE_LOCK sysrepo
-    )
+    if(DEFINED TESTS_ROOT)
+        sysrepo_fixture_env(sysrepo-czechlight-network
+                YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
+                YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
+                YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
+                YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
+                YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
+                YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
+                YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
+        velia_test(sysrepo_system-ietfinterfaces velia-system)
+        set_tests_properties(
+                test-sysrepo_system-ietfinterfaces
+                PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-network
+                RESOURCE_LOCK sysrepo
+        )
+    endif(DEFINED TESTS_ROOT)
 
     sysrepo_fixture_env(sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
     velia_test(hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo)

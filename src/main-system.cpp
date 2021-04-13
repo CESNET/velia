@@ -8,6 +8,7 @@
 #include "system/Authentication.h"
 #include "system/Network.h"
 #include "system_vars.h"
+#include "system/IETFInterfaces.h"
 #include "system/IETFSystem.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
@@ -91,6 +92,9 @@ int main(int argc, char* argv[])
 
             velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
         });
+
+        // implements ietf-interfaces and ietf-routing
+        auto sysrepoIETFInterfaces = std::make_shared<velia::system::IETFInterfaces>(srSess);
 
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 

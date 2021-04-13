@@ -10,7 +10,7 @@ ZUUL_PROJECT_SHORT_NAME=$(jq < ~/zuul-env.json -r '.project.short_name')
 ZUUL_GERRIT_HOSTNAME=$(jq < ~/zuul-env.json -r '.project.canonical_hostname')
 
 CI_PARALLEL_JOBS=$(awk -vcpu=$(getconf _NPROCESSORS_ONLN) 'BEGIN{printf "%.0f", cpu*1.3+1}')
-CMAKE_OPTIONS=""
+CMAKE_OPTIONS="-DTEST_NETWORK_WITH_SUDO=ON"
 CFLAGS=""
 CXXFLAGS=""
 LDFLAGS=""
@@ -51,7 +51,7 @@ PREFIX=~/target
 mkdir ${PREFIX}
 BUILD_DIR=~/build
 mkdir ${BUILD_DIR}
-export PATH=${PREFIX}/bin:$PATH
+export PATH=${PREFIX}/bin:/sbin:/usr/sbin:$PATH
 export LD_LIBRARY_PATH=${PREFIX}/lib64:${PREFIX}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 export PKG_CONFIG_PATH=${PREFIX}/lib64/pkgconfig:${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
 

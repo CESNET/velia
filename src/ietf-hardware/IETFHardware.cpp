@@ -181,7 +181,7 @@ DataTree SysfsValue<TYPE>::operator()() const
 {
     DataTree res(m_staticData);
 
-    int64_t sensorValue = m_hwmon->attributes().at(m_sysfsFile);
+    int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
     addSensorValue(res, m_componentName, std::to_string(sensorValue));
 
     return res;

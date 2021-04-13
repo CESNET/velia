@@ -45,14 +45,10 @@ TEST_CASE("HardwareState")
     };
     FAKE_HWMON(fans, attributesHWMon);
 
-    attributesHWMon = {{"temp1_input", 30800}};
-    FAKE_HWMON(sysfsTempFront, attributesHWMon);
-    attributesHWMon = {{"temp1_input", 41800}};
-    FAKE_HWMON(sysfsTempCpu, attributesHWMon);
-    attributesHWMon = {{"temp1_input", 39000}};
-    FAKE_HWMON(sysfsTempMII0, attributesHWMon);
-    attributesHWMon = {{"temp1_input", 36000}};
-    FAKE_HWMON(sysfsTempMII1, attributesHWMon);
+    REQUIRE_CALL(*sysfsTempFront, attribute("temp1_input")).RETURN(30800);
+    REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800);
+    REQUIRE_CALL(*sysfsTempMII0, attribute("temp1_input")).RETURN(39000);
+    REQUIRE_CALL(*sysfsTempMII1, attribute("temp1_input")).RETURN(36000);
 
     attributesEMMC = {{"life_time"s, "40"s}};
     FAKE_EMMC(emmc, attributesEMMC);

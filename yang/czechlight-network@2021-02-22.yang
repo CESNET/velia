@@ -7,6 +7,10 @@ module czechlight-network {
         prefix if;
     }
 
+    import ietf-routing {
+        prefix rt;
+    }
+
     import ietf-ip {
         prefix ip;
     }
@@ -21,15 +25,26 @@ module czechlight-network {
              ietf-interfaces:interface-state and makes the nodes in ietf-interfaces model config false.";
     }
 
-    // We don't support interface statistics (yet)
-    deviation /if:interfaces/if:interface/if:statistics { deviate not-supported; }
+    // We don't support discontinuity time (yet)
+    deviation /if:interfaces/if:interface/if:statistics/if:discontinuity-time { deviate not-supported; }
 
-    // Remove deprecated interfaces-state container
+    // Remove deprecated ietf-interfaces-state and ietf-routing containers. Beware, rt:routing-state references if:interfaces-state.
+    deviation /rt:routing-state { deviate not-supported; }
     deviation /if:interfaces-state { deviate not-supported; }
 
-    // As of now we implement the model to contain operational data only
+    // As of now we implement the models to contain operational data only
     deviation /if:interfaces { deviate add { config false; } }
+    deviation /rt:routing { deviate add { config false; } }
 
     // IPv6 address autoconfiguration is not supported
     deviation /if:interfaces/if:interface/ip:ipv6/ip:autoconf { deviate not-supported; }
+
+    identity dhcp {
+        base rt:routing-protocol;
+        description "Identity for route installed by DHCP.";
+    }
+    identity ra {
+        base rt:routing-protocol;
+        description "Identity for route installed by router advertisement.";
+    }
 }

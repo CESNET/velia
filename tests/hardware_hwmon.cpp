@@ -40,6 +40,8 @@ TEST_CASE("HWMon class")
         };
 
         REQUIRE(hwmon.attributes() == expected);
+        REQUIRE(hwmon.attribute("temp1_crit") == 105'000);
+        REQUIRE_THROWS_AS(hwmon.attribute("doesnt'exist"), std::invalid_argument);
     }
 
     SECTION("Test hwmon/device1 + one of the files unreadable")

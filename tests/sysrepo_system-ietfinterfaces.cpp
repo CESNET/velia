@@ -9,6 +9,8 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/process.hpp>
 #include <boost/process/extend.hpp>
+#include <cstdlib>
+#include <regex>
 #include <sys/wait.h>
 #include "pretty_printers.h"
 #include "system/IETFInterfaces.h"
@@ -46,9 +48,15 @@ void sudo_run(const Args... args_)
 
         throw std::runtime_error(absolutePath + " returned non-zero exit code " + std::to_string(c.exit_code()));
     }
+
+    std::this_thread::sleep_for(50ms);
 }
 
-auto IFACE = "czechlight9"s;
+namespace {
+const auto IFACE = "czechlight9"s;
+const auto LINK_MAC = "50:40:30:20:10:00"s;
+const auto LINK_MAC_CHANGED = "50:40:30:20:10:01"s;
+}
 
 TEST_CASE("ietf-interfaces localhost")
 {
@@ -59,38 +67,7 @@ TEST_CASE("ietf-interfaces localhost")
 
     auto network = std::make_shared<velia::system::IETFInterfaces>(srSess);
 
-#if 0
-    // We didn't came up with some way of mocking netlink. At least check that there is the loopback
-    // interface with expected values. It is *probably* safe to assume that there is at least the lo device.
-    auto lo = dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='lo']", SR_DS_OPERATIONAL);
-
-    // ensure statistics keys exist and remove them ; we can't really predict the content
-    for (const auto& key : {"/statistics", "/statistics/in-discards", "/statistics/in-errors", "/statistics/in-octets", "/statistics/out-discards", "/statistics/out-errors", "/statistics/out-octets"}) {
-        auto it = lo.find(key);
-        REQUIRE(it != lo.end());
-        lo.erase(it);
-    }
-
-    REQUIRE(lo == std::map<std::string, std::string> {
-                {"/name", "lo"},
-                {"/type", "iana-if-type:softwareLoopback"},
-                {"/phys-address", "00:00:00:00:00:00"},
-                {"/oper-status", "unknown"},
-                {"/ietf-ip:ipv4", ""},
-                {"/ietf-ip:ipv4/address[ip='127.0.0.1']", ""},
-                {"/ietf-ip:ipv4/address[ip='127.0.0.1']/ip", "127.0.0.1"},
-                {"/ietf-ip:ipv4/address[ip='127.0.0.1']/prefix-length", "8"},
-                {"/ietf-ip:ipv6", ""},
-                {"/ietf-ip:ipv6/address[ip='::1']", ""},
-                {"/ietf-ip:ipv6/address[ip='::1']/ip", "::1"},
-                {"/ietf-ip:ipv6/address[ip='::1']/prefix-length", "128"},
-                {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements", ""},
-                {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements/prefix-list", ""},
-            });
-    // NOTE: There are no neighbours on loopback
-#endif
-
-    sudo_run("/usr/bin/ip", "link", "add", IFACE, "address", "50:40:30:20:10:00", "type", "dummy");
+    sudo_run("/usr/bin/ip", "link", "add", IFACE, "address", LINK_MAC, "type", "dummy");
     sudo_run("/usr/bin/ip", "addr", "add", "10.9.8.7/24", "dev", IFACE);
     sudo_run("/usr/bin/ip", "addr", "add", "::ffff:a09:0807", "dev", IFACE);
 
@@ -106,9 +83,9 @@ TEST_CASE("ietf-interfaces localhost")
         {"/ietf-ip:ipv6/address[ip='::ffff:10.9.8.7']/prefix-length", "128"},
         {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements", ""},
         {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements/prefix-list", ""},
-        {"/name", "czechlight9"},
+        {"/name", IFACE},
         {"/oper-status", "down"},
-        {"/phys-address", "50:40:30:20:10:00"},
+        {"/phys-address", LINK_MAC},
         {"/statistics", ""},
         {"/statistics/in-discards", "0"},
         {"/statistics/in-errors", "0"},
@@ -121,7 +98,7 @@ TEST_CASE("ietf-interfaces localhost")
 
     SECTION("Change physical address")
     {
-        sudo_run("/usr/bin/ip", "link", "set", IFACE, "address", "50:40:30:20:10:01");
+        sudo_run("/usr/bin/ip", "link", "set", IFACE, "address", LINK_MAC_CHANGED);
 
         std::this_thread::sleep_for(50ms);
         REQUIRE(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
@@ -135,9 +112,9 @@ TEST_CASE("ietf-interfaces localhost")
                     {"/ietf-ip:ipv6/address[ip='::ffff:10.9.8.7']/prefix-length", "128"},
                     {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements", ""},
                     {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements/prefix-list", ""},
-                    {"/name", "czechlight9"},
+                    {"/name", IFACE},
                     {"/oper-status", "down"},
-                    {"/phys-address", "50:40:30:20:10:01"},
+                    {"/phys-address", LINK_MAC_CHANGED},
                     {"/statistics", ""},
                     {"/statistics/in-discards", "0"},
                     {"/statistics/in-errors", "0"},
@@ -167,9 +144,9 @@ TEST_CASE("ietf-interfaces localhost")
                     {"/ietf-ip:ipv6/address[ip='::ffff:10.9.8.7']/prefix-length", "128"},
                     {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements", ""},
                     {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements/prefix-list", ""},
-                    {"/name", "czechlight9"},
+                    {"/name", IFACE},
                     {"/oper-status", "down"},
-                    {"/phys-address", "50:40:30:20:10:00"},
+                    {"/phys-address", LINK_MAC},
                     {"/statistics", ""},
                     {"/statistics/in-discards", "0"},
                     {"/statistics/in-errors", "0"},
@@ -193,7 +170,7 @@ TEST_CASE("ietf-interfaces localhost")
                     {"/ietf-ip:ipv6/address[ip='::ffff:10.9.8.7']/prefix-length", "128"},
                     {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements", ""},
                     {"/ietf-ip:ipv6/ietf-ipv6-unicast-routing:ipv6-router-advertisements/prefix-list", ""},
-                    {"/name", "czechlight9"},
+                    {"/name", IFACE},
                     {"/oper-status", "down"},
                     {"/phys-address", "50:40:30:20:10:00"},
                     {"/statistics", ""},
@@ -212,35 +189,55 @@ TEST_CASE("ietf-interfaces localhost")
 
     SECTION("Add and remove routes")
     {
+        sudo_run("/usr/bin/ip", "link", "set", IFACE, "up");
         sudo_run("/usr/bin/ip", "route", "add", "10.9.0.0/16", "dev", IFACE);
-        std::this_thread::sleep_for(50ms);
-        CHECK(dataFromSysrepo(client, "/ietf-routing:routing", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
-            {"/rib[name='ipv4-master']/routes/route[1]/ietf-ipv4-unicast-routing:destination-prefix", "0.0.0.0/0"},
-            {"/rib[name='ipv4-master']/routes/route[1]/next-hop/ietf-ipv4-unicast-routing:next-hop-address", "10.88.3.1"},
-            {"/rib[name='ipv4-master']/routes/route[1]/next-hop/outgoing-interface", "wlp3s0"},
-            {"/rib[name='ipv4-master']/routes/route[1]/source-protocol", "czechlight-network:dhcp"},
-            {"/rib[name='ipv4-master']/routes/route[2]/ietf-ipv4-unicast-routing:destination-prefix", "10.9.8.0/24"},
-            {"/rib[name='ipv4-master']/routes/route[2]/next-hop/outgoing-interface", "czechlight9"},
-            {"/rib[name='ipv4-master']/routes/route[2]/source-protocol", "direct"},
-            {"/rib[name='ipv4-master']/routes/route[3]/ietf-ipv4-unicast-routing:destination-prefix", "10.88.3.0/24"},
-            {"/rib[name='ipv4-master']/routes/route[3]/next-hop/outgoing-interface", "wlp3s0"},
-            {"/rib[name='ipv4-master']/routes/route[3]/source-protocol", "direct"},
-            {"/rib[name='ipv6-master']/routes/route[1]/ietf-ipv6-unicast-routing:destination-prefix", "::1/128"},
-            {"/rib[name='ipv6-master']/routes/route[1]/next-hop/outgoing-interface", "lo"},
-            {"/rib[name='ipv6-master']/routes/route[1]/source-protocol", "static"},
-            {"/rib[name='ipv6-master']/routes/route[2]/ietf-ipv6-unicast-routing:destination-prefix", "::ffff:10.9.8.7/128"},
-            {"/rib[name='ipv6-master']/routes/route[2]/next-hop/outgoing-interface", "czechlight9"},
-            {"/rib[name='ipv6-master']/routes/route[2]/source-protocol", "static"},
-            {"/rib[name='ipv6-master']/routes/route[3]/ietf-ipv6-unicast-routing:destination-prefix", "fe80::/64"},
-            {"/rib[name='ipv6-master']/routes/route[3]/next-hop/outgoing-interface", "czechlight9"},
-            {"/rib[name='ipv6-master']/routes/route[3]/source-protocol", "static"},
-            {"/rib[name='ipv6-master']/routes/route[4]/ietf-ipv6-unicast-routing:destination-prefix", "fe80::/64"},
-            {"/rib[name='ipv6-master']/routes/route[4]/next-hop/outgoing-interface", "wlp3s0"},
-            {"/rib[name='ipv6-master']/routes/route[4]/source-protocol", "static"},
-        });
+
+        auto data = dataFromSysrepo(client, "/ietf-routing:routing", SR_DS_OPERATIONAL);
+        REQUIRE(data["/control-plane-protocols"] == "");
+        REQUIRE(data["/interfaces"] == "");
+        REQUIRE(data["/ribs"] == "");
+
+        data = dataFromSysrepo(client, "/ietf-routing:routing/ribs/rib[name='ipv4-master']", SR_DS_OPERATIONAL);
+        REQUIRE(data["/name"] == "ipv4-master");
+
+        auto findRouteIndex = [&data](const std::string& prefix) {
+            std::smatch match;
+            std::regex regex(R"(route\[(\d+)\])");
+            size_t length = 0;
+            for (const auto& [key, value] : data) {
+                if (std::regex_search(key, match, regex)) {
+                    length = std::max(std::stoul(match[1]), length);
+                }
+            }
+
+            for (size_t i = 1; i <= length; i++) {
+                const auto keyPrefix = "/routes/route["s + std::to_string(i) + "]";
+                if (data[keyPrefix + "/ietf-ipv4-unicast-routing:destination-prefix"] == prefix)
+                    return i;
+            }
+
+            return 0ul;
+        };
+
+        {
+            auto routeIdx = findRouteIndex("10.9.0.0/16");
+            REQUIRE(routeIdx > 0);
+            REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/next-hop/outgoing-interface"] == IFACE);
+            REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/source-protocol"] == "ietf-routing:static");
+        }
+        {
+            auto routeIdx = findRouteIndex("10.9.8.0/24");
+            REQUIRE(routeIdx > 0);
+            REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/next-hop/outgoing-interface"] == IFACE);
+            REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/source-protocol"] == "ietf-routing:direct");
+        }
+
+        data = dataFromSysrepo(client, "/ietf-routing:routing/ribs/rib[name='ipv6-master']", SR_DS_OPERATIONAL);
+        REQUIRE(data["/name"] == "ipv6-master");
 
         sudo_run("/usr/bin/ip", "route", "del", "10.9.0.0/16");
+        sudo_run("/usr/bin/ip", "link", "set", IFACE, "down");
     }
-
+// pause();
     sudo_run("/usr/bin/ip", "link", "delete", IFACE, "type", "dummy");
 }

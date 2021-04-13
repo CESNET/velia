@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57e2be3d_890e863c",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-13T17:50:00Z",
+      "side": 1,
+      "message": "I could also use the .SIDE_EFFECT macro for this. However, I think this approach is good and more readable... thoughts?",
+      "range": {
+        "startLine": 422,
+        "startChar": 0,
+        "endLine": 441,
+        "endChar": 5
+      },
+      "revId": "a3ed6c47b4630bab68a17b9b587d1085ae1010d5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

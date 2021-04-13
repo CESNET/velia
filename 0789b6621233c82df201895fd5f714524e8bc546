@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53ab66e9_b03a516e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-13T09:39:17Z",
+      "side": 1,
+      "message": "As per https://github.com/sysrepo/sysrepo/issues/2375 they are actually not needed.",
+      "parentUuid": "470c15fa_a78cbe07",
+      "revId": "0789b6621233c82df201895fd5f714524e8bc546",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "26763a41_434ccc6f",

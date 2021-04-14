@@ -30,6 +30,9 @@ inline constexpr size_t arrlen(const char (&)[N]) noexcept
 const auto CZECHLIGHT_NETWORK_MODULE_NAME = "czechlight-network"s;
 const auto IETF_IP_MODULE_NAME = "ietf-ip"s;
 const auto IETF_INTERFACES_MODULE_NAME = "ietf-interfaces"s;
+const auto IETF_ROUTING_MODULE_NAME = "ietf-routing"s;
+const auto IETF_IPV4_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv4-unicast-routing";
+const auto IETF_IPV6_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv6-unicast-routing";
 const auto IETF_INTERFACES = "/"s + IETF_INTERFACES_MODULE_NAME + ":interfaces"s;
 
 const auto PHYS_ADDR_BUF_SIZE = 6 * 2 /* 2 chars per 6 bytes in the address */ + 5 /* delimiters (':') between bytes */ + 1 /* \0 */;
@@ -166,6 +169,9 @@ IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
 {
     utils::ensureModuleImplemented(m_srSession, IETF_INTERFACES_MODULE_NAME, "2018-02-20");
     utils::ensureModuleImplemented(m_srSession, IETF_IP_MODULE_NAME, "2018-02-22");
+    utils::ensureModuleImplemented(m_srSession, IETF_ROUTING_MODULE_NAME, "2018-03-13");
+    utils::ensureModuleImplemented(m_srSession, IETF_IPV4_UNICAST_ROUTING_MODULE_NAME, "2018-03-13");
+    utils::ensureModuleImplemented(m_srSession, IETF_IPV6_UNICAST_ROUTING_MODULE_NAME, "2018-03-13");
     utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_NETWORK_MODULE_NAME, "2021-02-22");
 
     m_rtnetlink->invokeInitialCallbacks();

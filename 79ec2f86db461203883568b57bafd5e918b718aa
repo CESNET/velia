@@ -36,6 +36,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "dab7d490_0a70b7d8",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-15T17:04:02Z",
+      "side": 1,
+      "message": "Agreed, but even once that\u0027s done, you still have to have some userspace code which reads from sysfs and reports back some data in the ietf-hardware format.",
+      "parentUuid": "7bac0284_9c43e327",
+      "revId": "79ec2f86db461203883568b57bafd5e918b718aa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bd98c3c5_2641065d",

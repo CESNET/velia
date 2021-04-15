@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "753a923e_0bf7bdb5",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-15T10:06:55Z",
+      "side": 1,
+      "message": "Also add the third pmbus device, the PDU, please. Feel free to do that in a followup commit if you wish.",
+      "revId": "79ec2f86db461203883568b57bafd5e918b718aa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd98c3c5_2641065d",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-15T10:06:55Z",
+      "side": 1,
+      "message": "nit: I think it\u0027s more C++-ish to do that via int{m_address}, but that\u0027s just a random preference",
+      "range": {
+        "startLine": 21,
+        "startChar": 50,
+        "endLine": 21,
+        "endChar": 64
+      },
+      "revId": "79ec2f86db461203883568b57bafd5e918b718aa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71730005_9b98b342",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-15T10:06:55Z",
+      "side": 1,
+      "message": "If that happens, I think it also makes sense to unbind the hwmon driver. One approach would be changing the sleep in the BG thread to a wait-with-timeout on a condition variable (or something like that), and signal that event from here. The benefit is that the system will know \"early\" that a device has disappeared. I think it\u0027s not really required, but I would consider that elegant :).",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 146,
+        "endChar": 93
+      },
+      "revId": "79ec2f86db461203883568b57bafd5e918b718aa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6824a15_13638d28",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-15T10:06:55Z",
+      "side": 1,
+      "message": "This is prone to timing issues because you\u0027re manipulating the expectations from the main thread while the other one which \"consumes\" these expectations runs. It\u0027s possible that the main thread sets up this \"isPresent\" to return true (once), then get preempted/interrupted/whatever, and the BG thread invokes that call and proceeds to call bind_mock() before the expectation has been set up.\n\nIf I was writing this, I would have used something that\u0027s atomic. One example is to have a long-standing ALLOW_CALL (without limiting the max number of invocations) that invokes a lambda behind the scenes as a side effect, and have that lambda check an out-of-band variable that controls \"what to do\". The trick is that you can have one side-effect lambda from isPresent() and the other lambda from bind_mock() where both can consult a single variable \"what to do\" -- and you can manipulate this variable form the main thread. (It will need proper locking, but that\u0027s trivial.)\n\nI\u0027ve used something like that in cla-sysrepo\u0027s tests/sysrepo-push.cpp. It\u0027s more complicated in there via that updatePushProvider() helper, but the principle is the same.",
+      "range": {
+        "startLine": 463,
+        "startChar": 0,
+        "endLine": 464,
+        "endChar": 58
+      },
+      "revId": "79ec2f86db461203883568b57bafd5e918b718aa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e8d90d2_06c16257",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-15T10:06:55Z",
+      "side": 1,
+      "message": "The background thread has a timeout of 3s, and here\u0027s you\u0027re waiting 3s. If you\u0027re seeking perfect synchronization, this is still going to be very fragile. If you\u0027re seeking \"asynchronicity\" between the two threads, you will eventually get at least one run when they run \"in sync\", which is then also not what you want.\n\n-\u003e use different timeouts if possible, please",
+      "range": {
+        "startLine": 471,
+        "startChar": 53,
+        "endLine": 471,
+        "endChar": 54
+      },
+      "revId": "79ec2f86db461203883568b57bafd5e918b718aa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

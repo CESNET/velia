@@ -45,9 +45,9 @@ std::map<std::string, std::string> getNetworkConfiguration(std::shared_ptr<::sys
 
 namespace velia::system {
 Network::Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::path configDirectory, reload_cb_t reloadCallback)
-    : m_srSubscribe(std::make_shared<sysrepo::Subscribe>(srSess))
-    , configDirectory(std::move(configDirectory))
+    : configDirectory(std::move(configDirectory))
     , reloadCallback(std::move(reloadCallback))
+    , m_srSubscribe(std::make_shared<sysrepo::Subscribe>(srSess))
 {
     utils::ensureModuleImplemented(srSess, CZECHLIGHT_SYSTEM_MODULE_NAME, "2021-01-13");
 

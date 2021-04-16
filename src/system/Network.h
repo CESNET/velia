@@ -18,9 +18,9 @@ public:
     Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::path configDirectory, reload_cb_t reloadCallback);
 
 private:
-    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
     std::filesystem::path configDirectory;
     reload_cb_t reloadCallback;
+    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
 
     int generateConfig(std::shared_ptr<::sysrepo::Session> session);
 };

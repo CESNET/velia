@@ -16,6 +16,23 @@
       "message": "This isn\u0027t really needed, I thought I would use std::barrier but there is no support yet (only in very recent versions), but I think enabling it doesn\u0027t hurt.",
       "revId": "32cded628610e88345426c017c11dd2ce94c8f6c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a0e3a8e_2eb54085",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-16T12:58:55Z",
+      "side": 1,
+      "message": "It\u0027s interesting that this builds; I thought there was a problem in Boost which prevented this as we found out in https://gerrit.cesnet.cz/c/CzechLight/velia/+/3300/1#message-72bc60bd15a989c99bf1c90689cb2cc7adadcab1 .\n\nThe other build failure should be solved by https://gerrit.cesnet.cz/c/CzechLight/velia/+/4123 .",
+      "revId": "32cded628610e88345426c017c11dd2ce94c8f6c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

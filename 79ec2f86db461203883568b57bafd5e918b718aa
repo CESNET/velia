@@ -56,6 +56,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5a88aee6_6e6e8d4d",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-19T11:10:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dab7d490_0a70b7d8",
+      "revId": "79ec2f86db461203883568b57bafd5e918b718aa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "bd98c3c5_2641065d",
         "filename": "src/ietf-hardware/FspYhPsu.cpp",
         "patchSetId": 13

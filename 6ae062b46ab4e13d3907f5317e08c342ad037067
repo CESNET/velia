@@ -3,6 +3,63 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8b1e3138_68e78021",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-19T16:36:09Z",
+      "side": 1,
+      "message": "- use CMake\u0027s OPTION() for this, not a simple DEFINED\n- a more descriptive name would be something like \"TEST_NETWORK_WITH_SUDO\"",
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a05d92f_7b6d5b66",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-19T16:36:09Z",
+      "side": 1,
+      "message": "There\u0027s no reason to skip the \"old version of this test\" when not opting in for the `sudo` tests. Either use CMake\u0027s configure_file to write out that TEST_ROOT variable into a .h file and use #ifdef for the sudo tests in the matching tests/*.cpp, or, even better, add a new test executable which *only* runs these bits that are needed, and add that test conditionally via CMake based on the value of TESTS_ROOT.",
+      "range": {
+        "startLine": 422,
+        "startChar": 0,
+        "endLine": 435,
+        "endChar": 9
+      },
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6146946d_4b72a755",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-19T16:36:09Z",
+      "side": 1,
+      "message": "since you\u0027re changing this already, perhaps pick a locally-managed block, https://en.wikipedia.org/wiki/MAC_address#Ranges_of_group_and_locally_administered_addresses",
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "186731c2_b31888bb",
         "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
         "patchSetId": 3
@@ -20,6 +77,40 @@
         "endLine": 30,
         "endChar": 40
       },
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7ca76c0_b2b6af87",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-19T16:36:09Z",
+      "side": 1,
+      "message": "let\u0027s use some of the reserved IP ranges (192.0.2.0/24 (TEST-NET-1), 198.51.100.0/24 (TEST-NET-2), and 203.0.113.0/24 (TEST-NET-3)) instead of something which *could* be already used somewhere",
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d48329b_5673f50d",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-19T16:36:09Z",
+      "side": 1,
+      "message": "This is a bit fragile; if the test fails in the middle, the next test run will see some partial state from the previous test run. Please use CTest fixtures to \"properly\" clean up.",
       "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

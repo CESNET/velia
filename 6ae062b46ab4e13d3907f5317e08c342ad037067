@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "186731c2_b31888bb",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-19T16:24:35Z",
+      "side": 1,
+      "message": "It\u0027s `/usr/sbin/ip` on Fedora, but it\u0027s `/run/current-system/sw/bin/ip` on my dev box. Use CMake\u0027s find_program for both.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 40
+      },
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

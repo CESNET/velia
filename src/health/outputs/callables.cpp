@@ -34,18 +34,18 @@ void LedOutputCallback::operator()(State state)
 {
     switch (state) {
     case State::ERROR:
-        m_redLed->set(255);
+        m_redLed->set(m_redLed->getMaxBrightness());
         m_greenLed->set(0);
         m_blueLed->set(0);
         break;
     case State::WARNING:
-        m_redLed->set(255);
-        m_greenLed->set(160);
+        m_redLed->set(m_redLed->getMaxBrightness());
+        m_greenLed->set(0.625 * m_greenLed->getMaxBrightness()); // 160 for brightness=256, 159 for max_brightness=255
         m_blueLed->set(0);
         break;
     case State::OK:
         m_redLed->set(0);
-        m_greenLed->set(255);
+        m_greenLed->set(m_greenLed->getMaxBrightness());
         m_blueLed->set(0);
         break;
     }

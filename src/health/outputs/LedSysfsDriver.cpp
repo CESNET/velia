@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include "LedSysfsDriver.h"
+#include "utils/io.h"
 #include "utils/log.h"
 
 namespace velia::health {
@@ -20,6 +21,12 @@ LedSysfsDriver::LedSysfsDriver(const std::filesystem::path& directory)
         throw std::invalid_argument("Sysfs dir must contain 'brightness' file.");
     }
 
+    const auto maxBrightnessFile = directory / "max_brightness";
+    if (!std::filesystem::exists(maxBrightnessFile)) {
+        throw std::invalid_argument("Sysfs dir must contain 'max_brightness' file.");
+    }
+    m_maxBrightness = utils::readFileInt64(maxBrightnessFile);
+
     m_log->trace("Initialized LED {}", std::string(directory));
 }
 
@@ -32,6 +39,10 @@ void LedSysfsDriver::set(uint32_t brightness)
     if (!(ofs << brightness)) {
         throw std::invalid_argument("Write to '" + std::string(m_brightnessFile) + "' failed.");
     }
+}
+uint32_t LedSysfsDriver::maxBrightness() const
+{
+    return m_maxBrightness;
 }
 
 }

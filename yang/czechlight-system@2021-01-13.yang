@@ -212,5 +212,33 @@ module czechlight-system {
     }
   }
 
+  container leds {
+    config false;
+    description "Current status of LEDs.";
+
+    list led {
+      key 'name';
+
+      leaf name {
+        type string;
+        description "Name of the LED";
+      }
+
+      leaf state {
+        description "Current brightness.";
+        type enumeration {
+          enum off;
+          enum on;
+          enum blinking;
+        }
+      }
+
+      leaf max_brightness {
+        type uint32;
+        description "Maximal allowed brightness.";
+      }
+    }
+  }
+
   deviation /sys:system-shutdown { deviate not-supported; }
 }

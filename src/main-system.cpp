@@ -10,6 +10,7 @@
 #include "system_vars.h"
 #include "system/IETFInterfaces.h"
 #include "system/IETFSystem.h"
+#include "system/LED.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
 #include "utils/journal.h"
@@ -100,6 +101,8 @@ int main(int argc, char* argv[])
 
         auto srSess2 = std::make_shared<sysrepo::Session>(srConn);
         auto authentication = velia::system::Authentication(srSess2, REAL_ETC_PASSWD_FILE, REAL_ETC_SHADOW_FILE, AUTHORIZED_KEYS_FORMAT, velia::system::impl::changePassword);
+
+        auto leds = velia::system::LED(srConn, "/sys/class/leds");
 
         DBUS_EVENTLOOP_END
         return 0;

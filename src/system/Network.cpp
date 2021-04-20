@@ -49,7 +49,7 @@ Network::Network(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::pa
     , reloadCallback(std::move(reloadCallback))
     , m_srSubscribe(std::make_shared<sysrepo::Subscribe>(srSess))
 {
-    utils::ensureModuleImplemented(srSess, CZECHLIGHT_SYSTEM_MODULE_NAME, "2021-01-13");
+    utils::ensureModuleImplemented(srSess, CZECHLIGHT_SYSTEM_MODULE_NAME, "2021-04-19");
 
     m_srSubscribe->module_change_subscribe(
         CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(),

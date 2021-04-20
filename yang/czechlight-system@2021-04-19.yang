@@ -22,6 +22,10 @@ module czechlight-system {
   description
     "YANG model for system administration in Czechlight devices.";
 
+  revision 2021-04-19 {
+    description "Add system LEDs container.";
+  }
+
   revision 2021-01-13 {
     description "Initial release";
   }
@@ -209,6 +213,30 @@ module czechlight-system {
   container networking {
     container standalone-eth1 {
       presence "Presence of this container should make eth1 network interface standalone (not in any bridge).";
+    }
+  }
+
+  container leds {
+    config false;
+    description "Current status of LEDs.";
+
+    list led {
+      key 'name';
+
+      leaf name {
+        type string;
+        description "Name of the LED";
+      }
+
+      leaf brightness {
+        type uint32;
+        description "Current brightness.";
+      }
+
+      leaf max_brightness {
+        type uint32;
+        description "Maximal allowed brightness.";
+      }
     }
   }
 

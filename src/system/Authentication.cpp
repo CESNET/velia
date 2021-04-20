@@ -268,7 +268,7 @@ velia::system::Authentication::Authentication(
     m_log->debug("Using {} as passwd file", m_etc_passwd);
     m_log->debug("Using {} as shadow file", m_etc_shadow);
     m_log->debug("Using {} authorized_keys format", m_authorized_keys_format);
-    utils::ensureModuleImplemented(srSess, "czechlight-system", "2021-01-13");
+    utils::ensureModuleImplemented(srSess, "czechlight-system", "2021-04-19");
 
     sysrepo::OperGetItemsCb listUsersCb = [this] (
             auto session,

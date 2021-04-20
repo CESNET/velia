@@ -212,5 +212,30 @@ module czechlight-system {
     }
   }
 
+  container leds {
+    config false;
+    description "Current status of LEDs.";
+
+    list led {
+      key 'name';
+
+      leaf name {
+        type string;
+        description "Name of the LED";
+      }
+
+      leaf state {
+        mandatory true;
+        description "Current state of the LED. It can either be off, on (full brightness) or it is blinking
+                     (periodically switching on and off).";
+        type enumeration {
+          enum off;
+          enum on;
+          enum blinking;
+        }
+      }
+    }
+  }
+
   deviation /sys:system-shutdown { deviate not-supported; }
 }

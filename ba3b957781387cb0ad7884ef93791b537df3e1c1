@@ -16,6 +16,52 @@
       "message": "recheck",
       "revId": "ba3b957781387cb0ad7884ef93791b537df3e1c1",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edb3e773_894b80fa",
+        "filename": "yang/czechlight-system@2021-04-19.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-21T13:20:17Z",
+      "side": 1,
+      "message": "Skip this, please; that would only require bumping the version in br2-external for (in my opinion) little benefit. \"Nobody\" has seen these models yet.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 3
+      },
+      "revId": "ba3b957781387cb0ad7884ef93791b537df3e1c1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0008665e_e1b13925",
+        "filename": "yang/czechlight-system@2021-04-19.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-21T13:20:17Z",
+      "side": 1,
+      "message": "As a user, I don\u0027t want to deal with this. Please just export an enum for this:\n\n- off\n- on (full brightness)\n- blinking\n\nLet\u0027s not mess with any options for frequency or duty cycle (or, if you want to be particularly thorough, don\u0027t do \"blinking\", but do \"slow blinking\" and \"fast blinking\" if you wish).",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 7
+      },
+      "revId": "ba3b957781387cb0ad7884ef93791b537df3e1c1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

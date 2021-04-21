@@ -78,6 +78,18 @@ std::string readFileToString(const std::filesystem::path& path)
     return std::string(begin, end);
 }
 
+void writeFile(const std::string& path, const std::string_view& contents)
+{
+    std::ofstream ofs(path);
+    if (!ofs.is_open()) {
+        throw std::invalid_argument("File '" + std::string(path) + "' could not be opened.");
+    }
+
+    if (!(ofs << contents)) {
+        throw std::invalid_argument("File '" + std::string(path) + "' could not be written.");
+    }
+}
+
 void safeWriteFile(const std::string& filename, const std::string_view& contents)
 {
     auto throwErr = [&filename] (const auto& what) {

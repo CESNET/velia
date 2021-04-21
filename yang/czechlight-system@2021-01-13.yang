@@ -236,6 +236,20 @@ module czechlight-system {
         type percent;
       }
     }
+
+    action uid {
+      input {
+        leaf state {
+          mandatory true;
+          description "Change state of the UID led (turn off, on, or keep blinking).";
+          type enumeration {
+            enum off;
+            enum on;
+            enum blinking;
+          }
+        }
+      }
+    }
   }
 
   deviation /sys:system-shutdown { deviate not-supported; }

@@ -412,7 +412,7 @@ if(BUILD_TESTING)
             RESOURCE_LOCK sysrepo
     )
 
-    velia_test(sysrepo_system-leds velia-system)
+    velia_test(sysrepo_system-leds velia-system FsTestUtils)
     set_tests_properties(
             test-sysrepo_system-leds
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-system

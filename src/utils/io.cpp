@@ -7,13 +7,10 @@
 
 #include <cstring>
 #include <fmt/format.h>
-#include <fstream>
 #include <unistd.h>
 #include "io.h"
 
 namespace velia::utils {
-
-namespace {
 
 std::ifstream openStream(const std::filesystem::path& path)
 {
@@ -21,7 +18,6 @@ std::ifstream openStream(const std::filesystem::path& path)
     if (!ifs.is_open())
         throw std::invalid_argument("File '" + std::string(path) + "' does not exist.");
     return ifs;
-}
 }
 
 /** @brief Reads a string from a file */
@@ -54,19 +50,6 @@ std::vector<uint32_t> readFileWords(const std::filesystem::path& path, int value
     }
 
     return bytes;
-}
-
-/** @brief Reads a int64_t number from a file. */
-int64_t readFileInt64(const std::filesystem::path& path)
-{
-    std::ifstream ifs(openStream(path));
-    int64_t res;
-
-    if (ifs >> res) {
-        return res;
-    }
-
-    throw std::domain_error("Could not read int64_t value from '" + std::string(path) + "'.");
 }
 
 /** @brief Reads whole contents of `path`. Throws if file doesn't exist. */

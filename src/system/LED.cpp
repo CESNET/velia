@@ -9,6 +9,7 @@
 
 #include <utility>
 #include "utils/io.h"
+#include "utils/libyang.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
@@ -19,6 +20,7 @@ namespace {
 const auto CZECHLIGHT_SYSTEM_MODULE_NAME = "czechlight-system"s;
 const auto CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX = "/"s + CZECHLIGHT_SYSTEM_MODULE_NAME + ":leds/"s;
 
+const auto UID_LED = "uid:blue"s;
 }
 
 namespace velia::system {
@@ -60,6 +62,34 @@ LED::LED(const std::shared_ptr<::sysrepo::Connection>& srConn, std::filesystem::
         },
         (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "*").c_str(),
         SR_SUBSCR_PASSIVE | SR_SUBSCR_OPER_MERGE | SR_SUBSCR_CTX_REUSE);
+
+    const auto uidMaxBrightness = std::to_string(velia::utils::readOneFromFile<uint32_t>(m_sysfsLeds / UID_LED / "max_brightness"));
+    const auto triggerFile = m_sysfsLeds / UID_LED / "trigger";
+    const auto brightnessFile = m_sysfsLeds / UID_LED / "brightness";
+
+    m_srSubscribe->rpc_subscribe_tree(
+        (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid").c_str(),
+        [this, uidMaxBrightness, triggerFile, brightnessFile](auto session, auto, auto input, auto, auto, auto) {
+            std::string val = getValueAsString(getSubtree(input, (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid/state").c_str()));
+
+            try {
+                if (val == "on") {
+                    utils::writeFile(triggerFile, "none");
+                    utils::writeFile(brightnessFile, uidMaxBrightness);
+                } else if (val == "off") {
+                    utils::writeFile(triggerFile, "none"); // setting trigger to none also clears brightness settings
+                } else if (val == "blinking") {
+                    utils::writeFile(triggerFile, "timer");
+                    utils::writeFile(brightnessFile, uidMaxBrightness);
+                }
+            } catch (const std::invalid_argument& e) {
+                m_log->warn("Failed to set state of the UID LED: '{}'", e.what());
+                session->set_error("Failed to set state of the UID LED", nullptr);
+                return SR_ERR_OPERATION_FAILED;
+            }
+
+            return SR_ERR_OK;
+        });
 }
 
 }

@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "54c08281_4799df49",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-21T22:57:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f5c16cc_6f0d7dba",
+      "range": {
+        "startLine": 105,
+        "startChar": 105,
+        "endLine": 105,
+        "endChar": 119
+      },
+      "revId": "13dde2155956e8d839a4391ff5fb37098cc1e520",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "62259e64_dd9b9bb3",
         "filename": "src/ietf-hardware/FspYhPsu.cpp",
         "patchSetId": 18
@@ -70,6 +94,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "788a0803_427accdb",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-21T22:57:18Z",
+      "side": 1,
+      "message": "I didn\u0027t know you could do that. Done.",
+      "parentUuid": "95b9582c_67634f26",
+      "range": {
+        "startLine": 489,
+        "startChar": 38,
+        "endLine": 489,
+        "endChar": 84
+      },
+      "revId": "13dde2155956e8d839a4391ff5fb37098cc1e520",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f951d6af_4a853670",
@@ -83,6 +131,30 @@
       "writtenOn": "2021-04-21T12:26:46Z",
       "side": 1,
       "message": "Can you add a bunch of LR_WITH(counter \u003d\u003d x) here? The idea is that the first line should only match when counter \u003d\u003d 1, etc.",
+      "range": {
+        "startLine": 490,
+        "startChar": 0,
+        "endLine": 493,
+        "endChar": 60
+      },
+      "revId": "13dde2155956e8d839a4391ff5fb37098cc1e520",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0888736_ad1ba2dc",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-21T22:57:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f951d6af_4a853670",
       "range": {
         "startLine": 490,
         "startChar": 0,

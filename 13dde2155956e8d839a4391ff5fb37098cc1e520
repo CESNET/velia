@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f5c16cc_6f0d7dba",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-21T12:26:46Z",
+      "side": 1,
+      "message": "The fix (https://github.com/llvm/llvm-project/commit/16eb853ffdd1a1ad7c95455b7795c5f004402e46) is in LLVM 12, apparently, so we\u0027ll be able to get rid of this once we move to Fedora 34. Can you please update the comment?\n\n(Normally I would not bother, but I\u0027m having more comments, hence this one as well.)",
+      "range": {
+        "startLine": 105,
+        "startChar": 105,
+        "endLine": 105,
+        "endChar": 119
+      },
+      "revId": "13dde2155956e8d839a4391ff5fb37098cc1e520",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62259e64_dd9b9bb3",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-21T12:26:46Z",
+      "side": 1,
+      "message": "Good catch. The root cause is a missing interceptor in TSAN, that makes sense.",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 48
+      },
+      "revId": "13dde2155956e8d839a4391ff5fb37098cc1e520",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95b9582c_67634f26",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-21T12:26:46Z",
+      "side": 1,
+      "message": "This looks a bit complex to me. Why not just call a function in the LR_RETURN?\n \nauto i2cPresence \u003d [\u0026counter] {\n  switch (counter) {\n  case 0:\n  case 2:\n  case 4:\n    return false;\n  case 1:\n  case 3:\n    return true;\n  }\n  REQUIRE(false);\n};\n \nALLOW_CALL(*fakeI2c, isPresent()).LR_RETURN(i2cPresence());",
+      "range": {
+        "startLine": 489,
+        "startChar": 38,
+        "endLine": 489,
+        "endChar": 84
+      },
+      "revId": "13dde2155956e8d839a4391ff5fb37098cc1e520",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f951d6af_4a853670",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-21T12:26:46Z",
+      "side": 1,
+      "message": "Can you add a bunch of LR_WITH(counter \u003d\u003d x) here? The idea is that the first line should only match when counter \u003d\u003d 1, etc.",
+      "range": {
+        "startLine": 490,
+        "startChar": 0,
+        "endLine": 493,
+        "endChar": 60
+      },
+      "revId": "13dde2155956e8d839a4391ff5fb37098cc1e520",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72f7a1ff_3be6afa1",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-21T12:26:46Z",
+      "side": 1,
+      "message": "If you wanted to be super-fancy, you can check whether bind_mock() has been already called from here. Change the first REQUIRE_CALL(... bind_mock()) to a NAMED_REQUIRE_CALL and see if it got spent.",
+      "revId": "13dde2155956e8d839a4391ff5fb37098cc1e520",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

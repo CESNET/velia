@@ -189,6 +189,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a351ea5_000d30bd",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-21T12:26:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6824a15_13638d28",
+      "range": {
+        "startLine": 463,
+        "startChar": 0,
+        "endLine": 464,
+        "endChar": 58
+      },
+      "revId": "79ec2f86db461203883568b57bafd5e918b718aa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e8d90d2_06c16257",
@@ -226,6 +250,30 @@
       "side": 1,
       "message": "the first sleep is 4 seconds, so the main thread is a little ahead. But I agree that this sleep solution is probably not the best solution, I\u0027ll rework it according to the comment above",
       "parentUuid": "4e8d90d2_06c16257",
+      "range": {
+        "startLine": 471,
+        "startChar": 53,
+        "endLine": 471,
+        "endChar": 54
+      },
+      "revId": "79ec2f86db461203883568b57bafd5e918b718aa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2465b426_86619b18",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-21T12:26:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3bcf6258_ed32bb15",
       "range": {
         "startLine": 471,
         "startChar": 53,

@@ -16,6 +16,24 @@
       "message": "we decided to go with % brightness (for the R/O part), didn\u0027t we?",
       "revId": "728984a389cec205586c8130be283fe3947193fc",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a6921ca_32fecf60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-22T11:13:41Z",
+      "side": 1,
+      "message": "Yes. I haven\u0027t uploaded it yet. Sorry for marking it with ready after resolving the comment.",
+      "parentUuid": "fc9418ab_bcd6914c",
+      "revId": "728984a389cec205586c8130be283fe3947193fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

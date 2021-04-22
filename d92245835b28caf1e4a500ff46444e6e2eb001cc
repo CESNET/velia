@@ -16,6 +16,24 @@
       "message": "On a second thought, this code is supposed to be generic, so perhaps it would make more sense to remember the maximal brightness upon startup and use that later. Feel free to say \"nope\", but then I propose to perhaps skip this patch altogether -- the difference between 255 and 256 is not great, and I have a feeling that most LED drivers \"out there\" have have the range of 0..255. Of course that won\u0027t work for LEDs without PWM where only 0/1 work...",
       "revId": "d92245835b28caf1e4a500ff46444e6e2eb001cc",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "799fc039_39aec8a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-22T17:13:35Z",
+      "side": 1,
+      "message": "Well, 255 out of 256 is \"almost\" full brightness. But reported 99 % brightness in the status led kind of triggered me.\n\nI *think* that reading and remembering the max_brightness value is a good idea and I will implement it.",
+      "parentUuid": "b775ba64_ec934f0c",
+      "revId": "d92245835b28caf1e4a500ff46444e6e2eb001cc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

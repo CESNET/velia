@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b775ba64_ec934f0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-22T17:09:41Z",
+      "side": 1,
+      "message": "On a second thought, this code is supposed to be generic, so perhaps it would make more sense to remember the maximal brightness upon startup and use that later. Feel free to say \"nope\", but then I propose to perhaps skip this patch altogether -- the difference between 255 and 256 is not great, and I have a feeling that most LED drivers \"out there\" have have the range of 0..255. Of course that won\u0027t work for LEDs without PWM where only 0/1 work...",
+      "revId": "d92245835b28caf1e4a500ff46444e6e2eb001cc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

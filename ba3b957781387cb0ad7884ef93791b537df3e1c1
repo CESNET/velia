@@ -86,6 +86,30 @@
       },
       "revId": "ba3b957781387cb0ad7884ef93791b537df3e1c1",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0416ad3_1525e2b8",
+        "filename": "yang/czechlight-system@2021-04-19.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-22T10:06:00Z",
+      "side": 1,
+      "message": "As discussed on the call, this comment should belong to setting of the UID led.\nMarking as resolved.",
+      "parentUuid": "0008665e_e1b13925",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 7
+      },
+      "revId": "ba3b957781387cb0ad7884ef93791b537df3e1c1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

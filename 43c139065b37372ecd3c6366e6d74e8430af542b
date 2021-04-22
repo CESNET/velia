@@ -16,6 +16,41 @@
       "message": "There\u0027s no harm when a uint32_t is read (and processed) as an int64_t, so I would prefer to leave the code as-is.",
       "revId": "43c139065b37372ecd3c6366e6d74e8430af542b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0db94fc1_6651948a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-22T18:49:27Z",
+      "side": 1,
+      "message": "It might also not make sense, because the comment inside HWMon.cpp says the value is an int64 for all hwmon values.",
+      "parentUuid": "b6754c93_de0238ed",
+      "revId": "43c139065b37372ecd3c6366e6d74e8430af542b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7fd92ca_870e1e90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-22T18:49:27Z",
+      "side": 1,
+      "message": "It might also \"not make sense\", be",
+      "revId": "43c139065b37372ecd3c6366e6d74e8430af542b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -21,6 +21,7 @@ const auto CZECHLIGHT_SYSTEM_MODULE_NAME = "czechlight-system"s;
 const auto CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX = "/"s + CZECHLIGHT_SYSTEM_MODULE_NAME + ":leds/"s;
 
 const auto UID_LED = "uid:blue"s;
+const auto POLL_INTERVAL = 125ms;
 }
 
 namespace velia::system {
@@ -30,38 +31,19 @@ LED::LED(const std::shared_ptr<::sysrepo::Connection>& srConn, std::filesystem::
     , m_sysfsLeds(std::move(sysfsLeds))
     , m_srSession(std::make_shared<::sysrepo::Session>(srConn))
     , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+    , m_thrRunning(true)
 {
     utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_SYSTEM_MODULE_NAME, "2021-01-13");
 
-    m_srSubscribe->oper_get_items_subscribe(
-        CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(),
-        [this](auto session, auto, auto, auto, auto, auto& parent) {
-            std::map<std::string, std::string> data;
+    for (const auto& entry : std::filesystem::directory_iterator(m_sysfsLeds)) {
+        if (!std::filesystem::is_directory(entry.path())) {
+            continue;
+        }
 
-            for (const auto& entry : std::filesystem::directory_iterator(m_sysfsLeds)) {
-                if (!std::filesystem::is_directory(entry.path())) {
-                    continue;
-                }
+        m_leds.push_back(entry.path().filename());
+    }
 
-                const std::string deviceName = entry.path().filename();
-
-                try {
-                    const auto brightness = velia::utils::readOneFromFile<uint32_t>(entry.path() / "brightness");
-                    const auto max_brightness = velia::utils::readOneFromFile<uint32_t>(entry.path() / "max_brightness");
-                    auto percent = brightness * 100 / max_brightness;
-                    m_log->trace("Found LED '{}' with brightness of {} % (brightness {} out of {})", deviceName, percent, brightness, max_brightness);
-
-                    data[CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "led[name='" + deviceName + "']/brightness"] = std::to_string(percent);
-                } catch (const std::invalid_argument& e) {
-                    m_log->warn("Failed reading state of the LED '{}': {}", deviceName, e.what());
-                }
-            }
-
-            utils::valuesToYang(data, {}, session, parent);
-            return SR_ERR_OK;
-        },
-        (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "*").c_str(),
-        SR_SUBSCR_PASSIVE | SR_SUBSCR_OPER_MERGE | SR_SUBSCR_CTX_REUSE);
+    m_thr = std::thread(&LED::poll, this);
 
     const auto uidMaxBrightness = std::to_string(velia::utils::readOneFromFile<uint32_t>(m_sysfsLeds / UID_LED / "max_brightness"));
     const auto triggerFile = m_sysfsLeds / UID_LED / "trigger";
@@ -90,6 +72,35 @@ LED::LED(const std::shared_ptr<::sysrepo::Connection>& srConn, std::filesystem::
 
             return SR_ERR_OK;
         });
+}
+
+LED::~LED()
+{
+    m_thrRunning = false;
+    m_thr.join();
+}
+
+void LED::poll() const
+{
+    while (m_thrRunning) {
+        std::map<std::string, std::string> data;
+
+        for (const auto& ledDirectory : m_leds) {
+            try {
+                const auto brightness = velia::utils::readOneFromFile<uint32_t>(m_sysfsLeds / ledDirectory / "brightness");
+                const auto max_brightness = velia::utils::readOneFromFile<uint32_t>(m_sysfsLeds / ledDirectory / "max_brightness");
+                auto percent = brightness * 100 / max_brightness;
+
+                data[CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "led[name='" + std::string(ledDirectory) + "']/brightness"] = std::to_string(percent);
+            } catch (const std::invalid_argument& e) {
+                m_log->warn("Failed reading state of the LED '{}': {}", std::string(ledDirectory), e.what());
+            }
+        }
+
+        utils::valuesPush(data, {}, m_srSession, SR_DS_OPERATIONAL);
+
+        std::this_thread::sleep_for(POLL_INTERVAL);
+    }
 }
 
 }

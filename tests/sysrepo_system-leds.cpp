@@ -21,9 +21,11 @@ TEST_CASE("Sysrepo reports system LEDs")
     removeDirectoryTreeIfExists(fakeSysfsDir);
     std::filesystem::copy(CMAKE_CURRENT_SOURCE_DIR + "/tests/sysfs/leds"s, fakeSysfsDir, std::filesystem::copy_options::recursive);
 
+    const auto WAIT = 125ms /* poll interval */ + 10ms /* just to be sure */ ;
+
     velia::system::LED led(srConn, fakeSysfsDir);
 
-    std::this_thread::sleep_for(10ms);
+    std::this_thread::sleep_for(50ms);
 
     REQUIRE(dataFromSysrepo(client, "/czechlight-system:leds", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
                 {"/led[name='line:green']", ""},
@@ -48,7 +50,7 @@ TEST_CASE("Sysrepo reports system LEDs")
         auto res = client->rpc_send("/czechlight-system:leds/uid", rpcInput);
         REQUIRE(res->val_cnt() == 0);
 
-        std::this_thread::sleep_for(10ms);
+        std::this_thread::sleep_for(WAIT);
         REQUIRE(dataFromSysrepo(client, "/czechlight-system:leds", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
                     {"/led[name='line:green']", ""},
                     {"/led[name='line:green']/brightness", "100"},
@@ -71,7 +73,7 @@ TEST_CASE("Sysrepo reports system LEDs")
         auto res = client->rpc_send("/czechlight-system:leds/uid", rpcInput);
         REQUIRE(res->val_cnt() == 0);
 
-        std::this_thread::sleep_for(10ms);
+        std::this_thread::sleep_for(WAIT);
         REQUIRE(dataFromSysrepo(client, "/czechlight-system:leds", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
                     {"/led[name='line:green']", ""},
                     {"/led[name='line:green']/brightness", "100"},
@@ -94,7 +96,7 @@ TEST_CASE("Sysrepo reports system LEDs")
         auto res = client->rpc_send("/czechlight-system:leds/uid", rpcInput);
         REQUIRE(res->val_cnt() == 0);
 
-        std::this_thread::sleep_for(10ms); // default timer trigger switches the LED on first
+        std::this_thread::sleep_for(WAIT); // default timer trigger switches the LED on first
         REQUIRE(dataFromSysrepo(client, "/czechlight-system:leds", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
                     {"/led[name='line:green']", ""},
                     {"/led[name='line:green']/brightness", "100"},

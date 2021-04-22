@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6754c93_de0238ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-22T16:59:53Z",
+      "side": 1,
+      "message": "There\u0027s no harm when a uint32_t is read (and processed) as an int64_t, so I would prefer to leave the code as-is.",
+      "revId": "43c139065b37372ecd3c6366e6d74e8430af542b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

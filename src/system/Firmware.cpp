@@ -56,6 +56,8 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
     , m_srSubscribeOps(std::make_shared<::sysrepo::Subscribe>(m_srSessionOps))
     , m_srSubscribeRPC(std::make_shared<::sysrepo::Subscribe>(m_srSessionRPC))
 {
+    utils::ensureModuleImplemented(m_srSessionOps, "czechlight-system", "2021-01-13");
+
     {
         auto raucOperation = m_rauc->operation();
         auto raucLastError = m_rauc->lastError();

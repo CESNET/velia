@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cbca2ae1_9d36d4bc",
+        "filename": "tests/sysrepo_system-leds.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-26T13:24:54Z",
+      "side": 1,
+      "message": "Do these actually test anything new? The real action performed by the code under test in this SECTION is a writeout of that trigger, so if you think this deserves an auto test, check that the code updated the trigger file and the file with the brightness. Or just skip the test altogether if you prefer, and limit this test to only invoking that action with all possible args.",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 19
+      },
+      "revId": "7a785d0e3ffa010e528afe852fad8647e50afb1f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

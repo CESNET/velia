@@ -51,6 +51,24 @@
       "message": "It might also \"not make sense\", be",
       "revId": "43c139065b37372ecd3c6366e6d74e8430af542b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6989c7d3_355c3863",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-26T12:24:40Z",
+      "side": 1,
+      "message": "I think /sys/class/leds is not a part of the hwmon subsystem.",
+      "parentUuid": "0db94fc1_6651948a",
+      "revId": "43c139065b37372ecd3c6366e6d74e8430af542b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -22,6 +22,30 @@
       },
       "revId": "7a785d0e3ffa010e528afe852fad8647e50afb1f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0b4bc65_0cb0f324",
+        "filename": "tests/sysrepo_system-leds.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-26T18:38:50Z",
+      "side": 1,
+      "message": "Thanks for the tip. I\u0027m not going to simulate sysfs behaviour here but I have (at least) implemented a check that the trigger value gets written.",
+      "parentUuid": "cbca2ae1_9d36d4bc",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 19
+      },
+      "revId": "7a785d0e3ffa010e528afe852fad8647e50afb1f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

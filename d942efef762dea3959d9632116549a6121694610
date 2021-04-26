@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06e02952_6cca1f6f",
+        "filename": "src/system/LED.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-26T18:38:50Z",
+      "side": 1,
+      "message": "This comment is not true for transitions on-\u003eoff (i.e. while preserving the same trigger)",
+      "revId": "d942efef762dea3959d9632116549a6121694610",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

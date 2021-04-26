@@ -22,6 +22,30 @@
       },
       "revId": "49a1cee682d127480396d5560e792ea2e50ef6e0",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dab4aa9d_70b272ef",
+        "filename": "src/system/LED.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-26T18:38:50Z",
+      "side": 1,
+      "message": "I have tested this on (my) old HW revision and both possible sequences seemed to do the job.",
+      "parentUuid": "bb460b01_fa787b25",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 71
+      },
+      "revId": "49a1cee682d127480396d5560e792ea2e50ef6e0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

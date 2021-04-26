@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58768333_7feaa72d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-26T23:06:00Z",
+      "side": 1,
+      "message": "And it will also make this code work on platforms that are more limited and that don\u0027t allow brightness control. Good.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 41
+      },
+      "revId": "9233e3146b7b289ca243d2dc228061e92a974fdf",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d452673c_452aa8a9",
+        "filename": "src/health/outputs/LedSysfsDriver.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-26T23:06:00Z",
+      "side": 1,
+      "message": "Please get rid of the \"get\" prefix, these are not common in the libs we\u0027re using throughout these projects.",
+      "range": {
+        "startLine": 21,
+        "startChar": 13,
+        "endLine": 21,
+        "endChar": 16
+      },
+      "revId": "9233e3146b7b289ca243d2dc228061e92a974fdf",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

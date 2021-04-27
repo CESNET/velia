@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71bd7c96_376ac20f",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-27T18:20:32Z",
+      "side": 1,
+      "message": "This won\u0027t hard-fail if `sudo` is not found. Use:\n \nfind_program(SUDO_EXECUTABLE sudo REQUIRED)\n\n...which will require bumping the minimal required version of CMake to 3.18.",
+      "revId": "7279a508253bf1e4b5913bf04e9bb650d9159224",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12e69180_a3afc6ba",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-27T18:20:32Z",
+      "side": 1,
+      "message": "and same here",
+      "revId": "7279a508253bf1e4b5913bf04e9bb650d9159224",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "295301b5_a0d4828f",
+        "filename": "ci/build.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-27T18:20:32Z",
+      "side": 1,
+      "message": "\"TEST_NETWORK_WITH_SUDO\"",
+      "revId": "7279a508253bf1e4b5913bf04e9bb650d9159224",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "188d8be5_3c2e20a5",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-27T18:20:32Z",
+      "side": 1,
+      "message": "Did you mean \"doctest\"? \"docopt\" is for parsing the CLI args, and I don\u0027t think it\u0027s used here.",
+      "range": {
+        "startLine": 74,
+        "startChar": 150,
+        "endLine": 74,
+        "endChar": 156
+      },
+      "revId": "7279a508253bf1e4b5913bf04e9bb650d9159224",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

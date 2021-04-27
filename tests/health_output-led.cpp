@@ -39,13 +39,13 @@ TEST_CASE("SysFS LED driver")
     using namespace std::literals;
     TEST_INIT_LOGS;
 
-    auto fakeSysfsDir = std::filesystem::path {CMAKE_CURRENT_BINARY_DIR + "/tests/led/"s};
+    auto fakeSysfsDir = std::filesystem::path {CMAKE_CURRENT_BINARY_DIR + "/tests/leds/"s};
     auto fakeBrightnessFile = fakeSysfsDir / "brightness";
     removeDirectoryTreeIfExists(fakeSysfsDir);
 
     SECTION("Basic usage test")
     {
-        std::filesystem::copy(std::string(CMAKE_CURRENT_SOURCE_DIR) + "/tests/sysfs/led/1/"s, fakeSysfsDir, std::filesystem::copy_options::recursive);
+        std::filesystem::copy(std::string(CMAKE_CURRENT_SOURCE_DIR) + "/tests/sysfs/leds/line:green/"s, fakeSysfsDir, std::filesystem::copy_options::recursive);
         velia::health::LedSysfsDriver led(fakeSysfsDir);
 
         led.set(0);
@@ -63,7 +63,7 @@ TEST_CASE("SysFS LED driver")
 
     SECTION("Invalid directory")
     {
-        std::filesystem::copy(std::string(CMAKE_CURRENT_SOURCE_DIR) + "/tests/sysfs/led/2/"s, fakeSysfsDir, std::filesystem::copy_options::recursive);
+        std::filesystem::copy(std::string(CMAKE_CURRENT_SOURCE_DIR) + "/tests/sysfs/leds/line:red/"s, fakeSysfsDir, std::filesystem::copy_options::recursive);
         REQUIRE_THROWS_AS(velia::health::LedSysfsDriver(fakeSysfsDir), std::invalid_argument);
     }
 }

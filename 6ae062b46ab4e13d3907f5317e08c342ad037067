@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e3c2209_8978f157",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T16:43:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b1e3138_68e78021",
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a05d92f_7b6d5b66",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-04-19T16:36:09Z",
       "side": 1,
       "message": "There\u0027s no reason to skip the \"old version of this test\" when not opting in for the `sudo` tests. Either use CMake\u0027s configure_file to write out that TEST_ROOT variable into a .h file and use #ifdef for the sudo tests in the matching tests/*.cpp, or, even better, add a new test executable which *only* runs these bits that are needed, and add that test conditionally via CMake based on the value of TESTS_ROOT.",
+      "range": {
+        "startLine": 422,
+        "startChar": 0,
+        "endLine": 435,
+        "endChar": 9
+      },
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd503548_2fdb1d9c",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T16:43:03Z",
+      "side": 1,
+      "message": "the old version will be run always, the sudo version only when the SUDO option is true.",
+      "parentUuid": "4a05d92f_7b6d5b66",
       "range": {
         "startLine": 422,
         "startChar": 0,
@@ -58,6 +100,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17c1afba_e770e348",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T16:43:03Z",
+      "side": 1,
+      "message": "Interesting. Done.",
+      "parentUuid": "6146946d_4b72a755",
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "186731c2_b31888bb",
@@ -71,6 +131,30 @@
       "writtenOn": "2021-04-19T16:24:35Z",
       "side": 1,
       "message": "It\u0027s `/usr/sbin/ip` on Fedora, but it\u0027s `/run/current-system/sw/bin/ip` on my dev box. Use CMake\u0027s find_program for both.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 40
+      },
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35d13be6_758049bc",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T16:43:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "186731c2_b31888bb",
       "range": {
         "startLine": 29,
         "startChar": 0,
@@ -98,6 +182,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54c1502f_b9739a49",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T16:43:03Z",
+      "side": 1,
+      "message": "Did not know about this. Done.",
+      "parentUuid": "d7ca76c0_b2b6af87",
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8d48329b_5673f50d",
@@ -111,6 +213,24 @@
       "writtenOn": "2021-04-19T16:36:09Z",
       "side": 1,
       "message": "This is a bit fragile; if the test fails in the middle, the next test run will see some partial state from the previous test run. Please use CTest fixtures to \"properly\" clean up.",
+      "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdbe3a16_dcfa4290",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T16:43:03Z",
+      "side": 1,
+      "message": "I have added a \"cleanup\" by ctest but left this line in place. This is because docopt sections. To setup the interface again, I delete it before.",
+      "parentUuid": "8d48329b_5673f50d",
       "revId": "6ae062b46ab4e13d3907f5317e08c342ad037067",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

@@ -70,6 +70,30 @@
       },
       "revId": "18544a9ac1923d5f6ab4ac9e24c483c8854199ad",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6eefac4c_62fa3887",
+        "filename": "src/system/LED.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-27T10:44:19Z",
+      "side": 1,
+      "message": "I think it would make sense to also remember the max_brightness because that one stays constant over time. In case you are against that, please comment here (I do not really insist).",
+      "parentUuid": "eaaf57cb_66e843ca",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 159
+      },
+      "revId": "18544a9ac1923d5f6ab4ac9e24c483c8854199ad",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

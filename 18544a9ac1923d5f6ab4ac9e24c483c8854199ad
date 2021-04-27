@@ -22,6 +22,30 @@
       },
       "revId": "18544a9ac1923d5f6ab4ac9e24c483c8854199ad",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f99afbd_88e79f03",
+        "filename": "src/system/LED.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T09:41:59Z",
+      "side": 1,
+      "message": "The LED discovery is out of the loop (in the constructor, see m_leds). This just iterates over the discovered LEDs.\n\nBut the log message is confusing, I agree.",
+      "parentUuid": "dda8f99f_a78cfc43",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 159
+      },
+      "revId": "18544a9ac1923d5f6ab4ac9e24c483c8854199ad",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

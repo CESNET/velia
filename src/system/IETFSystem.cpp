@@ -165,8 +165,7 @@ void IETFSystem::initDummies()
 void IETFSystem::initClock()
 {
     m_srSubscribe->oper_get_items_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(),
-            [this] (auto session, auto, auto, auto, auto, auto& parent) {
-                m_log->critical("yay");
+            [] (auto session, auto, auto, auto, auto, auto& parent) {
                 parent->new_path(session->get_context(),
                         (IETF_SYSTEM_STATE_CLOCK_PATH + "/current-datetime"s).c_str(),
                         utils::yangTimeFormat(std::chrono::system_clock::now()).c_str(),

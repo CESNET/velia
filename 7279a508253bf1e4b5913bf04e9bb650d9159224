@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7bfe7a4_bc671060",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T18:38:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71bd7c96_376ac20f",
+      "revId": "7279a508253bf1e4b5913bf04e9bb650d9159224",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "12e69180_a3afc6ba",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-04-27T18:20:32Z",
       "side": 1,
       "message": "and same here",
+      "revId": "7279a508253bf1e4b5913bf04e9bb650d9159224",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34390a4f_2663bffe",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T18:38:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12e69180_a3afc6ba",
       "revId": "7279a508253bf1e4b5913bf04e9bb650d9159224",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -52,6 +88,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "65fa858b_57dab076",
+        "filename": "ci/build.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T18:38:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "295301b5_a0d4828f",
+      "revId": "7279a508253bf1e4b5913bf04e9bb650d9159224",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "188d8be5_3c2e20a5",
@@ -65,6 +119,30 @@
       "writtenOn": "2021-04-27T18:20:32Z",
       "side": 1,
       "message": "Did you mean \"doctest\"? \"docopt\" is for parsing the CLI args, and I don\u0027t think it\u0027s used here.",
+      "range": {
+        "startLine": 74,
+        "startChar": 150,
+        "endLine": 74,
+        "endChar": 156
+      },
+      "revId": "7279a508253bf1e4b5913bf04e9bb650d9159224",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "168bc2dd_ac551c9f",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-27T18:38:11Z",
+      "side": 1,
+      "message": "Yes, of course... Thanks.",
+      "parentUuid": "188d8be5_3c2e20a5",
       "range": {
         "startLine": 74,
         "startChar": 150,

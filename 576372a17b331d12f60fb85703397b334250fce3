@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c3b1c4c_aa08d6c8",
+        "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-04-28T12:49:39Z",
+      "side": 1,
+      "message": "Is the ctor call here really needed? Now it constructs the object and then (unnecessarily) moves it, right?",
+      "range": {
+        "startLine": 54,
+        "startChar": 25,
+        "endLine": 54,
+        "endChar": 35
+      },
+      "revId": "576372a17b331d12f60fb85703397b334250fce3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

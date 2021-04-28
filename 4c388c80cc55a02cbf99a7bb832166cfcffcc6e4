@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abb2940c_ba6bcd47",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-04-28T10:42:10Z",
+      "side": 1,
+      "message": "I don\u0027t insist on merging this, if you don\u0027t like that the line is so long",
+      "revId": "4c388c80cc55a02cbf99a7bb832166cfcffcc6e4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

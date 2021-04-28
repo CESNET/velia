@@ -17,7 +17,7 @@ The purpose is to make sure that a nicely formatted error message gets stored in
 void fatalException [[noreturn]] (velia::Log log, const std::exception& e, const std::string& when)
 {
     int demangled;
-    char* classname = __cxxabiv1::__cxa_demangle(typeid(e).name(), nullptr, 0, &demangled);
+    char* classname = __cxxabiv1::__cxa_demangle(typeid(e).name(), nullptr, nullptr, &demangled);
     log->critical("Fatal error in {}: {}", when, demangled == 0 ? classname : typeid(e).name());
     log->critical("{}", e.what());
     free(classname);

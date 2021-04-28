@@ -226,6 +226,12 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
     {
         iproute2_exec_and_wait("link", "set", "dev", IFACE, "up");
         iproute2_exec_and_wait("route", "add", "198.51.100.0/24", "dev", IFACE);
+
+        // issue #2
+        for (int i = 1; i < 15; i++) {
+            iproute2_exec_and_wait("route", "add", "203.0.113."s + std::to_string(i) + "/32", "dev", IFACE);
+        }
+
         std::this_thread::sleep_for(WAIT);
 
         auto data = dataFromSysrepo(client, "/ietf-routing:routing", SR_DS_OPERATIONAL);

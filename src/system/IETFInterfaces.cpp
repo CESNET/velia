@@ -281,7 +281,7 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
      * Unfortunately, this function may be called several times during the "reconstruction" of the routing table.
      */
 
-    std::map<std::string, std::string> values;
+    std::vector<utils::YANGPair> values;
     std::vector<std::string> deletePaths;
 
     auto routes = m_rtnetlink->getRoutes();
@@ -330,7 +330,7 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
             }
         }
 
-        values[yangPrefix + familyYangPrefix + ":destination-prefix"] = destPrefix;
+        values.push_back({yangPrefix + familyYangPrefix + ":destination-prefix", destPrefix});
 
         auto scope = rtnl_route_get_scope(route.get());
         std::string protoStr;
@@ -352,7 +352,7 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
             throw std::invalid_argument("Unexpected route protocol ("s + std::to_string(proto) + ")");
         }
 
-        values[yangPrefix + "source-protocol"] = protoStr;
+        values.push_back({yangPrefix + "source-protocol", protoStr});
 
         const auto hops = rtnl_route_get_nnexthops(route.get());
         const bool multihop = hops > 1;
@@ -368,7 +368,7 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
                 }
 
                 std::array<char, IPV6ADDRSTRLEN_WITH_PREFIX> buf;
-                values[yangKey] = nl_addr2str(addr, buf.data(), buf.size());
+                values.push_back({yangKey, nl_addr2str(addr, buf.data(), buf.size())});
             }
 
             auto if_index = rtnl_route_nh_get_ifindex(nh);
@@ -381,7 +381,7 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
                         yangKey = yangPrefix + "next-hop/next-hop-list/next-hop[" + std::to_string(i + 1) + "]/outgoing-interface";
                     }
 
-                    values[yangKey] = rtnl_link_get_name(linkIt->get());
+                    values.push_back({yangKey, rtnl_link_get_name(linkIt->get())});
                 }
             }
         }

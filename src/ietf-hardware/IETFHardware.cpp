@@ -133,13 +133,11 @@ DataTree Fans::operator()() const
 {
     DataTree res(m_staticData);
 
-    auto attrs = m_hwmon->attributes();
-
     for (unsigned i = 1; i <= m_fanChannelsCount; i++) {
         const auto sensorComponentName = m_componentName + ":fan" + std::to_string(i) + ":rpm";
         const auto attribute = "fan"s + std::to_string(i) + "_input";
 
-        addSensorValue(res, sensorComponentName, std::to_string(attrs.at(attribute)));
+        addSensorValue(res, sensorComponentName, std::to_string(m_hwmon->attribute(attribute)));
     }
 
     return res;

@@ -46,13 +46,10 @@ TEST_CASE("HardwareState")
     };
     FAKE_EMMC(emmc, attributesEMMC);
 
-    attributesHWMon = {
-        {"fan1_input"s, 253},
-        {"fan2_input"s, 0},
-        {"fan3_input"s, 1280},
-        {"fan4_input"s, 666},
-    };
-    FAKE_HWMON(fans, attributesHWMon);
+    REQUIRE_CALL(*fans, attribute("fan1_input"s)).RETURN( 253);
+    REQUIRE_CALL(*fans, attribute("fan2_input"s)).RETURN( 0);
+    REQUIRE_CALL(*fans, attribute("fan3_input"s)).RETURN( 1280);
+    REQUIRE_CALL(*fans, attribute("fan4_input"s)).RETURN( 666);
 
     REQUIRE_CALL(*sysfsTempFront, attribute("temp1_input")).RETURN(30800);
     REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800);

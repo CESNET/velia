@@ -217,7 +217,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
     m_log->trace("Netlink update on link '{}', action {}", name, nlActionToString(action));
 
     if (action == NL_ACT_DEL) {
-        utils::valuesPush({}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, m_srSession, SR_DS_OPERATIONAL);
+        utils::valuesPush(std::vector<utils::YANGPair>{}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, m_srSession, SR_DS_OPERATIONAL);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
         std::map<std::string, std::string> values;
         std::vector<std::string> deletePaths;

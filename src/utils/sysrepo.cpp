@@ -41,6 +41,19 @@ static void spdlog_sr_log_cb(sr_log_level_t level, const char* message)
 }
 }
 
+namespace {
+std::vector<velia::utils::YANGPair> mapToVector(const std::map<std::string, std::string>& values)
+{
+    std::vector<velia::utils::YANGPair> res;
+    for (const auto& [xpath, value] : values) {
+        res.push_back({xpath, value});
+    }
+
+    return res;
+}
+
+}
+
 namespace velia::utils {
 
 /** @short Setup sysrepo log forwarding
@@ -52,6 +65,11 @@ void initLogsSysrepo()
 }
 
 void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)
+{
+    valuesToYang(mapToVector(values), removePaths, std::move(session), parent);
+}
+
+void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)
 {
     auto netconf = session->get_context()->get_module("ietf-netconf");
     auto log = spdlog::get("main");
@@ -111,12 +129,34 @@ void valuesPush(const std::map<std::string, std::string>& values, const std::vec
 
     valuesPush(values, removePaths, session);
 
-    session->apply_changes();
     session->session_switch_ds(oldDatastore);
 }
 
 /** @brief Set or remove paths in Sysrepo's current datastore. */
 void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session)
+{
+    if (values.empty() && removePaths.empty()) return;
+
+    libyang::S_Data_Node edit;
+    valuesToYang(values, removePaths, session, edit);
+
+    session->edit_batch(edit, "merge");
+    session->apply_changes();
+}
+
+/** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
+void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore)
+{
+    sr_datastore_t oldDatastore = session->session_get_ds();
+    session->session_switch_ds(datastore);
+
+    valuesPush(values, removePaths, session);
+
+    session->session_switch_ds(oldDatastore);
+}
+
+/** @brief Set or remove paths in Sysrepo's current datastore. */
+void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session)
 {
     if (values.empty() && removePaths.empty()) return;
 

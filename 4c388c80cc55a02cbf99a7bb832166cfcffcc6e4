@@ -16,6 +16,23 @@
       "message": "I don\u0027t insist on merging this, if you don\u0027t like that the line is so long",
       "revId": "4c388c80cc55a02cbf99a7bb832166cfcffcc6e4",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abec63e3_6fc9b410",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-04-28T10:50:51Z",
+      "side": 1,
+      "message": "I think this is indeed better. Please apply this to cla-sysrpeo, too.",
+      "revId": "4c388c80cc55a02cbf99a7bb832166cfcffcc6e4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

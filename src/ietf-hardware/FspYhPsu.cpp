@@ -125,18 +125,18 @@ void FspYhPsu::createPower()
     using velia::ietf_hardware::data_reader::SysfsValue;
     using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
-    m_properties.push_back(StaticData(prefix, "ne", {{"class", "iana-hardware:power-supply"}}));
-    m_properties.push_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-1", prefix, m_hwmon, 1));
-    m_properties.push_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-2", prefix, m_hwmon, 2));
-    m_properties.push_back(SysfsValue<SensorType::Current>(prefix + ":current-in", prefix, m_hwmon, 1));
-    m_properties.push_back(SysfsValue<SensorType::Current>(prefix + ":current-12V", prefix, m_hwmon, 2));
-    m_properties.push_back(SysfsValue<SensorType::Current>(prefix + ":current-5Vsb", prefix, m_hwmon, 3));
-    m_properties.push_back(SysfsValue<SensorType::VoltageAC>(prefix + ":voltage-in", prefix, m_hwmon, 1));
-    m_properties.push_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-12V", prefix, m_hwmon, 2));
-    m_properties.push_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-5Vsb", prefix, m_hwmon, 3));
-    m_properties.push_back(SysfsValue<SensorType::Power>(prefix + ":power-in", prefix, m_hwmon, 1));
-    m_properties.push_back(SysfsValue<SensorType::Power>(prefix + ":power-out", prefix, m_hwmon, 2));
-    m_properties.push_back(Fans(prefix + ":fan", prefix, m_hwmon, 1));
+    m_properties.emplace_back(StaticData(prefix, "ne", {{"class", "iana-hardware:power-supply"}}));
+    m_properties.emplace_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-1", prefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-2", prefix, m_hwmon, 2));
+    m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-in", prefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-12V", prefix, m_hwmon, 2));
+    m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-5Vsb", prefix, m_hwmon, 3));
+    m_properties.emplace_back(SysfsValue<SensorType::VoltageAC>(prefix + ":voltage-in", prefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-12V", prefix, m_hwmon, 2));
+    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-5Vsb", prefix, m_hwmon, 3));
+    m_properties.emplace_back(SysfsValue<SensorType::Power>(prefix + ":power-in", prefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::Power>(prefix + ":power-out", prefix, m_hwmon, 2));
+    m_properties.emplace_back(Fans(prefix + ":fan", prefix, m_hwmon, 1));
 }
 
 DataTree FspYhPsu::readValues()

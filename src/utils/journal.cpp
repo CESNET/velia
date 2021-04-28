@@ -5,9 +5,9 @@
  *
 */
 
+#include <cinttypes>
 #include <cstdio>
 #include <cstdlib>
-#include <inttypes.h>
 #include <spdlog/sinks/systemd_sink.h>
 #include <sys/stat.h>
 #include <sys/types.h>

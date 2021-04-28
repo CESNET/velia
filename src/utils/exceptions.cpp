@@ -17,10 +17,10 @@ The purpose is to make sure that a nicely formatted error message gets stored in
 void fatalException [[noreturn]] (velia::Log log, const std::exception& e, const std::string& when)
 {
     int demangled;
-    char* classname = __cxxabiv1::__cxa_demangle(typeid(e).name(), nullptr, nullptr, &demangled);
-    log->critical("Fatal error in {}: {}", when, demangled == 0 ? classname : typeid(e).name());
+    auto classname =
+        std::unique_ptr<char, decltype(&std::free)>(__cxxabiv1::__cxa_demangle(typeid(e).name(), nullptr, nullptr, &demangled), std::free);
+    log->critical("Fatal error in {}: {}", when, demangled == 0 ? classname.get() : typeid(e).name());
     log->critical("{}", e.what());
-    free(classname);
     throw;
 }
 }

@@ -43,7 +43,7 @@ std::string velia::utils::execAndWait(
     logger->trace("exec: {} {}", absolutePath, boost::algorithm::join(args, " "));
     bp::child c(
             absolutePath,
-            boost::process::args=std::move(args),
+            boost::process::args=args,
             bp::std_in < stdinPipe, bp::std_out > stdoutStream, bp::std_err > stderrStream,
             bp::extend::on_exec_setup=onExecSetup);
 

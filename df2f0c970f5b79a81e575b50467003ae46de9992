@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "93a5ba29_1f0cd6ed",
+        "filename": "src/utils/sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-10T16:36:00Z",
+      "side": 1,
+      "message": "I think I will keep the for-range loop.\nIdk if something like this is better.\n std::transform(values.begin(), values.end(), std::back_inserter(res), [](const auto\u0026 kv) { return velia::utils::YANGPair{kv.first, kv.second}; });\n\n\n\n...but perhaps we can use emplace_back.",
+      "parentUuid": "6dfb4213_b7fcbba0",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 5
+      },
+      "revId": "df2f0c970f5b79a81e575b50467003ae46de9992",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "e78f6ed2_c90736fc",
         "filename": "src/utils/sysrepo.cpp",
         "patchSetId": 2

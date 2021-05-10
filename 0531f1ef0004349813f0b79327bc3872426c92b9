@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7f25813_a453ef36",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-10T16:36:03Z",
+      "side": 1,
+      "message": "Thanks.",
+      "parentUuid": "3fbe36ad_20aaa407",
+      "range": {
+        "startLine": 13,
+        "startChar": 35,
+        "endLine": 13,
+        "endChar": 37
+      },
+      "revId": "0531f1ef0004349813f0b79327bc3872426c92b9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fe212d31_2ad19aad",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-05-04T07:48:35Z",
       "side": 1,
       "message": "I think it\u0027s \"indices\" in this case https://www.nasdaq.com/articles/indexes-or-indices-whats-the-deal-2016-05-12",
+      "range": {
+        "startLine": 14,
+        "startChar": 15,
+        "endLine": 14,
+        "endChar": 23
+      },
+      "revId": "0531f1ef0004349813f0b79327bc3872426c92b9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1644fac_52560fc0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-10T16:36:03Z",
+      "side": 1,
+      "message": "Hmm I thought that in nowadays English they can be used interchangeably.",
+      "parentUuid": "fe212d31_2ad19aad",
       "range": {
         "startLine": 14,
         "startChar": 15,
@@ -77,6 +125,30 @@
       "writtenOn": "2021-05-04T07:48:35Z",
       "side": 1,
       "message": "`emplace_back`? (and for the others too?)",
+      "range": {
+        "startLine": 333,
+        "startChar": 15,
+        "endLine": 333,
+        "endChar": 24
+      },
+      "revId": "0531f1ef0004349813f0b79327bc3872426c92b9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b83b8c1d_8f82a50f",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-10T16:36:03Z",
+      "side": 1,
+      "message": "Yeah. Thanks for that.\n\nEven my clang-tidy warned me on that but for some reason I ignored it.",
+      "parentUuid": "3f153f91_0972483d",
       "range": {
         "startLine": 333,
         "startChar": 15,

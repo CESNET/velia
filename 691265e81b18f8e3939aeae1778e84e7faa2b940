@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1e6324f_251c4c07",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-05-11T08:23:36Z",
+      "side": 1,
+      "message": "I have actually just changed this clang-format setting in cla-sysrepo to not include this space\nhttps://gerrit.cesnet.cz/c/CzechLight/cla-sysrepo/+/4182\nyou can adopt also this into velia if you want",
+      "range": {
+        "startLine": 220,
+        "startChar": 54,
+        "endLine": 220,
+        "endChar": 55
+      },
+      "revId": "691265e81b18f8e3939aeae1778e84e7faa2b940",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b44c8fc7_4d78daa4",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-14T08:57:32Z",
+      "side": 1,
+      "message": "This looks like a copy-paste from the other block below; please add a helper function for that.",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 11
+      },
+      "revId": "bdaf3cac4d729a0a1559010aadcd33cc34c7e8ae",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

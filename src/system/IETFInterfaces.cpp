@@ -458,7 +458,24 @@ int IETFInterfaces::onSysrepoUpdate(std::shared_ptr<sysrepo::Session> session, c
             return acc + "Address=" + kv.first + "/" + kv.second + "\n"; // see man systemd.network(5)
         });
 
-        auto dhcpSetting = "DHCP=no"s;
+        std::string dhcpSetting;
+
+        {
+            bool DHCPv4 = linkEntry->find_path("ietf-ip:ipv4/czechlight-network:dhcp")->size() > 0;
+            bool DHCPv6 = linkEntry->find_path("ietf-ip:ipv6/czechlight-network:dhcp")->size() > 0;
+
+            spdlog::get("system")->trace("Link {}: DHCP v4={} v6={}", linkName, DHCPv4, DHCPv6);
+
+            if (DHCPv4 && DHCPv6) {
+                dhcpSetting = "DHCP=yes";
+            } else if (DHCPv4) {
+                dhcpSetting = "DHCP=ipv4";
+            } else if (DHCPv6) {
+                dhcpSetting = "DHCP=ipv6";
+            } else {
+                dhcpSetting = "DHCP=no";
+            }
+        }
 
         networkConfig[linkName] = fmt::format(NETWORK_FILE_CONTENT_TEMPLATE,
                                               "linkName"_a = linkName,

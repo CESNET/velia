@@ -12,6 +12,8 @@
 #include "test_sysrepo_helpers.h"
 #include "tests/mock/system.h"
 
+using namespace std::string_literals;
+
 TEST_CASE("ietf-interfaces localhost")
 {
     TEST_SYSREPO_INIT_LOGS;
@@ -47,4 +49,34 @@ TEST_CASE("ietf-interfaces localhost")
                 {"/ietf-ip:ipv6/address[ip='::1']/prefix-length", "128"},
             });
     // NOTE: There are no neighbours on loopback
+
+    SECTION("Link changes disabled")
+    {
+        client->session_switch_ds(SR_DS_STARTUP);
+
+        SECTION("Only specified link names can appear in configurable datastore")
+        {
+            for (const auto& [name, type] : {std::pair<const char*, const char*>{"eth0", "iana-if-type:ethernetCsmacd"},
+                                             {"eth1", "iana-if-type:ethernetCsmacd"},
+                                             {"br0", "iana-if-type:bridge"},
+                                             {"osc", "iana-if-type:ethernetCsmacd"},
+                                             {"oscW", "iana-if-type:ethernetCsmacd"},
+                                             {"oscE", "iana-if-type:ethernetCsmacd"}}) {
+                client->set_item_str(("/ietf-interfaces:interfaces/interface[name='"s + name + "']/type").c_str(), type);
+            }
+            client->apply_changes();
+        }
+
+        SECTION("Invalid type for a valid link")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:softwareLoopback");
+            REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
+        }
+
+        SECTION("Invalid name")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='blah0']/type", "iana-if-type:ethernetCsmacd");
+            REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
+        }
+    }
 }

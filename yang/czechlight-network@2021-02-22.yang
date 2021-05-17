@@ -81,4 +81,28 @@ module czechlight-network {
         base rt:routing-protocol;
         description "Identity for route installed by router advertisement.";
     }
+
+    augment "/if:interfaces/if:interface/ip:ipv4" {
+        when "not(ip:address)" {
+            description "This augment is valid only for IPv4 unicast.";
+        }
+
+        description "This augment adds the DHCP client.";
+
+        container dhcp {
+            presence "Presence of this container means the the link is configured by the DHCP protocol.";
+        }
+    }
+
+    augment "/if:interfaces/if:interface/ip:ipv6" {
+        when "not(ip:address)" {
+            description "This augment is valid only for IPv6 unicast.";
+        }
+
+        description "This augment adds the DHCP client.";
+
+        container dhcp {
+            presence "Presence of this container means the the link is configured by the DHCP protocol.";
+        }
+    }
 }

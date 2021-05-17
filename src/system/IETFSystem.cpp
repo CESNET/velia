@@ -7,6 +7,7 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
+#include <optional>
 #include "IETFSystem.h"
 #include "system_vars.h"
 #include "utils/exec.h"

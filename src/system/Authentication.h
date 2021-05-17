@@ -7,7 +7,10 @@
 
 #pragma once
 
+#include <optional>
+#include <string>
 #include <sysrepo-cpp/Session.hpp>
+#include <vector>
 #include "utils/log-fwd.h"
 
 namespace velia::system {

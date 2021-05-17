@@ -39,9 +39,45 @@ module czechlight-network {
     deviation /rt:routing-state { deviate not-supported; }
     deviation /if:interfaces-state { deviate not-supported; }
 
-    // As of now we implement the models to contain operational data only
-    deviation /if:interfaces { deviate add { config false; } }
+    // As of now we implement the ietf-routing model to contain operational data only
     deviation /rt:routing { deviate add { config false; } }
+
+    // Link management is "config false"
+    deviation /if:interfaces/if:interface/if:enabled { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/if:description { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/if:link-up-down-trap-enable { deviate add { config false; } }
+
+    // User should not create new links or reconfigure link types
+    deviation /if:interfaces/if:interface/if:name {
+        deviate add {
+            must '. = "br0" or . = "eth0" or . = "eth1" or . = "lo" or . = "osc" or . = "oscW" or . = "oscE"' {
+                error-message "Link name must be chosen from the following options: {br0, eth0, eth1, lo, osc, oscW, oscE}.";
+            }
+        }
+    }
+
+    deviation /if:interfaces/if:interface/if:type {
+        deviate add {
+            must '(../if:name = "br0" and . = "ianaift:bridge") or
+                  (../if:name = "eth0" and . = "ianaift:ethernetCsmacd") or
+                  (../if:name = "eth1" and . = "ianaift:ethernetCsmacd") or
+                  (../if:name = "lo" and . = "ianaift:softwareLoopback") or
+                  (../if:name = "osc" and . = "ianaift:ethernetCsmacd") or
+                  (../if:name = "oscW" and . = "ianaift:ethernetCsmacd") or
+                  (../if:name = "oscE" and . = "ianaift:ethernetCsmacd")' {
+                error-message "Link type can't be reconfigured.";
+            }
+        }
+    }
+
+    // We do not support configuring some parts
+    deviation /if:interfaces/if:interface/ip:ipv4/ip:neighbor { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:neighbor { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv4/ip:mtu { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:mtu { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv4/ip:forwarding { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:forwarding { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:dup-addr-detect-transmits { deviate add { config false; } }
 
     // IPv6 address autoconfiguration is not supported
     deviation /if:interfaces/if:interface/ip:ipv6/ip:autoconf { deviate not-supported; }

@@ -83,4 +83,20 @@ module czechlight-network {
         base rt:routing-protocol;
         description "Identity for route installed by router advertisement.";
     }
+
+    augment "/if:interfaces/if:interface/ip:ipv4" {
+        description "Add the option enabling DHCP client.";
+
+        container dhcp-client {
+            presence "If present, enable DHCP client on this interface.";
+        }
+    }
+
+    augment "/if:interfaces/if:interface/ip:ipv6" {
+        description "Add the option enabling DHCP client.";
+
+        container dhcp-client {
+            presence "If present, enable DHCP client on this interface.";
+        }
+    }
 }

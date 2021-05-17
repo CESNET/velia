@@ -90,4 +90,24 @@ module czechlight-network {
         base rt:routing-protocol;
         description "Identity for route installed by router advertisement.";
     }
+
+    augment "/if:interfaces/if:interface/ip:ipv4" {
+        description "Add the option enabling DHCP client.";
+
+        leaf dhcp-client {
+            type boolean;
+            default "false";
+            presence "If true, enable DHCPv4 client on this interface.";
+        }
+    }
+
+    augment "/if:interfaces/if:interface/ip:ipv6" {
+        description "Add the option enabling auto-configuration (DHCPv6 client and SLAAC) of the interface.";
+
+        leaf enable-autoconfiguration {
+            type boolean;
+            default "false";
+            description "If true, enable DHCPv6 client and accept RA on this interface.";
+        }
+    }
 }

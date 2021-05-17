@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include "AbstractManager.h"
 #include "health/State.h"
 #include "utils/log-fwd.h"

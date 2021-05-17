@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <optional>
+#include <string>
+#include <vector>
 #include <sysrepo-cpp/Session.hpp>
 #include "utils/log-fwd.h"
 

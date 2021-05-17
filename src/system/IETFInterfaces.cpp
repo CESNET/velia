@@ -6,14 +6,20 @@
  */
 
 #include <arpa/inet.h>
+#include <filesystem>
+#include <fmt/core.h>
 #include <linux/if_arp.h>
 #include <linux/netdevice.h>
+#include <numeric>
 #include "IETFInterfaces.h"
 #include "Rtnetlink.h"
+#include "utils/io.h"
 #include "utils/log.h"
+#include "utils/libyang.h"
 #include "utils/sysrepo.h"
 
 using namespace std::string_literals;
+using namespace fmt::literals;
 
 namespace {
 
@@ -154,14 +160,43 @@ std::map<std::string, std::string> collectNeighboursIP(std::shared_ptr<velia::sy
 
     return values;
 }
+
+void writeConfigs(const std::map<std::string, std::string>& networkConfig, const std::filesystem::path& configDir)
+{
+    // cleanup directory
+    for (const auto& entry : std::filesystem::directory_iterator(configDir)) {
+        std::filesystem::remove_all(entry.path());
+    }
+
+    // write files
+    for (const auto& [interface, networkFileContents] : networkConfig) {
+        auto targetFile = configDir / (interface + ".network");
+
+        if (!std::filesystem::exists(targetFile)) {
+            velia::utils::safeWriteFile(targetFile, networkFileContents);
+        }
+    }
+}
+
+const std::string NETWORK_FILE_CONTENT_TEMPLATE = R"([Match]
+Name={linkName}
+
+[Network]
+LLDP=true
+EmitLLDP=nearest-bridge
+{dhcp}
+{address}
+)";
+
 }
 
 namespace velia::system {
 
-IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
+IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::path configDirPersistent)
     : m_srSession(std::move(srSess))
     , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
     , m_log(spdlog::get("system"))
+    , m_configDirPersistent(std::move(configDirPersistent))
     , m_rtnetlink(std::make_shared<Rtnetlink>(
           [this](rtnl_link* link, int action) { onLinkUpdate(link, action); },
           [this](rtnl_addr* addr, int action) { onAddrUpdate(addr, action); },
@@ -209,6 +244,10 @@ IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
             return SR_ERR_OK;
         },
         (IETF_INTERFACES + "/interface/ietf-ip:ipv6/neighbor").c_str());
+
+    m_srSession->session_switch_ds(SR_DS_STARTUP);
+    m_srSubscribe->module_change_subscribe(IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto) { return onSysrepoUpdate(session, m_configDirPersistent); }, "/ietf-interfaces:interfaces", 0, SR_SUBSCR_DONE_ONLY);
+    m_srSession->session_switch_ds(SR_DS_RUNNING);
 }
 
 void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
@@ -388,5 +427,46 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
     }
 
     utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);
+}
+
+int IETFInterfaces::onSysrepoUpdate(std::shared_ptr<sysrepo::Session> session, const std::filesystem::path& configDir)
+{
+    spdlog::get("system")->trace("ietf-interfaces module change callback");
+    std::map<std::string, std::string> networkConfig;
+
+    auto data = session->get_data("/ietf-interfaces:interfaces/interface");
+
+    auto linkEntries = data->find_path("/ietf-interfaces:interfaces/interface");
+    for (const auto& linkEntry : linkEntries->data()) {
+        auto linkName = getValueAsString(getSubtree(linkEntry, "name"));
+
+        std::vector<std::pair<std::string, std::string>> IPsWithPrefixLen;
+        for (const auto& ipProto : {"ipv4", "ipv6"}) {
+            const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
+            const auto addresses = linkEntry->find_path(IPAddressListXPath.c_str());
+
+            for (const auto& ipEntry : addresses->data()) {
+                auto ip = getValueAsString(getSubtree(ipEntry, "ip"));
+                auto prefixLen = getValueAsString(getSubtree(ipEntry, "prefix-length"));
+
+                spdlog::get("system")->trace("Link {}: address {}/{}", linkName, ip, prefixLen);
+                IPsWithPrefixLen.emplace_back(ip, prefixLen);
+            }
+        }
+
+        auto addressSetting = std::accumulate(IPsWithPrefixLen.begin(), IPsWithPrefixLen.end(), std::string(), [](const std::string& acc, const std::pair<std::string, std::string>& kv) {
+            return acc + "Address=" + kv.first + "/" + kv.second + "\n"; // see man systemd.network(5)
+        });
+
+        auto dhcpSetting = "DHCP=no"s;
+
+        networkConfig[linkName] = fmt::format(NETWORK_FILE_CONTENT_TEMPLATE,
+                                              "linkName"_a = linkName,
+                                              "address"_a = addressSetting,
+                                              "dhcp"_a = dhcpSetting);
+    }
+
+    writeConfigs(networkConfig, configDir);
+    return SR_ERR_OK;
 }
 }

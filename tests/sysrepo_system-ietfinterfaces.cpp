@@ -6,20 +6,25 @@
 */
 
 #include "trompeloeil_doctest.h"
+#include <filesystem>
 #include "pretty_printers.h"
 #include "system/IETFInterfaces.h"
 #include "test_log_setup.h"
 #include "test_sysrepo_helpers.h"
+#include "tests/configure.cmake.h"
 #include "tests/mock/system.h"
+
+using namespace std::string_literals;
 
 TEST_CASE("ietf-interfaces localhost")
 {
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
-
     TEST_SYSREPO_INIT_CLIENT;
 
-    auto network = std::make_shared<velia::system::IETFInterfaces>(srSess);
+    auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
+
+    auto network = std::make_shared<velia::system::IETFInterfaces>(srSess, fakeConfigDir);
 
     // We didn't came up with some way of mocking netlink. At least check that there is the loopback
     // interface with expected values. It is *probably* safe to assume that there is at least the lo device.

@@ -1,26 +1,26 @@
 - project:
     check:
       jobs:
-        - f33-gcc-cover:
-            requires: CzechLight-deps-f33-gcc
+        - f34-gcc-cover:
+            requires: CzechLight-deps-f34-gcc
             required-projects: &projects
               - CzechLight/dependencies
               - name: github/systemd/systemd
                 override-checkout: v246
             pre-run: ci/pre.yaml
-        - f33-clang-asan-ubsan:
-            requires: CzechLight-deps-f33-clang-asan-ubsan
+        - f34-clang-asan-ubsan:
+            requires: CzechLight-deps-f34-clang-asan-ubsan
             required-projects: *projects
             pre-run: ci/pre.yaml
-        - f33-clang-tsan:
-            requires: CzechLight-deps-f33-clang-tsan
+        - f34-clang-tsan:
+            requires: CzechLight-deps-f34-clang-tsan
             required-projects: *projects
             pre-run: ci/pre.yaml
-        - f33-cpp-coverage-diff:
+        - f34-cpp-coverage-diff:
             voting: false
         - clang-format:
             voting: false
-        - f33-gcc-cover-previous:
-            requires: CzechLight-deps-f33-gcc
+        - f34-gcc-cover-previous:
+            requires: CzechLight-deps-f34-gcc
             required-projects: *projects
             pre-run: ci/pre.yaml

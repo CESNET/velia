@@ -127,7 +127,7 @@ void IETFSystem::initHostname()
 
     sysrepo::OperGetItemsCb hostNameCbOperational = [] (auto session, auto, auto, auto, auto, auto& parent) {
         // + 1 for null-terminating byte, HOST_NAME_MAX doesn't count that
-        std::array<char, HOST_NAME_MAX + 1> buffer;
+        std::array<char, HOST_NAME_MAX + 1> buffer{};
 
         if (gethostname(buffer.data(), buffer.size()) != 0) {
             throw std::system_error(errno, std::system_category(), "gethostname() failed");

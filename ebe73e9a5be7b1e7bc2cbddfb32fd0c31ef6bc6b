@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63d6f0bc_fe7e3ffe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-18T19:50:43Z",
+      "side": 1,
+      "message": "So, it works now, the problem was in CMake which needed both \u0027r\u0027 and \u0027x\u0027 on `sudo`, whereas it\u0027s tradditionally -r+x.\n\nThe first test failure (a timeout) is probably just a red herring, let\u0027s ignore that one.\n\nThe second test failure looks like something that happens because of the IPv6 configuration (SLAAC) where each link gets assigned a link-local IPv6 address. There\u0027s a sysctl knob (that the test MUST NOT change) for this, perhaps one can use that to accommodate various system configurations.",
+      "revId": "ebe73e9a5be7b1e7bc2cbddfb32fd0c31ef6bc6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

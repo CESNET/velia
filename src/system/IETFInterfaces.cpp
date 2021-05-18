@@ -101,7 +101,7 @@ std::string binaddrToString(void* binaddr, int addrFamily)
 {
     // any IPv4 address fits into a buffer allocated for an IPv6 address
     static_assert(INET6_ADDRSTRLEN >= INET_ADDRSTRLEN);
-    std::array<char, INET6_ADDRSTRLEN> buf;
+    std::array<char, INET6_ADDRSTRLEN> buf{};
 
     if (const char* res = inet_ntop(addrFamily, binaddr, buf.data(), buf.size()); res != nullptr) {
         return res;

@@ -216,6 +216,8 @@ add_library(velia-system STATIC
         src/system/Rtnetlink.h
         src/system/IETFInterfaces.cpp
         src/system/IETFInterfaces.h
+        src/system/IETFInterfacesConfig.cpp
+        src/system/IETFInterfacesConfig.h
         src/system/LED.cpp
         src/system/LED.h
         )

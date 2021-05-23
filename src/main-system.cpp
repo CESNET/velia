@@ -94,12 +94,13 @@ int main(int argc, char* argv[])
             velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
         });
 
-        // implements ietf-interfaces and ietf-routing
-        auto sysrepoIETFInterfaces = std::make_shared<velia::system::IETFInterfaces>(srSess);
-
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 
         auto srSess2 = std::make_shared<sysrepo::Session>(srConn);
+
+        // implements ietf-interfaces and ietf-routing
+        auto sysrepoIETFInterfaces = std::make_shared<velia::system::IETFInterfaces>(srSess);
+
         auto authentication = velia::system::Authentication(srSess2, REAL_ETC_PASSWD_FILE, REAL_ETC_SHADOW_FILE, AUTHORIZED_KEYS_FORMAT, velia::system::impl::changePassword);
 
         auto leds = velia::system::LED(srConn, "/sys/class/leds");

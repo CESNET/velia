@@ -6,11 +6,14 @@
 */
 
 #include "trompeloeil_doctest.h"
+#include <filesystem>
 #include "pretty_printers.h"
 #include "system/IETFInterfaces.h"
 #include "test_log_setup.h"
 #include "test_sysrepo_helpers.h"
+#include "tests/configure.cmake.h"
 #include "tests/mock/system.h"
+#include "utils/io.h"
 
 using namespace std::string_literals;
 
@@ -18,7 +21,6 @@ TEST_CASE("ietf-interfaces localhost")
 {
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
-
     TEST_SYSREPO_INIT_CLIENT;
 
     auto network = std::make_shared<velia::system::IETFInterfaces>(srSess);

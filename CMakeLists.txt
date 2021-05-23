@@ -215,6 +215,8 @@ add_library(velia-system STATIC
         src/system/Rtnetlink.h
         src/system/IETFInterfaces.cpp
         src/system/IETFInterfaces.h
+        src/system/IETFInterfacesConfig.cpp
+        src/system/IETFInterfacesConfig.h
         src/system/LED.cpp
         src/system/LED.h
         )
@@ -440,6 +442,13 @@ if(BUILD_TESTING)
     velia_test(sysrepo_system-ietfinterfaces velia-system)
     set_tests_properties(
             test-sysrepo_system-ietfinterfaces
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-network
+            RESOURCE_LOCK sysrepo
+    )
+
+    velia_test(sysrepo_system-ietfinterfaces-config velia-system)
+    set_tests_properties(
+            test-sysrepo_system-ietfinterfaces-config
             PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-network
             RESOURCE_LOCK sysrepo
     )

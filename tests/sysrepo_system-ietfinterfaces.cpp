@@ -6,11 +6,15 @@
 */
 
 #include "trompeloeil_doctest.h"
+#include <filesystem>
 #include "pretty_printers.h"
 #include "system/IETFInterfaces.h"
+#include "system/IETFInterfacesConfig.h"
 #include "test_log_setup.h"
 #include "test_sysrepo_helpers.h"
+#include "tests/configure.cmake.h"
 #include "tests/mock/system.h"
+#include "utils/io.h"
 
 using namespace std::string_literals;
 
@@ -18,7 +22,6 @@ TEST_CASE("ietf-interfaces localhost")
 {
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
-
     TEST_SYSREPO_INIT_CLIENT;
 
     auto network = std::make_shared<velia::system::IETFInterfaces>(srSess);
@@ -80,4 +83,71 @@ TEST_CASE("ietf-interfaces localhost")
             REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
         }
     }
+}
+
+struct FakeNetworkReload {
+public:
+    MAKE_CONST_MOCK1(cb, void(const std::vector<std::string>&));
+};
+
+TEST_CASE("configuration in ietf-interfaces")
+{
+    TEST_SYSREPO_INIT_LOGS;
+    TEST_SYSREPO_INIT;
+    TEST_SYSREPO_INIT_CLIENT;
+    trompeloeil::sequence seq1;
+
+    auto fake = FakeNetworkReload();
+
+    const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
+    std::filesystem::remove_all(fakeConfigDir);
+    std::filesystem::create_directories(fakeConfigDir);
+
+    auto expectedFilePath = fakeConfigDir / "eth0.network";
+
+    srSess->session_switch_ds(SR_DS_RUNNING);
+    client->session_switch_ds(SR_DS_RUNNING);
+
+    auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"lo", "eth0"}, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
+
+    std::string expectedContents;
+    SECTION("With description")
+    {
+        expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+Description=Hello world
+Bridge=br0
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/description", "Hello world");
+    }
+
+    SECTION("No description")
+    {
+        expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+Bridge=br0
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+    }
+
+    client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+
+    REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+    client->apply_changes();
+    REQUIRE(std::filesystem::exists(expectedFilePath));
+    REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
+
+    // reset the contents
+    client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']");
+    REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+    client->apply_changes();
+    REQUIRE(!std::filesystem::exists(expectedFilePath));
 }

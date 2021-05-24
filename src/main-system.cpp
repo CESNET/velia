@@ -4,16 +4,16 @@
 #include <sysrepo-cpp/Session.hpp>
 #include "VELIA_VERSION.h"
 #include "main.h"
-#include "system/Firmware.h"
 #include "system/Authentication.h"
-#include "system_vars.h"
+#include "system/Firmware.h"
 #include "system/IETFInterfaces.h"
+#include "system/IETFInterfacesConfig.h"
 #include "system/IETFSystem.h"
 #include "system/LED.h"
+#include "system_vars.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
 #include "utils/journal.h"
-#include "utils/log.h"
 #include "utils/log-init.h"
 #include "utils/sysrepo.h"
 
@@ -69,7 +69,33 @@ int main(int argc, char* argv[])
         dbusConnection->enterEventLoopAsync();
 
         // implements ietf-interfaces and ietf-routing
-        auto sysrepoIETFInterfaces = std::make_shared<velia::system::IETFInterfaces>(srSess);
+        const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network"), persistentNetworkDirectory("/cfg/network/");
+        std::filesystem::create_directories(runtimeNetworkDirectory);
+        std::filesystem::create_directories(persistentNetworkDirectory);
+        auto srSessStartup = std::make_shared<sysrepo::Session>(srConn, SR_DS_STARTUP);
+        std::vector<std::string> managedLinks = {"br0", "eth0", "eth1", "osc", "oscE", "oscW"};
+
+        auto sysrepoIETFInterfacesOperational = std::make_shared<velia::system::IETFInterfaces>(srSess);
+        auto sysrepoIETFInterfacesStartup = velia::system::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, managedLinks, [](const auto&) {});
+        auto sysrepoIETFInterfacesRunning = velia::system::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto& reconfiguredInterfaces) {
+            auto log = spdlog::get("system");
+
+            /* Bring all the updated interfaces down (they will later be brought up by executing `networkctl reload`).
+             *
+             * This is required when transitioning from bridge to DHCP configuration. systemd-networkd apparently does not reset many
+             * interface properties when reconfiguring the interface into new "bridge-less" configuration (the interface stays in the
+             * bridge and it also does not obtain link local address).
+             *
+             * This doesn't seem to be required when transitioning from DHCP to bridge configuration. It's just a "precaution" because
+             * there might be hidden some caveats that I am unable to see now (some leftover setting). Bringing the interface
+             * down seems to reset the interface (and it is something we can afford in the interface reconfiguration process).
+             */
+            for (const auto& interfaceName : reconfiguredInterfaces) {
+                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+            }
+
+            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
+        });
 
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 

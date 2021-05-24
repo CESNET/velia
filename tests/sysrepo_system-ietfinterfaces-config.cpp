@@ -42,7 +42,27 @@ std::map<std::string, std::string> CONFIG = {
                                             "DHCP=no\n"
                                             "Address=127.0.0.1/8\n"
                                             "Address=::1/128\n"},
-
+    {"DHCP=ipv4", "[Match]\n"
+                  "Name=lo\n"
+                  "\n"
+                  "[Network]\n"
+                  "LLDP=true\n"
+                  "EmitLLDP=nearest-bridge\n"
+                  "DHCP=ipv4\n"},
+    {"DHCP=ipv6", "[Match]\n"
+                  "Name=lo\n"
+                  "\n"
+                  "[Network]\n"
+                  "LLDP=true\n"
+                  "EmitLLDP=nearest-bridge\n"
+                  "DHCP=ipv6\n"},
+    {"DHCP=yes", "[Match]\n"
+                 "Name=lo\n"
+                 "\n"
+                 "[Network]\n"
+                 "LLDP=true\n"
+                 "EmitLLDP=nearest-bridge\n"
+                 "DHCP=yes\n"},
 };
 
 struct FakeNetworkReload {
@@ -103,6 +123,62 @@ TEST_CASE("changes in ietf-interfaces")
         // reset the contents
         client->delete_item("/ietf-interfaces:interfaces/interface[name='lo']");
         REQUIRE_CALL(fake, cb(std::vector<std::string>{"lo"})).IN_SEQUENCE(seq1);
+        client->apply_changes();
+    }
+
+    SECTION("DHCP")
+    {
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='lo']/type", "iana-if-type:softwareLoopback");
+
+        SECTION("DHCP IPv4 on")
+        {
+            client->set_item("/ietf-interfaces:interfaces/interface[name='lo']/ietf-ip:ipv4/czechlight-network:dhcp");
+            REQUIRE_CALL(fake, cb(std::vector<std::string>{("lo")})).IN_SEQUENCE(seq1);
+            client->apply_changes();
+            REQUIRE(std::filesystem::exists(expectedFilePath));
+            REQUIRE(velia::utils::readFileToString(expectedFilePath) == CONFIG["DHCP=ipv4"]);
+        }
+
+        SECTION("DHCP IPv6 on")
+        {
+            client->set_item("/ietf-interfaces:interfaces/interface[name='lo']/ietf-ip:ipv6/czechlight-network:dhcp");
+            REQUIRE_CALL(fake, cb(std::vector<std::string>{("lo")})).IN_SEQUENCE(seq1);
+            client->apply_changes();
+            REQUIRE(std::filesystem::exists(expectedFilePath));
+            REQUIRE(velia::utils::readFileToString(expectedFilePath) == CONFIG["DHCP=ipv6"]);
+        }
+
+        SECTION("DHCP IPv4 and IPv6 on")
+        {
+            client->set_item("/ietf-interfaces:interfaces/interface[name='lo']/ietf-ip:ipv4/czechlight-network:dhcp");
+            client->set_item("/ietf-interfaces:interfaces/interface[name='lo']/ietf-ip:ipv6/czechlight-network:dhcp");
+            REQUIRE_CALL(fake, cb(std::vector<std::string>{("lo")})).IN_SEQUENCE(seq1);
+            client->apply_changes();
+            REQUIRE(std::filesystem::exists(expectedFilePath));
+            REQUIRE(velia::utils::readFileToString(expectedFilePath) == CONFIG["DHCP=yes"]);
+        }
+
+        SECTION("Setting DHCP fails when an address is also set")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='lo']/ietf-ip:ipv4/ietf-ip:address[ip='127.0.0.1']/ietf-ip:prefix-length", "8");
+            client->set_item("/ietf-interfaces:interfaces/interface[name='lo']/ietf-ip:ipv4/czechlight-network:dhcp");
+            REQUIRE_THROWS_WITH_AS(client->apply_changes(), "Validation failed", sysrepo::sysrepo_exception);
+            client->discard_changes();
+        }
+
+        SECTION("Setting DHCP fails when an address was set previously")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='lo']/ietf-ip:ipv4/ietf-ip:address[ip='127.0.0.1']/ietf-ip:prefix-length", "8");
+            REQUIRE_CALL(fake, cb(std::vector<std::string>{"lo"})).IN_SEQUENCE(seq1);
+            client->apply_changes();
+            client->set_item("/ietf-interfaces:interfaces/interface[name='lo']/ietf-ip:ipv4/czechlight-network:dhcp");
+            REQUIRE_THROWS_WITH_AS(client->apply_changes(), "Validation failed", sysrepo::sysrepo_exception);
+            client->discard_changes();
+        }
+
+        // reset the contents
+        client->delete_item("/ietf-interfaces:interfaces/interface[name='lo']");
+        REQUIRE_CALL(fake, cb(std::vector<std::string>{"lo"})).IN_SEQUENCE(seq1).TIMES(AT_MOST(1));
         client->apply_changes();
     }
 }

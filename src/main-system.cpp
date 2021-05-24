@@ -9,6 +9,7 @@
 #include "system/Network.h"
 #include "system_vars.h"
 #include "system/IETFInterfaces.h"
+#include "system/IETFInterfacesConfig.h"
 #include "system/IETFSystem.h"
 #include "system/LED.h"
 #include "utils/exceptions.h"
@@ -100,6 +101,26 @@ int main(int argc, char* argv[])
 
         // implements ietf-interfaces and ietf-routing
         auto sysrepoIETFInterfaces = std::make_shared<velia::system::IETFInterfaces>(srSess);
+        auto sysrepoIETFInterfacesStartup = velia::system::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, [](const auto&) {});
+        auto sysrepoIETFInterfacesRunning = velia::system::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, [](const auto& reconfiguredInterfaces) {
+            auto log = spdlog::get("system");
+
+            /* Bring all the updated interfaces down (they will later be brought up by executing `networkctl reload`).
+             *
+             * This is required when transitioning from bridge to DHCP configuration. systemd-networkd apparently does not reset many
+             * interface properties when reconfiguring the interface into new "bridge-less" configuration (the interface stays in the
+             * bridge and it also does not obtain link local address).
+             *
+             * This doesn't seem to be required when transitioning from DHCP to bridge configuration. It's just a "precaution" because
+             * there might be hidden some caveats that I am unable to see now (some leftover setting). Bringing the interface
+             * down seems to reset the interface (and it is something we can afford in the interface reconfiguration process).
+             */
+            for (const auto& interfaceName : reconfiguredInterfaces) {
+                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+            }
+
+            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
+        });
 
         auto authentication = velia::system::Authentication(srSess2, REAL_ETC_PASSWD_FILE, REAL_ETC_SHADOW_FILE, AUTHORIZED_KEYS_FORMAT, velia::system::impl::changePassword);
 

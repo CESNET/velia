@@ -21,7 +21,13 @@ TEST_CASE("ietf-interfaces localhost")
 
     TEST_SYSREPO_INIT_CLIENT;
 
-    auto network = std::make_shared<velia::system::IETFInterfaces>(srSess);
+    std::map<std::string, std::string> systemLinks{{"eth0", "iana-if-type:ethernetCsmacd"},
+            {"eth1", "iana-if-type:ethernetCsmacd"},
+            {"br0", "iana-if-type:bridge"},
+            {"lo", "iana-if-type:softwareLoopback"},
+            {"osc", "iana-if-type:ethernetCsmacd"},
+            {"sit0", "iana-if-type:sixToFour"}};
+    auto network = std::make_shared<velia::system::IETFInterfaces>(srSess, systemLinks);
 
     // We didn't came up with some way of mocking netlink. At least check that there is the loopback
     // interface with expected values. It is *probably* safe to assume that there is at least the lo device.
@@ -58,13 +64,8 @@ TEST_CASE("ietf-interfaces localhost")
 
         SECTION("Valid link and type")
         {
-            for (const auto& [name, type] : {std::pair<const char*, const char*>{"eth0", "iana-if-type:ethernetCsmacd"},
-                                             {"eth1", "iana-if-type:ethernetCsmacd"},
-                                             {"br0", "iana-if-type:bridge"},
-                                             {"lo", "iana-if-type:softwareLoopback"},
-                                             {"osc", "iana-if-type:ethernetCsmacd"},
-                                             {"sit0", "iana-if-type:sixToFour"}}) {
-                client->set_item_str(("/ietf-interfaces:interfaces/interface[name='"s + name + "']/type").c_str(), type);
+            for (const auto& [name, type] : systemLinks) {
+                client->set_item_str(("/ietf-interfaces:interfaces/interface[name='"s + name + "']/type").c_str(), type.c_str());
             }
             client->apply_changes();
         }

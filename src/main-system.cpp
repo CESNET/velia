@@ -97,7 +97,14 @@ int main(int argc, char* argv[])
         });
 
         // implements ietf-interfaces and ietf-routing
-        auto sysrepoIETFInterfaces = std::make_shared<velia::system::IETFInterfaces>(srSess);
+        std::map<std::string, std::string> systemLinks{
+            {"eth0", "iana-if-type:ethernetCsmacd"},
+            {"eth1", "iana-if-type:ethernetCsmacd"},
+            {"osc", "iana-if-type:ethernetCsmacd"},
+            {"lo", "iana-if-type:softwareLoopback"},
+            {"br0", "iana-if-type:bridge"},
+            {"sit0", "iana-if-type:six-to-four"}};
+        auto sysrepoIETFInterfaces = std::make_shared<velia::system::IETFInterfaces>(srSess, systemLinks);
 
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 

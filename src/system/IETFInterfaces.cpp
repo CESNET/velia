@@ -62,21 +62,6 @@ std::string operStatusToString(uint8_t operStatus, velia::Log log)
     }
 }
 
-std::string arpTypeToString(unsigned int arptype, velia::Log log)
-{
-    switch (arptype) {
-    case ARPHRD_ETHER:
-        return "iana-if-type:ethernetCsmacd";
-    case ARPHRD_LOOPBACK:
-        return "iana-if-type:softwareLoopback";
-    case ARPHRD_SIT:
-        return "iana-if-type:sixToFour";
-    default:
-        log->warn("Encountered unknown interface type {}, using 'iana-if-type:other'", arptype);
-        return "iana-if-type:other";
-    }
-}
-
 std::string nlActionToString(int action)
 {
     switch (action) {
@@ -158,9 +143,10 @@ std::map<std::string, std::string> collectNeighboursIP(std::shared_ptr<velia::sy
 
 namespace velia::system {
 
-IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
+IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess, std::map<std::string, std::string> systemLinks)
     : m_srSession(std::move(srSess))
     , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+    , m_systemLinks(std::move(systemLinks))
     , m_log(spdlog::get("system"))
     , m_rtnetlink(std::make_shared<Rtnetlink>(
           [this](rtnl_link* link, int action) { onLinkUpdate(link, action); },
@@ -216,6 +202,12 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
     char* name = rtnl_link_get_name(link);
     m_log->trace("Netlink update on link '{}', action {}", name, nlActionToString(action));
 
+    // Report encountered links that are not expected. Make only one report per such link.
+    if (!m_systemLinks.contains(name) && !m_encounteredUnknownLinks.contains(name)) {
+        m_log->warn("{} is an unexpected link name.", name);
+        m_encounteredUnknownLinks.insert(name);
+    }
+
     if (action == NL_ACT_DEL) {
         utils::valuesPush(std::vector<utils::YANGPair>{}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, m_srSession, SR_DS_OPERATIONAL);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
@@ -233,7 +225,11 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
             deletePaths.push_back({IETF_INTERFACES + "/interface[name='" + name + "']/phys-address"});
         }
 
-        values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = arpTypeToString(rtnl_link_get_arptype(link), m_log);
+        if (m_systemLinks.contains(name)) {
+            values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = m_systemLinks.at(name).c_str();
+        } else {
+            values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = "iana-if-type:other";
+        }
         values[IETF_INTERFACES + "/interface[name='" + name + "']/oper-status"] = operStatusToString(rtnl_link_get_operstate(link), m_log);
 
         utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);

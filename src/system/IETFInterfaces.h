@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include <set>
 #include <sysrepo-cpp/Session.hpp>
 #include "utils/log-fwd.h"
 
@@ -19,7 +20,7 @@ class Rtnetlink;
 
 class IETFInterfaces {
 public:
-    explicit IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess);
+    explicit IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess, std::map<std::string, std::string> systemLinks);
 
 private:
     void onLinkUpdate(rtnl_link* link, int action);
@@ -28,6 +29,8 @@ private:
 
     std::shared_ptr<::sysrepo::Session> m_srSession;
     std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
+    std::map<std::string, std::string> m_systemLinks;
+    std::set<std::string> m_encounteredUnknownLinks;
     velia::Log m_log;
     std::shared_ptr<Rtnetlink> m_rtnetlink; // first to destroy, because the callback to rtnetlink uses m_srSession and m_log
 };

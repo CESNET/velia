@@ -10,6 +10,7 @@
 #include "utils/journal.h"
 #include "utils/log.h"
 #include "utils/log-init.h"
+#include "utils/sysrepo.h"
 #include "utils/waitUntilSignalled.h"
 
 static const char usage[] =
@@ -45,6 +46,7 @@ int main(int argc, char* argv[])
     auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "veliad-system " VELIA_VERSION, true);
 
     velia::utils::initLogs(loggingSink);
+    velia::utils::initLogsSysrepo();
     spdlog::set_level(spdlog::level::info);
 
     try {

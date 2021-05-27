@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb5a44ef_b239b771",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-27T13:02:52Z",
+      "side": 1,
+      "message": "\"Unicast\" is something else, it is unrelated to having one or multiple addresses on an interface, so the description needs fixing.\n\nBesides, is there a reason for not allowing a DHCP client *and* some manually assigned address(es) at the same time?",
+      "range": {
+        "startLine": 87,
+        "startChar": 25,
+        "endLine": 87,
+        "endChar": 69
+      },
+      "revId": "72ede0ffebd00de3ecc284138266e0a6db37f1e4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd68610a_cbc9d061",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-27T13:02:52Z",
+      "side": 1,
+      "message": "let\u0027s call this dhcp-client, please (and some below)",
+      "range": {
+        "startLine": 92,
+        "startChar": 18,
+        "endLine": 92,
+        "endChar": 22
+      },
+      "revId": "72ede0ffebd00de3ecc284138266e0a6db37f1e4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf9b247c_15f760a7",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-27T13:02:52Z",
+      "side": 1,
+      "message": "let\u0027s make this brief, please, e.g.:\n \nIf present, enable DHCP client on this interface.\n\nSame below.",
+      "range": {
+        "startLine": 93,
+        "startChar": 22,
+        "endLine": 93,
+        "endChar": 103
+      },
+      "revId": "72ede0ffebd00de3ecc284138266e0a6db37f1e4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c724478_8abe05a8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-27T12:50:12Z",
+      "side": 1,
+      "message": "It might be worth considering doing it the other way round -- just one function which initializes both spdlog sinks and sets up the sysrepo forwarding. Then, in that only case where sysrepo is not used (and not even linked to), init just the spdlog sinks.\n\nBut hey, this fixes a problem already.",
+      "revId": "41784704dd33c962a5ce923a0d76e22f0bb55adc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

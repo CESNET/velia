@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9df487f9_be940e1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-27T13:10:09Z",
+      "side": 1,
+      "message": "This implies that one cannot tell from the userspace whether a given interface is a bridge. That doesn\u0027t make sense to me, sorry. If `bridge link` can show me just the enslaved interfaces, surely it\u0027s possible to get a list of bridges.\n\nPerhaps it\u0027s \"just\" that the API is weird and it says \"a bridge\" for the *bridged* interfaces and not for the bridge itself?",
+      "revId": "84881fb6476eda96797e2071c4afb7ba180f2e22",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

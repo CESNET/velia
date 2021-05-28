@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8632c444_f67b3971",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-28T08:55:37Z",
+      "side": 1,
+      "message": "Well, the reason is that we discussed this on the call with the result that it will be either dhcp xor manual address configuration.\n\nBut apparently, this makes no sense. It is then removed.",
+      "parentUuid": "fb5a44ef_b239b771",
+      "range": {
+        "startLine": 87,
+        "startChar": 25,
+        "endLine": 87,
+        "endChar": 69
+      },
+      "revId": "72ede0ffebd00de3ecc284138266e0a6db37f1e4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd68610a_cbc9d061",
@@ -47,6 +71,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "370d2913_801dbcbc",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-28T08:55:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd68610a_cbc9d061",
+      "range": {
+        "startLine": 92,
+        "startChar": 18,
+        "endLine": 92,
+        "endChar": 22
+      },
+      "revId": "72ede0ffebd00de3ecc284138266e0a6db37f1e4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf9b247c_15f760a7",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-05-27T13:02:52Z",
       "side": 1,
       "message": "let\u0027s make this brief, please, e.g.:\n \nIf present, enable DHCP client on this interface.\n\nSame below.",
+      "range": {
+        "startLine": 93,
+        "startChar": 22,
+        "endLine": 93,
+        "endChar": 103
+      },
+      "revId": "72ede0ffebd00de3ecc284138266e0a6db37f1e4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d714912_0a61d030",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-28T08:55:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf9b247c_15f760a7",
       "range": {
         "startLine": 93,
         "startChar": 22,

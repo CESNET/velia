@@ -16,6 +16,24 @@
       "message": "That\u0027s not enough, see https://gerrit.cesnet.cz/plugins/gitiles/CzechLight/br2-external/+/refs/heads/master/board/czechlight/clearfog/overlay/usr/lib/systemd/system-generators/osc#7 .\n\nAlso, can you add a comment to the commit message explaining why one needs sit0?",
       "revId": "abdb7a25828b845adb69478be46ab503756b5144",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa88794b_64c2038d",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-28T08:55:37Z",
+      "side": 1,
+      "message": "Done.\n\nActually, I have no idea why one needs sit0 here. So I have added rather a generic note.",
+      "parentUuid": "405f0b59_bef6427a",
+      "revId": "abdb7a25828b845adb69478be46ab503756b5144",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

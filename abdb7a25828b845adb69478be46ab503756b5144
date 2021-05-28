@@ -34,6 +34,24 @@
       "parentUuid": "405f0b59_bef6427a",
       "revId": "abdb7a25828b845adb69478be46ab503756b5144",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdf7d2c3_41376c58",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-28T14:03:14Z",
+      "side": 1,
+      "message": "sit0 gets removed via https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/4257 ; does that look good to you?",
+      "parentUuid": "aa88794b_64c2038d",
+      "revId": "abdb7a25828b845adb69478be46ab503756b5144",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

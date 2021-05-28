@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad620880_624efa7c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-28T14:03:59Z",
+      "side": 1,
+      "message": "Let\u0027s wait for the implementation before we merge this.",
+      "revId": "1ae7a2bcb9eab95726bf4a92d91f97ab60d5e05a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

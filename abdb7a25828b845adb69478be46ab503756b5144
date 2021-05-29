@@ -52,6 +52,24 @@
       "parentUuid": "aa88794b_64c2038d",
       "revId": "abdb7a25828b845adb69478be46ab503756b5144",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6801e9f5_0c44b705",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-29T12:44:15Z",
+      "side": 1,
+      "message": "sit0 is no longer present on my device",
+      "parentUuid": "cdf7d2c3_41376c58",
+      "revId": "abdb7a25828b845adb69478be46ab503756b5144",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

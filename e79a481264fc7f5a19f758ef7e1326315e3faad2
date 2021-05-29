@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99067794_060871a9",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-29T22:28:19Z",
+      "side": 1,
+      "message": "Let\u0027s also add a few more toggles:\n\n- One which enables SLAAC. I think it\u0027s reasonable to default to true for this one, which means that it cannot be a presence container (unless you make it a \"negative one\" to disable that config). For symmetry, perhaps we should always use boolean leafs and not presence containers, otherwise the users will be mad at us?\n\n- IPv6 privacy extensions (probably a more complex one because it\u0027s something like off/preferred/also-available or something like that) -- this needs more thought",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 5
+      },
+      "revId": "e79a481264fc7f5a19f758ef7e1326315e3faad2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

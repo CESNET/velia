@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc11903f_68171272",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-29T22:23:07Z",
+      "side": 1,
+      "message": "ietf-ip:forwarding (for both IPv4 and IPv6) and ietf-ip:dup-addr-detect-transmits (IPv6) and ietf-ipv6-unicast-routing:ipv6-router-advertisements (IPv6) have now become writable, is that intentional?\n\nI think that ietf-ipv6-unicast-routing:ipv6-router-advertisements should be actually removed altogether unless you want to turn this into a fully fledged IPv6 router.",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 90
+      },
+      "revId": "814e4325bda57c3f4465648fb27ad869479b07b1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

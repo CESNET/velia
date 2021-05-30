@@ -22,6 +22,30 @@
       },
       "revId": "814e4325bda57c3f4465648fb27ad869479b07b1",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97400fc4_2a8fc584",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-30T12:44:27Z",
+      "side": 1,
+      "message": "Fixed. RAs removed in a commit that will become a parent of this commit.",
+      "parentUuid": "dc11903f_68171272",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 90
+      },
+      "revId": "814e4325bda57c3f4465648fb27ad869479b07b1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

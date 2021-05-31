@@ -46,6 +46,30 @@
       },
       "revId": "95ab58a3284a6fbbc3f8937a69eabea248191182",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "181f886e_9dd80f1b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-31T17:51:42Z",
+      "side": 1,
+      "message": "Also, after bringing an interface down (or up) changes the type leaf to contain bridge type.\n\n [2021-05-31 17:48:19.833] [system] [trace] Netlink update on link \u0027eth0\u0027, action CHANGE\n [2021-05-31 17:48:19.839] [main] [trace] Processing node update /ietf-interfaces:interfaces/interface[name\u003d\u0027eth0\u0027]/oper-status -\u003e down\n [2021-05-31 17:48:19.840] [main] [trace] Processing node update /ietf-interfaces:interfaces/interface[name\u003d\u0027eth0\u0027]/phys-address -\u003e 00:11:17:01:00:4f\n [2021-05-31 17:48:19.840] [main] [trace] Processing node update /ietf-interfaces:interfaces/interface[name\u003d\u0027eth0\u0027]/type -\u003e iana-if-type:ethernetCsmacd\n\n [2021-05-31 17:48:19.858] [system] [trace] Netlink update on link \u0027eth0\u0027, action NEW\n [2021-05-31 17:48:19.859] [main] [trace] Processing node update /ietf-interfaces:interfaces/interface[name\u003d\u0027eth0\u0027]/oper-status -\u003e down\n [2021-05-31 17:48:19.859] [main] [trace] Processing node update /ietf-interfaces:interfaces/interface[name\u003d\u0027eth0\u0027]/phys-address -\u003e 00:11:17:01:00:4f\n [2021-05-31 17:48:19.859] [main] [trace] Processing node update /ietf-interfaces:interfaces/interface[name\u003d\u0027eth0\u0027]/type -\u003e iana-if-type:bridge\n\nHere are the corresponding parts of the log. It is weird that there are two callbacks for eth0 changes. First one is CHANGE and second one is of type NEW. No idea why. \n\nI have to dig into that because it somehow seems to trigger Internal error from sysrepo when combined with changes in running datastore to this leaf (wtf?).",
+      "parentUuid": "410f84ac_09253b70",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 7
+      },
+      "revId": "95ab58a3284a6fbbc3f8937a69eabea248191182",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

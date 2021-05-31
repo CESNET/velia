@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "032f5806_c7350ad3",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-31T13:23:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4ddc795_a1bdfb08",
+      "revId": "6cc203d14adc3325b5d5aadcddfd38e626989b29",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8ecaeff2_4b2c0cb3",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-05-31T12:08:41Z",
       "side": 1,
       "message": "OK, sorry for not noticing earlier :), but there\u0027s that \"autoconf\" container in the ITEF model which looks like it\u0027s doing exactly this thing, please take a look there.",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 5
+      },
+      "revId": "6cc203d14adc3325b5d5aadcddfd38e626989b29",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8affd5c6_ea8c53ba",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-31T13:23:03Z",
+      "side": 1,
+      "message": "Correct, but I don\u0027t think it is exactly the same. You can\u0027t turn off the autoconfiguration.",
+      "parentUuid": "8ecaeff2_4b2c0cb3",
       "range": {
         "startLine": 104,
         "startChar": 0,

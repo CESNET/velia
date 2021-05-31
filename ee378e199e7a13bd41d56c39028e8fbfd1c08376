@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "796476f5_ffe5f070",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-31T12:07:35Z",
+      "side": 1,
+      "message": "I think I\u0027m getting lost when I try to follow which patch of this series is trying to accomplish what. I agree that it\u0027s nice to change stuff incrementally and in small steps, but at the same time we now have patches which first enable some feature in the YANG model without enabling a proper handler for that data in the YANG tree. For me, that\u0027s hard to follow.\n\nWhat is going to be the first step? I think it\u0027s reasonable to start with changing the ietf-interfaces to become writable *and* disallowing any modifications to the child nodes. Then, when you add suport for something, let\u0027s call it changing the \"color\" of the interface or whatever, you set `config: true` just on that part of the model which is handled by the added code.\n\nUnfortunately, it gets more complex because some leafs are \"special\", such as the link type, so I\u0027m OK with just adding that `must` as you did here in this commit. That makes sense to me. Let\u0027s turn this one into a patch which \"allows writes\", but only to the interface/link type.\n\nHere\u0027s a quick-n-dirty way of seeing what is allowed for modifications:\n \n$ yanglint -f tree -p yang/ yang/ietf-interfaces@2018-02-20.yang yang/ietf-ip@2018-02-22.yang yang/ietf-routing@2018-03-13.yang yang/ietf-ipv4-unicast-routing@2018-03-13.yang yang/ietf-ipv6-unicast-routing@2018-03-13.yang yang/czechlight-network@2021-02-22.yang | grep rw\n  +--rw interfaces\n     +--rw interface* [name]\n        +--rw name                        string\n        +--rw type                        identityref\n        +--rw ietf-ip:ipv4!\n        |  +--rw ietf-ip:enabled?                  boolean \u003ctrue\u003e\n        |  +--ro ietf-ip:forwarding?               boolean \u003cfalse\u003e\n        |  +--rw ietf-ip:address* [ip]\n        |  |  +--rw ietf-ip:ip         ietf-inet-types:ipv4-address-no-zone\n        |  |  +--rw (ietf-ip:subnet)\n        |  |  |  |  +--rw ietf-ip:prefix-length?   uint8\n        |  |  |     +--rw ietf-ip:netmask?   ietf-yang-types:dotted-quad {ietf-ip:ipv4-non-contiguous-netmasks}?\n        |  +--rw czechlight-network:dhcp-client?   boolean \u003cfalse\u003e\n        +--rw ietf-ip:ipv6!\n           +--rw ietf-ip:enabled?                               boolean \u003ctrue\u003e\n           +--ro ietf-ip:forwarding?                            boolean \u003cfalse\u003e\n           +--rw ietf-ip:address* [ip]\n           |  +--rw ietf-ip:ip               ietf-inet-types:ipv6-address-no-zone\n           |  +--rw ietf-ip:prefix-length    uint8\n           +--rw czechlight-network:enable-autoconfiguration?   boolean \u003cfalse\u003e\n    +--rw ipv4!\n    |  +--rw enabled?                          boolean \u003ctrue\u003e\n    |  +--ro forwarding?                       boolean \u003cfalse\u003e\n    |  +--rw address* [ip]\n    |  |  +--rw ip         ietf-inet-types:ipv4-address-no-zone\n    |  |  +--rw (subnet)\n    |  |  |  |  +--rw prefix-length?   uint8\n    |  |  |     +--rw netmask?   ietf-yang-types:dotted-quad {ipv4-non-contiguous-netmasks}?\n    |  +--rw czechlight-network:dhcp-client?   boolean \u003cfalse\u003e\n    +--rw ipv6!\n       +--rw enabled?                                       boolean \u003ctrue\u003e\n       +--ro forwarding?                                    boolean \u003cfalse\u003e\n       +--rw address* [ip]\n       |  +--rw ip               ietf-inet-types:ipv6-address-no-zone\n       |  +--rw prefix-length    uint8\n       +--rw czechlight-network:enable-autoconfiguration?   boolean \u003cfalse\u003e\n    |  x--ro forwarding?   boolean\n       x--ro forwarding?                                             boolean \u003cfalse\u003e\n    +--rw dhcp-client?   boolean \u003cfalse\u003e\n    +--rw enable-autoconfiguration?   boolean \u003cfalse\u003e\n\nPlease limit that just to \"name\" and \"type\" (and \"description\" if you agree, see inline); then this will be ready to go in. (Feel free to rely optional features being disabled by default, i.e., it might not be necessary to deviate those parts which are only enable via a feature that you\u0027re gonna leave disabled.)",
+      "revId": "ee378e199e7a13bd41d56c39028e8fbfd1c08376",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "509c84e6_a9b0b8e1",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 9
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-31T12:07:35Z",
+      "side": 1,
+      "message": "And perhaps you can enable this leaf as well -- just make sure that there\u0027s a sysrepo callback (and it can do nothing, or generate a comment in the sd-networkd config file, orwhatever).",
+      "range": {
+        "startLine": 47,
+        "startChar": 45,
+        "endLine": 47,
+        "endChar": 56
+      },
+      "revId": "ee378e199e7a13bd41d56c39028e8fbfd1c08376",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bd5161b_7a4aaa14",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-05-31T12:07:35Z",
+      "side": 1,
+      "message": "This one is already guarded by the if-mib feature, so perhaps it\u0027s enough.",
+      "range": {
+        "startLine": 48,
+        "startChar": 45,
+        "endLine": 48,
+        "endChar": 69
+      },
+      "revId": "ee378e199e7a13bd41d56c39028e8fbfd1c08376",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

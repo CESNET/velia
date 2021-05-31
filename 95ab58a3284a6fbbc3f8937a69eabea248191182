@@ -22,6 +22,30 @@
       },
       "revId": "95ab58a3284a6fbbc3f8937a69eabea248191182",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "410f84ac_09253b70",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-05-31T15:30:21Z",
+      "side": 1,
+      "message": "While bringing the interface down (while reconfiguring), there is a brief moment when the interface is reported as a bridge.\nI am not sure whether I should just ignore it or hardcode the types because they are constant.",
+      "parentUuid": "a37c7c2e_1a3e9525",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 7
+      },
+      "revId": "95ab58a3284a6fbbc3f8937a69eabea248191182",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

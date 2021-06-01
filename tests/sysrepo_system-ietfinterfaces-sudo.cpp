@@ -28,7 +28,8 @@ namespace {
 
 const auto IFACE = "czechlight0"s;
 const auto LINK_MAC = "02:02:02:02:02:02"s;
-const auto WAIT = 200ms;
+const auto WAIT = 250ms;
+const auto WAIT_BRIDGE = 999ms;
 
 template <class... Args>
 void iproute2_run(const Args... args_)
@@ -56,10 +57,10 @@ void iproute2_run(const Args... args_)
 }
 
 template <class... Args>
-void iproute2_exec_and_wait(const Args... args_)
+void iproute2_exec_and_wait(const auto& wait, const Args... args_)
 {
     iproute2_run(args_...);
-    std::this_thread::sleep_for(WAIT); // wait for velia to process and publish the change
+    std::this_thread::sleep_for(wait); // wait for velia to process and publish the change
 }
 
 
@@ -75,6 +76,19 @@ void nlCacheForeachWrapper(nl_cache* cache, std::function<void(T*)> cb)
         &cb);
 }
 
+auto dataFromSysrepoNoStatistics(const std::shared_ptr<sysrepo::Session>& session, const std::string& xpath, sr_datastore_t datastore)
+{
+    auto res = dataFromSysrepo(session, xpath, datastore);
+    REQUIRE(res.erase("/statistics") == 1);
+    REQUIRE(res.erase("/statistics/in-octets") == 1);
+    REQUIRE(res.erase("/statistics/in-errors") == 1);
+    REQUIRE(res.erase("/statistics/in-discards") == 1);
+    REQUIRE(res.erase("/statistics/out-octets") == 1);
+    REQUIRE(res.erase("/statistics/out-errors") == 1);
+    REQUIRE(res.erase("/statistics/out-discards") == 1);
+    return res;
+}
+
 }
 
 TEST_CASE("Test ietf-interfaces and ietf-routing")
@@ -85,10 +99,10 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
 
     auto network = std::make_shared<velia::system::IETFInterfaces>(srSess);
 
-    iproute2_exec_and_wait("link", "add", IFACE, "address", LINK_MAC, "type", "dummy");
+    iproute2_exec_and_wait(WAIT, "link", "add", IFACE, "address", LINK_MAC, "type", "dummy");
 
-    iproute2_exec_and_wait("addr", "add", "192.0.2.1/24", "dev", IFACE); // from TEST-NET-1 (RFC 5737)
-    iproute2_exec_and_wait("addr", "add", "::ffff:192.0.2.1", "dev", IFACE);
+    iproute2_exec_and_wait(WAIT, "addr", "add", "192.0.2.1/24", "dev", IFACE); // from TEST-NET-1 (RFC 5737)
+    iproute2_exec_and_wait(WAIT, "addr", "add", "::ffff:192.0.2.1", "dev", IFACE);
 
     std::map<std::string, std::string> initialExpected{
         {"/ietf-ip:ipv4", ""},
@@ -102,13 +116,6 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         {"/name", IFACE},
         {"/oper-status", "down"},
         {"/phys-address", LINK_MAC},
-        {"/statistics", ""},
-        {"/statistics/in-discards", "0"},
-        {"/statistics/in-errors", "0"},
-        {"/statistics/in-octets", "0"},
-        {"/statistics/out-discards", "0"},
-        {"/statistics/out-errors", "0"},
-        {"/statistics/out-octets", "0"},
         {"/type", "iana-if-type:ethernetCsmacd"},
     };
 
@@ -116,29 +123,29 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
     {
         const auto LINK_MAC_CHANGED = "02:44:44:44:44:44"s;
 
-        iproute2_exec_and_wait("link", "set", IFACE, "address", LINK_MAC_CHANGED);
+        iproute2_exec_and_wait(WAIT, "link", "set", IFACE, "address", LINK_MAC_CHANGED);
 
         std::map<std::string, std::string> expected = initialExpected;
         expected["/phys-address"] = LINK_MAC_CHANGED;
-        REQUIRE(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
     }
 
     SECTION("Add and remove IP addresses")
     {
-        iproute2_exec_and_wait("addr", "add", "192.0.2.6/24", "dev", IFACE);
+        iproute2_exec_and_wait(WAIT, "addr", "add", "192.0.2.6/24", "dev", IFACE);
         std::map<std::string, std::string> expected = initialExpected;
         expected["/ietf-ip:ipv4/address[ip='192.0.2.6']"] = "";
         expected["/ietf-ip:ipv4/address[ip='192.0.2.6']/ip"] = "192.0.2.6";
         expected["/ietf-ip:ipv4/address[ip='192.0.2.6']/prefix-length"] = "24";
-        REQUIRE(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
 
-        iproute2_exec_and_wait("addr", "del", "192.0.2.6/24", "dev", IFACE);
-        REQUIRE(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == initialExpected);
+        iproute2_exec_and_wait(WAIT, "addr", "del", "192.0.2.6/24", "dev", IFACE);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == initialExpected);
     }
 
     SECTION("IPv6 LL gained when device up")
     {
-        iproute2_exec_and_wait("link", "set", "dev", IFACE, "up");
+        iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "up");
 
         {
             std::map<std::string, std::string> expected = initialExpected;
@@ -146,26 +153,84 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
             expected["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip"] = "fe80::2:2ff:fe02:202";
             expected["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length"] = "64";
             expected["/oper-status"] = "unknown";
-            expected["/statistics/out-octets"] = "70";
-            REQUIRE(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
+            REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
         }
 
-        iproute2_exec_and_wait("link", "set", "dev", IFACE, "down"); // this discards all addresses, i.e., the link-local address and the ::ffff:192.0.2.1 address
+        iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "down"); // this discards all addresses, i.e., the link-local address and the ::ffff:192.0.2.1 address
         {
             std::map<std::string, std::string> expected = initialExpected;
             expected.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']");
             expected.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip");
             expected.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/prefix-length");
             expected["/oper-status"] = "down";
-            expected["/statistics/out-octets"] = "70";
-            REQUIRE(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
+            REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
         }
+    }
+
+    SECTION("Add a bridge")
+    {
+        const auto IFACE_BRIDGE = "czechlight_br0"s;
+        const auto MAC_BRIDGE = "02:22:22:22:22:22";
+
+        std::map<std::string, std::string> expectedIface = initialExpected;
+        std::map<std::string, std::string> expectedBridge{
+            {"/name", "czechlight_br0"},
+            {"/oper-status", "down"},
+            {"/phys-address", MAC_BRIDGE},
+            {"/type", "iana-if-type:bridge"},
+        };
+
+        iproute2_exec_and_wait(WAIT, "link", "add", "name", IFACE_BRIDGE, "address", MAC_BRIDGE, "type", "bridge");
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+
+        iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "master", IFACE_BRIDGE);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+
+        iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "up");
+        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']"] = "";
+        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip"] = "fe80::2:2ff:fe02:202";
+        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length"] = "64";
+        expectedIface["/oper-status"] = "unknown";
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+
+        iproute2_exec_and_wait(WAIT_BRIDGE, "link", "set", "dev", IFACE_BRIDGE, "up");
+        expectedBridge["/oper-status"] = "up";
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+
+        iproute2_exec_and_wait(WAIT_BRIDGE, "link", "set", "dev", IFACE_BRIDGE, "down");
+        expectedBridge["/oper-status"] = "down";
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+
+        iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "down");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/prefix-length");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length");
+        expectedIface["/oper-status"] = "down";
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+
+        iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "nomaster");
+        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']");
+        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/ip");
+        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/prefix-length");
+        expectedIface.erase("/ietf-ip:ipv4");
+        expectedIface.erase("/ietf-ip:ipv6");
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
     }
 
     SECTION("Add and remove routes")
     {
-        iproute2_exec_and_wait("link", "set", "dev", IFACE, "up");
-        iproute2_exec_and_wait("route", "add", "198.51.100.0/24", "dev", IFACE);
+        iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "up");
+        iproute2_exec_and_wait(WAIT, "route", "add", "198.51.100.0/24", "dev", IFACE);
         std::this_thread::sleep_for(WAIT);
 
         auto data = dataFromSysrepo(client, "/ietf-routing:routing", SR_DS_OPERATIONAL);
@@ -211,9 +276,9 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         data = dataFromSysrepo(client, "/ietf-routing:routing/ribs/rib[name='ipv6-master']", SR_DS_OPERATIONAL);
         REQUIRE(data["/name"] == "ipv6-master");
 
-        iproute2_exec_and_wait("route", "del", "198.51.100.0/24");
-        iproute2_exec_and_wait("link", "set", IFACE, "down");
+        iproute2_exec_and_wait(WAIT, "route", "del", "198.51.100.0/24");
+        iproute2_exec_and_wait(WAIT, "link", "set", IFACE, "down");
     }
 
-    iproute2_exec_and_wait("link", "del", IFACE, "type", "dummy"); // Executed later again by ctest fixture cleanup just for sure. It remains here because of doctest sections: The interface needs to be setup again.
+    iproute2_exec_and_wait(WAIT, "link", "del", IFACE, "type", "dummy"); // Executed later again by ctest fixture cleanup just for sure. It remains here because of doctest sections: The interface needs to be setup again.
 }

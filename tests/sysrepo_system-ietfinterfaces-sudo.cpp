@@ -162,6 +162,73 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         }
     }
 
+    SECTION("Add a bridge")
+    {
+        const auto IFACE_BRIDGE = "czechlight_br0"s;
+
+        std::map<std::string, std::string> expectedIface = initialExpected;
+        std::map<std::string, std::string> expectedBridge{
+            {"/name", "czechlight_br0"},
+            {"/oper-status", "down"},
+            {"/phys-address", "86:01:de:f2:6c:d7"},
+            {"/statistics", ""},
+            {"/statistics/in-discards", "0"},
+            {"/statistics/in-errors", "0"},
+            {"/statistics/in-octets", "0"},
+            {"/statistics/out-discards", "0"},
+            {"/statistics/out-errors", "0"},
+            {"/type", "iana-if-type:bridge"},
+        };
+
+        expectedIface.erase("/statistics/out-octets");
+        auto removeOutOctets = [](std::map<std::string, std::string> m) { m.erase("/statistics/out-octets"); return m; };
+
+        iproute2_exec_and_wait("link", "add", "name", IFACE_BRIDGE, "type", "bridge");
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL)) == expectedIface);
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL)) == expectedBridge);
+
+        iproute2_exec_and_wait("link", "set", "dev", IFACE, "up");
+        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']"] = "";
+        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip"] = "fe80::2:2ff:fe02:202";
+        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length"] = "64";
+        expectedIface["/oper-status"] = "unknown";
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL)) == expectedIface);
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL)) == expectedBridge);
+
+        iproute2_exec_and_wait("link", "set", "dev", IFACE, "master", IFACE_BRIDGE);
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL)) == expectedIface);
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL)) == expectedBridge);
+
+        iproute2_exec_and_wait("link", "set", "dev", IFACE_BRIDGE, "up");
+        expectedBridge["/oper-status"] = "down"; // the bridge is still down, probably because its ports are just dummy unconnected interfaces
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL)) == expectedIface);
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL)) == expectedBridge);
+
+        iproute2_exec_and_wait("link", "set", "dev", IFACE_BRIDGE, "down");
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL)) == expectedIface);
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL)) == expectedBridge);
+
+        iproute2_exec_and_wait("link", "set", "dev", IFACE, "down");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/prefix-length");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length");
+        expectedIface["/oper-status"] = "down";
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL)) == expectedIface);
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL)) == expectedBridge);
+
+        iproute2_exec_and_wait("link", "set", "dev", IFACE, "nomaster");
+        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']");
+        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/ip");
+        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/prefix-length");
+        expectedIface.erase("/ietf-ip:ipv4");
+        expectedIface.erase("/ietf-ip:ipv6");
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL)) == expectedIface);
+        REQUIRE(removeOutOctets(dataFromSysrepo(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL)) == expectedBridge);
+    }
+
     SECTION("Add and remove routes")
     {
         iproute2_exec_and_wait("link", "set", "dev", IFACE, "up");

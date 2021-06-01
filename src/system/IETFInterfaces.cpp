@@ -6,6 +6,7 @@
  */
 
 #include <arpa/inet.h>
+#include <filesystem>
 #include <linux/if_arp.h>
 #include <linux/netdevice.h>
 #include "IETFInterfaces.h"
@@ -233,7 +234,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
             deletePaths.push_back({IETF_INTERFACES + "/interface[name='" + name + "']/phys-address"});
         }
 
-        values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = rtnl_link_get_family(link) == AF_BRIDGE ? "iana-if-type:bridge" : arpTypeToString(rtnl_link_get_arptype(link), m_log);
+        values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = std::filesystem::exists("/sys/class/net/"s + name + "/bridge") ? "iana-if-type:bridge" : arpTypeToString(rtnl_link_get_arptype(link), m_log);
         values[IETF_INTERFACES + "/interface[name='" + name + "']/oper-status"] = operStatusToString(rtnl_link_get_operstate(link), m_log);
 
         utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);

@@ -6,6 +6,7 @@
  */
 
 #include <arpa/inet.h>
+#include <filesystem>
 #include <linux/if_arp.h>
 #include <linux/netdevice.h>
 #include "IETFInterfaces.h"
@@ -154,6 +155,19 @@ std::map<std::string, std::string> collectNeighboursIP(std::shared_ptr<velia::sy
 
     return values;
 }
+
+/** @brief Determine if link is a bridge
+ *
+ * This is done via sysfs query because rtnl_link_is_bridge doesn't always work. When bridge ports are being added/removed, kernel issues a rtnetlink message
+ * RTM_NEWLINK/RTM_DELLINK which is not a complete message. It is just an information that a bridge port changed. The rtnl_link object is not fully instantiated
+ * and rtnl_link_is_bridge function considers it a bridge.
+ *
+ * See git log for details and references.
+ */
+bool isBridge(rtnl_link* link)
+{
+    return std::filesystem::exists("/sys/class/net/"s + rtnl_link_get_name(link) + "/bridge");
+}
 }
 
 namespace velia::system {
@@ -233,7 +247,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
             deletePaths.push_back({IETF_INTERFACES + "/interface[name='" + name + "']/phys-address"});
         }
 
-        values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = rtnl_link_get_family(link) == AF_BRIDGE ? "iana-if-type:bridge" : arpTypeToString(rtnl_link_get_arptype(link), m_log);
+        values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = isBridge(link) ? "iana-if-type:bridge" : arpTypeToString(rtnl_link_get_arptype(link), m_log);
         values[IETF_INTERFACES + "/interface[name='" + name + "']/oper-status"] = operStatusToString(rtnl_link_get_operstate(link), m_log);
 
         utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);

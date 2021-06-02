@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70a345d0_9a585783",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-02T14:37:54Z",
+      "side": 1,
+      "message": "I would like the implementation and YANG update done in the same patch, otherwise it\u0027s hard for me to track what\u0027s implemented where.",
+      "revId": "80d4e8066313adbac8f34899b345a5f5b7b016bc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

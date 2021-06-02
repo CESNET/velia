@@ -81,6 +81,30 @@
       },
       "revId": "6cc203d14adc3325b5d5aadcddfd38e626989b29",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "282620f6_4d10ce5e",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-02T14:37:54Z",
+      "side": 1,
+      "message": "(Just saying it here so that I don\u0027t get confused next time I read these comments.)\n\nWe agreed that the IETF model has got everything. Just controlling the SLAAC+DHCPv6 via the ietf-ip:autoconf/ietf-ip:create-global-addresses leaf is OK.",
+      "parentUuid": "8affd5c6_ea8c53ba",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 5
+      },
+      "revId": "6cc203d14adc3325b5d5aadcddfd38e626989b29",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

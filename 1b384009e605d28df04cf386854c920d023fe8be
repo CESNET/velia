@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38acfbe9_41d27cd8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-03T10:06:51Z",
+      "side": 1,
+      "message": "that CI failure of the ARM build needs https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/4265, otherwise that target still gets the old sysrepo because these versions are pinned via br2-external/submodules/cla-sysrepo",
+      "revId": "1b384009e605d28df04cf386854c920d023fe8be",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

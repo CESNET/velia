@@ -1,0 +1,32 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "br0",
+        "type": "iana-if-type:bridge",
+        "ietf-ip:ipv4": { },
+        "ietf-ip:ipv6": { }
+      },
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd"
+      },
+      {
+        "name": "eth1",
+        "type": "iana-if-type:ethernetCsmacd"
+      },
+      {
+        "name": "osc",
+        "type": "iana-if-type:ethernetCsmacd"
+      },
+      {
+        "name": "oscE",
+        "type": "iana-if-type:ethernetCsmacd"
+      },
+      {
+        "name": "oscW",
+        "type": "iana-if-type:ethernetCsmacd"
+      }
+    ]
+  }
+}

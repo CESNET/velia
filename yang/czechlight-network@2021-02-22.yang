@@ -44,8 +44,13 @@ module czechlight-network {
 
     // We do not support configuring some parts of if:interfaces tree
     deviation /if:interfaces/if:interface/if:enabled { deviate add { config false; } }
-    deviation /if:interfaces/if:interface/ip:ipv4 { deviate add { config false; } }
-    deviation /if:interfaces/if:interface/ip:ipv6 { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv4/ip:forwarding { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv4/ip:mtu { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv4/ip:neighbor { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:forwarding { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:mtu { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:neighbor { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:dup-addr-detect-transmits { deviate add { config false; } }
 
     // User should not create new links or reconfigure link types
     deviation /if:interfaces/if:interface/if:name {

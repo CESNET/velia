@@ -81,7 +81,20 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
                 configValues["Network"].push_back("Description="s + getValueAsString(set->data().front()));
             }
 
-            configValues["Network"].push_back("Bridge=br0");
+            for (const auto& ipProto : {"ipv4", "ipv6"}) {
+                const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
+                const auto addresses = linkEntry->find_path(IPAddressListXPath.c_str());
+
+                for (const auto& ipEntry : addresses->data()) {
+                    auto ipAddress = getValueAsString(getSubtree(ipEntry, "ip"));
+                    auto prefixLen = getValueAsString(getSubtree(ipEntry, "prefix-length"));
+
+                    spdlog::get("system")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
+                    configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
+                }
+            }
+
+            configValues["Network"].push_back("DHCP=no");
             configValues["Network"].push_back("LLDP=true");
             configValues["Network"].push_back("EmitLLDP=nearest-bridge");
 

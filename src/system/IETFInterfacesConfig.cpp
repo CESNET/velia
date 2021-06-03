@@ -43,6 +43,21 @@ std::string generateNetworkConfigFile(const std::string& linkName, const std::ma
     return oss.str();
 }
 
+/** @brief Checks if protocol is enabled.
+ *
+ * If the ietf-ip:ipv{4,6} presence container is present, takes value of leaf 'enabled' (which is always there). If the container is not present (and so the 'enabled' leaf is not there as well), then the protocol is disabled.
+ */
+bool protocolEnabled(const std::shared_ptr<libyang::Data_Node>& linkEntry, const std::string& proto)
+{
+    const auto xpath = "ietf-ip:" + proto + "/enabled";
+
+    try {
+        auto enabled = getValueAsString(getSubtree(linkEntry, xpath.c_str()));
+        return enabled == "true"s;
+    } catch (const std::runtime_error&) { // leaf and the presence container missing
+        return false;
+    }
+}
 }
 
 namespace velia::system {
@@ -81,7 +96,32 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
                 configValues["Network"].push_back("Description="s + getValueAsString(set->data().front()));
             }
 
-            configValues["Network"].push_back("Bridge=br0");
+            // if addresses present, generate them...
+            for (const auto& ipProto : {"ipv4", "ipv6"}) {
+                // ...but only if the protocol is enabled
+                if (!protocolEnabled(linkEntry, ipProto)) {
+                    continue;
+                }
+
+                const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
+                const auto addresses = linkEntry->find_path(IPAddressListXPath.c_str());
+
+                for (const auto& ipEntry : addresses->data()) {
+                    auto ipAddress = getValueAsString(getSubtree(ipEntry, "ip"));
+                    auto prefixLen = getValueAsString(getSubtree(ipEntry, "prefix-length"));
+
+                    spdlog::get("system")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
+                    configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
+                }
+            }
+
+            // systemd-networkd auto-generates IPv6 link-layer addresses https://www.freedesktop.org/software/systemd/man/systemd.network.html#LinkLocalAddressing=
+            // disable this behaviour if ipv6 is disabled
+            if (!protocolEnabled(linkEntry, "ipv6")) {
+                configValues["Network"].push_back("LinkLocalAddressing=no");
+            }
+
+            configValues["Network"].push_back("DHCP=no"); // temporarily disabled
             configValues["Network"].push_back("LLDP=true");
             configValues["Network"].push_back("EmitLLDP=nearest-bridge");
 

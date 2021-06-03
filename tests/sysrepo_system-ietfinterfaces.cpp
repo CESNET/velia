@@ -177,50 +177,138 @@ TEST_CASE("Config data in ietf-interfaces")
     std::filesystem::remove_all(fakeConfigDir);
     std::filesystem::create_directories(fakeConfigDir);
 
-    auto expectedFilePath = fakeConfigDir / "eth0.network";
+    auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"eth0", "eth1"}, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
 
-    auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"lo", "eth0"}, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
 
     std::string expectedContents;
-    SECTION("With description")
+    SECTION("Setting IPs to eth0")
     {
-        expectedContents = R"([Match]
+        const auto expectedFilePath = fakeConfigDir / "eth0.network";
+
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+
+        SECTION("Single IPv4 address")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/description", "Hello world");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+            expectedContents = R"([Match]
 Name=eth0
 
 [Network]
 Description=Hello world
-Bridge=br0
+Address=192.0.2.1/24
+LinkLocalAddressing=no
+DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
 )";
+        }
 
-        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/description", "Hello world");
-    }
-
-    SECTION("No description")
-    {
-        expectedContents = R"([Match]
+        SECTION("Two IPv4 addresses")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.2']/ietf-ip:prefix-length", "24");
+            client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6");
+            expectedContents = R"([Match]
 Name=eth0
 
 [Network]
-Bridge=br0
+Address=192.0.2.1/24
+Address=192.0.2.2/24
+LinkLocalAddressing=no
+DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
 )";
+        }
+
+        SECTION("IPv4 and IPv6 addresses")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+Address=192.0.2.1/24
+Address=2001:db8::1/32
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+        }
+
+        SECTION("IPv4 and IPv6 addresses but IPv6 disabled")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/enabled", "false");
+            expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+Address=192.0.2.1/24
+LinkLocalAddressing=no
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+        }
+
+        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+        client->apply_changes();
+        REQUIRE(std::filesystem::exists(expectedFilePath));
+        REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
+
+        // reset the contents
+        client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']");
+        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+        client->apply_changes();
+        REQUIRE(!std::filesystem::exists(expectedFilePath));
     }
 
-    client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
-    client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
-    client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+    SECTION("Setting IPs to eth0 and eth1")
+    {
+        const auto expectedFilePathEth0 = fakeConfigDir / "eth0.network";
+        const auto expectedFilePathEth1 = fakeConfigDir / "eth1.network";
+        const std::string expectedContentsEth0 = R"([Match]
+Name=eth0
 
-    REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
-    client->apply_changes();
-    REQUIRE(std::filesystem::exists(expectedFilePath));
-    REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
+[Network]
+Address=192.0.2.1/24
+LinkLocalAddressing=no
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+        const std::string expectedContentsEth1 = R"([Match]
+Name=eth1
 
-    // reset the contents
-    client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']");
-    REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
-    client->apply_changes();
-    REQUIRE(!std::filesystem::exists(expectedFilePath));
+[Network]
+Address=2001:db8::1/32
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+
+        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0", "eth1"})).IN_SEQUENCE(seq1);
+        client->apply_changes();
+        REQUIRE(std::filesystem::exists(expectedFilePathEth0));
+        REQUIRE(std::filesystem::exists(expectedFilePathEth1));
+        REQUIRE(velia::utils::readFileToString(expectedFilePathEth0) == expectedContentsEth0);
+        REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
+
+        // reset the contents
+        client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']");
+        client->delete_item("/ietf-interfaces:interfaces/interface[name='eth1']");
+        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0", "eth1"})).IN_SEQUENCE(seq1);
+        client->apply_changes();
+        REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
+        REQUIRE(!std::filesystem::exists(expectedFilePathEth1));
+    }
 }

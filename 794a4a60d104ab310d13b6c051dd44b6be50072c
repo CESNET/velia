@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb0ab185_d94f7aed",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-06-04T12:55:45Z",
+      "side": 1,
+      "message": "Yay, my functions are useful! ^^",
+      "range": {
+        "startLine": 78,
+        "startChar": 28,
+        "endLine": 78,
+        "endChar": 55
+      },
+      "revId": "794a4a60d104ab310d13b6c051dd44b6be50072c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dbcb4fb_e56d5b6f",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-06-04T12:55:45Z",
+      "side": 1,
+      "message": "This is the default, so this does nothing. Or am I missing something?",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 45
+      },
+      "revId": "794a4a60d104ab310d13b6c051dd44b6be50072c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -115,9 +115,16 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
                 }
             }
 
+            bool isSlave = false;
+
+            if (auto set = linkEntry->find_path("czechlight-network:bridge"); set->number() > 0) {
+                configValues["Network"].push_back("Bridge="s + getValueAsString(set->data().front()));
+                isSlave = true;
+            }
+
             // systemd-networkd auto-generates ipv6 LL addresses https://www.freedesktop.org/software/systemd/man/systemd.network.html#LinkLocalAddressing=
             // disable this behaviour if ipv6 is disabled
-            if (!protocolEnabled(linkEntry, "ipv6")) {
+            if (!protocolEnabled(linkEntry, "ipv6") && !isSlave) {
                 configValues["Network"].push_back("LinkLocalAddressing=no");
             }
 

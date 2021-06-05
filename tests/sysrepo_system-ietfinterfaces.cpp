@@ -174,11 +174,16 @@ EmitLLDP=nearest-bridge
         REQUIRE(!std::filesystem::exists(expectedFilePath));
     }
 
-    SECTION("Setting IPs to eth0 and eth1")
+    SECTION("Two links")
     {
         const auto expectedFilePathEth0 = fakeConfigDir / "eth0.network";
         const auto expectedFilePathEth1 = fakeConfigDir / "eth1.network";
-        const std::string expectedContentsEth0 = R"([Match]
+        std::string expectedContentsEth0;
+        std::string expectedContentsEth1;
+
+        SECTION("Addresses on eth0 and eth1")
+        {
+            expectedContentsEth0 = R"([Match]
 Name=eth0
 
 [Network]
@@ -187,7 +192,7 @@ DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
 )";
-        const std::string expectedContentsEth1 = R"([Match]
+            expectedContentsEth1 = R"([Match]
 Name=eth1
 
 [Network]
@@ -197,10 +202,39 @@ LLDP=true
 EmitLLDP=nearest-bridge
 )";
 
-        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
-        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
-        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
-        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+        }
+
+        SECTION("eth0 is a slave, eth1 has some address")
+        {
+            expectedContentsEth0 = R"([Match]
+Name=eth0
+
+[Network]
+Bridge=br0
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+            expectedContentsEth1 = R"([Match]
+Name=eth1
+
+[Network]
+Address=2001:db8::1/32
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='br0']/type", "iana-if-type:bridge");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/czechlight-network:bridge", "br0");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+        }
 
         REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0", "eth1"})).IN_SEQUENCE(seq1);
         client->apply_changes();
@@ -216,5 +250,14 @@ EmitLLDP=nearest-bridge
         client->apply_changes();
         REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
         REQUIRE(!std::filesystem::exists(expectedFilePathEth1));
+    }
+
+    SECTION("Slave interface with IP address")
+    {
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='br0']/type", "iana-if-type:bridge");
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/czechlight-network:bridge", "br0");
+        REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
     }
 }

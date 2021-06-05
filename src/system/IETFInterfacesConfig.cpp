@@ -81,6 +81,10 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
                 configValues["Network"].push_back("Description="s + getValueAsString(set->data().front()));
             }
 
+            if (auto set = linkEntry->find_path("czechlight-network:bridge"); set->number() != 0) {
+                configValues["Network"].push_back("Bridge="s + getValueAsString(set->data().front()));
+            }
+
             for (const auto& ipProto : {"ipv4", "ipv6"}) {
                 const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
                 const auto addresses = linkEntry->find_path(IPAddressListXPath.c_str());

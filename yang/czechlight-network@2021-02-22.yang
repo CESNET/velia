@@ -74,6 +74,25 @@ module czechlight-network {
         }
     }
 
+    augment /if:interfaces/if:interface {
+        description "Add the option to add this link to a bridge.";
+
+        leaf bridge {
+            must '. = "br0"' {
+                error-message "br0 is the only available bridge interface.";
+            }
+
+            when '(not(../ip:ipv4) or ../ip:ipv4/ip:enabled[.="false"]) and
+                  (not(../ip:ipv6) or ../ip:ipv6/ip:enabled[.="false"])' {
+                description "IP protocols must be disabled for enslaved link.";
+            }
+
+            type if:interface-ref;
+            mandatory false;
+            description "The name of the bridge to add the link to.";
+        }
+    }
+
     // IPv6 address autoconfiguration is not supported
     deviation /if:interfaces/if:interface/ip:ipv6/ip:autoconf { deviate not-supported; }
 

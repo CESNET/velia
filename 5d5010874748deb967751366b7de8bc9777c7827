@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e4963c8_748b6a0b",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-07T15:32:44Z",
+      "side": 1,
+      "message": "this looks way too unreliable; let\u0027s put there something like 250ms to be on a safe(r) side. Then you can loose that other FIXME in the code.",
+      "range": {
+        "startLine": 31,
+        "startChar": 18,
+        "endLine": 31,
+        "endChar": 22
+      },
+      "revId": "5d5010874748deb967751366b7de8bc9777c7827",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d07a8f55_17ce5ba7",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-07T15:32:44Z",
+      "side": 1,
+      "message": "The fixture setup removes the interface altogether. Are you sure that neighbors survive *that*?",
+      "range": {
+        "startLine": 89,
+        "startChar": 59,
+        "endLine": 89,
+        "endChar": 168
+      },
+      "revId": "5d5010874748deb967751366b7de8bc9777c7827",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4ba094a_fe3557c1",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-07T15:32:44Z",
+      "side": 1,
+      "message": "Please change this to just 0. If that won\u0027t compile, then use size_t{0} because I have no idea if size_t is always an \"unsigned long\".",
+      "range": {
+        "startLine": 198,
+        "startChar": 19,
+        "endLine": 198,
+        "endChar": 22
+      },
+      "revId": "5d5010874748deb967751366b7de8bc9777c7827",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

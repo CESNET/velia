@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eadc78c8_fa7fc96a",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-07T19:38:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e4963c8_748b6a0b",
+      "range": {
+        "startLine": 31,
+        "startChar": 18,
+        "endLine": 31,
+        "endChar": 22
+      },
+      "revId": "5d5010874748deb967751366b7de8bc9777c7827",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d07a8f55_17ce5ba7",
@@ -47,6 +71,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2a6446a_bfd4d27d",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-07T19:38:46Z",
+      "side": 1,
+      "message": "This is not for neighbours but rather for all addresses of a device (see e.g. https://manpages.debian.org/jessie/iproute2/ip-address.8.en.html#ip_address_flush_-_flush_protocol_addresses). \n\nBut anyway, that is a leftover from previous version. Thanks for catching that.",
+      "parentUuid": "d07a8f55_17ce5ba7",
+      "range": {
+        "startLine": 89,
+        "startChar": 59,
+        "endLine": 89,
+        "endChar": 168
+      },
+      "revId": "5d5010874748deb967751366b7de8bc9777c7827",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c4ba094a_fe3557c1",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-06-07T15:32:44Z",
       "side": 1,
       "message": "Please change this to just 0. If that won\u0027t compile, then use size_t{0} because I have no idea if size_t is always an \"unsigned long\".",
+      "range": {
+        "startLine": 198,
+        "startChar": 19,
+        "endLine": 198,
+        "endChar": 22
+      },
+      "revId": "5d5010874748deb967751366b7de8bc9777c7827",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "527c025d_44b29fc7",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-07T19:38:46Z",
+      "side": 1,
+      "message": "You are of course right because the size of size_t is implementation defined.",
+      "parentUuid": "c4ba094a_fe3557c1",
       "range": {
         "startLine": 198,
         "startChar": 19,

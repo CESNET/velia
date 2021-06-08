@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2e44a0f0_e26f498d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-08T09:02:07Z",
+      "side": 1,
+      "message": "I think the test has to be added into the \"sudo\" test-suite. Will do after it is reviewed (and I will rebase this on top of that change).",
+      "parentUuid": "7a9d9cfb_4e13db4d",
+      "revId": "11b69f8c75acfbca17ccf77c5c7d30a82dc1379e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ca7ed2c3_83cf0eee",
         "filename": "src/system/IETFInterfaces.cpp",
         "patchSetId": 1
@@ -31,6 +49,24 @@
       "writtenOn": "2021-06-07T15:36:30Z",
       "side": 1,
       "message": "I think this one deserves a comment in the code. Thanks for putting a lot of info into the commit message, but at least something like \"rtnl_link_get_family() is broken sometimes, see git changelog\" is needed here. Alternatively, add a function for this and put the bits from the changelog into a comment of that function.",
+      "revId": "11b69f8c75acfbca17ccf77c5c7d30a82dc1379e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8bf65660_5ba9d8d9",
+        "filename": "src/system/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-08T09:02:07Z",
+      "side": 1,
+      "message": "Agreed. I have added a function with a brief comment explaining the situation.",
+      "parentUuid": "ca7ed2c3_83cf0eee",
       "revId": "11b69f8c75acfbca17ccf77c5c7d30a82dc1379e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2333e748_53787d19",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-15T07:44:43Z",
+      "side": 1,
+      "message": "In my testing (manually, not anything automated and not velia\u0027s test suite), I can flip the \"virtual bridge\"\u0027s up/down state independently from the state of the enslaved interface. However, when I flip a slave\u0027s interface (and that interface is the only one enslaved into the bridge), this state gets propagated to the bridge.\n\nThe latest CI run failed twice (ASAN/UBSAN and TSAN) with an error in the expected state, and once (regular, no sanitizers) with an internal error about unexpected sequence numbers. My suggestion is to add some sleeps around the places where you\u0027re manipulating the network state. Not only into the test suite, but really into the network config generator. There\u0027s no point in debugging races in libnl, just see if a 100ms sleep can paper over that.",
+      "revId": "bbfd987e1d2e2563f115cd371ba49c8211823e16",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -69,6 +69,54 @@
       },
       "revId": "794a4a60d104ab310d13b6c051dd44b6be50072c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d1f3ee6_a00436ad",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-18T14:37:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e7ea0c6_cbf2898b",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 45
+      },
+      "revId": "794a4a60d104ab310d13b6c051dd44b6be50072c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df946855_71811203",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-18T14:37:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e7ea0c6_cbf2898b",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 45
+      },
+      "revId": "794a4a60d104ab310d13b6c051dd44b6be50072c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

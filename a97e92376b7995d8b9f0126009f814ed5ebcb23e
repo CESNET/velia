@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c388d2c7_5324087b",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-24T09:08:46Z",
+      "side": 1,
+      "message": "I\u0027m looking for the bridge\u0027s config file, and I don\u0027t see it. I realize that in systemd-networkd there\u0027s nothing about the slave ifaces in the bridge\u0027s config file, but if I enslave two interfaces to a bridge, I see that the `interface-ref` is a leafref with the require-instance defaulting to true, so there must be an entry for the br0 interface in the YANG datastore, somewhere. Should an interface config file be generated for br0 as well, then? Am I missing something?",
+      "revId": "a97e92376b7995d8b9f0126009f814ed5ebcb23e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14f1cd0e_0f02310c",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-24T09:08:46Z",
+      "side": 1,
+      "message": "I think this should check that the entire ietf-ip:ipv4 and ietf-ip:ipv6 presence containers are missing, not just the list of addresses in them",
+      "revId": "a97e92376b7995d8b9f0126009f814ed5ebcb23e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

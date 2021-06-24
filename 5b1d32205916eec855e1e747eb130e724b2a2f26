@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89c1f965_19c92d69",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-24T09:02:00Z",
+      "side": 1,
+      "message": "Unless I\u0027m mistaken, this will always disable DHCPv4 and also IPv6 autoconfiguration for the current interface, and this will happen no matter whether the ipv4 and ipv6 presence containers are present in the data tree. If I\u0027m correct, that\u0027s not how the system should work. What\u0027s the plan for supporting the autoconfiguration? (I\u0027m OK with this if it is only a temporary change, but I don\u0027t see a DHCP/SLAAC patch.)",
+      "revId": "5b1d32205916eec855e1e747eb130e724b2a2f26",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

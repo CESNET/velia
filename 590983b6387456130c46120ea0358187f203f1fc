@@ -16,6 +16,24 @@
       "message": "discussed on call today:\n* Loopback should not be configurable\n* oper datastore doesn\u0027t need to be valid, so it should be OK if loopback appears in oper datastore",
       "revId": "590983b6387456130c46120ea0358187f203f1fc",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6796e480_a229aff9",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 11
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-28T16:56:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82f45a54_88a6f6a1",
+      "revId": "590983b6387456130c46120ea0358187f203f1fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

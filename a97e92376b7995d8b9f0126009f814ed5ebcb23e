@@ -33,6 +33,24 @@
       "message": "I think this should check that the entire ietf-ip:ipv4 and ietf-ip:ipv6 presence containers are missing, not just the list of addresses in them",
       "revId": "a97e92376b7995d8b9f0126009f814ed5ebcb23e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cc706ff_ee24163f",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-29T20:39:27Z",
+      "side": 1,
+      "message": "I guess you are right.\n\nThose are presence containers with meaning \"if present, ipv{4,6} is enabled on the interface\". Could there be an use-case for toggling ipv{4,6} on/off if the interface is enslaved? Everything should be handled by the master interface so I guess these are actually supposed not to be present.\n\nAlso there is the \u0027mtu\u0027 leaf inside the container. Could the MTU be set for interface that is enslaved? Quick google query hints that the MTU is propagated from the master.",
+      "parentUuid": "14f1cd0e_0f02310c",
+      "revId": "a97e92376b7995d8b9f0126009f814ed5ebcb23e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

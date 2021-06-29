@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c706f853_ecf64566",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-29T16:50:12Z",
+      "side": 1,
+      "message": "I\u0027m not sure how to initialize such JSON \"startup\" file because for enslaved links the presence containers are not supposed to be there (at least that is how I understand it).\n\nSo I have created a JSON data file where br0 has ipv4/6 enabled and it is disabled for the remaining interfaces.",
+      "parentUuid": "3cce4ff8_f2efa150",
+      "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27067776_bb8bf40b",
         "filename": "src/system/IETFInterfacesConfig.cpp",
         "patchSetId": 4
@@ -31,6 +49,24 @@
       "writtenOn": "2021-06-29T09:28:58Z",
       "side": 1,
       "message": "It would be nice to explicitly say it here that this handles the presence container as well: if the container is not present, then the \"enabled\" leaf will not be there, and therefore this check returns true. That\u0027s due to the way how sysrepo works.",
+      "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7748d88_a035f6e3",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-29T16:50:12Z",
+      "side": 1,
+      "message": "Done.\n\nI think you meant to write \"this check returns false\".",
+      "parentUuid": "27067776_bb8bf40b",
       "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

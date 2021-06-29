@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4dc3311_3d9dab8d",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-29T09:16:31Z",
+      "side": 1,
+      "message": "It\u0027s not super-awesomely-nice; if the user is \"just\" adding a new address to an existing interface, losing the connectivity is not great. However, it\u0027s a reasonable implementation in my opinion..",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 126
+      },
+      "revId": "08d59cd2f2a8a2b3d12f8d94262223445cb59d06",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

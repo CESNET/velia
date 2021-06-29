@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed104dae_018e9c9f",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-29T20:42:10Z",
+      "side": 1,
+      "message": "The config for br0 is generated. It was, however, missing from the tests. Fixed.",
+      "parentUuid": "c388d2c7_5324087b",
+      "revId": "a97e92376b7995d8b9f0126009f814ed5ebcb23e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "14f1cd0e_0f02310c",
@@ -49,6 +67,24 @@
       "side": 1,
       "message": "I guess you are right.\n\nThose are presence containers with meaning \"if present, ipv{4,6} is enabled on the interface\". Could there be an use-case for toggling ipv{4,6} on/off if the interface is enslaved? Everything should be handled by the master interface so I guess these are actually supposed not to be present.\n\nAlso there is the \u0027mtu\u0027 leaf inside the container. Could the MTU be set for interface that is enslaved? Quick google query hints that the MTU is propagated from the master.",
       "parentUuid": "14f1cd0e_0f02310c",
+      "revId": "a97e92376b7995d8b9f0126009f814ed5ebcb23e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c23c609_5c2c6711",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-06-29T20:42:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0cc706ff_ee24163f",
       "revId": "a97e92376b7995d8b9f0126009f814ed5ebcb23e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

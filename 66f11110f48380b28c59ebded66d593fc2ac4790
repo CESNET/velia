@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3cce4ff8_f2efa150",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-29T09:28:58Z",
+      "side": 1,
+      "message": "This means that by default (when there\u0027s no configuration), the system will have no network connectivity: both ipv4 and ipv6 are presence containers which \"are not there\".\n\nAs a minimum, the devices themselves should ship with some default config JSONs which enable both IPv4 and IPv6 on all interfaces. That would still allow the operator to disable all network access remotely, and I smell that there will be some truck rolls to fix this :(, but that\u0027s what the IETF model says I\u0027m afraid. Can you perhaps create and install these JSONs from this commit? Afterwards, a br2-external patch can hook these into the initial YANG provisioning.",
+      "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27067776_bb8bf40b",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-29T09:28:58Z",
+      "side": 1,
+      "message": "It would be nice to explicitly say it here that this handles the presence container as well: if the container is not present, then the \"enabled\" leaf will not be there, and therefore this check returns true. That\u0027s due to the way how sysrepo works.",
+      "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

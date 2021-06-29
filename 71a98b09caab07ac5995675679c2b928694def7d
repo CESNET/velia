@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78c99350_1e01cbc1",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-29T09:12:45Z",
+      "side": 0,
+      "message": "This will need \"something\" to handle updates properly. Perhaps that \"something\" can be taken care of 100% automatically, but I\u0027ll have to think about that when the devices get updated.",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 3
+      },
+      "revId": "71a98b09caab07ac5995675679c2b928694def7d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

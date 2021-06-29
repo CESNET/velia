@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8ff2262_89006b95",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-29T09:12:45Z",
+      "side": 1,
+      "message": "CR+1 only so that I won\u0027t forget about a possible update gotcha.",
+      "revId": "e36e0801e25d7e71932a033fde27d7912c687c58",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

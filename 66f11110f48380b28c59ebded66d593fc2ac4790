@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "90d03310_70490537",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-30T09:16:57Z",
+      "side": 1,
+      "message": "Sorry for that detour via default config, it seems that we\u0027ve come up with something better during the call. The motivation is to make it hard to lose network access.\n\n- if an interface is not listed in the `running` DS, the drop-in .network file in /run is removed (and the systemwide default takes over)\n- there will be a new `must` which says that either the entire interface is enabled, or there\u0027s an ipv4/enabled\u003dtrue, or there\u0027s an ipv6/enabled\u003dtrue, or there\u0027s a valid bridge config\n\nThis also means that there will have to be \"something\" which creates the operational DS from scratch based on actual network devices which are configured in the kernel. I.e., we can no longer rely on sysrepo\u0027s implicit copying of stuff from running to operational because there will be interfaces which are not \"configured via YANG\", but which have a config from a systemwide default. I don\u0027t know if it\u0027s implemented already, perhaps it is. If not, there\u0027s no need to implement that in this commit, but it\u0027s something to keep in mind as a next step.",
+      "parentUuid": "c706f853_ecf64566",
+      "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27067776_bb8bf40b",
         "filename": "src/system/IETFInterfacesConfig.cpp",
         "patchSetId": 4
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "Done.\n\nI think you meant to write \"this check returns false\".",
       "parentUuid": "27067776_bb8bf40b",
+      "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9ca838f_2831a72b",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-30T09:16:57Z",
+      "side": 1,
+      "message": "yup, thanks",
+      "parentUuid": "c7748d88_a035f6e3",
       "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

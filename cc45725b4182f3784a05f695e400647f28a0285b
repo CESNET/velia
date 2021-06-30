@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48a9f833_e7e20f07",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-06-30T09:20:41Z",
+      "side": 1,
+      "message": "This will need an update to extend that \"must\" that\u0027s described at https://gerrit.cesnet.cz/c/CzechLight/velia/+/4266/5#message-e603f3bf72ee1673d990cce9edd51f8084b76fa0 . Otherwise it looks perfect to me.",
+      "revId": "cc45725b4182f3784a05f695e400647f28a0285b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -66,6 +66,7 @@ TEST_CASE("ietf-interfaces localhost")
                                              {"oscW", "iana-if-type:ethernetCsmacd"},
                                              {"oscE", "iana-if-type:ethernetCsmacd"}}) {
                 client->set_item_str(("/ietf-interfaces:interfaces/interface[name='"s + name + "']/type").c_str(), type);
+                client->set_item_str(("/ietf-interfaces:interfaces/interface[name='"s + name + "']/enabled").c_str(), "false");
             }
             client->apply_changes();
         }
@@ -80,6 +81,67 @@ TEST_CASE("ietf-interfaces localhost")
         {
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='blah0']/type", "iana-if-type:ethernetCsmacd");
             REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
+        }
+    }
+
+    SECTION("There must always be enabled protocol or the interface must be explicitely disabled")
+    {
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+
+        SECTION("Disabled protocols; enabled link")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
+            REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
+        }
+
+        SECTION("Active protocols; disabled link")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "false");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            client->apply_changes();
+        }
+
+        SECTION("IPv4 only; enabled link")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
+            client->apply_changes();
+        }
+
+        SECTION("Active protocol must have at least one IP")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            client->apply_changes();
+        }
+
+        SECTION("Active protocol must have at least one IP")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "false");
+            client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4");
+            client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6");
+            client->apply_changes();
+
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
+            REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
+            client->discard_changes();
+
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
+            REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
+            client->discard_changes();
         }
     }
 }
@@ -134,6 +196,8 @@ EmitLLDP=nearest-bridge
 )";
     }
 
+    client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
+    client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
     client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
 
     REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);

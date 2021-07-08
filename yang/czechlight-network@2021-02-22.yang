@@ -43,9 +43,13 @@ module czechlight-network {
     deviation /rt:routing { deviate add { config false; } }
 
     // We do not support configuring some parts of if:interfaces tree
-    deviation /if:interfaces/if:interface/if:enabled { deviate add { config false; } }
-    deviation /if:interfaces/if:interface/ip:ipv4 { deviate add { config false; } }
-    deviation /if:interfaces/if:interface/ip:ipv6 { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv4/ip:forwarding { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv4/ip:mtu { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv4/ip:neighbor { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:forwarding { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:mtu { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:neighbor { deviate add { config false; } }
+    deviation /if:interfaces/if:interface/ip:ipv6/ip:dup-addr-detect-transmits { deviate add { config false; } }
 
     // User should not create new links or reconfigure link types
     deviation /if:interfaces/if:interface/if:name {
@@ -65,6 +69,17 @@ module czechlight-network {
                   (../if:name = "oscW" and . = "ianaift:ethernetCsmacd") or
                   (../if:name = "oscE" and . = "ianaift:ethernetCsmacd")' {
                 error-message "Link type can't be reconfigured.";
+            }
+        }
+    }
+
+    // Make it hard to accidentally lose connection by removing ipv4/ipv6 presence containers
+    deviation /if:interfaces/if:interface {
+        deviate add {
+            must 'if:enabled = "false" or
+                  ip:ipv4/ip:enabled = "true" or
+                  ip:ipv6/ip:enabled = "true"' {
+                error-message "There must always be at least one protocol active unless the interface is disabled.";
             }
         }
     }

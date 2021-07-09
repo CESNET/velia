@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "319ad0c6_03324b7a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-07-09T14:14:51Z",
+      "side": 1,
+      "message": "The first part is done, but now I don\u0027t know if there\u0027s already some code that creates and deletes the interfaces in the operational DS.",
+      "parentUuid": "90d03310_70490537",
+      "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27067776_bb8bf40b",
         "filename": "src/system/IETFInterfacesConfig.cpp",
         "patchSetId": 4

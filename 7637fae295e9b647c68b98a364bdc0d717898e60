@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb1a8e1a_04553443",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-07-09T13:56:09Z",
+      "side": 1,
+      "message": "I think this is very easy to catch as well by another `must` statement inside the IPv4 and IPv6 containers:\n must \u0027ip:enabled \u003d \"false\" or count(ip:address) \u003e 0\u0027\n\nOnce the corresponding autoconf mechanism gets enabled, so will have to the be this new `must`.\n\nI think this is worth the effort, but perhaps I\u0027m missing something. Opinions?",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 62
+      },
+      "revId": "7637fae295e9b647c68b98a364bdc0d717898e60",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

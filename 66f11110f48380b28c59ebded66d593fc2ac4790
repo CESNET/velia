@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "78ea02e1_4465fda5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-07-13T21:37:59Z",
+      "side": 1,
+      "message": "When my running DS doesn\u0027t contain information about interface `foo`, but somehow the interface `foo` exists in the Linux system (perhaps because I\u0027ve just removed all configuration from my YANG, and therefore I rely on the CzechLight system\u0027s default settings), do I see this `foo` interface in the operational DS?\n\nThis code is \"not used\" from main.cpp, so I honestly don\u0027t know and I\u0027m asking.",
+      "parentUuid": "c5cc13b6_1679035e",
+      "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27067776_bb8bf40b",
         "filename": "src/system/IETFInterfacesConfig.cpp",
         "patchSetId": 4

@@ -22,6 +22,30 @@
       },
       "revId": "7637fae295e9b647c68b98a364bdc0d717898e60",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e9cb25a_e6fa5b16",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-07-13T13:40:47Z",
+      "side": 1,
+      "message": "Yes, you are right. This is a simple and effective way.",
+      "parentUuid": "eb1a8e1a_04553443",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 62
+      },
+      "revId": "7637fae295e9b647c68b98a364bdc0d717898e60",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

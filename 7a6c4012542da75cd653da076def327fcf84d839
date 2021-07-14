@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6adbae4_2839c617",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-07-14T07:49:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26abac37_9408cddf",
+      "revId": "7a6c4012542da75cd653da076def327fcf84d839",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6a36bb19_6d082082",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-07-13T21:34:47Z",
       "side": 1,
       "message": "instead of an explicit discard, leverage SECTIONs (a new session get created at the very top, so no explicit discard is needed that way)",
+      "revId": "7a6c4012542da75cd653da076def327fcf84d839",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fd0c388_d3f07618",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-07-14T07:49:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a36bb19_6d082082",
       "revId": "7a6c4012542da75cd653da076def327fcf84d839",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

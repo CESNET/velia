@@ -22,6 +22,30 @@
       },
       "revId": "71a98b09caab07ac5995675679c2b928694def7d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1275ef52_bcdc9919",
+        "filename": "yang/czechlight-system@2021-01-13.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-07-14T08:54:52Z",
+      "side": 0,
+      "message": "OK, we\u0027ll do this manually because we only have a handful of boxes right now.",
+      "parentUuid": "78c99350_1e01cbc1",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 3
+      },
+      "revId": "71a98b09caab07ac5995675679c2b928694def7d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -29,7 +29,7 @@ namespace {
 const auto IFACE = "czechlight0"s;
 const auto LINK_MAC = "02:02:02:02:02:02"s;
 const auto WAIT = 250ms;
-const auto WAIT_BRIDGE = 999ms;
+const auto WAIT_BRIDGE = 2500ms;
 
 template <class... Args>
 void iproute2_run(const Args... args_)
@@ -197,11 +197,19 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT_BRIDGE, "link", "set", "dev", IFACE_BRIDGE, "up");
+        expectedBridge["/ietf-ip:ipv6"] = "";
+        expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']"] = "";
+        expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/ip"] = "fe80::22:22ff:fe22:2222";
+        expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/prefix-length"] = "64";
         expectedBridge["/oper-status"] = "up";
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT_BRIDGE, "link", "set", "dev", IFACE_BRIDGE, "down");
+        //expectedBridge.erase("/ietf-ip:ipv6"); // the container remains even if all addresses deleted
+        expectedBridge.erase("/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']");
+        expectedBridge.erase("/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/ip");
+        expectedBridge.erase("/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/prefix-length");
         expectedBridge["/oper-status"] = "down";
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);

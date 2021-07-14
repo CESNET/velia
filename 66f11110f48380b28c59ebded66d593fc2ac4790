@@ -108,6 +108,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9b904c4_64c25a5b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-07-14T09:04:36Z",
+      "side": 1,
+      "message": "During the call Tomas verified that this is not an issue and the operational DS is always rebuilt form scratch.",
+      "parentUuid": "78ea02e1_4465fda5",
+      "revId": "66f11110f48380b28c59ebded66d593fc2ac4790",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "27067776_bb8bf40b",

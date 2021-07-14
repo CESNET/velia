@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68ae94a2_a9b66261",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-07-14T09:55:06Z",
+      "side": 1,
+      "message": "apart from the timeout issue with TSAN (just try a longer timeout, I guess?) this looks good",
+      "revId": "64bc0a744c43226058cf9587ab7266d77bb7675d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "108e4940_38b6edcd",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-07-14T09:55:06Z",
+      "side": 1,
+      "message": "I think it\u0027s redundant to test both IPv4 and IPv6; I assume that the config generator doesn\u0027t care about the bridge vs. just-a-regular-ethernet case. But there\u0027s no need to remove that code now I guess, but if you do, I won\u0027t mind (it complicates the test a wee bit).",
+      "revId": "64bc0a744c43226058cf9587ab7266d77bb7675d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

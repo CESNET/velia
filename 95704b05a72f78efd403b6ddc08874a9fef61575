@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "642183ec_390c8c41",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-08-02T12:56:16Z",
+      "side": 1,
+      "message": "Apparently `fmt::runtime` is fmt\u003e\u003d8.0 only so this won\u0027t work here.\n\n(I will locally downgrade fmtlib.)",
+      "revId": "95704b05a72f78efd403b6ddc08874a9fef61575",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

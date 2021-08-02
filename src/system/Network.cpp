@@ -19,7 +19,7 @@ namespace {
 const auto CZECHLIGHT_SYSTEM_MODULE_NAME = "czechlight-system"s;
 const auto CZECHLIGHT_SYSTEM_STANDALONE_ETH1 = "/"s + CZECHLIGHT_SYSTEM_MODULE_NAME + ":networking/standalone-eth1"s;
 
-const std::string NETWORK_FILE_CONTENT_TEMPLATE = R"([Match]
+constexpr char NETWORK_FILE_CONTENT_TEMPLATE[] = R"([Match]
 Name=eth1
 
 [Network]

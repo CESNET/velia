@@ -199,6 +199,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
 
         iproute2_exec_and_wait(WAIT_BRIDGE, "link", "set", "dev", IFACE_BRIDGE, "up");
         expectedBridge["/ietf-ip:ipv6"] = "";
+        expectedBridge["/ietf-ip:ipv6/autoconf"] = "";
         expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']"] = "";
         expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/ip"] = "fe80::22:22ff:fe22:2222";
         expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/prefix-length"] = "64";
@@ -231,6 +232,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/ip");
         expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/prefix-length");
         expectedIface.erase("/ietf-ip:ipv4");
+        expectedIface.erase("/ietf-ip:ipv6/autoconf");
         expectedIface.erase("/ietf-ip:ipv6");
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);

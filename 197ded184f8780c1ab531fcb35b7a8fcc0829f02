@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecb0c1d3_17ca3d00",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-08-04T13:56:04Z",
+      "side": 1,
+      "message": "Can you please #ifdef just this part of the call? I realize that it\u0027s going to be ugly, but on the other hand it\u0027s a temporary, limited kind of ugliness. In my book that\u0027s better than \"risking\" a possible typo that\u0027s not CI-checked which might introduce a subtle breakage; there are string which are only checked at runtime here.\n\nOr feel free to tell me that what I\u0027m proposing is nonsense.",
+      "range": {
+        "startLine": 143,
+        "startChar": 23,
+        "endLine": 143,
+        "endChar": 61
+      },
+      "revId": "197ded184f8780c1ab531fcb35b7a8fcc0829f02",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

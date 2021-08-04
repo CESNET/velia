@@ -37,7 +37,7 @@ TEST_CASE("ietf-interfaces localhost")
         lo.erase(it);
     }
 
-    REQUIRE(lo == std::map<std::string, std::string> {
+    REQUIRE(lo == std::map<std::string, std::string>{
                 {"/name", "lo"},
                 {"/type", "iana-if-type:softwareLoopback"},
                 {"/phys-address", "00:00:00:00:00:00"},
@@ -47,6 +47,7 @@ TEST_CASE("ietf-interfaces localhost")
                 {"/ietf-ip:ipv4/address[ip='127.0.0.1']/ip", "127.0.0.1"},
                 {"/ietf-ip:ipv4/address[ip='127.0.0.1']/prefix-length", "8"},
                 {"/ietf-ip:ipv6", ""},
+                {"/ietf-ip:ipv6/autoconf", ""},
                 {"/ietf-ip:ipv6/address[ip='::1']", ""},
                 {"/ietf-ip:ipv6/address[ip='::1']/ip", "::1"},
                 {"/ietf-ip:ipv6/address[ip='::1']/prefix-length", "128"},
@@ -167,24 +168,27 @@ TEST_CASE("Config data in ietf-interfaces")
             client->apply_changes();
         }
 
-        SECTION("Enabled IPv4 protocol must have at least one IP")
+        SECTION("Enabled IPv4 protocol must have at least one IP or the autoconfiguration must be on")
         {
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
             REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
         }
 
-        SECTION("Enabled IPv6 protocol must have at least one IP")
+        SECTION("Enabled IPv6 protocol must have at least one IP or the autoconfiguration must be on")
         {
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "false");
             REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
         }
     }
 
     std::string expectedContents;
+
     SECTION("Setting IPs to eth0")
     {
         const auto expectedFilePath = fakeConfigDir / "eth0.network";
@@ -195,6 +199,7 @@ TEST_CASE("Config data in ietf-interfaces")
         {
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/description", "Hello world");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
             expectedContents = R"([Match]
 Name=eth0
 
@@ -202,6 +207,7 @@ Name=eth0
 Description=Hello world
 Address=192.0.2.1/24
 LinkLocalAddressing=no
+IPv6AcceptRA=false
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -212,6 +218,7 @@ EmitLLDP=nearest-bridge
         {
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.2']/ietf-ip:prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
             client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6");
             expectedContents = R"([Match]
 Name=eth0
@@ -220,6 +227,7 @@ Name=eth0
 Address=192.0.2.1/24
 Address=192.0.2.2/24
 LinkLocalAddressing=no
+IPv6AcceptRA=false
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -230,12 +238,14 @@ EmitLLDP=nearest-bridge
         {
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
             expectedContents = R"([Match]
 Name=eth0
 
 [Network]
 Address=192.0.2.1/24
 Address=2001:db8::1/32
+IPv6AcceptRA=true
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -246,6 +256,7 @@ EmitLLDP=nearest-bridge
         {
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/enabled", "false");
             expectedContents = R"([Match]
 Name=eth0
@@ -253,6 +264,7 @@ Name=eth0
 [Network]
 Address=192.0.2.1/24
 LinkLocalAddressing=no
+IPv6AcceptRA=false
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -282,6 +294,7 @@ Name=eth0
 [Network]
 Address=192.0.2.1/24
 LinkLocalAddressing=no
+IPv6AcceptRA=false
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -291,6 +304,7 @@ Name=eth1
 
 [Network]
 Address=2001:db8::1/32
+IPv6AcceptRA=true
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -298,6 +312,7 @@ EmitLLDP=nearest-bridge
 
         client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
         client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
         client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
         client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
 
@@ -328,6 +343,7 @@ Name=br0
 
 [Network]
 LinkLocalAddressing=no
+IPv6AcceptRA=false
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -338,6 +354,7 @@ Name=eth0
 
 [Network]
 Bridge=br0
+IPv6AcceptRA=false
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -348,6 +365,7 @@ Name=eth1
 
 [Network]
 Bridge=br0
+IPv6AcceptRA=false
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -379,12 +397,14 @@ EmitLLDP=nearest-bridge
         // assign an IPv4 address to br0
         client->set_item_str("/ietf-interfaces:interfaces/interface[name='br0']/enabled", "true");
         client->set_item_str("/ietf-interfaces:interfaces/interface[name='br0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='br0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
         expectedContentsBr0 = R"([Match]
 Name=br0
 
 [Network]
 Address=192.0.2.1/24
 LinkLocalAddressing=no
+IPv6AcceptRA=false
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -407,6 +427,7 @@ Name=br0
 [Network]
 Address=192.0.2.1/24
 Address=2001:db8::1/32
+IPv6AcceptRA=true
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -430,6 +451,7 @@ Name=eth1
 
 [Network]
 Address=2001:db8::2/32
+IPv6AcceptRA=true
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -500,5 +522,137 @@ EmitLLDP=nearest-bridge
             REQUIRE(!std::filesystem::exists(expectedFilePathBr0));
             REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
         }
+    }
+
+    SECTION("Network autoconfiguration")
+    {
+        const auto expectedFilePath = fakeConfigDir / "eth0.network";
+
+        client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+
+        SECTION("IPv4 on with address, IPv6 disabled, DHCPv4 off, RA off")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24"); // in case DHCP is disabled an IP must be present
+
+            expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+Address=192.0.2.1/24
+LinkLocalAddressing=no
+IPv6AcceptRA=false
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+        }
+
+        SECTION("IPv4 on with address, IPv6 disabled, DHCPv4 on, RA on")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24"); // in case DHCP is disabled an IP must be present
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
+
+            expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+Address=192.0.2.1/24
+LinkLocalAddressing=no
+IPv6AcceptRA=false
+DHCP=ipv4
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+        }
+
+        SECTION("IPv4 disabled, IPv6 enabled, DHCPv4 on, RA on")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
+
+            expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+IPv6AcceptRA=true
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+        }
+
+        SECTION("IPv4 enabled, IPv6 enabled, DHCPv4 on, RA on")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
+
+            expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+IPv6AcceptRA=true
+DHCP=ipv4
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+        }
+
+        SECTION("IPv4 enabled, IPv6 enabled, DHCPv4 off, RA on")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
+
+            expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+Address=192.0.2.1/24
+IPv6AcceptRA=true
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+        }
+
+        SECTION("IPv4 disabled, IPv6 disabled, DHCPv4 off, RA off")
+        {
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/prefix-length", "24");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/prefix-length", "32");
+            client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "false");
+
+            expectedContents = R"([Match]
+Name=eth0
+
+[Network]
+Address=192.0.2.1/24
+Address=2001:db8::1/32
+IPv6AcceptRA=false
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+        }
+
+        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+        client->apply_changes();
+        REQUIRE(std::filesystem::exists(expectedFilePath));
+        REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
+
+        // reset the contents
+        client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']");
+        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+        client->apply_changes();
+        REQUIRE(!std::filesystem::exists(expectedFilePath));
     }
 }

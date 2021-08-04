@@ -128,7 +128,19 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
                 configValues["Network"].push_back("LinkLocalAddressing=no");
             }
 
-            configValues["Network"].push_back("DHCP=no"); // temporarily disabled
+            // network autoconfiguration
+            if (auto set = linkEntry->find_path("ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses"); set->number() > 0 && protocolEnabled(linkEntry, "ipv6") && getValueAsString(set->data().front()) == "true"s) {
+                configValues["Network"].push_back("IPv6AcceptRA=true");
+            } else {
+                configValues["Network"].push_back("IPv6AcceptRA=false");
+            }
+
+            if (auto set = linkEntry->find_path("ietf-ip:ipv4/czechlight-network:dhcp-client"); set->number() > 0 && protocolEnabled(linkEntry, "ipv4") && getValueAsString(set->data().front()) == "true"s) {
+                configValues["Network"].push_back("DHCP=yes");
+            } else {
+                configValues["Network"].push_back("DHCP=ipv6");
+            }
+
             configValues["Network"].push_back("LLDP=true");
             configValues["Network"].push_back("EmitLLDP=nearest-bridge");
 

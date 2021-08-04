@@ -113,6 +113,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         {"/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']", ""},
         {"/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip", "::ffff:192.0.2.1"},
         {"/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/prefix-length", "128"},
+        {"/ietf-ip:ipv6/autoconf", ""},
         {"/name", IFACE},
         {"/oper-status", "down"},
         {"/phys-address", LINK_MAC},
@@ -198,6 +199,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
 
         iproute2_exec_and_wait(WAIT_BRIDGE, "link", "set", "dev", IFACE_BRIDGE, "up");
         expectedBridge["/ietf-ip:ipv6"] = "";
+        expectedBridge["/ietf-ip:ipv6/autoconf"] = "";
         expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']"] = "";
         expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/ip"] = "fe80::22:22ff:fe22:2222";
         expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/prefix-length"] = "64";

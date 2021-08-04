@@ -104,24 +104,31 @@ module czechlight-network {
 		}
 	}
 
+    augment /if:interfaces/if:interface/ip:ipv4 {
+        description "Add the IPv4 autoconfiguration option (DHCP client).";
+
+        leaf dhcp-client {
+            type boolean;
+            default true;
+            description "Enable DHCP client.";
+        }
+    }
+
     deviation /if:interfaces/if:interface/ip:ipv4 {
         deviate add {
-            must 'ip:enabled = "false" or count(ip:address) > 0' {
-                error-message "There must always be at least one IPv4 address unless the protocol is disabled.";
+            must 'ip:enabled = "false" or count(ip:address) > 0 or cla-network:dhcp-client = "true"' {
+                error-message "There must always be at least one IPv4 address or the autoconfiguration must be turned on unless the protocol is disabled.";
             }
         }
     }
 
     deviation /if:interfaces/if:interface/ip:ipv6 {
         deviate add {
-            must 'ip:enabled = "false" or count(ip:address) > 0' {
-                error-message "There must always be at least one IPv6 address unless the protocol is disabled.";
+            must 'ip:enabled = "false" or count(ip:address) > 0 or ip:autoconf/ip:create-global-addresses = "true"' {
+                error-message "There must always be at least one IPv6 address or the autoconfiguration must be turned on unless the protocol is disabled.";
             }
         }
     }
-
-    // IPv6 address autoconfiguration is not supported
-    deviation /if:interfaces/if:interface/ip:ipv6/ip:autoconf { deviate not-supported; }
 
     identity dhcp {
         base rt:routing-protocol;

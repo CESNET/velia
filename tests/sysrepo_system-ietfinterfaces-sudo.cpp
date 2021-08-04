@@ -113,6 +113,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         {"/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']", ""},
         {"/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip", "::ffff:192.0.2.1"},
         {"/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/prefix-length", "128"},
+        {"/ietf-ip:ipv6/autoconf", ""},
         {"/name", IFACE},
         {"/oper-status", "down"},
         {"/phys-address", LINK_MAC},

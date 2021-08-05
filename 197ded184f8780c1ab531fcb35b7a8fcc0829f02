@@ -46,6 +46,30 @@
       },
       "revId": "197ded184f8780c1ab531fcb35b7a8fcc0829f02",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eca7911e_6e705dd4",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-08-05T08:30:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1da2954_c70e22a9",
+      "range": {
+        "startLine": 143,
+        "startChar": 23,
+        "endLine": 143,
+        "endChar": 61
+      },
+      "revId": "197ded184f8780c1ab531fcb35b7a8fcc0829f02",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

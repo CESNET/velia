@@ -52,6 +52,27 @@ TEST_CASE("ietf-interfaces localhost")
                 {"/ietf-ip:ipv6/address[ip='::1']/prefix-length", "128"},
             });
     // NOTE: There are no neighbours on loopback
+}
+
+struct FakeNetworkReload {
+public:
+    MAKE_CONST_MOCK1(cb, void(const std::vector<std::string>&));
+};
+
+TEST_CASE("Config data in ietf-interfaces")
+{
+    TEST_SYSREPO_INIT_LOGS;
+    TEST_SYSREPO_INIT;
+    TEST_SYSREPO_INIT_CLIENT;
+    trompeloeil::sequence seq1;
+
+    auto fake = FakeNetworkReload();
+
+    const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
+    std::filesystem::remove_all(fakeConfigDir);
+    std::filesystem::create_directories(fakeConfigDir);
+
+    auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
 
     SECTION("Link changes disabled")
     {
@@ -102,6 +123,7 @@ TEST_CASE("ietf-interfaces localhost")
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
             client->apply_changes();
         }
 
@@ -111,6 +133,7 @@ TEST_CASE("ietf-interfaces localhost")
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
+            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
             client->apply_changes();
         }
     }
@@ -120,6 +143,7 @@ TEST_CASE("ietf-interfaces localhost")
         client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "false");
         client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4");
         client->delete_item("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6");
+        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1).TIMES(AT_MOST(1));
         client->apply_changes();
 
         SECTION("Enabled IPv4 protocol with some IPs assigned is valid")
@@ -129,6 +153,7 @@ TEST_CASE("ietf-interfaces localhost")
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.2']/ietf-ip:prefix-length", "24");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
+            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
             client->apply_changes();
         }
 
@@ -138,6 +163,7 @@ TEST_CASE("ietf-interfaces localhost")
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client->set_item_str("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
             client->apply_changes();
         }
 
@@ -157,28 +183,6 @@ TEST_CASE("ietf-interfaces localhost")
             REQUIRE_THROWS_AS(client->apply_changes(), sysrepo::sysrepo_exception);
         }
     }
-}
-
-struct FakeNetworkReload {
-public:
-    MAKE_CONST_MOCK1(cb, void(const std::vector<std::string>&));
-};
-
-TEST_CASE("Config data in ietf-interfaces")
-{
-    TEST_SYSREPO_INIT_LOGS;
-    TEST_SYSREPO_INIT;
-    TEST_SYSREPO_INIT_CLIENT;
-    trompeloeil::sequence seq1;
-
-    auto fake = FakeNetworkReload();
-
-    const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
-    std::filesystem::remove_all(fakeConfigDir);
-    std::filesystem::create_directories(fakeConfigDir);
-
-    auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
-
 
     std::string expectedContents;
     SECTION("Setting IPs to eth0")

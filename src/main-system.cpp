@@ -4,13 +4,15 @@
 #include <sysrepo-cpp/Session.hpp>
 #include "VELIA_VERSION.h"
 #include "main.h"
+#include "system_vars.h"
 #include "system/Authentication.h"
 #include "system/Firmware.h"
 #include "system/IETFInterfaces.h"
 #include "system/IETFInterfacesConfig.h"
 #include "system/IETFSystem.h"
 #include "system/LED.h"
-#include "system_vars.h"
+#include "system/LLDP.h"
+#include "system/LLDPCallback.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
 #include "utils/journal.h"
@@ -103,6 +105,10 @@ int main(int argc, char* argv[])
         auto authentication = velia::system::Authentication(srSess2, REAL_ETC_PASSWD_FILE, REAL_ETC_SHADOW_FILE, AUTHORIZED_KEYS_FORMAT, velia::system::impl::changePassword);
 
         auto leds = velia::system::LED(srConn, "/sys/class/leds");
+
+        auto lldp = std::make_shared<velia::system::LLDPDataProvider>("/run/systemd/netif/lldp", *g_dbusConnection, "org.freedesktop.network1");
+        auto srSubs = std::make_shared<sysrepo::Subscribe>(srSess);
+        srSubs->oper_get_items_subscribe("czechlight-lldp", velia::system::LLDPCallback(lldp), "/czechlight-lldp:nbr-list");
 
         DBUS_EVENTLOOP_END
         return 0;

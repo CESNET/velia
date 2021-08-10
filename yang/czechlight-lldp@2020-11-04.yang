@@ -1,0 +1,260 @@
+module czechlight-lldp {
+  yang-version 1.1;
+  namespace
+    "http://czechlight.cesnet.cz/yang/czechlight-lldp";
+
+  prefix "cla-lldp";
+
+  import iana-afn-safi {
+    prefix ianaaf;
+    revision-date 2013-07-04;
+  }
+  import ietf-inet-types {
+    prefix inet;
+    revision-date 2013-07-15;
+  }
+
+  organization "CESNET";
+  contact "photonic@cesnet.cz";
+  description
+    "Model for listing neighbours discovered via LLDP protocol.
+     Based on OpenROADM's org-openroadm-lldp@2020-05-29 model.";
+
+  revision 2020-11-04 {
+    description "Allow multiple neighbor entries on in interface.";
+  }
+  revision 2020-08-25 {
+    description "Initial release";
+  }
+
+  typedef capabilities {
+    type bits {
+      bit other {
+        position 0;
+        description
+          "This bit indicates that the system has capabilities
+           other than those listed below.";
+      }
+      bit repeater {
+        position 1;
+        description
+          "This bit indicates that the system has repeater
+           capability.";
+      }
+      bit bridge {
+        position 2;
+        description
+          "This bit indicates that the system has bridge
+           capability.";
+      }
+      bit wlan-access-point {
+        position 3;
+        description
+          "This bit indicates that the system has
+           WLAN access point capability.";
+      }
+      bit router {
+        position 4;
+        description
+          "This bit indicates that the system has router
+           capability.";
+      }
+      bit telephone {
+        position 5;
+        description
+          "This bit indicates that the system has telephone
+           capability.";
+      }
+      bit docsis-cable-device {
+        position 6;
+        description
+          "This bit indicates that the system has
+           DOCSIS Cable Device capability (IETF RFC 4639 & 2670).";
+      }
+      bit station-only {
+        position 7;
+        description
+          "This bit indicates that the system has only
+           station capability and nothing else.";
+      }
+      bit cvlan-component {
+        position 8;
+        description
+          "This bit indicates that the system has
+           C-VLAN component functionality.";
+      }
+      bit svlan-component {
+        position 9;
+        description
+          "This bit indicates that the system has
+           S-VLAN component functionality.";
+      }
+      bit two-port-mac-relay {
+        position 10;
+        description
+          "This bit indicates that the system has
+           Two-port MAC Relay (TPMR) functionality.";
+      }
+    }
+    description
+      "This describes system capabilities.";
+    reference
+      "IEEE Std 802.1AB-2016: 8.5.8.1";
+
+  }
+
+  typedef chassisSubtype {
+    type enumeration {
+      enum reserved {
+        value 0;
+        description
+          "reserved";
+      }
+      enum chassiscomponent {
+        value 1;
+        description
+          "Chassis component (EntPhysicalAlias IETF RFC 4133)";
+      }
+      enum ifalias {
+        value 2;
+        description
+          "Interface Alias (IfAlias - IETF RFC 2863) ";
+      }
+      enum portcomponent {
+        value 3;
+        description
+          "Port component (EntPhysicalAlias IETF RFC 4133)";
+      }
+      enum macaddress {
+        value 4;
+        description
+          "MAC address (IEEE Std 802) ";
+      }
+      enum networkaddress {
+        value 5;
+        description
+          "Network Address";
+      }
+      enum ifname {
+        value 6;
+        description
+          "Interface Name (ifName - IETF RFC 2863)";
+      }
+      enum local {
+        value 7;
+        description
+          "Locally assigned";
+      }
+    }
+  }
+  typedef portSubtype {
+    type enumeration {
+      enum other {
+        value 0;
+        description
+          "reserved";
+      }
+      enum ifalias {
+        value 1;
+        description
+          "Interface Alias (IfAlias - IETF RFC 2863) ";
+      }
+      enum portcomponent {
+        value 2;
+        description
+          "Port component (EntPhysicalAlias IETF RFC 4133)";
+      }
+      enum macaddress {
+        value 3;
+        description
+          "MAC address (IEEE Std 802) ";
+      }
+      enum networkaddress {
+        value 4;
+        description
+          "Network Address";
+      }
+      enum ifname {
+        value 5;
+        description
+          "Interface Name (ifName - IETF RFC 2863)";
+      }
+      enum agentcircuitid {
+        value 6;
+        description
+          "Agent Circuit Id (IETF RFC 3046)";
+      }
+      enum local {
+        value 7;
+        description
+          "Locally assigned";
+      }
+    }
+  }
+
+  container nbr-list {
+    config false;
+    description
+      "LLDP Operational data - Neighbour List information";
+
+    list neighbors {
+      leaf ifName {
+        type string;
+        description
+          "Ethernet interface name where LLDP runs";
+      }
+      leaf remoteSysName {
+        type string;
+        description
+          "remote neighbour system name";
+      }
+      leaf remoteMgmtAddressSubType {
+        type ianaaf:address-family;
+        description
+          "remote neighbour Management Address Subtype Enumeration";
+      }
+      leaf remoteMgmtAddress {
+        type inet:ip-address;
+        description
+          "remote neighbour management address";
+      }
+      leaf remotePortIdSubType {
+        type cla-lldp:portSubtype;
+        description
+          "remote neighbour Port ID Subtype Enumeration";
+      }
+      leaf remotePortId {
+        type string;
+        description
+          "remote neighbour port Id";
+      }
+      leaf remoteChassisIdSubType {
+        type cla-lldp:chassisSubtype;
+        description
+          "Chassis ID Subtype Enumeration";
+      }
+      leaf remoteChassisId {
+        type string;
+        description
+          "remote neighbour Chassis Id";
+      }
+      leaf systemCapabilitiesSupported {
+        type cla-lldp:capabilities;
+        description
+          "The bitmap value used to identify which system capabilities
+           are supported on the local system.";
+        reference
+          "IEEE Std 802.1AB-2016: 8.5.8.1";
+      }
+
+      leaf systemCapabilitiesEnabled {
+        type cla-lldp:capabilities;
+        description
+          "The bitmap value used to identify which system capabilities
+           are enabled on the local system.";
+        reference
+          "IEEE Std 802.1AB-2016: 8.5.8.2";
+      }
+    }
+  }
+}

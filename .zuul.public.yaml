@@ -6,7 +6,7 @@
             required-projects: &projects
               - CzechLight/dependencies
               - name: github/systemd/systemd
-                override-checkout: v246
+                override-checkout: cesnet/lldp
             pre-run: ci/pre.yaml
         - f34-clang-asan-ubsan:
             requires: CzechLight-deps-f34-clang-asan-ubsan

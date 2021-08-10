@@ -11,7 +11,7 @@
 
 namespace velia::system {
 
-namespace impl {
+namespace {
 
 static const std::string systemdNetworkdDbusInterface = "org.freedesktop.network1.Manager";
 static const sdbus::ObjectPath systemdNetworkdDbusManagerObjectPath = "/org/freedesktop/network1";
@@ -118,18 +118,18 @@ auto listLinks(sdbus::IProxy* networkdManagerProxy)
     std::vector<sdbus::Struct<int, std::string, sdbus::ObjectPath>> links;
     std::vector<std::pair<int, std::string>> res; // we only want to return pairs (linkId, linkName), we do not need dbus object path
 
-    networkdManagerProxy->callMethod("ListLinks").onInterface(impl::systemdNetworkdDbusInterface).storeResultsTo(links);
+    networkdManagerProxy->callMethod("ListLinks").onInterface(systemdNetworkdDbusInterface).storeResultsTo(links);
 
     std::transform(links.begin(), links.end(), std::back_inserter(res), [](const auto& e) { return std::make_pair(std::get<0>(e), std::get<1>(e)); });
     return res;
 }
 
-} /* namespace impl */
+}
 
 LLDPDataProvider::LLDPDataProvider(std::filesystem::path dataDirectory, sdbus::IConnection& dbusConnection, const std::string& dbusNetworkdBus)
     : m_log(spdlog::get("system"))
     , m_dataDirectory(std::move(dataDirectory))
-    , m_networkdDbusProxy(sdbus::createProxy(dbusConnection, dbusNetworkdBus, impl::systemdNetworkdDbusManagerObjectPath))
+    , m_networkdDbusProxy(sdbus::createProxy(dbusConnection, dbusNetworkdBus, systemdNetworkdDbusManagerObjectPath))
 {
 }
 
@@ -137,7 +137,7 @@ std::vector<NeighborEntry> LLDPDataProvider::getNeighbors() const
 {
     std::vector<NeighborEntry> res;
 
-    for (const auto& [linkId, linkName] : impl::listLinks(m_networkdDbusProxy.get())) {
+    for (const auto& [linkId, linkName] : listLinks(m_networkdDbusProxy.get())) {
         m_log->debug("LLDP: Collecting neighbours on '{}' (id {})", linkName, linkId);
 
         // open lldp datafile
@@ -151,7 +151,7 @@ std::vector<NeighborEntry> LLDPDataProvider::getNeighbors() const
             continue;
         }
 
-        while (auto n = impl::nextNeighbor(ifs)) {
+        while (auto n = nextNeighbor(ifs)) {
             NeighborEntry ne;
             ne.m_portId = linkName;
 
@@ -169,11 +169,11 @@ std::vector<NeighborEntry> LLDPDataProvider::getNeighbors() const
             }
 
             if (uint16_t cap = 0; sd_lldp_neighbor_get_system_capabilities(n.get(), &cap) >= 0) {
-                ne.m_properties["systemCapabilitiesSupported"] = impl::toBitsYANG(cap);
+                ne.m_properties["systemCapabilitiesSupported"] = toBitsYANG(cap);
             }
 
             if (uint16_t cap = 0; sd_lldp_neighbor_get_enabled_capabilities(n.get(), &cap) >= 0) {
-                ne.m_properties["systemCapabilitiesEnabled"] = impl::toBitsYANG(cap);
+                ne.m_properties["systemCapabilitiesEnabled"] = toBitsYANG(cap);
             }
 
             m_log->trace("  found neighbor {}", ne);

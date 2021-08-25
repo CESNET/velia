@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2386c8fd_92191acc",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-08-25T09:06:37Z",
+      "side": 1,
+      "message": "The test says that IPv6 is disabled, but this statement enables DHCPv6 support. Please also check the other cases; the if-statement in the config generator looks fishy.",
+      "revId": "41c22424268cd61a3441194307d19243994bdba2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

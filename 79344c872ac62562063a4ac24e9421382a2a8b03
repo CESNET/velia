@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c48ed19_48dfdabc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-09-16T22:19:05Z",
+      "side": 1,
+      "message": "Thanks for an excellent commit message. A nice feature for follow-up patch would be implementation of CurrentDNSServerEx, so that you can return the currently used server first.",
+      "revId": "79344c872ac62562063a4ac24e9421382a2a8b03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17ef1916_9e426d8c",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-09-16T22:19:05Z",
+      "side": 1,
+      "message": "this is safe as long as the systemd service keeps returning IP addresses, which is a reasonable assumption I guess. That said, I\u0027d love to see a helper which escapes arbitrary strings for their use in XPath (netconf-cli\u0027s escapeListKeyString).",
+      "range": {
+        "startLine": 235,
+        "startChar": 50,
+        "endLine": 235,
+        "endChar": 69
+      },
+      "revId": "79344c872ac62562063a4ac24e9421382a2a8b03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -5,6 +5,7 @@
  *
  */
 
+#include <arpa/inet.h>
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
 #include <optional>
@@ -23,6 +24,7 @@ namespace {
 const auto IETF_SYSTEM_MODULE_NAME = "ietf-system"s;
 const auto IETF_SYSTEM_STATE_MODULE_PREFIX = "/"s + IETF_SYSTEM_MODULE_NAME + ":system-state/"s;
 const auto IETF_SYSTEM_HOSTNAME_PATH = "/ietf-system:system/hostname";
+const auto IETF_SYSTEM_DNS_PATH = "/ietf-system:system/dns-resolver";
 const auto IETF_SYSTEM_STATE_CLOCK_PATH = "/ietf-system:system-state/clock";
 
 /** @brief Returns key=value pairs from (e.g. /etc/os-release) as a std::map */
@@ -71,6 +73,49 @@ std::optional<std::string> getHostnameFromChange(const std::shared_ptr<sysrepo::
     }
 
     return res;
+}
+
+/** @brief Returns list of IP addresses (coded as a string) that serve as the DNS servers.
+ *
+ * We query the addresses from systemd-resolved D-Bus interface (see https://www.freedesktop.org/software/systemd/man/org.freedesktop.resolve1.html#Properties
+ * and possibly also https://www.freedesktop.org/software/systemd/man/resolved.conf.html).
+ * We use the value of DnsEx property on the Manager object. In case that DnsEx is empty we fallback to FallbackDnsEx property.
+ *
+ * Note that the returns not only the system-wide setting, but also the DNS resolvers that are configured per-interface. We chose not to ignore them despite ietf-system
+ * YANG model inability to distinguish between system-wide and per-interface type. Hence the resolver is listed as a system-wide one.
+ */
+std::vector<std::string> getDNSResolvers(sdbus::IConnection& connection, const std::string& dbusName)
+{
+    static const auto DBUS_RESOLVE1_MANAGER_PATH = "/org/freedesktop/resolve1";
+    static const auto DBUS_RESOLVE1_MANAGER_INTERFACE = "org.freedesktop.resolve1.Manager";
+
+    auto proxy = sdbus::createProxy(connection, dbusName, DBUS_RESOLVE1_MANAGER_PATH);
+
+    for (const auto& propertyName : {"DNSEx", "FallbackDNSEx"}) {
+        sdbus::Variant store = proxy->getProperty(propertyName).onInterface(DBUS_RESOLVE1_MANAGER_INTERFACE);
+
+        // DBus type of the DNSEx and FallbackDNSEx properties is "a(iiayqs)" ~ Array of [ Struct of (Int32, Int32, Array of [Byte], Uint16, String) ]
+        // i.e., <ifindex (0 for system-wide), addrtype, address as a bytearray, port (0 for unspecified), server name>,
+        auto replyObjects = store.get<std::vector<sdbus::Struct<int32_t, int32_t, std::vector<uint8_t>, uint16_t, std::string>>>();
+
+        if (!replyObjects.empty() > 0) {
+            std::vector<std::string> res;
+
+            for (const auto& e : replyObjects) {
+                auto addrType = e.get<1>();
+                auto addrBytes = e.get<2>();
+
+                std::array<char, std::max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN)> buf{};
+                inet_ntop(addrType, addrBytes.data(), buf.data(), buf.size());
+
+                res.emplace_back(buf.data());
+            }
+
+            return res;
+        }
+    }
+
+    return {};
 }
 }
 
@@ -178,12 +223,31 @@ void IETFSystem::initClock()
             SR_SUBSCR_OPER_MERGE);
 }
 
+/** @short DNS resolver callbacks */
+void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbusName) {
+    sysrepo::OperGetItemsCb dnsOper = [&connection, dbusName] (auto session, auto, auto, auto, auto, auto& parent) {
+        std::map<std::string, std::string> values;
+
+        /* RFC 7317 specifies that key leaf 'name' contains "An arbitrary name for the DNS server".
+           We use the IP address which is unique. If the server is returned multiple times (e.g. once as system-wide and once
+           for some specific ifindex, it doesn't matter that it is listed only once. */
+        for (const auto& e : getDNSResolvers(connection, dbusName)) {
+            values[IETF_SYSTEM_DNS_PATH + "/server[name='"s + e + "']/udp-and-tcp/address"] = e;
+        }
+
+        utils::valuesToYang(values, {}, session, parent);
+        return SR_ERR_OK;
+    };
+
+    m_srSubscribe->oper_get_items_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), dnsOper, IETF_SYSTEM_DNS_PATH);
+}
+
 /** This class handles multiple system properties and publishes them via the ietf-system model:
  * - OS-identification data from osRelease file
  * - Rebooting
  * - Hostname
  */
-IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease)
+IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease, sdbus::IConnection& connection, const std::string& dbusName)
     : m_srSession(std::move(srSession))
     , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
     , m_log(spdlog::get("system"))
@@ -193,5 +257,6 @@ IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std:
     initHostname();
     initDummies();
     initClock();
+    initDNS(connection, dbusName);
 }
 }

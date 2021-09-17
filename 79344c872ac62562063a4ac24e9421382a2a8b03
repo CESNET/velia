@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "666cfa8b_ed4ce651",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-09-17T06:25:14Z",
+      "side": 1,
+      "message": "I am afraid that would require some augmentation to the model. The list of DNS resolvers is not ordered as I have noticed yesterday. It\u0027s just a list with the key (server name).\n\n\nAlso, I am not sure how to implement the \"config true\" part: I\u0027m not sure how to handle the interface-specific resolvers. Perhaps we can do something similar to what we did in networking:\n - startup/running DS stores the system-wide resolvers (i.e., it configures the DNS\u003d clause of systemd-resolved)\n - operational DS provides all the resolvers, including the interface-specific ones (as it does in this patch)\nBut that still does not allow to configure the interface-specific resolvers. This needs an augment in czechlight-system/network I guess.\n\nI think these are the questions for a call next week.",
+      "parentUuid": "0c48ed19_48dfdabc",
+      "revId": "79344c872ac62562063a4ac24e9421382a2a8b03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "17ef1916_9e426d8c",
         "filename": "src/system/IETFSystem.cpp",
         "patchSetId": 1

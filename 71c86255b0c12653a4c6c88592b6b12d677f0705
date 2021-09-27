@@ -50,6 +50,24 @@
       "message": "That\u0027s the way how sysrepo operates; non-presence containers are always present when their parent node is present (and depending on all if-features, and maybe a bunch of other ifs). If you want to keep a comment, keep a comment, but I think it\u0027s better to remove a commented-out call to erase() :)",
       "revId": "71c86255b0c12653a4c6c88592b6b12d677f0705",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fabdc70_80f1db1d",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-09-27T12:34:31Z",
+      "side": 1,
+      "message": "Agreed. I have removed the comment.",
+      "parentUuid": "7c82d262_b0e4e407",
+      "revId": "71c86255b0c12653a4c6c88592b6b12d677f0705",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

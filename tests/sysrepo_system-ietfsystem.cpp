@@ -1,4 +1,7 @@
 #include "trompeloeil_doctest.h"
+#include <arpa/inet.h>
+#include <sdbus-c++/sdbus-c++.h>
+#include "dbus-helpers/dbus_resolve1_server.h"
 #include "pretty_printers.h"
 #include "system/IETFSystem.h"
 #include "test_log_setup.h"
@@ -14,6 +17,14 @@ TEST_CASE("Sysrepo ietf-system")
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
+
+    auto dbusConnServer = sdbus::createSessionBusConnection();
+    auto dbusConnClient = sdbus::createSessionBusConnection();
+
+    dbusConnServer->enterEventLoopAsync();
+    dbusConnClient->enterEventLoopAsync();
+
+    DbusResolve1Server dbusServer(*dbusConnServer);
 
     SECTION("Test system-state")
     {
@@ -54,19 +65,19 @@ TEST_CASE("Sysrepo ietf-system")
                 };
             }
 
-            auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, file);
+            auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, file, *dbusConnClient, dbusConnServer->getUniqueName());
             REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", SR_DS_OPERATIONAL) == expected);
         }
 
         SECTION("Invalid data (missing VERSION and NAME keys)")
         {
-            REQUIRE_THROWS_AS(std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys"), std::out_of_range);
+            REQUIRE_THROWS_AS(std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys", *dbusConnClient, dbusConnServer->getUniqueName()), std::out_of_range);
         }
     }
 
     SECTION("dummy values")
     {
-        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release");
+        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
         const char* xpath;
 
         SECTION("location") {
@@ -88,15 +99,68 @@ TEST_CASE("Sysrepo ietf-system")
 
     SECTION("clock")
     {
-        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release");
+        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
         client->session_switch_ds(SR_DS_OPERATIONAL);
         REQUIRE(!!client->get_item("/ietf-system:system-state/clock/current-datetime"));
+    }
+
+    SECTION("DNS resolvers")
+    {
+        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
+        std::map<std::string, std::string> expected;
+
+        dbusServer.setFallbackDNSEx({
+            {0, AF_INET, {8, 8, 8, 8}, 0, "prvni.googlovsky.dns"},
+            {0, AF_INET, {8, 8, 4, 4}, 0, "druhy.googlovsky.dns"},
+            {2, AF_INET6, {0x20, 0x01, 0x48, 0x60, 0x48, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x88, 0x88}, 0, "this.was.in.my.resolved"},
+        });
+
+        SECTION("Both DNS and Fallback DNS") {
+            dbusServer.setDNSEx({
+                {0, AF_INET, {127, 0, 0, 1}, 0, "ahoj.com"},
+                {2, AF_INET, {127, 0, 0, 1}, 0, "czech.light"},
+                {2, AF_INET6, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 53, "idk.net"},
+            });
+
+            expected = {
+                {"/options", ""},
+                {"/server[name='127.0.0.1']", ""},
+                {"/server[name='127.0.0.1']/name", "127.0.0.1"},
+                {"/server[name='127.0.0.1']/udp-and-tcp", ""},
+                {"/server[name='127.0.0.1']/udp-and-tcp/address", "127.0.0.1"},
+                {"/server[name='::1']", ""},
+                {"/server[name='::1']/name", "::1"},
+                {"/server[name='::1']/udp-and-tcp", ""},
+                {"/server[name='::1']/udp-and-tcp/address", "::1"},
+            };
+        }
+
+        SECTION("FallbackDNS only")
+        {
+            expected = {
+                {"/options", ""},
+                {"/server[name='2001:4860:4860::8888']", ""},
+                {"/server[name='2001:4860:4860::8888']/name", "2001:4860:4860::8888"},
+                {"/server[name='2001:4860:4860::8888']/udp-and-tcp", ""},
+                {"/server[name='2001:4860:4860::8888']/udp-and-tcp/address", "2001:4860:4860::8888"},
+                {"/server[name='8.8.4.4']", ""},
+                {"/server[name='8.8.4.4']/name", "8.8.4.4"},
+                {"/server[name='8.8.4.4']/udp-and-tcp", ""},
+                {"/server[name='8.8.4.4']/udp-and-tcp/address", "8.8.4.4"},
+                {"/server[name='8.8.8.8']", ""},
+                {"/server[name='8.8.8.8']/name", "8.8.8.8"},
+                {"/server[name='8.8.8.8']/udp-and-tcp", ""},
+                {"/server[name='8.8.8.8']/udp-and-tcp/address", "8.8.8.8"},
+            };
+        }
+
+        REQUIRE(dataFromSysrepo(client, "/ietf-system:system/dns-resolver", SR_DS_OPERATIONAL) == expected);
     }
 
 #ifdef TEST_RPC_SYSTEM_REBOOT
     SECTION("RPC system-restart")
     {
-        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release");
+        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", dbusConnection);
 
         auto rpcInput = std::make_shared<sysrepo::Vals>(0);
         auto res = client->rpc_send("/ietf-system:system-restart", rpcInput);

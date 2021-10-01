@@ -45,6 +45,11 @@ pkg_check_modules(SYSREPO REQUIRED sysrepo-cpp>=1.4.148 IMPORTED_TARGET sysrepo)
 pkg_check_modules(LIBYANG REQUIRED libyang-cpp>=1.0.248 IMPORTED_TARGET libyang)
 pkg_check_modules(LIBNL REQUIRED IMPORTED_TARGET libnl-route-3.0)
 
+find_path(SD_LLDP_H systemd/sd-lldp.h PATHS ${SYSTEMD_INCLUDEDIR} NO_DEFAULT_PATH)
+if(NOT SD_LLDP_H)
+    message(FATAL_ERROR "Cannot find required header <systemd/sd-lldp.h>, use https://github.com/systemd/systemd/pull/16744")
+endif()
+
 include(GNUInstallDirs)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
@@ -69,6 +74,8 @@ set(YANG_SRCS
     yang/ietf-routing@2018-03-13.yang
     yang/ietf-ipv4-unicast-routing@2018-03-13.yang
     yang/ietf-ipv6-unicast-routing@2018-03-13.yang
+    yang/czechlight-lldp@2020-11-04.yang
+    yang/iana-afn-safi@2013-07-04.yang
     )
 
 # Targets
@@ -218,6 +225,10 @@ add_library(velia-system STATIC
         src/system/IETFInterfacesConfig.h
         src/system/LED.cpp
         src/system/LED.h
+        src/system/LLDP.cpp
+        src/system/LLDP.h
+        src/system/LLDPCallback.cpp
+        src/system/LLDPCallback.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -318,6 +329,8 @@ if(BUILD_TESTING)
     target_link_libraries(SysrepoTesting DoctestIntegration PkgConfig::SYSREPO)
 
     add_library(DbusTesting STATIC
+        tests/dbus-helpers/dbus_network1_server.cpp
+        tests/dbus-helpers/dbus_network1_server.h
         tests/dbus-helpers/dbus_rauc_server.cpp
         tests/dbus-helpers/dbus_rauc_server.h
         tests/dbus-helpers/dbus_semaphore_server.cpp
@@ -387,6 +400,17 @@ if(BUILD_TESTING)
     set_tests_properties(
             test-system_rauc
             PROPERTIES RESOURCE_LOCK dbus-rauc
+    )
+
+    velia_test(system_lldp velia-system DbusTesting)
+
+    sysrepo_fixture_env(sysrepo-czechlight-lldp YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)
+    velia_test(sysrepo_system-lldp velia-system DbusTesting)
+    target_link_libraries(test-sysrepo_system-lldp)
+    set_tests_properties(
+            test-sysrepo_system-lldp
+            PROPERTIES FIXTURES_REQUIRED sysrepo:env:sysrepo-czechlight-lldp
+            RESOURCE_LOCK sysrepo
     )
 
     velia_test(hardware_emmc velia-ietf-hardware FsTestUtils)

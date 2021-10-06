@@ -41,6 +41,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "998ff4f5_dbf78672",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-10-06T13:10:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2386c8fd_92191acc",
+      "revId": "41c22424268cd61a3441194307d19243994bdba2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cef5c0c3_0c14280f",
@@ -54,6 +72,30 @@
       "writtenOn": "2021-10-06T12:16:51Z",
       "side": 1,
       "message": "Isn\u0027t this the default?",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 28
+      },
+      "revId": "41c22424268cd61a3441194307d19243994bdba2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "424296be_a7c320ed",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-10-06T13:10:33Z",
+      "side": 1,
+      "message": "Yeah, this is redundant. Furthermore, the default settings should probably be to enable DHCPv4, otherwise one will have to have one extra leaf in the default config.\n\n-\u003e Can you please change this to `default true` so that it matches the IPv6 behavior?",
+      "parentUuid": "cef5c0c3_0c14280f",
       "range": {
         "startLine": 112,
         "startChar": 0,

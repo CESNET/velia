@@ -61,6 +61,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "81cf7b6f_418c8b7a",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-10-07T11:41:33Z",
+      "side": 1,
+      "message": "oh god thanks. Why am I making my life more difficult than necessary.",
+      "parentUuid": "0338fde9_03df9756",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 85
+      },
+      "revId": "f6b42f2d0ed330167ef8e3f40ce08a06846080f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "cb288781_1f0e7703",
         "filename": "src/utils/libyang.cpp",
         "patchSetId": 1
@@ -72,6 +96,30 @@
       "writtenOn": "2021-10-07T09:08:57Z",
       "side": 1,
       "message": "nit: this message could now be changed to say \"got more than match\", because zero matches is no longer an error",
+      "range": {
+        "startLine": 26,
+        "startChar": 66,
+        "endLine": 26,
+        "endChar": 94
+      },
+      "revId": "f6b42f2d0ed330167ef8e3f40ce08a06846080f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "704d69f3_2c475b8c",
+        "filename": "src/utils/libyang.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-10-07T11:41:33Z",
+      "side": 1,
+      "message": "fixed",
+      "parentUuid": "cb288781_1f0e7703",
       "range": {
         "startLine": 26,
         "startChar": 66,

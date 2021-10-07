@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8dc11916_5a3676f0",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-10-07T09:13:00Z",
+      "side": 1,
+      "message": "This is not so important, and should be made in another change, but you can get rid of the \"; data\" in these kind of if-statements.",
+      "range": {
+        "startLine": 86,
+        "startChar": 78,
+        "endLine": 86,
+        "endChar": 84
+      },
+      "revId": "c830f7128d8d8c2c81f074e9454b0426fd38f588",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

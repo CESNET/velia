@@ -68,17 +68,17 @@ std::string generateNftConfig(velia::Log logger, const libyang::S_Data_Node& tre
         if (nodeSchemaPath == nodepaths::ace_comment) {
             // We will use the ACE name as a comment inside the rule. However, the comment must be at the end, so we
             // save it for later.
-            comment = getValueAsString(node);
+            comment = velia::utils::getValueAsString(node);
         } else if (nodeSchemaPath == nodepaths::ipv4_matches) {
             // Here we save the ip we're matching against.
-            match = " ip saddr "s + getValueAsString(node);
+            match = " ip saddr "s + velia::utils::getValueAsString(node);
         } else if (nodeSchemaPath == nodepaths::ipv6_matches) {
             // Here we save the ip we're matching against.
-            match = " ip6 saddr "s + getValueAsString(node);
+            match = " ip6 saddr "s + velia::utils::getValueAsString(node);
         } else if (nodeSchemaPath == nodepaths::action) {
             // Action is the last statement we get, so this is where we create the actual rule.
             ss << "add rule inet filter acls" << match;
-            auto action = getValueAsString(node);
+            auto action = velia::utils::getValueAsString(node);
             if (action ==  "ietf-access-control-list:accept"sv) {
                 ss << " accept";
             } else if (action ==  "ietf-access-control-list:drop"sv) {

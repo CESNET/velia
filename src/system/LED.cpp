@@ -54,7 +54,7 @@ LED::LED(const std::shared_ptr<::sysrepo::Connection>& srConn, std::filesystem::
     m_srSubscribe->rpc_subscribe_tree(
         (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid").c_str(),
         [this, uidMaxBrightness, triggerFile, brightnessFile](auto session, auto, auto input, auto, auto, auto) {
-            std::string val = getValueAsString(getSubtree(input, (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid/state").c_str()));
+            std::string val = utils::getValueAsString(utils::getSubtree(input, (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid/state").c_str()));
 
             try {
                 if (val == "on") {

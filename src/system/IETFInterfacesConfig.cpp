@@ -84,15 +84,15 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
 {
     std::map<std::string, std::string> networkConfigFiles;
 
-    if (auto data = session->get_data("/ietf-interfaces:interfaces/interface"); data) {
+    if (auto data = session->get_data("/ietf-interfaces:interfaces/interface")) {
         auto linkEntries = data->find_path("/ietf-interfaces:interfaces/interface");
         for (const auto& linkEntry : linkEntries->data()) {
             std::map<std::string, std::vector<std::string>> configValues;
 
             auto linkName = utils::getValueAsString(utils::getUniqueSubtree(linkEntry, "name").value());
 
-            if (auto set = linkEntry->find_path("description"); set->number() != 0) {
-                configValues["Network"].push_back("Description="s + utils::getValueAsString(set->data().front()));
+            if (auto node = utils::getUniqueSubtree(linkEntry, "description")) {
+                configValues["Network"].push_back("Description="s + utils::getValueAsString(node.value()));
             }
 
             // if addresses present, generate them...
@@ -118,8 +118,8 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
             // disable this behaviour when IPv6 is disabled or when link enslaved
             bool isSlave = false;
 
-            if (auto set = linkEntry->find_path("czechlight-network:bridge"); set->number() > 0) {
-                configValues["Network"].push_back("Bridge="s + utils::getValueAsString(set->data().front()));
+            if (auto node = utils::getUniqueSubtree(linkEntry, "czechlight-network:bridge")) {
+                configValues["Network"].push_back("Bridge="s + utils::getValueAsString(node.value()));
                 isSlave = true;
             }
 

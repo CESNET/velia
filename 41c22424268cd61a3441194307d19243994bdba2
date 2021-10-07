@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d0928b97_4e488777",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-10-07T08:51:24Z",
+      "side": 1,
+      "message": "Let\u0027s move this discussion to I8ded7695dc383e6654f8efa44b6a5442ef904485.",
+      "parentUuid": "8b9937b2_ed6f20f6",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 224
+      },
+      "revId": "41c22424268cd61a3441194307d19243994bdba2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2386c8fd_92191acc",
         "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
         "patchSetId": 9

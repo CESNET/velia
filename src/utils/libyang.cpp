@@ -2,6 +2,8 @@
 #include <libyang/Tree_Data.hpp>
 #include "utils/libyang.h"
 
+namespace velia::utils {
+
 const char* getValueAsString(const libyang::S_Data_Node& node)
 {
     if (!node || node->schema()->nodetype() != LYS_LEAF) {
@@ -19,4 +21,5 @@ libyang::S_Data_Node getSubtree(const libyang::S_Data_Node& start, const char* p
     }
 
     return set->data().front();
+}
 }

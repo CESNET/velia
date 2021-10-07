@@ -12,6 +12,8 @@ namespace libyang {
     class Data_Node;
 }
 
+namespace velia::utils {
+
 /**
  * @brief Gets a string value from a node.
  *
@@ -25,3 +27,4 @@ const char* getValueAsString(const std::shared_ptr<libyang::Data_Node>& node);
  * Throws if there is more than one matching node. Also throws if there aren't any matching nodes.
  */
 std::shared_ptr<libyang::Data_Node> getSubtree(const std::shared_ptr<libyang::Data_Node>& start, const char* path);
+}

@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8b9937b2_ed6f20f6",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-10-07T06:46:38Z",
+      "side": 1,
+      "message": "Maybe the function could renamed to getOneSubtree or, getUniqueSubtree and then it would throw with std::logic_error if there are more matching nodes and and return std::nullopt when no matching nodes found (and return the node, when there\u0027s one matching node)",
+      "parentUuid": "0107b804_9bd2c93b",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 224
+      },
+      "revId": "41c22424268cd61a3441194307d19243994bdba2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2386c8fd_92191acc",
         "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
         "patchSetId": 9
@@ -144,6 +168,30 @@
       "side": 1,
       "message": "Indeed it is. I probably copied it from the bridge leaf. However I have no idea how it got to that leaf.\n\nRemoved this occurrence and replaced with default true.",
       "parentUuid": "cef5c0c3_0c14280f",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 28
+      },
+      "revId": "41c22424268cd61a3441194307d19243994bdba2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb97df7f_59b0d9c9",
+        "filename": "yang/czechlight-network@2021-02-22.yang",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-10-07T06:46:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4975710_20e5d8d0",
       "range": {
         "startLine": 112,
         "startChar": 0,

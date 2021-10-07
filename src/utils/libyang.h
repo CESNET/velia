@@ -7,6 +7,7 @@
 
 #pragma once
 #include <memory>
+#include <optional>
 
 namespace libyang {
     class Data_Node;
@@ -24,7 +25,7 @@ const char* getValueAsString(const std::shared_ptr<libyang::Data_Node>& node);
 
 /** @brief Gets exactly one node based on `path` starting from `start`.
  *
- * Throws if there is more than one matching node. Also throws if there aren't any matching nodes.
+ * Throws if there is more than one matching node. Returns std::nullopt if no node matches.
  */
-std::shared_ptr<libyang::Data_Node> getSubtree(const std::shared_ptr<libyang::Data_Node>& start, const char* path);
+std::optional<std::shared_ptr<libyang::Data_Node>> getUniqueSubtree(const std::shared_ptr<libyang::Data_Node>& start, const char* path);
 }

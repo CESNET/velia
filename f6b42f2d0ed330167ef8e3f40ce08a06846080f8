@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bde9e680_88223669",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-10-07T09:19:00Z",
+      "side": 1,
+      "message": "I think using .value() is fine. You, as the caller, are basically asserting that there MUST be a value. The function just wants a value. Besides, it does not really make sense to change the signature of the function to allow erroneous inputs (since you would always throw on std::nullopt).",
+      "parentUuid": "a48d6ad4_eb69a903",
+      "revId": "f6b42f2d0ed330167ef8e3f40ce08a06846080f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0338fde9_03df9756",

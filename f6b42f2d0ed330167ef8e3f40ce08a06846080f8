@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a48d6ad4_eb69a903",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-10-07T09:07:55Z",
+      "side": 1,
+      "message": "I\u0027m not sure about adding this .value() (or equivalently using operator*) in patterns like this. Perhaps refactor utils::getValueAsString\u0027s argument to std::optional\u003c\u003e and if nullopt is passed, throw?",
+      "revId": "f6b42f2d0ed330167ef8e3f40ce08a06846080f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -16,6 +16,52 @@
       "message": "I\u0027m not sure about adding this .value() (or equivalently using operator*) in patterns like this. Perhaps refactor utils::getValueAsString\u0027s argument to std::optional\u003c\u003e and if nullopt is passed, throw?",
       "revId": "f6b42f2d0ed330167ef8e3f40ce08a06846080f8",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0338fde9_03df9756",
+        "filename": "src/system/IETFInterfacesConfig.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-10-07T09:08:57Z",
+      "side": 1,
+      "message": "You can just do \n\n    if (auto node \u003d velia::utils::getUniqueSubtree(linkEntry, xpath.c_str())) {",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 85
+      },
+      "revId": "f6b42f2d0ed330167ef8e3f40ce08a06846080f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb288781_1f0e7703",
+        "filename": "src/utils/libyang.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-10-07T09:08:57Z",
+      "side": 1,
+      "message": "nit: this message could now be changed to say \"got more than match\", because zero matches is no longer an error",
+      "range": {
+        "startLine": 26,
+        "startChar": 66,
+        "endLine": 26,
+        "endChar": 94
+      },
+      "revId": "f6b42f2d0ed330167ef8e3f40ce08a06846080f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -51,12 +51,11 @@ bool protocolEnabled(const std::shared_ptr<libyang::Data_Node>& linkEntry, const
 {
     const auto xpath = "ietf-ip:" + proto + "/enabled";
 
-    try {
-        auto enabled = velia::utils::getValueAsString(velia::utils::getSubtree(linkEntry, xpath.c_str()));
-        return enabled == "true"s;
-    } catch (const std::runtime_error&) { // leaf and the presence container missing
-        return false;
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, xpath.c_str())) {
+        return velia::utils::getValueAsString(node.value()) == "true"s;
     }
+
+    return false;
 }
 }
 
@@ -90,7 +89,7 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
         for (const auto& linkEntry : linkEntries->data()) {
             std::map<std::string, std::vector<std::string>> configValues;
 
-            auto linkName = utils::getValueAsString(utils::getSubtree(linkEntry, "name"));
+            auto linkName = utils::getValueAsString(utils::getUniqueSubtree(linkEntry, "name").value());
 
             if (auto set = linkEntry->find_path("description"); set->number() != 0) {
                 configValues["Network"].push_back("Description="s + utils::getValueAsString(set->data().front()));
@@ -107,8 +106,8 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
                 const auto addresses = linkEntry->find_path(IPAddressListXPath.c_str());
 
                 for (const auto& ipEntry : addresses->data()) {
-                    auto ipAddress = utils::getValueAsString(utils::getSubtree(ipEntry, "ip"));
-                    auto prefixLen = utils::getValueAsString(utils::getSubtree(ipEntry, "prefix-length"));
+                    auto ipAddress = utils::getValueAsString(utils::getUniqueSubtree(ipEntry, "ip").value());
+                    auto prefixLen = utils::getValueAsString(utils::getUniqueSubtree(ipEntry, "prefix-length").value());
 
                     spdlog::get("system")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
                     configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
@@ -119,8 +118,8 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
             // disable this behaviour when IPv6 is disabled or when link enslaved
             bool isSlave = false;
 
-            if (auto set = linkEntry->find_path("czechlight-network:bridge"); set->number() > 0) {
-                configValues["Network"].push_back("Bridge="s + utils::getValueAsString(set->data().front()));
+            if (auto node = utils::getUniqueSubtree(linkEntry, "czechlight-network:bridge")) {
+                configValues["Network"].push_back("Bridge="s + utils::getValueAsString(node.value()));
                 isSlave = true;
             }
 

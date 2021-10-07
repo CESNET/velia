@@ -301,9 +301,9 @@ velia::system::Authentication::Authentication(
             auto,
             auto output) {
 
-        auto userNode = utils::getSubtree(input, (authentication_container + "/users" ).c_str());
-        auto name = utils::getValueAsString(utils::getSubtree(userNode, "name"));
-        auto password = utils::getValueAsString(utils::getSubtree(userNode, "change-password/password-cleartext"));
+        auto userNode = utils::getUniqueSubtree(input, (authentication_container + "/users" ).c_str()).value();
+        auto name = utils::getValueAsString(utils::getUniqueSubtree(userNode, "name").value());
+        auto password = utils::getValueAsString(utils::getUniqueSubtree(userNode, "change-password/password-cleartext").value());
         m_log->debug("Changing password for {}", name);
         try {
             changePassword(name, password, m_etc_shadow);
@@ -326,9 +326,9 @@ velia::system::Authentication::Authentication(
             auto,
             auto output) {
 
-        auto userNode = utils::getSubtree(input, (authentication_container + "/users").c_str());
-        auto name = utils::getValueAsString(utils::getSubtree(userNode, "name"));
-        auto key = utils::getValueAsString(utils::getSubtree(userNode, "add-authorized-key/key"));
+        auto userNode = utils::getUniqueSubtree(input, (authentication_container + "/users").c_str()).value();
+        auto name = utils::getValueAsString(utils::getUniqueSubtree(userNode, "name").value());
+        auto key = utils::getValueAsString(utils::getUniqueSubtree(userNode, "add-authorized-key/key").value());
         m_log->debug("Adding key for {}", name);
         try {
             addKey(name, key);
@@ -351,9 +351,9 @@ velia::system::Authentication::Authentication(
             auto,
             auto output) {
 
-        auto userNode = utils::getSubtree(input, (authentication_container + "/users").c_str());
-        auto name = utils::getValueAsString(utils::getSubtree(userNode, "name"));
-        auto key = std::stol(utils::getValueAsString(utils::getSubtree(userNode, "authorized-keys/index")));
+        auto userNode = utils::getUniqueSubtree(input, (authentication_container + "/users").c_str()).value();
+        auto name = utils::getValueAsString(utils::getUniqueSubtree(userNode, "name").value());
+        auto key = std::stol(utils::getValueAsString(utils::getUniqueSubtree(userNode, "authorized-keys/index").value()));
         m_log->debug("Removing key for {}", name);
         try {
             removeKey(name, key);

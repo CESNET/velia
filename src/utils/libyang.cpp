@@ -13,13 +13,17 @@ const char* getValueAsString(const libyang::S_Data_Node& node)
     return libyang::Data_Node_Leaf_List(node).value_str();
 }
 
-libyang::S_Data_Node getSubtree(const libyang::S_Data_Node& start, const char* path)
+std::optional<libyang::S_Data_Node> getUniqueSubtree(const libyang::S_Data_Node& start, const char* path)
 {
     auto set = start->find_path(path);
-    if (set->number() != 1) {
+
+    switch(set->number()) {
+    case 0:
+        return std::nullopt;
+    case 1:
+        return set->data().front();
+    default:
         throw std::runtime_error(fmt::format("getSubtree({}, {}): didn't get exactly one match (got {})", start->path(), path, set->number()));
     }
-
-    return set->data().front();
 }
 }

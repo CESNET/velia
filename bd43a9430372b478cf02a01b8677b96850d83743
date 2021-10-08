@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "baedaa54_57909713",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-10-08T08:47:15Z",
+      "side": 1,
+      "message": "I don\u0027t understand this section. Both ipv4:enabled and ipv6:enabled leafs are `default: true`, and so are the IPv4 and IPv6 autoconfig toggles. There are no presence containers in the mix. How come that this code ends up with IPv6 autoconfiguration disabled? Did I miss some place in the code which explicitly disables that? Where is it?",
+      "range": {
+        "startLine": 533,
+        "startChar": 0,
+        "endLine": 549,
+        "endChar": 9
+      },
+      "revId": "bd43a9430372b478cf02a01b8677b96850d83743",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

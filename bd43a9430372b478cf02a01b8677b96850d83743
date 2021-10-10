@@ -46,6 +46,30 @@
       },
       "revId": "bd43a9430372b478cf02a01b8677b96850d83743",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfc1cf3f_d9a91304",
+        "filename": "tests/sysrepo_system-ietfinterfaces.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-10-10T21:06:35Z",
+      "side": 1,
+      "message": "ah, thanks, I missed that it\u0027s a presence container.",
+      "parentUuid": "c9377f9a_05b68577",
+      "range": {
+        "startLine": 533,
+        "startChar": 0,
+        "endLine": 549,
+        "endChar": 9
+      },
+      "revId": "bd43a9430372b478cf02a01b8677b96850d83743",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

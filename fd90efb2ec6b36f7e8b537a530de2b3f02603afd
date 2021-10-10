@@ -16,6 +16,24 @@
       "message": "Interesting; re-reading the code, I\u0027m not sure that dereferencing that std::optional all the time via .value() makes the code more readable. But the other patches in the series are nice and improve the code. One option would be changing the getValueAsString() to take an optional and perhaps raise an exception when it is a nullopt, but I have not really thought about this that much.\n\nIf I was writing this I would have used operator* instead of .value() I guess, but that\u0027s just random bikeshedding :).",
       "revId": "fd90efb2ec6b36f7e8b537a530de2b3f02603afd",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbd6a16a_209e4100",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-10-10T07:01:41Z",
+      "side": 1,
+      "message": "\u003e One option would be changing the getValueAsString() to take an optional and perhaps raise an exception when it is a nullopt\n\nTomáš already suggested this and I think it\u0027s not a good idea:\n\u003e \u003e The function just wants a value. Besides, it does not really make sense to change the signature of the function to allow erroneous inputs (since you would always throw on std::nullopt).",
+      "parentUuid": "e50c423e_921b608a",
+      "revId": "fd90efb2ec6b36f7e8b537a530de2b3f02603afd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

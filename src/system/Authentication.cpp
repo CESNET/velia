@@ -38,6 +38,11 @@ void writeKeys(const std::string& filename, const std::vector<std::string>& keys
     for (const auto& key : keys) {
         ss << key << "\n";
     }
+
+    if (auto keyFilePath = std::filesystem::path(filename); keyFilePath.has_parent_path()) {
+        std::filesystem::create_directories(keyFilePath.parent_path());
+    }
+
     utils::safeWriteFile(filename, ss.str());
 }
 }

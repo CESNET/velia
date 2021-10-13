@@ -99,7 +99,7 @@ module czechlight-network {
                   ip:ipv4/ip:enabled = "true" or
                   ip:ipv6/ip:enabled = "true" or
                   cla-network:bridge' {
-                error-message "There must always be at least one protocol active unless the interface is disabled.";
+                error-message "Enabled interface must always have at least one protocol active or it must be connected in the bridge.";
             }
 		}
 	}

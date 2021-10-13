@@ -40,15 +40,11 @@ pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
 if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
     message(FATAL_ERROR "Systemd 245 has a bug affecting DBus method calls using sdbus-c++. Please see https://github.com/Kistler-Group/sdbus-cpp/issues/106.")
 endif()
+#TODO: Check patch 20333 active
 
 pkg_check_modules(SYSREPO REQUIRED sysrepo-cpp>=1.4.148 IMPORTED_TARGET sysrepo)
 pkg_check_modules(LIBYANG REQUIRED libyang-cpp>=1.0.248 IMPORTED_TARGET libyang)
 pkg_check_modules(LIBNL REQUIRED IMPORTED_TARGET libnl-route-3.0)
-
-find_path(SD_LLDP_H systemd/sd-lldp.h PATHS ${SYSTEMD_INCLUDEDIR} NO_DEFAULT_PATH)
-if(NOT SD_LLDP_H)
-    message(FATAL_ERROR "Cannot find required header <systemd/sd-lldp.h>, use https://github.com/systemd/systemd/pull/16744")
-endif()
 
 include(GNUInstallDirs)
 
@@ -329,8 +325,6 @@ if(BUILD_TESTING)
     target_link_libraries(SysrepoTesting DoctestIntegration PkgConfig::SYSREPO)
 
     add_library(DbusTesting STATIC
-        tests/dbus-helpers/dbus_network1_server.cpp
-        tests/dbus-helpers/dbus_network1_server.h
         tests/dbus-helpers/dbus_rauc_server.cpp
         tests/dbus-helpers/dbus_rauc_server.h
         tests/dbus-helpers/dbus_resolve1_server.cpp

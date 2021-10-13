@@ -1,12 +1,13 @@
 - hosts: all
   tasks:
-    - name: install systemd's build deps
-      shell:
-        cmd: dnf -y builddep systemd
-      become: true
-
     - name: install libnl
       package:
         name: libnl3-devel
+        state: present
+      become: true
+
+    - name: install nlohmann/json
+      package:
+        name: json-devel
         state: present
       become: true

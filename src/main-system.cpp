@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
 
         auto leds = velia::system::LED(srConn, "/sys/class/leds");
 
-        auto lldp = std::make_shared<velia::system::LLDPDataProvider>("/run/systemd/netif/lldp", *g_dbusConnection, "org.freedesktop.network1");
+        auto lldp = std::make_shared<velia::system::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
         auto srSubs = std::make_shared<sysrepo::Subscribe>(srSess);
         srSubs->oper_get_items_subscribe("czechlight-lldp", velia::system::LLDPCallback(lldp), "/czechlight-lldp:nbr-list");
 

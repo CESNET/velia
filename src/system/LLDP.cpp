@@ -5,30 +5,30 @@
  *
  */
 #include <netinet/ether.h>
+#include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 #include "LLDP.h"
+#include "system_vars.h"
+#include "utils/exec.h"
 #include "utils/log.h"
 
 namespace velia::system {
 
 namespace {
 
-static const std::string systemdNetworkdDbusInterface = "org.freedesktop.network1.Manager";
-static const sdbus::ObjectPath systemdNetworkdDbusManagerObjectPath = "/org/freedesktop/network1";
-
 /** @brief LLDP capabilities identifiers ordered by their appearence in YANG schema 'czechlight-lldp' */
-const char* SYSTEM_CAPABILITIES[] = {
-    "other",
-    "repeater",
-    "bridge",
-    "wlan-access-point",
-    "router",
-    "telephone",
-    "docsis-cable-device",
-    "station-only",
-    "cvlan-component",
-    "svlan-component",
-    "two-port-mac-relay",
+std::map<char, std::string> SYSTEM_CAPABILITIES = {
+    {'o', "other"},
+    {'p', "repeater"},
+    {'b', "bridge"},
+    {'w', "wlan-access-point"},
+    {'r', "router"},
+    {'t', "telephone"},
+    {'d', "docsis-cable-device"},
+    {'a', "station-only"},
+    {'c', "cvlan-component"},
+    {'s', "svlan-component"},
+    {'m', "two-port-mac-relay"},
 };
 
 /** @brief Converts systemd's capabilities bitset to YANG's (named) bits.
@@ -41,95 +41,27 @@ const char* SYSTEM_CAPABILITIES[] = {
  * Systemd and our YANG model czechlight-lldp define the bits in the same order so this function does not have to care
  * about it.
  */
-std::string toBitsYANG(uint16_t bits)
+std::string toBitsYANG(const std::string& caps)
 {
     std::string res;
 
-    unsigned idx = 0;
-    while (bits) {
-        if (bits % 2) {
+    for (const auto& [bit, capability] : SYSTEM_CAPABILITIES) {
+        if (std::find(caps.begin(), caps.end(), bit) != caps.end()) {
             if (!res.empty()) {
                 res += " ";
             }
-            res += SYSTEM_CAPABILITIES[idx];
-        }
 
-        bits /= 2;
-        idx += 1;
+            res += capability;
+        }
     }
 
     return res;
 }
-
-/** @brief sd_lldp_neighbor requires deletion by invoking sd_lldp_neighbor_unrefp */
-struct sd_lldp_neighbor_deleter {
-    void operator()(sd_lldp_neighbor* e) const
-    {
-        sd_lldp_neighbor_unrefp(&e);
-    }
-};
-using sd_lldp_neighbor_managed = std::unique_ptr<sd_lldp_neighbor, sd_lldp_neighbor_deleter>;
-
-/* @brief Reads a LLDP neighbour entry from systemd's binary LLDP files.
-*
-* Inspired systemd's networkctl code.
-*/
-sd_lldp_neighbor_managed nextNeighbor(std::ifstream& ifs)
-{
-    size_t size;
-
-    // read neighbor size
-    /* Systemd allows the LLDP frame to be at most 4 KiB long. The comment in networkctl.c states that
-     * "each LLDP packet is at most MTU size, but let's allow up to 4KiB just in case".
-     * This comment may be misleading a bit because Ethernet Jumbo Frames can be up to 9000 B long.
-     * However, LLDP frames should still be at most 1500 B long.
-     * (see https://www.cisco.com/c/en/us/td/docs/routers/ncs4000/software/configure/guide/configurationguide/configurationguide_chapter_0111011.pdf)
-     */
-    {
-        uint64_t rawSz; // get neighbour size in bytes
-        ifs.read(reinterpret_cast<char*>(&rawSz), sizeof(rawSz));
-        size = le64toh(rawSz);
-
-        if (size_t rd = ifs.gcount(); (rd == 0 && ifs.eof()) || rd != sizeof(rawSz) || size >= 4096) {
-            return nullptr;
-        }
-    }
-
-    std::vector<uint8_t> raw;
-    raw.resize(size);
-
-    ifs.read(reinterpret_cast<char*>(raw.data()), size);
-    if (static_cast<size_t>(ifs.gcount()) != size) { // typecast is safe here (see std::streamsize)
-        return nullptr;
-    }
-
-    // let systemd parse from raw
-    sd_lldp_neighbor* tmp = nullptr;
-    if (sd_lldp_neighbor_from_raw(&tmp, raw.data(), size) < 0) {
-        return nullptr;
-    }
-
-    return sd_lldp_neighbor_managed(tmp);
 }
 
-/* @brief Lists links using networkd dbus interface and returns them as a list of pairs <link_id, link_name>. */
-auto listLinks(sdbus::IProxy* networkdManagerProxy)
-{
-    std::vector<sdbus::Struct<int, std::string, sdbus::ObjectPath>> links;
-    std::vector<std::pair<int, std::string>> res; // we only want to return pairs (linkId, linkName), we do not need dbus object path
-
-    networkdManagerProxy->callMethod("ListLinks").onInterface(systemdNetworkdDbusInterface).storeResultsTo(links);
-
-    std::transform(links.begin(), links.end(), std::back_inserter(res), [](const auto& e) { return std::make_pair(std::get<0>(e), std::get<1>(e)); });
-    return res;
-}
-
-}
-
-LLDPDataProvider::LLDPDataProvider(std::filesystem::path dataDirectory, sdbus::IConnection& dbusConnection, const std::string& dbusNetworkdBus)
+LLDPDataProvider::LLDPDataProvider(std::function<std::string()> dataCallback)
     : m_log(spdlog::get("system"))
-    , m_dataDirectory(std::move(dataDirectory))
-    , m_networkdDbusProxy(sdbus::createProxy(dbusConnection, dbusNetworkdBus, systemdNetworkdDbusManagerObjectPath))
+    , m_dataCallback(std::move(dataCallback))
 {
 }
 
@@ -137,46 +69,28 @@ std::vector<NeighborEntry> LLDPDataProvider::getNeighbors() const
 {
     std::vector<NeighborEntry> res;
 
-    for (const auto& [linkId, linkName] : listLinks(m_networkdDbusProxy.get())) {
-        m_log->debug("LLDP: Collecting neighbours on '{}' (id {})", linkName, linkId);
+    auto json = nlohmann::json::parse(m_dataCallback());
 
-        // open lldp datafile
-        std::filesystem::path lldpFilename = m_dataDirectory / std::to_string(linkId);
-        std::ifstream ifs(lldpFilename, std::ios::binary);
-
-        if (!ifs.is_open()) {
-            // TODO: As of now, we are querying systemd-networkd for *all* links, not just those that have LLDP enabled.
-            // TODO: Create a patch for systemd that queries *only* links with LLDP enabled and change severity of this debug log to warning/error.
-            m_log->debug("  failed to open ({})", lldpFilename);
-            continue;
-        }
-
-        while (auto n = nextNeighbor(ifs)) {
+    for (const auto& [linkName, neighbors] : json.items()) {
+        for (const auto& n_ : neighbors) {
+            [[maybe_unused]] const auto& parameters = n_["neighbor"];
             NeighborEntry ne;
             ne.m_portId = linkName;
 
-            if (const char* system_name = nullptr; sd_lldp_neighbor_get_system_name(n.get(), &system_name) >= 0) {
-                ne.m_properties["remoteSysName"] = system_name;
+            if (auto it = parameters.find("chassisId"); it != parameters.end()) {
+                ne.m_properties["remoteChassisId"] = *it;
             }
-            if (const char* port_id = nullptr; sd_lldp_neighbor_get_port_id_as_string(n.get(), &port_id) >= 0) {
-                ne.m_properties["remotePortId"] = port_id;
+            if (auto it = parameters.find("portId"); it != parameters.end()) {
+                ne.m_properties["remotePortId"] = *it;
             }
-            if (const char* chassis_id = nullptr; sd_lldp_neighbor_get_chassis_id_as_string(n.get(), &chassis_id) >= 0) {
-                ne.m_properties["remoteChassisId"] = chassis_id;
+            if (auto it = parameters.find("systemName"); it != parameters.end()) {
+                ne.m_properties["remoteSysName"] = *it;
             }
-            if (ether_addr* addr = nullptr; sd_lldp_neighbor_get_destination_address(n.get(), addr) >= 0) {
-                ne.m_properties["remoteMgmtAddress"] = ether_ntoa(addr);
-            }
-
-            if (uint16_t cap = 0; sd_lldp_neighbor_get_system_capabilities(n.get(), &cap) >= 0) {
-                ne.m_properties["systemCapabilitiesSupported"] = toBitsYANG(cap);
+            if (auto it = parameters.find("enabledCapabilities"); it != parameters.end()) {
+                ne.m_properties["systemCapabilitiesEnabled"] = toBitsYANG(*it);
             }
 
-            if (uint16_t cap = 0; sd_lldp_neighbor_get_enabled_capabilities(n.get(), &cap) >= 0) {
-                ne.m_properties["systemCapabilitiesEnabled"] = toBitsYANG(cap);
-            }
-
-            m_log->trace("  found neighbor {}", ne);
+            m_log->trace("Found LLDP neighbor {}", ne);
             res.push_back(ne);
         }
     }
@@ -196,7 +110,7 @@ std::ostream& operator<<(std::ostream& os, const NeighborEntry& entry)
         os << it->first << ": " << it->second;
     }
 
-    return os << "}";
+    return os << "})";
 }
 
 }

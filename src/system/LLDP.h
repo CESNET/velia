@@ -7,13 +7,10 @@
 
 #pragma once
 
-#include <filesystem>
-#include <fstream>
+#include <functional>
 #include <map>
-#include <sdbus-c++/sdbus-c++.h>
 #include <spdlog/fmt/ostr.h> // allow spdlog to use operator<<(ostream, NeighborEntry)
 #include <string>
-#include <systemd/sd-lldp.h>
 #include <vector>
 #include "utils/log-fwd.h"
 
@@ -27,13 +24,12 @@ std::ostream& operator<<(std::ostream& os, const NeighborEntry& entry);
 
 class LLDPDataProvider {
 public:
-    LLDPDataProvider(std::filesystem::path dataDirectory, sdbus::IConnection& dbusConnection, const std::string& dbusNetworkdBus);
+    explicit LLDPDataProvider(std::function<std::string()> dataCallback);
     std::vector<NeighborEntry> getNeighbors() const;
 
 private:
     velia::Log m_log;
-    std::filesystem::path m_dataDirectory;
-    std::unique_ptr<sdbus::IProxy> m_networkdDbusProxy;
+    std::function<std::string()> m_dataCallback;
 };
 
 }

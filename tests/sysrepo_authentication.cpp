@@ -127,6 +127,19 @@ TEST_CASE("Authentication")
 
         SECTION("add a key")
         {
+            SECTION("keyfile directory does not exist")
+            {
+                removeDirectoryTreeIfExists(testDir / "authorized_keys");
+                expectedContents = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDCiBEDq8VmzBcJ23q/5GjUy8Hc18Ib20cxGEdI8McjN66eeCPc8tkeji6KT1mx15UmaJ1y+8S8cPxKi2ycdUyFpuXijDkgpuwbd3XYsOQQvMarNhyzEP7SoK5xhMy0Rcgw0Ep57JMDCEaO/V7+4lK4Mu1e+e+CyR5gVg5anGnROlRElr7h18fqCMf1JNW1tZcK5xyfUqYqnkCMKrjIFCOKqZlSo1UVJaKgWNvMx+snrBAsCUvK4N7uKniDMGt4foJBfSNQ60T1UWREbeK5B/dRnmuWJB2P43oWZB0aeEbiBpM/kGh6TE22SmTutpAk/bsgfGd6TKyOuyhkyjITbixo3F5QJ7an8LtF4Uau8CLCs14lRORBeI7a5RpZnfD/TJJ+OvpDm1LKJO3ZlILO0achrkUT1O2urM4tc6O7Fik2QjGUC9QkL4AHXIDDGjpg1or56zoR8W9Tmng6/2+8SGm4n/qxtfoifYyxqPJVUya0zwmAjkoyofoyBtrktzlH4qk= comment\n";
+
+            }
+
+            SECTION("keyfile directory exists")
+            {
+                expectedContents = "ssh-rsa SOME_KEY comment\n"
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDCiBEDq8VmzBcJ23q/5GjUy8Hc18Ib20cxGEdI8McjN66eeCPc8tkeji6KT1mx15UmaJ1y+8S8cPxKi2ycdUyFpuXijDkgpuwbd3XYsOQQvMarNhyzEP7SoK5xhMy0Rcgw0Ep57JMDCEaO/V7+4lK4Mu1e+e+CyR5gVg5anGnROlRElr7h18fqCMf1JNW1tZcK5xyfUqYqnkCMKrjIFCOKqZlSo1UVJaKgWNvMx+snrBAsCUvK4N7uKniDMGt4foJBfSNQ60T1UWREbeK5B/dRnmuWJB2P43oWZB0aeEbiBpM/kGh6TE22SmTutpAk/bsgfGd6TKyOuyhkyjITbixo3F5QJ7an8LtF4Uau8CLCs14lRORBeI7a5RpZnfD/TJJ+OvpDm1LKJO3ZlILO0achrkUT1O2urM4tc6O7Fik2QjGUC9QkL4AHXIDDGjpg1or56zoR8W9Tmng6/2+8SGm4n/qxtfoifYyxqPJVUya0zwmAjkoyofoyBtrktzlH4qk= comment\n";
+            }
+
             rpcPath = "/czechlight-system:authentication/users[name='root']/add-authorized-key";
 
             expected = {
@@ -136,8 +149,6 @@ TEST_CASE("Authentication")
                 {"key", "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDCiBEDq8VmzBcJ23q/5GjUy8Hc18Ib20cxGEdI8McjN66eeCPc8tkeji6KT1mx15UmaJ1y+8S8cPxKi2ycdUyFpuXijDkgpuwbd3XYsOQQvMarNhyzEP7SoK5xhMy0Rcgw0Ep57JMDCEaO/V7+4lK4Mu1e+e+CyR5gVg5anGnROlRElr7h18fqCMf1JNW1tZcK5xyfUqYqnkCMKrjIFCOKqZlSo1UVJaKgWNvMx+snrBAsCUvK4N7uKniDMGt4foJBfSNQ60T1UWREbeK5B/dRnmuWJB2P43oWZB0aeEbiBpM/kGh6TE22SmTutpAk/bsgfGd6TKyOuyhkyjITbixo3F5QJ7an8LtF4Uau8CLCs14lRORBeI7a5RpZnfD/TJJ+OvpDm1LKJO3ZlILO0achrkUT1O2urM4tc6O7Fik2QjGUC9QkL4AHXIDDGjpg1or56zoR8W9Tmng6/2+8SGm4n/qxtfoifYyxqPJVUya0zwmAjkoyofoyBtrktzlH4qk= comment"}
             };
 
-            expectedContents = "ssh-rsa SOME_KEY comment\n"
-                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDCiBEDq8VmzBcJ23q/5GjUy8Hc18Ib20cxGEdI8McjN66eeCPc8tkeji6KT1mx15UmaJ1y+8S8cPxKi2ycdUyFpuXijDkgpuwbd3XYsOQQvMarNhyzEP7SoK5xhMy0Rcgw0Ep57JMDCEaO/V7+4lK4Mu1e+e+CyR5gVg5anGnROlRElr7h18fqCMf1JNW1tZcK5xyfUqYqnkCMKrjIFCOKqZlSo1UVJaKgWNvMx+snrBAsCUvK4N7uKniDMGt4foJBfSNQ60T1UWREbeK5B/dRnmuWJB2P43oWZB0aeEbiBpM/kGh6TE22SmTutpAk/bsgfGd6TKyOuyhkyjITbixo3F5QJ7an8LtF4Uau8CLCs14lRORBeI7a5RpZnfD/TJJ+OvpDm1LKJO3ZlILO0achrkUT1O2urM4tc6O7Fik2QjGUC9QkL4AHXIDDGjpg1or56zoR8W9Tmng6/2+8SGm4n/qxtfoifYyxqPJVUya0zwmAjkoyofoyBtrktzlH4qk= comment\n";
 
             fileToCheck = testDir / "authorized_keys/root";
 

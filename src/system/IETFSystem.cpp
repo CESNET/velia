@@ -61,15 +61,14 @@ std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path
     return res;
 }
 
-std::optional<std::string> getHostnameFromChange(const std::shared_ptr<sysrepo::Session> session)
+std::optional<std::string> getHostnameFromChange(const sysrepo::Session session)
 {
     std::optional<std::string> res;
 
-    auto data = session->get_data(IETF_SYSTEM_HOSTNAME_PATH);
+    auto data = session.getData(IETF_SYSTEM_HOSTNAME_PATH);
     if (data) {
-        auto hostnameNode = data->find_path(IETF_SYSTEM_HOSTNAME_PATH)->data().front();
-        auto leaf = std::make_shared<libyang::Data_Node_Leaf_List>(hostnameNode);
-        res = leaf->value_str();
+        auto hostnameNode = data->findPath(IETF_SYSTEM_HOSTNAME_PATH);
+        res = hostnameNode->asTerm().valueStr();
     }
 
     return res;
@@ -133,44 +132,54 @@ void IETFSystem::initStaticProperties(const std::filesystem::path& osRelease)
         {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-version", osReleaseContents.at("VERSION")},
     };
 
-    utils::valuesPush(opsSystemStateData, {}, m_srSession, SR_DS_OPERATIONAL);
+    utils::valuesPush(opsSystemStateData, {}, m_srSession, sysrepo::Datastore::Operational);
 }
 
 void IETFSystem::initSystemRestart()
 {
-    m_srSubscribe->rpc_subscribe(
-        ("/" + IETF_SYSTEM_MODULE_NAME + ":system-restart").c_str(),
-        [this](::sysrepo::S_Session session, [[maybe_unused]] const char* op_path, [[maybe_unused]] const ::sysrepo::S_Vals input, [[maybe_unused]] sr_event_t event, [[maybe_unused]] uint32_t request_id, [[maybe_unused]] ::sysrepo::S_Vals_Holder output) {
+    sysrepo::RpcActionCb cb = [this](auto session, auto, auto, auto, auto, auto, auto) {
             try {
                 velia::utils::execAndWait(m_log, SYSTEMCTL_EXECUTABLE, {"reboot"}, "", {});
             } catch(const std::runtime_error& e) {
-                session->set_error("Reboot procedure failed.", nullptr);
-                return SR_ERR_OPERATION_FAILED;
+                constexpr auto errMessage = "Reboot procedure failed.";
+                if (session.getOriginatorName() == "NETCONF") {
+                    session.setNetconfError(sysrepo::NetconfErrorInfo{
+                        .type = "application",
+                        .tag = "operation-failed",
+                        .appTag = {},
+                        .path = {},
+                        .message = errMessage,
+                        .infoElements = {},
+                    });
+                } else {
+                    session.setErrorMessage(errMessage);
+                }
+                return sysrepo::ErrorCode::OperationFailed;
             }
 
-            return SR_ERR_OK;
-        },
-        0,
-        SR_SUBSCR_CTX_REUSE);
+            return sysrepo::ErrorCode::Ok;
+        };
+
+    m_srSubscribe = m_srSession.onRPCAction(("/" + IETF_SYSTEM_MODULE_NAME + ":system-restart").c_str(), cb);
 }
 
 void IETFSystem::initHostname()
 {
-    sysrepo::ModuleChangeCb hostNameCbRunning = [this] (auto session, auto, auto, auto, auto) {
+    sysrepo::ModuleChangeCb hostNameCbRunning = [this] (auto session, auto, auto, auto, auto, auto) {
         if (auto newHostname = getHostnameFromChange(session)) {
             velia::utils::execAndWait(m_log, HOSTNAMECTL_EXECUTABLE, {"set-hostname", *newHostname}, "");
         }
-        return SR_ERR_OK;
+        return sysrepo::ErrorCode::Ok;
     };
 
-    sysrepo::ModuleChangeCb hostNameCbStartup = [] (auto session, auto, auto, auto, auto) {
+    sysrepo::ModuleChangeCb hostNameCbStartup = [] (auto session, auto, auto, auto, auto, auto) {
         if (auto newHostname = getHostnameFromChange(session)) {
             utils::safeWriteFile(BACKUP_ETC_HOSTNAME_FILE, *newHostname);
         }
-        return SR_ERR_OK;
+        return sysrepo::ErrorCode::Ok;
     };
 
-    sysrepo::OperGetItemsCb hostNameCbOperational = [] (auto session, auto, auto, auto, auto, auto& parent) {
+    sysrepo::OperGetCb hostNameCbOperational = [] (auto, auto, auto, auto, auto, auto, auto& parent) {
         // + 1 for null-terminating byte, HOST_NAME_MAX doesn't count that
         std::array<char, HOST_NAME_MAX + 1> buffer{};
 
@@ -178,54 +187,44 @@ void IETFSystem::initHostname()
             throw std::system_error(errno, std::system_category(), "gethostname() failed");
         }
 
-        parent->new_path(
-            session->get_context(),
-            IETF_SYSTEM_HOSTNAME_PATH,
-            buffer.data(),
-            LYD_ANYDATA_CONSTSTRING,
-            0);
+        parent->newPath( IETF_SYSTEM_HOSTNAME_PATH, buffer.data());
 
-        return SR_ERR_OK;
+        return sysrepo::ErrorCode::Ok;
     };
 
-    m_srSubscribe->module_change_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbRunning, IETF_SYSTEM_HOSTNAME_PATH, 0, SR_SUBSCR_DONE_ONLY);
-    m_srSession->session_switch_ds(SR_DS_STARTUP);
-    m_srSubscribe->module_change_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbStartup, IETF_SYSTEM_HOSTNAME_PATH, 0, SR_SUBSCR_DONE_ONLY);
-    m_srSession->session_switch_ds(SR_DS_OPERATIONAL);
-    m_srSubscribe->oper_get_items_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbOperational, IETF_SYSTEM_HOSTNAME_PATH);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbRunning, IETF_SYSTEM_HOSTNAME_PATH);
+    m_srSession.switchDatastore(sysrepo::Datastore::Startup);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbStartup, IETF_SYSTEM_HOSTNAME_PATH);
+    m_srSession.switchDatastore(sysrepo::Datastore::Operational);
+    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbOperational, IETF_SYSTEM_HOSTNAME_PATH);
 }
 
 /** @short Acknowledge writes to dummy fields so that they're visible in the operational DS */
 void IETFSystem::initDummies()
 {
-    m_srSession->session_switch_ds(SR_DS_RUNNING);
-    auto ignore = [] (auto, auto, auto, auto, auto) {
-        return SR_ERR_OK;
+    m_srSession.switchDatastore(sysrepo::Datastore::Running);
+    sysrepo::ModuleChangeCb ignore = [] (auto, auto, auto, auto, auto, auto) {
+        return sysrepo::ErrorCode::Ok;
     };
     for (const auto xpath : {"/ietf-system:system/location", "/ietf-system:system/contact"}) {
-        m_srSubscribe->module_change_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), ignore, xpath, 0, SR_SUBSCR_CTX_REUSE | SR_SUBSCR_DONE_ONLY);
+        m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME.c_str(), ignore, xpath, 0, sysrepo::SubscribeOptions::DoneOnly);
     }
 }
 
 /** @short Time and clock callbacks */
 void IETFSystem::initClock()
 {
-    m_srSubscribe->oper_get_items_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(),
-            [] (auto session, auto, auto, auto, auto, auto& parent) {
-                parent->new_path(session->get_context(),
-                        (IETF_SYSTEM_STATE_CLOCK_PATH + "/current-datetime"s).c_str(),
-                        utils::yangTimeFormat(std::chrono::system_clock::now()).c_str(),
-                        LYD_ANYDATA_CONSTSTRING,
-                        0);
-                return SR_ERR_OK;
-            },
-            IETF_SYSTEM_STATE_CLOCK_PATH,
-            SR_SUBSCR_OPER_MERGE);
+    sysrepo::OperGetCb cb = [] (auto, auto, auto, auto, auto, auto, auto& parent) {
+        parent->newPath((IETF_SYSTEM_STATE_CLOCK_PATH + "/current-datetime"s).c_str(), utils::yangTimeFormat(std::chrono::system_clock::now()).c_str());
+        return sysrepo::ErrorCode::Ok;
+    };
+
+    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME.c_str(), cb, IETF_SYSTEM_STATE_CLOCK_PATH, sysrepo::SubscribeOptions::OperMerge);
 }
 
 /** @short DNS resolver callbacks */
 void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbusName) {
-    sysrepo::OperGetItemsCb dnsOper = [&connection, dbusName] (auto session, auto, auto, auto, auto, auto& parent) {
+    sysrepo::OperGetCb dnsOper = [&connection, dbusName] (auto session, auto, auto, auto, auto, auto, auto& parent) {
         std::map<std::string, std::string> values;
 
         /* RFC 7317 specifies that key leaf 'name' contains "An arbitrary name for the DNS server".
@@ -236,10 +235,10 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
         }
 
         utils::valuesToYang(values, {}, session, parent);
-        return SR_ERR_OK;
+        return sysrepo::ErrorCode::Ok;
     };
 
-    m_srSubscribe->oper_get_items_subscribe(IETF_SYSTEM_MODULE_NAME.c_str(), dnsOper, IETF_SYSTEM_DNS_PATH);
+    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME.c_str(), dnsOper, IETF_SYSTEM_DNS_PATH);
 }
 
 /** This class handles multiple system properties and publishes them via the ietf-system model:
@@ -247,9 +246,9 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
  * - Rebooting
  * - Hostname
  */
-IETFSystem::IETFSystem(std::shared_ptr<::sysrepo::Session> srSession, const std::filesystem::path& osRelease, sdbus::IConnection& connection, const std::string& dbusName)
-    : m_srSession(std::move(srSession))
-    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+IETFSystem::IETFSystem(::sysrepo::Session srSession, const std::filesystem::path& osRelease, sdbus::IConnection& connection, const std::string& dbusName)
+    : m_srSession(srSession)
+    , m_srSubscribe()
     , m_log(spdlog::get("system"))
 {
     initStaticProperties(osRelease);

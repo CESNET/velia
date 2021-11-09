@@ -218,30 +218,31 @@ TEST_CASE("HardwareState")
         TEST_SYSREPO_INIT;
         TEST_SYSREPO_INIT_CLIENT;
 
-        auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSubs, ietfHardware);
+        auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSess, ietfHardware);
 
         SECTION("test last-change")
         {
             // at least check that there is some timestamp
-            REQUIRE(dataFromSysrepo(client, modulePrefix, SR_DS_OPERATIONAL).count("/last-change") > 0);
+            REQUIRE(dataFromSysrepo(client, modulePrefix, sysrepo::Datastore::Operational).count("/last-change") > 0);
         }
 
         SECTION("test components")
         {
             std::map<std::string, std::string> expected = {
+                {"[name='ne']", ""},
                 {"[name='ne']/name", "ne"},
                 {"[name='ne']/class", "iana-hardware:chassis"},
                 {"[name='ne']/mfg-name", "CESNET"},
-                {"[name='ne']/sensor-data", ""},
 
+                {"[name='ne:fans']", ""},
                 {"[name='ne:fans']/class", "iana-hardware:module"},
                 {"[name='ne:fans']/name", "ne:fans"},
                 {"[name='ne:fans']/parent", "ne"},
-                {"[name='ne:fans']/sensor-data", ""},
+                {"[name='ne:fans:fan1']", ""},
                 {"[name='ne:fans:fan1']/class", "iana-hardware:fan"},
                 {"[name='ne:fans:fan1']/name", "ne:fans:fan1"},
                 {"[name='ne:fans:fan1']/parent", "ne:fans"},
-                {"[name='ne:fans:fan1']/sensor-data", ""},
+                {"[name='ne:fans:fan1:rpm']", ""},
                 {"[name='ne:fans:fan1:rpm']/class", "iana-hardware:sensor"},
                 {"[name='ne:fans:fan1:rpm']/name", "ne:fans:fan1:rpm"},
                 {"[name='ne:fans:fan1:rpm']/parent", "ne:fans:fan1"},
@@ -251,10 +252,11 @@ TEST_CASE("HardwareState")
                 {"[name='ne:fans:fan1:rpm']/sensor-data/value-precision", "0"},
                 {"[name='ne:fans:fan1:rpm']/sensor-data/value-scale", "units"},
                 {"[name='ne:fans:fan1:rpm']/sensor-data/value-type", "rpm"},
+                {"[name='ne:fans:fan2']", ""},
                 {"[name='ne:fans:fan2']/class", "iana-hardware:fan"},
                 {"[name='ne:fans:fan2']/name", "ne:fans:fan2"},
                 {"[name='ne:fans:fan2']/parent", "ne:fans"},
-                {"[name='ne:fans:fan2']/sensor-data", ""},
+                {"[name='ne:fans:fan2:rpm']", ""},
                 {"[name='ne:fans:fan2:rpm']/class", "iana-hardware:sensor"},
                 {"[name='ne:fans:fan2:rpm']/name", "ne:fans:fan2:rpm"},
                 {"[name='ne:fans:fan2:rpm']/parent", "ne:fans:fan2"},
@@ -264,10 +266,11 @@ TEST_CASE("HardwareState")
                 {"[name='ne:fans:fan2:rpm']/sensor-data/value-precision", "0"},
                 {"[name='ne:fans:fan2:rpm']/sensor-data/value-scale", "units"},
                 {"[name='ne:fans:fan2:rpm']/sensor-data/value-type", "rpm"},
+                {"[name='ne:fans:fan3']", ""},
                 {"[name='ne:fans:fan3']/class", "iana-hardware:fan"},
                 {"[name='ne:fans:fan3']/name", "ne:fans:fan3"},
                 {"[name='ne:fans:fan3']/parent", "ne:fans"},
-                {"[name='ne:fans:fan3']/sensor-data", ""},
+                {"[name='ne:fans:fan3:rpm']", ""},
                 {"[name='ne:fans:fan3:rpm']/class", "iana-hardware:sensor"},
                 {"[name='ne:fans:fan3:rpm']/name", "ne:fans:fan3:rpm"},
                 {"[name='ne:fans:fan3:rpm']/parent", "ne:fans:fan3"},
@@ -277,10 +280,11 @@ TEST_CASE("HardwareState")
                 {"[name='ne:fans:fan3:rpm']/sensor-data/value-precision", "0"},
                 {"[name='ne:fans:fan3:rpm']/sensor-data/value-scale", "units"},
                 {"[name='ne:fans:fan3:rpm']/sensor-data/value-type", "rpm"},
+                {"[name='ne:fans:fan4']", ""},
                 {"[name='ne:fans:fan4']/class", "iana-hardware:fan"},
                 {"[name='ne:fans:fan4']/name", "ne:fans:fan4"},
                 {"[name='ne:fans:fan4']/parent", "ne:fans"},
-                {"[name='ne:fans:fan4']/sensor-data", ""},
+                {"[name='ne:fans:fan4:rpm']", ""},
                 {"[name='ne:fans:fan4:rpm']/class", "iana-hardware:sensor"},
                 {"[name='ne:fans:fan4:rpm']/name", "ne:fans:fan4:rpm"},
                 {"[name='ne:fans:fan4:rpm']/parent", "ne:fans:fan4"},
@@ -291,11 +295,12 @@ TEST_CASE("HardwareState")
                 {"[name='ne:fans:fan4:rpm']/sensor-data/value-scale", "units"},
                 {"[name='ne:fans:fan4:rpm']/sensor-data/value-type", "rpm"},
 
+                {"[name='ne:ctrl']", ""},
                 {"[name='ne:ctrl']/name", "ne:ctrl"},
                 {"[name='ne:ctrl']/parent", "ne"},
                 {"[name='ne:ctrl']/class", "iana-hardware:module"},
-                {"[name='ne:ctrl']/sensor-data", ""},
 
+                {"[name='ne:ctrl:temperature-cpu']", ""},
                 {"[name='ne:ctrl:temperature-cpu']/name", "ne:ctrl:temperature-cpu"},
                 {"[name='ne:ctrl:temperature-cpu']/class", "iana-hardware:sensor"},
                 {"[name='ne:ctrl:temperature-cpu']/parent", "ne:ctrl"},
@@ -305,6 +310,7 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:temperature-cpu']/sensor-data/value-precision", "0"},
                 {"[name='ne:ctrl:temperature-cpu']/sensor-data/value-scale", "milli"},
                 {"[name='ne:ctrl:temperature-cpu']/sensor-data/value-type", "celsius"},
+                {"[name='ne:ctrl:temperature-front']", ""},
                 {"[name='ne:ctrl:temperature-front']/name", "ne:ctrl:temperature-front"},
                 {"[name='ne:ctrl:temperature-front']/class", "iana-hardware:sensor"},
                 {"[name='ne:ctrl:temperature-front']/parent", "ne:ctrl"},
@@ -314,6 +320,7 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:temperature-front']/sensor-data/value-precision", "0"},
                 {"[name='ne:ctrl:temperature-front']/sensor-data/value-scale", "milli"},
                 {"[name='ne:ctrl:temperature-front']/sensor-data/value-type", "celsius"},
+                {"[name='ne:ctrl:temperature-internal-0']", ""},
                 {"[name='ne:ctrl:temperature-internal-0']/name", "ne:ctrl:temperature-internal-0"},
                 {"[name='ne:ctrl:temperature-internal-0']/class", "iana-hardware:sensor"},
                 {"[name='ne:ctrl:temperature-internal-0']/parent", "ne:ctrl"},
@@ -323,6 +330,7 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:temperature-internal-0']/sensor-data/value-precision", "0"},
                 {"[name='ne:ctrl:temperature-internal-0']/sensor-data/value-scale", "milli"},
                 {"[name='ne:ctrl:temperature-internal-0']/sensor-data/value-type", "celsius"},
+                {"[name='ne:ctrl:temperature-internal-1']", ""},
                 {"[name='ne:ctrl:temperature-internal-1']/name", "ne:ctrl:temperature-internal-1"},
                 {"[name='ne:ctrl:temperature-internal-1']/class", "iana-hardware:sensor"},
                 {"[name='ne:ctrl:temperature-internal-1']/parent", "ne:ctrl"},
@@ -333,6 +341,7 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-scale", "milli"},
                 {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-type", "celsius"},
 
+                {"[name='ne:ctrl:power']", ""},
                 {"[name='ne:ctrl:power']/name", "ne:ctrl:power"},
                 {"[name='ne:ctrl:power']/class", "iana-hardware:sensor"},
                 {"[name='ne:ctrl:power']/parent", "ne:ctrl"},
@@ -343,6 +352,7 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:power']/sensor-data/value-scale", "micro"},
                 {"[name='ne:ctrl:power']/sensor-data/value-type", "watts"},
 
+                {"[name='ne:ctrl:voltage-in']", ""},
                 {"[name='ne:ctrl:voltage-in']/name", "ne:ctrl:voltage-in"},
                 {"[name='ne:ctrl:voltage-in']/class", "iana-hardware:sensor"},
                 {"[name='ne:ctrl:voltage-in']/parent", "ne:ctrl"},
@@ -352,6 +362,7 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:voltage-in']/sensor-data/value-precision", "0"},
                 {"[name='ne:ctrl:voltage-in']/sensor-data/value-scale", "micro"},
                 {"[name='ne:ctrl:voltage-in']/sensor-data/value-type", "volts-AC"},
+                {"[name='ne:ctrl:voltage-out']", ""},
                 {"[name='ne:ctrl:voltage-out']/name", "ne:ctrl:voltage-out"},
                 {"[name='ne:ctrl:voltage-out']/class", "iana-hardware:sensor"},
                 {"[name='ne:ctrl:voltage-out']/parent", "ne:ctrl"},
@@ -362,6 +373,7 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:voltage-out']/sensor-data/value-scale", "micro"},
                 {"[name='ne:ctrl:voltage-out']/sensor-data/value-type", "volts-DC"},
 
+                {"[name='ne:ctrl:current']", ""},
                 {"[name='ne:ctrl:current']/name", "ne:ctrl:current"},
                 {"[name='ne:ctrl:current']/class", "iana-hardware:sensor"},
                 {"[name='ne:ctrl:current']/parent", "ne:ctrl"},
@@ -372,13 +384,14 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:current']/sensor-data/value-scale", "milli"},
                 {"[name='ne:ctrl:current']/sensor-data/value-type", "amperes"},
 
+                {"[name='ne:ctrl:emmc']", ""},
                 {"[name='ne:ctrl:emmc']/name", "ne:ctrl:emmc"},
                 {"[name='ne:ctrl:emmc']/parent", "ne:ctrl"},
                 {"[name='ne:ctrl:emmc']/class", "iana-hardware:module"},
                 {"[name='ne:ctrl:emmc']/serial-num", "0x00a8808d"},
                 {"[name='ne:ctrl:emmc']/mfg-date", "2017-02-01T00:00:00-00:00"},
                 {"[name='ne:ctrl:emmc']/model-name", "8GME4R"},
-                {"[name='ne:ctrl:emmc']/sensor-data", ""},
+                {"[name='ne:ctrl:emmc:lifetime']", ""},
                 {"[name='ne:ctrl:emmc:lifetime']/name", "ne:ctrl:emmc:lifetime"},
                 {"[name='ne:ctrl:emmc:lifetime']/class", "iana-hardware:sensor"},
                 {"[name='ne:ctrl:emmc:lifetime']/parent", "ne:ctrl:emmc"},
@@ -391,17 +404,17 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:emmc:lifetime']/sensor-data/units-display", "percent"},
             };
 
-            REQUIRE(dataFromSysrepo(client, modulePrefix + "/component", SR_DS_OPERATIONAL) == expected);
+            REQUIRE(dataFromSysrepo(client, modulePrefix + "/component", sysrepo::Datastore::Operational) == expected);
         }
 
         SECTION("test leafnode query")
         {
             const auto xpath = modulePrefix + "/component[name='ne:ctrl:emmc:lifetime']/class";
-            client->session_switch_ds(SR_DS_OPERATIONAL);
-            auto val = client->get_item(xpath.c_str());
-            client->session_switch_ds(SR_DS_RUNNING);
-            REQUIRE(!!val);
-            REQUIRE(val->data()->get_identityref() == "iana-hardware:sensor"s);
+            client.switchDatastore(sysrepo::Datastore::Operational);
+            auto val = client.getData(xpath.c_str());
+            client.switchDatastore(sysrepo::Datastore::Running);
+            REQUIRE(val);
+            REQUIRE(val->findPath(xpath.c_str())->asTerm().valueStr() == "iana-hardware:sensor"s);
         }
     }
 }

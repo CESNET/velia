@@ -1,5 +1,6 @@
 #include "trompeloeil_doctest.h"
 #include <sysrepo-cpp/Connection.hpp>
+#include "pretty_printers.h"
 #include "system/LLDP.h"
 #include "system/LLDPCallback.h"
 #include "test_log_setup.h"
@@ -74,8 +75,8 @@ TEST_CASE("Sysrepo opsdata callback")
     }
 
     auto lldp = std::make_shared<velia::system::LLDPDataProvider>([&]() { return json; });
-    srSubs->oper_get_items_subscribe("czechlight-lldp", velia::system::LLDPCallback(lldp), "/czechlight-lldp:nbr-list");
+    auto sub = srSess.onOperGet("czechlight-lldp", velia::system::LLDPCallback(lldp), "/czechlight-lldp:nbr-list");
 
-    client->session_switch_ds(SR_DS_OPERATIONAL);
+    client.switchDatastore(sysrepo::Datastore::Operational);
     REQUIRE(dataFromSysrepo(client, "/czechlight-lldp:nbr-list") == expected);
 }

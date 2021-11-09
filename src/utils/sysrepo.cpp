@@ -64,114 +64,98 @@ void initLogsSysrepo()
     sr_log_set_cb(spdlog_sr_log_cb);
 }
 
-void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)
+void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, ::sysrepo::Session session, libyang::DataNode& parent)
 {
     valuesToYang(mapToVector(values), removePaths, std::move(session), parent);
 }
 
-void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, std::shared_ptr<libyang::Data_Node>& parent)
+void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent)
 {
-    auto netconf = session->get_context()->get_module("ietf-netconf");
+    auto netconf = session.getContext().getModuleImplemented("ietf-netconf");
     auto log = spdlog::get("main");
 
     for (const auto& propertyName : removePaths) {
         log->trace("Processing node deletion {}", propertyName);
 
         if (!parent) {
-            parent = std::make_shared<libyang::Data_Node>(
-                session->get_context(),
-                propertyName.c_str(),
-                nullptr,
-                LYD_ANYDATA_CONSTSTRING,
-                LYD_PATH_OPT_EDIT);
+            parent = session.getContext().newPath(propertyName.c_str(), nullptr, libyang::CreationOptions::Opaque);
         } else {
-            parent->new_path(
-                session->get_context(),
-                propertyName.c_str(),
-                nullptr,
-                LYD_ANYDATA_CONSTSTRING,
-                LYD_PATH_OPT_EDIT);
+            parent->newPath(propertyName.c_str(), nullptr);
         }
 
-        auto deletion = parent->find_path(propertyName.c_str());
-        if (deletion->number() != 1) {
+        auto deletion = parent->findPath(propertyName.c_str());
+        if (!deletion) {
             throw std::logic_error {"Cannot find XPath " + propertyName + " for deletion in libyang's new_path() output"};
         }
-        deletion->data()[0]->insert_attr(netconf, "operation", "remove");
+        deletion->newMeta(*netconf, "operation", "remove");
     }
 
     for (const auto& [propertyName, value] : values) {
         log->trace("Processing node update {} -> {}", propertyName, value);
 
         if (!parent) {
-            parent = std::make_shared<libyang::Data_Node>(
-                session->get_context(),
-                propertyName.c_str(),
-                value.c_str(),
-                LYD_ANYDATA_CONSTSTRING,
-                LYD_PATH_OPT_OUTPUT);
+            parent = session.getContext().newPath(propertyName.c_str(), value.c_str(), libyang::CreationOptions::Output);
         } else {
-            parent->new_path(
-                session->get_context(),
-                propertyName.c_str(),
-                value.c_str(),
-                LYD_ANYDATA_CONSTSTRING,
-                LYD_PATH_OPT_OUTPUT);
+            parent->newPath(propertyName.c_str(), value.c_str(), libyang::CreationOptions::Output);
         }
     }
 }
 
 /** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
-void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore)
+void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, ::sysrepo::Session session, sysrepo::Datastore datastore)
 {
-    sr_datastore_t oldDatastore = session->session_get_ds();
-    session->session_switch_ds(datastore);
+    auto oldDatastore = session.activeDatastore();
+    session.switchDatastore(datastore);
 
     valuesPush(values, removePaths, session);
 
-    session->session_switch_ds(oldDatastore);
+    session.switchDatastore(oldDatastore);
 }
 
 /** @brief Set or remove paths in Sysrepo's current datastore. */
-void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session)
+void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, ::sysrepo::Session session)
 {
     if (values.empty() && removePaths.empty()) return;
 
-    libyang::S_Data_Node edit;
+    std::optional<libyang::DataNode> edit;
     valuesToYang(values, removePaths, session, edit);
 
-    session->edit_batch(edit, "merge");
-    session->apply_changes();
+    if (edit) {
+        session.editBatch(*edit, sysrepo::DefaultOperation::Merge);
+        session.applyChanges();
+    }
 }
 
 /** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
-void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session, sr_datastore_t datastore)
+void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, sysrepo::Session session, sysrepo::Datastore datastore)
 {
-    sr_datastore_t oldDatastore = session->session_get_ds();
-    session->session_switch_ds(datastore);
+    auto oldDatastore = session.activeDatastore();
+    session.switchDatastore(datastore);
 
     valuesPush(values, removePaths, session);
 
-    session->session_switch_ds(oldDatastore);
+    session.switchDatastore(oldDatastore);
 }
 
 /** @brief Set or remove paths in Sysrepo's current datastore. */
-void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, std::shared_ptr<::sysrepo::Session> session)
+void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, sysrepo::Session session)
 {
     if (values.empty() && removePaths.empty())
         return;
 
-    libyang::S_Data_Node edit;
+    std::optional<libyang::DataNode> edit;
     valuesToYang(values, removePaths, session, edit);
 
-    session->edit_batch(edit, "merge");
-    session->apply_changes();
+    if (edit) {
+    session.editBatch(*edit, sysrepo::DefaultOperation::Merge);
+    session.applyChanges();
+    }
 }
 
 /** @brief Checks whether a module is implemented in Sysrepo and throws if not. */
 void ensureModuleImplemented(std::shared_ptr<::sysrepo::Session> session, const std::string& module, const std::string& revision)
 {
-    if (auto mod = session->get_context()->get_module(module.c_str(), revision.c_str()); !mod || !mod->implemented()) {
+    if (auto mod = session->getContext().getModule(module.c_str(), revision.c_str()); !mod || !mod->implemented()) {
         throw std::runtime_error(module + "@" + revision + " is not implemented in sysrepo.");
     }
 }

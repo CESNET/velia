@@ -24,19 +24,19 @@ TEST_CASE("Authentication")
 {
     FakeAuthentication mock;
     TEST_INIT_LOGS;
-    auto srConn = std::make_shared<sysrepo::Connection>();
+    auto srConn = sysrepo::Connection{};
     std::filesystem::path testDir = CMAKE_CURRENT_BINARY_DIR "/tests/authentication"s;
     removeDirectoryTreeIfExists(testDir);
     std::filesystem::create_directory(testDir);
     std::filesystem::create_directory(testDir / "authorized_keys");
-    auto srSess = std::make_shared<sysrepo::Session>(srConn);
+    auto srSess = srConn.sessionStart();
     std::string authorized_keys_format = testDir / "authorized_keys/{USER}";
     std::string etc_passwd = testDir / "etc_passwd";
     std::string etc_shadow = testDir / "etc_shadow";
     velia::system::Authentication auth(srSess, etc_passwd, etc_shadow, authorized_keys_format, [&mock] (const auto& user, const auto& password, const auto& etc_shadow) { mock.changePassword(user, password, etc_shadow); });
 
-    auto test_srConn = std::make_shared<sysrepo::Connection>();
-    auto test_srSess = std::make_shared<sysrepo::Session>(test_srConn, SR_DS_OPERATIONAL);
+    auto test_srConn = sysrepo::Connection{};
+    auto test_srSess = test_srConn.sessionStart(sysrepo::Datastore::Operational);
 
     FileInjector passwd(etc_passwd, std::filesystem::perms::owner_read,
         "root:x:0:0::/root:/bin/bash\n"
@@ -60,7 +60,6 @@ TEST_CASE("Authentication")
             {"[name='ci']/password-last-change", "2024-10-04T00:00:00-00:00"},
             {"[name='root']/name", "root"},
             {"[name='root']/password-last-change", "2020-09-09T00:00:00-00:00"},
-            {"[name='root']/authorized-keys[index='0']", ""},
             {"[name='root']/authorized-keys[index='0']/index", "0"},
             {"[name='root']/authorized-keys[index='0']/public-key", "ssh-rsa SOME_KEY comment"}
 

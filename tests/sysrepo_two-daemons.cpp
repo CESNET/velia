@@ -22,7 +22,7 @@ TEST_CASE("HardwareState with two daemons")
 
     SECTION("Test when both processes are running")
     {
-        srSess->session_switch_ds(SR_DS_OPERATIONAL);
+        srSess.switchDatastore(sysrepo::Datastore::Operational);
         REQUIRE(dataFromSysrepo(srSess, "/ietf-hardware:hardware") == std::map<std::string, std::string> {
                     {"/component[name='ne']", ""},
                     {"/component[name='ne']/name", "ne"},
@@ -38,6 +38,6 @@ TEST_CASE("HardwareState with two daemons")
                     {"/component[name='ne:ctrl']/class", "iana-hardware:module"},
                     {"/component[name='ne:ctrl']/sensor-data", ""},
                 });
-        srSess->session_switch_ds(SR_DS_RUNNING);
+        srSess.switchDatastore(sysrepo::Datastore::Running);
     }
 }

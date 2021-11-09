@@ -25,10 +25,10 @@ namespace velia::ietf_hardware::sysrepo {
  */
 class Sysrepo {
 public:
-    Sysrepo(std::shared_ptr<::sysrepo::Subscribe> srSubscribe, std::shared_ptr<IETFHardware> driver);
+    Sysrepo(::sysrepo::Subscription srSubscribe, std::shared_ptr<IETFHardware> driver);
 
 private:
     std::shared_ptr<IETFHardware> m_hwState;
-    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
+    ::sysrepo::Subscription m_srSubscribe;
 };
 }

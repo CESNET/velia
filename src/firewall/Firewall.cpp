@@ -18,12 +18,12 @@ namespace {
 const auto ietf_acl_module = "ietf-access-control-list"s;
 namespace nodepaths {
 const auto ace_comment = "/ietf-access-control-list:acls/acl/aces/ace/name";
-const auto ipv4_matches = "/ietf-access-control-list:acls/acl/aces/ace/matches/l3/ipv4/ipv4/source-network/source-ipv4-network/source-ipv4-network";
-const auto ipv6_matches = "/ietf-access-control-list:acls/acl/aces/ace/matches/l3/ipv6/ipv6/source-network/source-ipv6-network/source-ipv6-network";
+const auto ipv4_matches = "/ietf-access-control-list:acls/acl/aces/ace/matches/ipv4/source-ipv4-network";
+const auto ipv6_matches = "/ietf-access-control-list:acls/acl/aces/ace/matches/ipv6/source-ipv6-network";
 const auto action = "/ietf-access-control-list:acls/acl/aces/ace/actions/forwarding";
 }
 
-std::string generateNftConfig(velia::Log logger, const libyang::S_Data_Node& tree)
+std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree)
 {
     using namespace std::string_view_literals;
     std::ostringstream ss;
@@ -48,23 +48,23 @@ std::string generateNftConfig(velia::Log logger, const libyang::S_Data_Node& tre
         // These are ignored, because they do not give any meaningful information. They are mostly containers.
         "/ietf-access-control-list:acls/acl/aces/ace"sv,
         "/ietf-access-control-list:acls/acl/aces/ace/matches"sv,
-        "/ietf-access-control-list:acls/acl/aces/ace/matches/l3/ipv4/ipv4"sv,
-        "/ietf-access-control-list:acls/acl/aces/ace/matches/l3/ipv6/ipv6"sv,
+        "/ietf-access-control-list:acls/acl/aces/ace/matches/ipv4"sv,
+        "/ietf-access-control-list:acls/acl/aces/ace/matches/ipv6"sv,
         "/ietf-access-control-list:acls/acl/aces/ace/actions"sv,
     };
 
     logger->trace("traversing the tree");
     std::string comment;
     std::string match;
-    for (auto node : tree->tree_dfs()) {
-        auto nodeSchemaPath = node->schema()->path(LYS_PATH_FIRST_PREFIX);
+    for (auto node : tree.childrenDfs()) {
+        auto nodeSchemaPath = node.schema().path();
         if (std::any_of(skippedNodes.begin(), skippedNodes.end(), [&nodeSchemaPath] (const auto& skippedNode) { return nodeSchemaPath == skippedNode; })) {
-            logger->trace("skipping: {}", node->path());
+            logger->trace("skipping: {}", node.path().get().get());
             continue;
         }
 
-        logger->trace("processing node: data   {}", node->path());
-        logger->trace("                 schema {}", nodeSchemaPath);
+        logger->trace("processing node: data   {}", node.path().get().get());
+        logger->trace("                 schema {}", nodeSchemaPath.get().get());
         if (nodeSchemaPath == nodepaths::ace_comment) {
             // We will use the ACE name as a comment inside the rule. However, the comment must be at the end, so we
             // save it for later.
@@ -95,7 +95,7 @@ std::string generateNftConfig(velia::Log logger, const libyang::S_Data_Node& tre
             match = "";
             comment = "";
         } else {
-            throw std::logic_error("unsupported node: " + node->path());
+            throw std::logic_error("unsupported node: "s + node.path().get().get());
         }
     }
 
@@ -103,31 +103,25 @@ std::string generateNftConfig(velia::Log logger, const libyang::S_Data_Node& tre
 }
 }
 
-velia::firewall::SysrepoFirewall::SysrepoFirewall(sysrepo::S_Session srSess, NftConfigConsumer consumer)
-    : m_session(srSess)
-    , m_sub(std::make_shared<sysrepo::Subscribe>(srSess))
+velia::firewall::SysrepoFirewall::SysrepoFirewall(sysrepo::Session srSess, NftConfigConsumer consumer)
+    : m_sub()
     , m_log(spdlog::get("firewall"))
 {
-    auto lyCtx = m_session->get_context();
+    auto lyCtx = srSess.getContext();
     utils::ensureModuleImplemented(srSess, "ietf-access-control-list", "2019-03-04");
     utils::ensureModuleImplemented(srSess, "czechlight-firewall", "2021-01-25");
 
-    sysrepo::ModuleChangeCb cb = [logger = m_log, consumer = std::move(consumer)] (auto session, auto, auto, auto, auto) {
+    sysrepo::ModuleChangeCb cb = [logger = m_log, consumer = std::move(consumer)] (sysrepo::Session session, auto, auto, auto, auto, auto) {
         logger->debug("Applying new data from sysrepo");
-        auto data = session->get_data(("/" + (ietf_acl_module + ":*")).c_str());
-        // The data from sysrepo aren't guaranteed to be sorted according to the schema, but generateNftConfig depends
-        // on that order.
-        // FIXME: when libyang2 becomes available, remove this.
-        // https://github.com/sysrepo/sysrepo/issues/2292
-        data->schema_sort(1);
+        auto data = session.getData(("/" + (ietf_acl_module + ":*")).c_str());
 
-        auto config = generateNftConfig(logger, data);
+        auto config = generateNftConfig(logger, *data);
         logger->trace("running the consumer...");
         consumer(config);
         logger->trace("consumer done.");
 
-        return SR_ERR_OK;
+        return sysrepo::ErrorCode::Ok;
     };
 
-    m_sub->module_change_subscribe(ietf_acl_module.c_str(), cb, nullptr, 0, SR_SUBSCR_DONE_ONLY | SR_SUBSCR_ENABLED);
+    m_sub = srSess.onModuleChange(ietf_acl_module.c_str(), cb, nullptr, 0, sysrepo::SubscribeOptions::DoneOnly | sysrepo::SubscribeOptions::Enabled);
 }

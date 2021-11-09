@@ -236,32 +236,27 @@ void Authentication::removeKey(const std::string& username, const int index)
 }
 }
 
-void usersToTree(libyang::S_Context ctx, const std::vector<velia::system::User> users, libyang::S_Data_Node& out)
+void usersToTree(libyang::Context ctx, const std::vector<velia::system::User> users, std::optional<libyang::DataNode>& out)
 {
-    out = std::make_shared<libyang::Data_Node>(
-            ctx,
-            authentication_container.c_str(),
-            nullptr,
-            LYD_ANYDATA_CONSTSTRING,
-            0);
+    out = ctx.newPath(authentication_container.c_str());
     for (const auto& user : users) {
-        auto userNode = out->new_path(ctx, ("users[name='" + user.name + "']").c_str(), nullptr, LYD_ANYDATA_CONSTSTRING, 0);
+        auto userNode = out->newPath(("users[name='" + user.name + "']").c_str(), nullptr);
 
         decltype(user.authorizedKeys)::size_type entries = 0;
         for (const auto& authorizedKey : user.authorizedKeys) {
-            auto entry = userNode->new_path(ctx, ("authorized-keys[index='" + std::to_string(entries) + "']").c_str(), nullptr, LYD_ANYDATA_CONSTSTRING, 0);
-            entry->new_path(ctx, "public-key", authorizedKey.c_str(), LYD_ANYDATA_CONSTSTRING, 0);
+            auto entry = userNode->newPath(("authorized-keys[index='" + std::to_string(entries) + "']").c_str());
+            entry->newPath("public-key", authorizedKey.c_str());
             entries++;
         }
 
         if (user.lastPasswordChange) {
-            userNode->new_path(ctx, "password-last-change", user.lastPasswordChange->c_str(), LYD_ANYDATA_CONSTSTRING, 0);
+            userNode->newPath("password-last-change", user.lastPasswordChange->c_str());
         }
     }
 }
 
 velia::system::Authentication::Authentication(
-        sysrepo::S_Session srSess,
+        sysrepo::Session srSess,
         const std::string& etc_passwd,
         const std::string& etc_shadow,
         const std::string& authorized_keys_format,
@@ -272,7 +267,7 @@ velia::system::Authentication::Authentication(
     , m_etc_shadow(etc_shadow)
     , m_authorized_keys_format(authorized_keys_format)
     , m_session(srSess)
-    , m_sub(std::make_shared<sysrepo::Subscribe>(srSess))
+    , m_sub()
 {
     m_log->debug("Initializing authentication");
     m_log->debug("Using {} as passwd file", m_etc_passwd);
@@ -280,29 +275,17 @@ velia::system::Authentication::Authentication(
     m_log->debug("Using {} authorized_keys format", m_authorized_keys_format);
     utils::ensureModuleImplemented(srSess, "czechlight-system", "2021-01-13");
 
-    sysrepo::OperGetItemsCb listUsersCb = [this] (
-            auto session,
-            auto,
-            auto,
-            auto,
-            auto,
-            auto& out) {
+    sysrepo::OperGetCb listUsersCb = [this] (auto session, auto, auto, auto, auto, auto, auto& out) {
         m_log->debug("Listing users");
 
         auto users = listUsers();
         m_log->trace("got {} users", users.size());
-        usersToTree(session->get_context(), users, out);
+        usersToTree(session.getContext(), users, out);
 
-        return SR_ERR_OK;
+        return sysrepo::ErrorCode::Ok;
     };
 
-    sysrepo::RpcTreeCb changePasswordCb = [this, changePassword] (
-            auto session,
-            auto,
-            auto input,
-            auto,
-            auto,
-            auto output) {
+    sysrepo::RpcActionCb changePasswordCb = [this, changePassword] (auto, auto, auto, auto input, auto, auto, auto output) {
 
         auto userNode = utils::getUniqueSubtree(input, (authentication_container + "/users" ).c_str()).value();
         auto name = utils::getValueAsString(utils::getUniqueSubtree(userNode, "name").value());
@@ -310,24 +293,18 @@ velia::system::Authentication::Authentication(
         m_log->debug("Changing password for {}", name);
         try {
             changePassword(name, password, m_etc_shadow);
-            output->new_path(session->get_context(), "result", "success", LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
+            output.newPath("result", "success", libyang::CreationOptions::Output);
             m_log->info("Changed password for {}", name);
         } catch (std::runtime_error& ex) {
-            output->new_path(session->get_context(), "result", "failure", LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
-            output->new_path(session->get_context(), "message", ex.what(), LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
+            output.newPath("result", "failure", libyang::CreationOptions::Output);
+            output.newPath("message", ex.what(), libyang::CreationOptions::Output);
             m_log->info("Failed to change password for {}: {}", name, ex.what());
         }
 
-        return SR_ERR_OK;
+        return sysrepo::ErrorCode::Ok;
     };
 
-    sysrepo::RpcTreeCb addKeyCb = [this] (
-            auto session,
-            auto,
-            auto input,
-            auto,
-            auto,
-            auto output) {
+    sysrepo::RpcActionCb addKeyCb = [this] (auto, auto, auto, auto input, auto, auto, auto output) {
 
         auto userNode = utils::getUniqueSubtree(input, (authentication_container + "/users").c_str()).value();
         auto name = utils::getValueAsString(utils::getUniqueSubtree(userNode, "name").value());
@@ -335,44 +312,37 @@ velia::system::Authentication::Authentication(
         m_log->debug("Adding key for {}", name);
         try {
             addKey(name, key);
-            output->new_path(session->get_context(), "result", "success", LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
+            output.newPath("result", "success", libyang::CreationOptions::Output);
             m_log->info("Added a key for {}", name);
         } catch (AuthException& ex) {
-            output->new_path(session->get_context(), "result", "failure", LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
-            output->new_path(session->get_context(), "message", ex.what(), LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
+            output.newPath("result", "failure", libyang::CreationOptions::Output);
+            output.newPath("message", ex.what(), libyang::CreationOptions::Output);
             m_log->warn("Failed to add a key for {}: {}", name, ex.what());
         }
 
-        return SR_ERR_OK;
+        return sysrepo::ErrorCode::Ok;
     };
 
-    sysrepo::RpcTreeCb removeKeyCb = [this] (
-            auto session,
-            auto,
-            auto input,
-            auto,
-            auto,
-            auto output) {
-
+    sysrepo::RpcActionCb removeKeyCb = [this] (auto, auto, auto, auto input, auto, auto, auto output) {
         auto userNode = utils::getUniqueSubtree(input, (authentication_container + "/users").c_str()).value();
         auto name = utils::getValueAsString(utils::getUniqueSubtree(userNode, "name").value());
         auto key = std::stol(utils::getValueAsString(utils::getUniqueSubtree(userNode, "authorized-keys/index").value()));
         m_log->debug("Removing key for {}", name);
         try {
             removeKey(name, key);
-            output->new_path(session->get_context(), "result", "success", LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
+            output.newPath("result", "success", libyang::CreationOptions::Output);
             m_log->info("Removed key for {}", name);
         } catch (AuthException& ex) {
-            output->new_path(session->get_context(), "result", "failure", LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
-            output->new_path(session->get_context(), "message", ex.what(), LYD_ANYDATA_CONSTSTRING, LYD_PATH_OPT_OUTPUT);
+            output.newPath("result", "failure", libyang::CreationOptions::Output);
+            output.newPath("message", ex.what(), libyang::CreationOptions::Output);
             m_log->warn("Failed to remove a key for {}: {}", name, ex.what());
         }
 
-        return SR_ERR_OK;
+        return sysrepo::ErrorCode::Ok;
     };
 
-    m_sub->oper_get_items_subscribe(czechlight_system_module.c_str(), listUsersCb, authentication_container.c_str());
-    m_sub->rpc_subscribe_tree(change_password_action.c_str(), changePasswordCb);
-    m_sub->rpc_subscribe_tree(add_key_action.c_str(), addKeyCb);
-    m_sub->rpc_subscribe_tree(remove_key_action.c_str(), removeKeyCb);
+    m_sub = m_session.onOperGet(czechlight_system_module.c_str(), listUsersCb, authentication_container.c_str());
+    m_sub->onRPCAction(change_password_action.c_str(), changePasswordCb);
+    m_sub->onRPCAction(add_key_action.c_str(), addKeyCb);
+    m_sub->onRPCAction(remove_key_action.c_str(), removeKeyCb);
 }

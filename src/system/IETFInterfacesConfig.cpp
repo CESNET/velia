@@ -47,7 +47,7 @@ std::string generateNetworkConfigFile(const std::string& linkName, const std::ma
  *
  * If the ietf-ip:ipv{4,6} presence container is present, takes value of leaf 'enabled' (which is always there). If the container is not present (and so the 'enabled' leaf is not there as well), then the protocol is disabled.
  */
-bool protocolEnabled(const std::shared_ptr<libyang::Data_Node>& linkEntry, const std::string& proto)
+bool protocolEnabled(const libyang::DataNode& linkEntry, const std::string& proto)
 {
     const auto xpath = "ietf-ip:" + proto + "/enabled";
 
@@ -61,13 +61,13 @@ bool protocolEnabled(const std::shared_ptr<libyang::Data_Node>& linkEntry, const
 
 namespace velia::system {
 
-IETFInterfacesConfig::IETFInterfacesConfig(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::path configDirectory, std::vector<std::string> managedLinks, reload_cb_t reloadCallback)
+IETFInterfacesConfig::IETFInterfacesConfig(::sysrepo::Session srSess, std::filesystem::path configDirectory, std::vector<std::string> managedLinks, reload_cb_t reloadCallback)
     : m_log(spdlog::get("system"))
     , m_reloadCb(std::move(reloadCallback))
     , m_configDirectory(std::move(configDirectory))
     , m_managedLinks(std::move(managedLinks))
-    , m_srSession(std::move(srSess))
-    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+    , m_srSession(srSess)
+    , m_srSubscribe()
 {
     utils::ensureModuleImplemented(m_srSession, IETF_INTERFACES_MODULE_NAME, "2018-02-20");
     utils::ensureModuleImplemented(m_srSession, IETF_IP_MODULE_NAME, "2018-02-22");
@@ -76,17 +76,21 @@ IETFInterfacesConfig::IETFInterfacesConfig(std::shared_ptr<::sysrepo::Session> s
     utils::ensureModuleImplemented(m_srSession, IETF_IPV6_UNICAST_ROUTING_MODULE_NAME, "2018-03-13");
     utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_NETWORK_MODULE_NAME, "2021-02-22");
 
-    m_srSubscribe->module_change_subscribe(
-        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto) { return moduleChange(session); }, IETF_INTERFACES.c_str(), 0, SR_SUBSCR_DONE_ONLY);
+    m_srSubscribe = m_srSession.onModuleChange(
+        IETF_INTERFACES_MODULE_NAME.c_str(),
+        [this](auto session, auto, auto, auto, auto, auto) { return moduleChange(session); },
+        IETF_INTERFACES.c_str(),
+        0,
+        sysrepo::SubscribeOptions::DoneOnly);
 }
 
-int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> session) const
+sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session) const
 {
     std::map<std::string, std::string> networkConfigFiles;
 
-    if (auto data = session->get_data("/ietf-interfaces:interfaces/interface")) {
-        auto linkEntries = data->find_path("/ietf-interfaces:interfaces/interface");
-        for (const auto& linkEntry : linkEntries->data()) {
+    if (auto data = session.getData("/ietf-interfaces:interfaces/interface")) {
+        auto linkEntries = data->findXPath("/ietf-interfaces:interfaces/interface");
+        for (const auto& linkEntry : linkEntries) {
             std::map<std::string, std::vector<std::string>> configValues;
 
             auto linkName = utils::getValueAsString(utils::getUniqueSubtree(linkEntry, "name").value());
@@ -103,9 +107,9 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
                 }
 
                 const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
-                const auto addresses = linkEntry->find_path(IPAddressListXPath.c_str());
+                const auto addresses = linkEntry.findXPath(IPAddressListXPath.c_str());
 
-                for (const auto& ipEntry : addresses->data()) {
+                for (const auto& ipEntry : addresses) {
                     auto ipAddress = utils::getValueAsString(utils::getUniqueSubtree(ipEntry, "ip").value());
                     auto prefixLen = utils::getValueAsString(utils::getUniqueSubtree(ipEntry, "prefix-length").value());
 
@@ -149,7 +153,7 @@ int IETFInterfacesConfig::moduleChange(std::shared_ptr<::sysrepo::Session> sessi
 
     auto changedLinks = updateNetworkFiles(networkConfigFiles, m_configDirectory);
     m_reloadCb(changedLinks);
-    return SR_ERR_OK;
+    return sysrepo::ErrorCode::Ok;
 }
 
 std::vector<std::string> IETFInterfacesConfig::updateNetworkFiles(const std::map<std::string, std::string>& networkConfig, const std::filesystem::path& configDir) const

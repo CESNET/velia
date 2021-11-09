@@ -21,7 +21,7 @@ const auto FIRMWARE_SLOTS = {"rootfs.0"s, "rootfs.1"s};
 
 namespace velia::system {
 
-Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnection& dbusConnectionSignals, sdbus::IConnection& dbusConnectionMethods)
+Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnectionSignals, sdbus::IConnection& dbusConnectionMethods)
     : m_rauc(std::make_shared<RAUC>(
         dbusConnectionSignals,
         dbusConnectionMethods,
@@ -38,11 +38,11 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
                 {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/update/progress", std::to_string(perc)},
             };
 
-            libyang::S_Data_Node dataNode;
-            auto session = std::make_shared<::sysrepo::Session>(m_srConn);
+            std::optional<libyang::DataNode> dataNode;
+            auto session = m_srConn.sessionStart();
 
             utils::valuesToYang(data, {}, session, dataNode);
-            session->event_notif_send(dataNode);
+            session.sendNotification(*dataNode, sysrepo::Wait::No); // No need to wait, it's just a notification.
         },
         [this](int32_t retVal, const std::string& lastError) {
             auto lock = updateSlotStatus();
@@ -51,10 +51,10 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
         }))
     , m_log(spdlog::get("system"))
     , m_srConn(std::move(srConn))
-    , m_srSessionOps(std::make_shared<::sysrepo::Session>(m_srConn))
-    , m_srSessionRPC(std::make_shared<::sysrepo::Session>(m_srConn))
-    , m_srSubscribeOps(std::make_shared<::sysrepo::Subscribe>(m_srSessionOps))
-    , m_srSubscribeRPC(std::make_shared<::sysrepo::Subscribe>(m_srSessionRPC))
+    , m_srSessionOps(m_srConn.sessionStart())
+    , m_srSessionRPC(m_srConn.sessionStart())
+    , m_srSubscribeOps()
+    , m_srSubscribeRPC()
 {
     utils::ensureModuleImplemented(m_srSessionOps, "czechlight-system", "2021-01-13");
 
@@ -75,42 +75,42 @@ Firmware::Firmware(std::shared_ptr<::sysrepo::Connection> srConn, sdbus::IConnec
         }
     }
 
-    m_srSubscribeRPC->rpc_subscribe(
-        (CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/install").c_str(),
-        [this](auto session, auto, auto input, auto, auto, [[maybe_unused]] auto output) {
+    ::sysrepo::RpcActionCb cbRPC = [this](auto session, auto, auto, auto input, auto, auto, auto) {
+        auto lock = updateSlotStatus();
+
+        try {
+            auto source = std::string{input.findPath("url")->asTerm().valueStr()};
+            m_rauc->install(source);
+        } catch (sdbus::Error& e) {
+            m_log->warn("RAUC install error: '{}'", e.what());
+            session.setErrorMessage(e.getMessage().c_str());
+            return ::sysrepo::ErrorCode::OperationFailed;
+        }
+        return ::sysrepo::ErrorCode::Ok;
+    };
+
+    m_srSubscribeRPC = m_srSessionRPC.onRPCAction((CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/install").c_str(), cbRPC);
+
+    ::sysrepo::OperGetCb cbOper = [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
+        std::map<std::string, std::string> data;
+
+        {
             auto lock = updateSlotStatus();
 
-            try {
-                std::string source = input->val(0)->val_to_string();
-                m_rauc->install(source);
-            } catch (sdbus::Error& e) {
-                m_log->warn("RAUC install error: '{}'", e.what());
-                session->set_error(e.getMessage().c_str(), nullptr);
-                return SR_ERR_OPERATION_FAILED;
-            }
-            return SR_ERR_OK;
-        },
-        0,
-        SR_SUBSCR_CTX_REUSE);
+            data.insert(m_slotStatusCache.begin(), m_slotStatusCache.end());
+            data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status"] = m_installStatus;
+            data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message"] = m_installMessage;
+        }
 
-    m_srSubscribeOps->oper_get_items_subscribe(
+        utils::valuesToYang(data, {}, session, parent);
+        return ::sysrepo::ErrorCode::Ok;
+    };
+
+    m_srSubscribeOps = m_srSessionOps.onOperGet(
         CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(),
-        [this](auto session, auto, auto, auto, auto, auto& parent) {
-            std::map<std::string, std::string> data;
-
-            {
-                auto lock = updateSlotStatus();
-
-                data.insert(m_slotStatusCache.begin(), m_slotStatusCache.end());
-                data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status"] = m_installStatus;
-                data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message"] = m_installMessage;
-            }
-
-            utils::valuesToYang(data, {}, session, parent);
-            return SR_ERR_OK;
-        },
+        cbOper,
         (CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "*").c_str(),
-        SR_SUBSCR_PASSIVE | SR_SUBSCR_OPER_MERGE | SR_SUBSCR_CTX_REUSE);
+        ::sysrepo::SubscribeOptions::Passive | ::sysrepo::SubscribeOptions::OperMerge);
 }
 
 /** @brief Updates the slot status cache with the new data obtained via RAUC

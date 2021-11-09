@@ -8,17 +8,23 @@
 #include "events.h"
 
 namespace {
-std::string sr_ev_notif_type_to_string(const sr_ev_notif_type_t notif_type)
+std::string sr_ev_notif_type_to_string(const sysrepo::NotificationType notif_type)
 {
     switch (notif_type) {
-    case SR_EV_NOTIF_REALTIME:
-        return "SR_EV_NOTIF_REALTIME";
-    case SR_EV_NOTIF_REPLAY:
-        return "SR_EV_NOTIF_REPLAY";
-    case SR_EV_NOTIF_REPLAY_COMPLETE:
-        return "SR_EV_NOTIF_REPLAY_COMPLETE";
-    case SR_EV_NOTIF_STOP:
-        return "SR_EV_NOTIF_STOP";
+    case sysrepo::NotificationType::Realtime:
+        return "sysrepo::NotificationType::Realtime";
+    case sysrepo::NotificationType::Replay:
+        return "sysrepo::NotificationType::Replay";
+    case sysrepo::NotificationType::ReplayComplete:
+        return "sysrepo::NotificationType::ReplayComplete";
+    case sysrepo::NotificationType::Terminated:
+        return "sysrepo::NotificationType::Terminated";
+    case sysrepo::NotificationType::Modified:
+        return "sysrepo::NotificationType::Modified";
+    case sysrepo::NotificationType::Suspended:
+        return "sysrepo::NotificationType::Suspended";
+    case sysrepo::NotificationType::Resumed:
+        return "sysrepo::NotificationType::Resumed";
     default:
         return "[unknown event type]";
     }
@@ -35,24 +41,31 @@ EventWatcher::~EventWatcher()
 }
 
 void EventWatcher::operator()(
-    [[maybe_unused]] ::sysrepo::S_Session session,
-    const sr_ev_notif_type_t notif_type,
-    const char* xpath,
-    const ::sysrepo::S_Vals vals,
-    time_t timestamp)
+        sysrepo::Session,
+        uint32_t ,
+        const sysrepo::NotificationType type,
+        const std::optional<libyang::DataNode> notificationTree,
+        const sysrepo::NotificationTimeStamp timestamp)
 {
     Event e;
-    e.xPath = xpath;
+    e.xPath = std::string{notificationTree ? std::string{notificationTree->path()} : "<no-xpath>"};
     e.received = std::chrono::steady_clock::now();
-
     auto log = spdlog::get("main");
-    log->info("SR event {} {} {}", sr_ev_notif_type_to_string(notif_type), timestamp, xpath);
+    log->info("SR event {} {} {}", sr_ev_notif_type_to_string(type), timestamp.time_since_epoch().count(), e.xPath);
 
-    for (size_t i = 0; i < vals->val_cnt(); ++i) {
-        const auto& v = vals->val(i);
-        auto s = v->val_to_string();
-        log->debug(" {}: {}", v->xpath(), s);
-        e.data[v->xpath()] = s;
+    if (notificationTree) {
+        for (const auto& node : notificationTree->childrenDfs()) {
+            auto path = std::string{node.path()};
+            auto val = [&] {
+                if (node.schema().nodeType() == libyang::NodeType::Leaf) {
+                    return std::string{node.asTerm().valueStr()};
+                }
+
+                return std::string{""};
+            }();
+            e.data[path] = val;
+            log->debug(" {}: {}", path, val);
+        }
     }
 
     {

@@ -22,7 +22,7 @@ public:
 
     explicit EventWatcher(std::function<void(Event)> callback);
     ~EventWatcher();
-    void operator()(::sysrepo::S_Session session, const sr_ev_notif_type_t notif_type, const char* xpath, const ::sysrepo::S_Vals vals, time_t timestamp);
+    void operator()(sysrepo::Session session, uint32_t subscriptionId, const sysrepo::NotificationType type, const std::optional<libyang::DataNode> notificationTree, const sysrepo::NotificationTimeStamp timestamp);
 
     Event peek(std::vector<Event>::size_type index) const;
     std::vector<Event>::size_type count() const;

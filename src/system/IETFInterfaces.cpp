@@ -172,9 +172,9 @@ bool isBridge(rtnl_link* link)
 
 namespace velia::system {
 
-IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
-    : m_srSession(std::move(srSess))
-    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+IETFInterfaces::IETFInterfaces(::sysrepo::Session srSess)
+    : m_srSession(srSess)
+    , m_srSubscribe()
     , m_log(spdlog::get("system"))
     , m_rtnetlink(std::make_shared<Rtnetlink>(
           [this](rtnl_link* link, int action) { onLinkUpdate(link, action); },
@@ -191,36 +191,36 @@ IETFInterfaces::IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess)
     m_rtnetlink->invokeInitialCallbacks();
     // TODO: Implement /ietf-routing:routing/interfaces and /ietf-routing:routing/router-id
 
-    m_srSubscribe->oper_get_items_subscribe(
-        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto& parent) {
-            std::map<std::string, std::string> values;
-            for (const auto& link : m_rtnetlink->getLinks()) {
-                const auto yangPrefix = IETF_INTERFACES + "/interface[name='" + rtnl_link_get_name(link.get()) + "']/statistics";
+    sysrepo::OperGetItemsCb statsCb = [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
+        std::map<std::string, std::string> values;
+        for (const auto& link : m_rtnetlink->getLinks()) {
+            const auto yangPrefix = IETF_INTERFACES + "/interface[name='" + rtnl_link_get_name(link.get()) + "']/statistics";
 
-                values[yangPrefix + "/in-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_BYTES));
-                values[yangPrefix + "/out-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_BYTES));
-                values[yangPrefix + "/in-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_DROPPED));
-                values[yangPrefix + "/out-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_DROPPED));
-                values[yangPrefix + "/in-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_ERRORS));
-                values[yangPrefix + "/out-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_ERRORS));
-            }
+            values[yangPrefix + "/in-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_BYTES));
+            values[yangPrefix + "/out-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_BYTES));
+            values[yangPrefix + "/in-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_DROPPED));
+            values[yangPrefix + "/out-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_DROPPED));
+            values[yangPrefix + "/in-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_ERRORS));
+            values[yangPrefix + "/out-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_ERRORS));
+        }
 
-            utils::valuesToYang(values, {}, session, parent);
-            return SR_ERR_OK;
-        },
-        (IETF_INTERFACES + "/interface/statistics").c_str());
+        utils::valuesToYang(values, {}, session, parent);
+        return sysrepo::ErrorCode::Ok;
+    };
 
-    m_srSubscribe->oper_get_items_subscribe(
-        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto& parent) {
+    m_srSubscribe = m_srSession.onOperGetItems(IETF_INTERFACES_MODULE_NAME.c_str(), statsCb, (IETF_INTERFACES + "/interface/statistics").c_str());
+
+    m_srSubscribe->onOperGetItems(
+        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
             utils::valuesToYang(collectNeighboursIP(m_rtnetlink, AF_INET, m_log), {}, session, parent);
-            return SR_ERR_OK;
+            return sysrepo::ErrorCode::Ok;
         },
         (IETF_INTERFACES + "/interface/ietf-ip:ipv4/neighbor").c_str());
 
-    m_srSubscribe->oper_get_items_subscribe(
-        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto& parent) {
+    m_srSubscribe->onOperGetItems(
+        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
             utils::valuesToYang(collectNeighboursIP(m_rtnetlink, AF_INET6, m_log), {}, session, parent);
-            return SR_ERR_OK;
+            return sysrepo::ErrorCode::Ok;
         },
         (IETF_INTERFACES + "/interface/ietf-ip:ipv6/neighbor").c_str());
 }
@@ -231,7 +231,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
     m_log->trace("Netlink update on link '{}', action {}", name, nlActionToString(action));
 
     if (action == NL_ACT_DEL) {
-        utils::valuesPush(std::vector<utils::YANGPair>{}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, m_srSession, SR_DS_OPERATIONAL);
+        utils::valuesPush(std::vector<utils::YANGPair>{}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, m_srSession, sysrepo::Datastore::Operational);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
         std::map<std::string, std::string> values;
         std::vector<std::string> deletePaths;
@@ -250,7 +250,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
         values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = isBridge(link) ? "iana-if-type:bridge" : arpTypeToString(rtnl_link_get_arptype(link), m_log);
         values[IETF_INTERFACES + "/interface[name='" + name + "']/oper-status"] = operStatusToString(rtnl_link_get_operstate(link), m_log);
 
-        utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);
+        utils::valuesPush(values, deletePaths, m_srSession, sysrepo::Datastore::Operational);
     } else {
         m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
     }
@@ -284,7 +284,7 @@ void IETFInterfaces::onAddrUpdate(rtnl_addr* addr, int action)
         m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
     }
 
-    utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);
+    utils::valuesPush(values, deletePaths, m_srSession, sysrepo::Datastore::Operational);
 }
 
 void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
@@ -401,6 +401,6 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
         }
     }
 
-    utils::valuesPush(values, deletePaths, m_srSession, SR_DS_OPERATIONAL);
+    utils::valuesPush(values, deletePaths, m_srSession, sysrepo::Datastore::Operational);
 }
 }

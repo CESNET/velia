@@ -19,15 +19,15 @@ class Rtnetlink;
 
 class IETFInterfaces {
 public:
-    explicit IETFInterfaces(std::shared_ptr<::sysrepo::Session> srSess);
+    explicit IETFInterfaces(::sysrepo::Session srSess);
 
 private:
     void onLinkUpdate(rtnl_link* link, int action);
     void onAddrUpdate(rtnl_addr* addr, int action);
     void onRouteUpdate(rtnl_route* addr, int action);
 
-    std::shared_ptr<::sysrepo::Session> m_srSession;
-    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
+    ::sysrepo::Session m_srSession;
+    std::optional<::sysrepo::Subscription> m_srSubscribe;
     velia::Log m_log;
     std::shared_ptr<Rtnetlink> m_rtnetlink; // first to destroy, because the callback to rtnetlink uses m_srSession and m_log
 };

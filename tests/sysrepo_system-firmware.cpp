@@ -1,3 +1,4 @@
+#include <sysrepo-cpp/utils/exception.hpp>
 #include "trompeloeil_doctest.h"
 #include "dbus-helpers/dbus_rauc_server.h"
 #include "pretty_printers.h"
@@ -64,6 +65,9 @@ TEST_CASE("Firmware in czechlight-system, RPC")
     // process install notifications
     InstallProgressMock installProgressMock;
     EventWatcher events([&installProgressMock](const EventWatcher::Event& event) {
+        if (event.xPath == "<no-xpath>") {
+            return;
+        }
         installProgressMock.update(std::stoi(event.data.at("/czechlight-system:firmware/installation/update/progress")), event.data.at("/czechlight-system:firmware/installation/update/message"));
     });
 
@@ -77,7 +81,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
     std::map<std::string, velia::system::RAUC::SlotProperties> dbusRaucStatus = {
         {"rootfs.1", {
                          {"activated.count", uint32_t {39}},
-                         {"activated.timestamp", "2021-01-13T17:20:18Z"},
+                         {"activated.timestamp", "2021-01-13T17:20:18-00:00"},
                          {"bootname", "B"},
                          {"boot-status", "good"},
                          {"bundle.compatible", "czechlight-clearfog"},
@@ -85,7 +89,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                          {"class", "rootfs"},
                          {"device", "/dev/mmcblk0p3"},
                          {"installed.count", uint32_t {39}},
-                         {"installed.timestamp", "2021-01-13T17:20:15Z"},
+                         {"installed.timestamp", "2021-01-13T17:20:15-00:00"},
                          {"mountpoint", "/"},
                          {"sha256", "07b30d065c7aad64d2006ce99fd339c929d3ca97b666fca4584b9ef726469fc4"},
                          {"size", uint64_t {45601892}},
@@ -95,7 +99,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                      }},
         {"rootfs.0", {
                          {"activated.count", uint32_t {41}},
-                         {"activated.timestamp", "2021-01-13T17:15:54Z"},
+                         {"activated.timestamp", "2021-01-13T17:15:54-00:00"},
                          {"bootname", "A"},
                          {"boot-status", "bad"},
                          {"bundle.compatible", "czechlight-clearfog"},
@@ -103,7 +107,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                          {"class", "rootfs"},
                          {"device", "/dev/mmcblk0p1"},
                          {"installed.count", uint32_t {41}},
-                         {"installed.timestamp", "2021-01-13T17:15:50Z"},
+                         {"installed.timestamp", "2021-01-13T17:15:50-00:00"},
                          {"sha256", "6d81e8f341edd17c127811f7347c7e23d18c2fc25c0bdc29ac56999cc9c25629"},
                          {"size", uint64_t {45647664}},
                          {"state", "inactive"},
@@ -116,7 +120,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                       {"class", "cfg"},
                       {"device", "/dev/mmcblk0p4"},
                       {"installed.count", uint32_t {39}},
-                      {"installed.timestamp", "2021-01-13T17:20:18Z"},
+                      {"installed.timestamp", "2021-01-13T17:20:18-00:00"},
                       {"mountpoint", "/cfg"},
                       {"parent", "rootfs.1"},
                       {"sha256", "5ca1b6c461fc194055d52b181f57c63dc1d34c19d041f6395e6f6abc039692bb"},
@@ -131,7 +135,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                       {"class", "cfg"},
                       {"device", "/dev/mmcblk0p2"},
                       {"installed.count", uint32_t {41}},
-                      {"installed.timestamp", "2021-01-13T17:15:54Z"},
+                      {"installed.timestamp", "2021-01-13T17:15:54-00:00"},
                       {"parent", "rootfs.0"},
                       {"sha256", "5ca1b6c461fc194055d52b181f57c63dc1d34c19d041f6395e6f6abc039692bb"},
                       {"size", uint64_t {108}},
@@ -143,32 +147,28 @@ TEST_CASE("Firmware in czechlight-system, RPC")
     auto raucServer = DBusRAUCServer(*dbusServerConnection, "rootfs.1", dbusRaucStatus);
     auto sysrepo = std::make_shared<velia::system::Firmware>(srConn, *dbusClientConnectionSignals, *dbusClientConnectionMethods);
 
-    REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
-                {"/firmware-slot[name='A']", ""},
+    REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                 {"/firmware-slot[name='A']/boot-status", "bad"},
-                {"/firmware-slot[name='A']/installed", "2021-01-13T17:15:50Z"},
+                {"/firmware-slot[name='A']/installed", "2021-01-13T17:15:50-00:00"},
                 {"/firmware-slot[name='A']/name", "A"},
                 {"/firmware-slot[name='A']/state", "inactive"},
                 {"/firmware-slot[name='A']/version", "v4-104-ge80fcd4"},
-                {"/firmware-slot[name='B']", ""},
                 {"/firmware-slot[name='B']/boot-status", "good"},
-                {"/firmware-slot[name='B']/installed", "2021-01-13T17:20:15Z"},
+                {"/firmware-slot[name='B']/installed", "2021-01-13T17:20:15-00:00"},
                 {"/firmware-slot[name='B']/name", "B"},
                 {"/firmware-slot[name='B']/state", "booted"},
                 {"/firmware-slot[name='B']/version", "v4-103-g34d2f48"},
-                {"/installation", ""},
                 {"/installation/message", ""},
                 {"/installation/status", "none"},
             });
 
     SECTION("Firmware install RPC")
     {
-        auto rpcInput = std::make_shared<sysrepo::Vals>(1);
-        rpcInput->val(0)->set("/czechlight-system:firmware/installation/install/url", "/path/to/bundle/update.raucb");
+        auto rpcInput = client.getContext().newPath("/czechlight-system:firmware/installation/install/url", "/path/to/bundle/update.raucb");
 
         SECTION("Installation runs")
         {
-            subscription->event_notif_subscribe("czechlight-system", events, "/czechlight-system:firmware/installation/update");
+            auto subscription = client.onNotification("czechlight-system", events, "/czechlight-system:firmware/installation/update");
 
             DBusRAUCServer::InstallBehaviour installType;
             std::map<std::string, std::string> expectedFinished, expectedInProgress = {
@@ -196,28 +196,28 @@ TEST_CASE("Firmware in czechlight-system, RPC")
 
             raucServer.installBundleBehaviour(installType);
             auto progressExpectations = expectationFactory(installType, installProgressMock, seq1);
-            auto res = client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
-            REQUIRE(res->val_cnt() == 0);
+            auto res = client.sendRPC(rpcInput);
+            REQUIRE(res.tree().child() == std::nullopt);
 
             std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
-            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expectedInProgress);
+            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == expectedInProgress);
 
             waitForCompletionAndBitMore(seq1); // wait for installation to complete
-            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expectedFinished);
+            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == expectedFinished);
         }
 
         SECTION("Unsuccessfull install followed by successfull install")
         {
-            subscription->event_notif_subscribe("czechlight-system", events, "/czechlight-system:firmware/installation/update");
+            auto subscription = client.onNotification("czechlight-system", events, "/czechlight-system:firmware/installation/update");
 
             // invoke unsuccessfull install
             {
                 raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::FAILURE);
                 auto progressExpectations = expectationFactory(DBusRAUCServer::InstallBehaviour::FAILURE, installProgressMock, seq1);
-                client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+                client.sendRPC(rpcInput);
 
                 waitForCompletionAndBitMore(seq1); // wait for installation to complete
-                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                     {"/message", "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number"},
                     {"/status", "failed"},
                 });
@@ -227,16 +227,16 @@ TEST_CASE("Firmware in czechlight-system, RPC")
             {
                 raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK);
                 auto progressExpectations = expectationFactory(DBusRAUCServer::InstallBehaviour::OK, installProgressMock, seq1);
-                client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+                client.sendRPC(rpcInput);
 
                 std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
-                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                     {"/message", ""},
                     {"/status", "in-progress"},
                 });
 
                 waitForCompletionAndBitMore(seq1); // wait for installation to complete
-                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == std::map<std::string, std::string>{
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == std::map<std::string, std::string>{
                     {"/message", ""},
                     {"/status", "succeeded"},
                 });
@@ -246,31 +246,28 @@ TEST_CASE("Firmware in czechlight-system, RPC")
         SECTION("Installation in progress")
         {
             raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK);
-            client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+            client.sendRPC(rpcInput);
             std::this_thread::sleep_for(10ms);
 
             SECTION("Invoking second installation throws")
             {
-                REQUIRE_THROWS_WITH_AS(client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput), "User callback failed", sysrepo::sysrepo_exception);
+                REQUIRE_THROWS_WITH_AS(client.sendRPC(rpcInput), "Couldn't send RPC (14)", sysrepo::ErrorWithCode);
             }
 
             SECTION("Firmware slot data are available")
             {
                 // RAUC does not respond to GetSlotStatus when another operation in progress, so let's check we use the cached data
-                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
-                    {"/firmware-slot[name='A']", ""},
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                     {"/firmware-slot[name='A']/boot-status", "bad"},
-                    {"/firmware-slot[name='A']/installed", "2021-01-13T17:15:50Z"},
+                    {"/firmware-slot[name='A']/installed", "2021-01-13T17:15:50-00:00"},
                     {"/firmware-slot[name='A']/name", "A"},
                     {"/firmware-slot[name='A']/state", "inactive"},
                     {"/firmware-slot[name='A']/version", "v4-104-ge80fcd4"},
-                    {"/firmware-slot[name='B']", ""},
                     {"/firmware-slot[name='B']/boot-status", "good"},
-                    {"/firmware-slot[name='B']/installed", "2021-01-13T17:20:15Z"},
+                    {"/firmware-slot[name='B']/installed", "2021-01-13T17:20:15-00:00"},
                     {"/firmware-slot[name='B']/name", "B"},
                     {"/firmware-slot[name='B']/state", "booted"},
                     {"/firmware-slot[name='B']/version", "v4-103-g34d2f48"},
-                    {"/installation", ""},
                     {"/installation/message", ""},
                     {"/installation/status", "in-progress"},
                 });
@@ -302,7 +299,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
         dbusRaucStatus = {
             {"rootfs.1", {
                              {"activated.count", uint32_t {39}},
-                             {"activated.timestamp", "2021-01-13T17:20:18Z"},
+                             {"activated.timestamp", "2021-01-13T17:20:18-00:00"},
                              {"bootname", "B"},
                              {"boot-status", "good"},
                              {"bundle.compatible", "czechlight-clearfog"},
@@ -310,7 +307,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
                              {"class", "rootfs"},
                              {"device", "/dev/mmcblk0p3"},
                              {"installed.count", uint32_t {39}},
-                             {"installed.timestamp", "2021-01-13T17:20:15Z"},
+                             {"installed.timestamp", "2021-01-13T17:20:15-00:00"},
                              {"mountpoint", "/"},
                              {"sha256", "07b30d065c7aad64d2006ce99fd339c929d3ca97b666fca4584b9ef726469fc4"},
                              {"size", uint64_t {45601892}},
@@ -320,7 +317,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
                          }},
             {"rootfs.0", {
                              {"activated.count", uint32_t {41}},
-                             {"activated.timestamp", "2021-01-13T17:15:54Z"},
+                             {"activated.timestamp", "2021-01-13T17:15:54-00:00"},
                              {"bootname", "A"},
                              {"boot-status", "bad"},
                              {"bundle.compatible", "czechlight-clearfog"},
@@ -328,7 +325,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
                              {"class", "rootfs"},
                              {"device", "/dev/mmcblk0p1"},
                              {"installed.count", uint32_t {41}},
-                             {"installed.timestamp", "2021-01-13T17:15:50Z"},
+                             {"installed.timestamp", "2021-01-13T17:15:50-00:00"},
                              {"sha256", "6d81e8f341edd17c127811f7347c7e23d18c2fc25c0bdc29ac56999cc9c25629"},
                              {"size", uint64_t {45647664}},
                              {"state", "inactive"},
@@ -341,7 +338,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
                              {"class", "cfg"},
                              {"device", "/dev/mmcblk0p4"},
                              {"installed.count", uint32_t {39}},
-                             {"installed.timestamp", "2021-01-13T17:20:18Z"},
+                             {"installed.timestamp", "2021-01-13T17:20:18-00:00"},
                              {"mountpoint", "/cfg"},
                              {"parent", "rootfs.1"},
                              {"sha256", "5ca1b6c461fc194055d52b181f57c63dc1d34c19d041f6395e6f6abc039692bb"},
@@ -356,7 +353,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
                              {"class", "cfg"},
                              {"device", "/dev/mmcblk0p2"},
                              {"installed.count", uint32_t {41}},
-                             {"installed.timestamp", "2021-01-13T17:15:54Z"},
+                             {"installed.timestamp", "2021-01-13T17:15:54-00:00"},
                              {"parent", "rootfs.0"},
                              {"sha256", "5ca1b6c461fc194055d52b181f57c63dc1d34c19d041f6395e6f6abc039692bb"},
                              {"size", uint64_t {108}},
@@ -368,12 +365,12 @@ TEST_CASE("Firmware in czechlight-system, slot status")
 
         expected = {
             {"[name='A']/boot-status", "bad"},
-            {"[name='A']/installed", "2021-01-13T17:15:50Z"},
+            {"[name='A']/installed", "2021-01-13T17:15:50-00:00"},
             {"[name='A']/name", "A"},
             {"[name='A']/state", "inactive"},
             {"[name='A']/version", "v4-104-ge80fcd4"},
             {"[name='B']/boot-status", "good"},
-            {"[name='B']/installed", "2021-01-13T17:20:15Z"},
+            {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
             {"[name='B']/state", "booted"},
             {"[name='B']/version", "v4-103-g34d2f48"},
@@ -385,7 +382,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
         dbusRaucStatus = {
             {"rootfs.1", {
                              {"activated.count", uint32_t {39}},
-                             {"activated.timestamp", "2021-01-13T17:20:18Z"},
+                             {"activated.timestamp", "2021-01-13T17:20:18-00:00"},
                              {"bootname", "B"},
                              {"boot-status", "good"},
                              {"bundle.compatible", "czechlight-clearfog"},
@@ -393,7 +390,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
                              {"class", "rootfs"},
                              {"device", "/dev/mmcblk0p3"},
                              {"installed.count", uint32_t {39}},
-                             {"installed.timestamp", "2021-01-13T17:20:15Z"},
+                             {"installed.timestamp", "2021-01-13T17:20:15-00:00"},
                              {"mountpoint", "/"},
                              {"sha256", "07b30d065c7aad64d2006ce99fd339c929d3ca97b666fca4584b9ef726469fc4"},
                              {"size", uint64_t {45601892}},
@@ -419,7 +416,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
             {"[name='A']/name", "A"},
             {"[name='A']/state", "inactive"},
             {"[name='B']/boot-status", "good"},
-            {"[name='B']/installed", "2021-01-13T17:20:15Z"},
+            {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
             {"[name='B']/state", "booted"},
             {"[name='B']/version", "v4-103-g34d2f48"},
@@ -431,7 +428,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
         dbusRaucStatus = {
             {"rootfs.1", {
                              {"activated.count", uint32_t {39}},
-                             {"activated.timestamp", "2021-01-13T17:20:18Z"},
+                             {"activated.timestamp", "2021-01-13T17:20:18-00:00"},
                              {"bootname", "B"},
                              {"boot-status", "good"},
                              {"bundle.compatible", "czechlight-clearfog"},
@@ -439,7 +436,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
                              {"class", "rootfs"},
                              {"device", "/dev/mmcblk0p3"},
                              {"installed.count", uint32_t {39}},
-                             {"installed.timestamp", "2021-01-13T17:20:15Z"},
+                             {"installed.timestamp", "2021-01-13T17:20:15-00:00"},
                              {"mountpoint", "/"},
                              {"sha256", "07b30d065c7aad64d2006ce99fd339c929d3ca97b666fca4584b9ef726469fc4"},
                              {"size", uint64_t {45601892}},
@@ -461,7 +458,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
 
         expected = {
             {"[name='B']/boot-status", "good"},
-            {"[name='B']/installed", "2021-01-13T17:20:15Z"},
+            {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
             {"[name='B']/state", "booted"},
             {"[name='B']/version", "v4-103-g34d2f48"},
@@ -471,5 +468,5 @@ TEST_CASE("Firmware in czechlight-system, slot status")
     auto raucServer = DBusRAUCServer(*dbusServerConnection, "rootfs.1", dbusRaucStatus);
     auto sysrepo = std::make_shared<velia::system::Firmware>(srConn, *dbusClientConnectionSignals, *dbusClientConnectionMethods);
 
-    REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/firmware-slot", SR_DS_OPERATIONAL) == expected);
+    REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/firmware-slot", sysrepo::Datastore::Operational) == expected);
 }

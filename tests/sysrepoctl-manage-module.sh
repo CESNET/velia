@@ -39,8 +39,7 @@ fi
   YANG_DIR=$(dirname "${YANG_FILE}")
 
   if [[ "${MODE}" == "prepare" ]]; then
-    ${SYSREPOCTL} --uninstall "${MODULE}" -a || true
-     # not using -a here, because modules with mandatory need startup data first
+    ${SYSREPOCTL} --uninstall "${MODULE}" || true
     ${SYSREPOCTL} --search-dirs "${YANG_DIR}" --install "${YANG_FILE}"
   elif [[ "${MODE}" == "uninstall" ]]; then
     MODULE_LIST=( "${MODULE}" "${MODULE_LIST[@]}" ) # save for later; uninstall in reverse order
@@ -55,7 +54,7 @@ fi
       [ -z "${FEATURE}" ] && error "Error: FEATURE requires an argument"
 
       if [[ "${MODE}" == "prepare" ]]; then
-        ${SYSREPOCTL} --change ${MODULE} --enable-feature ${FEATURE} -a
+        ${SYSREPOCTL} --change ${MODULE} --enable-feature ${FEATURE}
       fi
     elif [[ "${1}" == "JSON" || "${1}" == "XML" ]]; then
       FORMAT="${1}"
@@ -79,6 +78,6 @@ done
 
 if [[ "${MODE}" == "uninstall" ]]; then
   for module in "${MODULE_LIST[@]}"; do
-    ${SYSREPOCTL} --uninstall "${module}" -a
+    ${SYSREPOCTL} --uninstall "${module}"
   done
 fi

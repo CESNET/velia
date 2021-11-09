@@ -1,7 +1,7 @@
 #include <docopt.h>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Connection.hpp>
 #include "VELIA_VERSION.h"
 #include "ietf-hardware/Factory.h"
 #include "ietf-hardware/IETFHardware.h"
@@ -53,9 +53,8 @@ int main(int argc, char* argv[])
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
         spdlog::get("hardware")->set_level(parseLogLevel("Hardware loggers", args["--hardware-log-level"]));
 
-        auto srConn = std::make_shared<sysrepo::Connection>();
-        auto srSess = std::make_shared<sysrepo::Session>(srConn);
-        auto srSubscription = std::make_shared<sysrepo::Subscribe>(srSess);
+        auto srConn = sysrepo::Connection{};
+        auto srSess = srConn.sessionStart();
 
         // initialize ietf-hardware
         std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware;
@@ -65,7 +64,7 @@ int main(int argc, char* argv[])
             ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
         }
 
-        auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSubscription, ietfHardware);
+        auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSess, ietfHardware);
 
         waitUntilSignaled();
 

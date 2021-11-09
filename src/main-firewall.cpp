@@ -2,7 +2,7 @@
 #include <docopt.h>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Connection.hpp>
 #include <unistd.h>
 #include "VELIA_VERSION.h"
 #include "firewall/Firewall.h"
@@ -53,8 +53,8 @@ int main(int argc, char* argv[])
         spdlog::get("firewall")->set_level(parseLogLevel("Firewall logging", args["--firewall-log-level"]));
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
-        auto srConn = std::make_shared<sysrepo::Connection>();
-        auto srSess = std::make_shared<sysrepo::Session>(srConn);
+        auto srConn = sysrepo::Connection{};
+        auto srSess = srConn.sessionStart();
         velia::firewall::SysrepoFirewall firewall(srSess, [] (const auto& config) {
             spdlog::get("firewall")->debug("running nft...");
             velia::utils::execAndWait(spdlog::get("firewall"), NFT_EXECUTABLE, {"-f", "-"}, config);

@@ -28,7 +28,7 @@ TEST_CASE("Sysrepo reports system LEDs")
 
     std::this_thread::sleep_for(10ms);
 
-    REQUIRE(dataFromSysrepo(client, "/czechlight-system:leds", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+    REQUIRE(dataFromSysrepo(client, "/czechlight-system:leds", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                 {"/led[name='line:green']", ""},
                 {"/led[name='line:green']/brightness", "100"},
                 {"/led[name='line:green']/name", "line:green"},
@@ -48,7 +48,7 @@ TEST_CASE("Sysrepo reports system LEDs")
         velia::utils::writeFile(fakeSysfsDir / "uid:green" / "brightness", "0");
         std::this_thread::sleep_for(WAIT);
 
-        REQUIRE(dataFromSysrepo(client, "/czechlight-system:leds", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+        REQUIRE(dataFromSysrepo(client, "/czechlight-system:leds", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                     {"/led[name='line:green']", ""},
                     {"/led[name='line:green']/brightness", "100"},
                     {"/led[name='line:green']/name", "line:green"},
@@ -66,7 +66,6 @@ TEST_CASE("Sysrepo reports system LEDs")
 
     SECTION("Test UID RPC")
     {
-        std::shared_ptr<sysrepo::Vals> rpcInput = std::make_shared<sysrepo::Vals>(1);
         std::string state;
         std::string expectedTrigger;
         std::string expectedBrightness;
@@ -102,9 +101,10 @@ TEST_CASE("Sysrepo reports system LEDs")
             expectedBrightness = "256";
         }
 
-        rpcInput->val(0)->set("/czechlight-system:leds/uid/state", state.c_str());
-        auto res = client->rpc_send("/czechlight-system:leds/uid", rpcInput);
-        REQUIRE(res->val_cnt() == 0);
+        auto rpcInput = client.getContext().newPath("/czechlight-system:leds/uid/state", state.c_str());
+
+        auto res = client.sendRPC(rpcInput);
+        REQUIRE(res.child() == std::nullopt);
         REQUIRE(velia::utils::readFileString(fakeSysfsDir / "uid:blue" / "trigger") == expectedTrigger);
         REQUIRE(velia::utils::readFileString(fakeSysfsDir / "uid:blue" / "brightness") == expectedBrightness);
     }

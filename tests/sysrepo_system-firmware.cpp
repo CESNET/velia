@@ -1,3 +1,4 @@
+#include <sysrepo-cpp/utils/exception.hpp>
 #include "trompeloeil_doctest.h"
 #include "dbus-helpers/dbus_rauc_server.h"
 #include "pretty_printers.h"
@@ -64,6 +65,9 @@ TEST_CASE("Firmware in czechlight-system, RPC")
     // process install notifications
     InstallProgressMock installProgressMock;
     EventWatcher events([&installProgressMock](const EventWatcher::Event& event) {
+        if (event.xPath == "<no-xpath>") {
+            return;
+        }
         installProgressMock.update(std::stoi(event.data.at("/czechlight-system:firmware/installation/update/progress")), event.data.at("/czechlight-system:firmware/installation/update/message"));
     });
 
@@ -143,7 +147,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
     auto raucServer = DBusRAUCServer(*dbusServerConnection, "rootfs.1", dbusRaucStatus);
     auto sysrepo = std::make_shared<velia::system::Firmware>(srConn, *dbusClientConnectionSignals, *dbusClientConnectionMethods);
 
-    REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+    REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                 {"/firmware-slot[name='A']", ""},
                 {"/firmware-slot[name='A']/boot-status", "bad"},
                 {"/firmware-slot[name='A']/installed", "2021-01-13T17:15:50-00:00"},
@@ -163,12 +167,11 @@ TEST_CASE("Firmware in czechlight-system, RPC")
 
     SECTION("Firmware install RPC")
     {
-        auto rpcInput = std::make_shared<sysrepo::Vals>(1);
-        rpcInput->val(0)->set("/czechlight-system:firmware/installation/install/url", "/path/to/bundle/update.raucb");
+        auto rpcInput = client.getContext().newPath("/czechlight-system:firmware/installation/install/url", "/path/to/bundle/update.raucb");
 
         SECTION("Installation runs")
         {
-            subscription->event_notif_subscribe("czechlight-system", events, "/czechlight-system:firmware/installation/update");
+            auto subscription = client.onNotification("czechlight-system", events, "/czechlight-system:firmware/installation/update");
 
             DBusRAUCServer::InstallBehaviour installType;
             std::map<std::string, std::string> expectedFinished, expectedInProgress = {
@@ -196,28 +199,28 @@ TEST_CASE("Firmware in czechlight-system, RPC")
 
             raucServer.installBundleBehaviour(installType);
             auto progressExpectations = expectationFactory(installType, installProgressMock, seq1);
-            auto res = client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
-            REQUIRE(res->val_cnt() == 0);
+            auto res = client.sendRPC(rpcInput);
+            REQUIRE(res.child() == std::nullopt);
 
             std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
-            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expectedInProgress);
+            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == expectedInProgress);
 
             waitForCompletionAndBitMore(seq1); // wait for installation to complete
-            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == expectedFinished);
+            REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == expectedFinished);
         }
 
         SECTION("Unsuccessfull install followed by successfull install")
         {
-            subscription->event_notif_subscribe("czechlight-system", events, "/czechlight-system:firmware/installation/update");
+            auto subscription = client.onNotification("czechlight-system", events, "/czechlight-system:firmware/installation/update");
 
             // invoke unsuccessfull install
             {
                 raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::FAILURE);
                 auto progressExpectations = expectationFactory(DBusRAUCServer::InstallBehaviour::FAILURE, installProgressMock, seq1);
-                client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+                client.sendRPC(rpcInput);
 
                 waitForCompletionAndBitMore(seq1); // wait for installation to complete
-                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                     {"/message", "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number"},
                     {"/status", "failed"},
                 });
@@ -227,16 +230,16 @@ TEST_CASE("Firmware in czechlight-system, RPC")
             {
                 raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK);
                 auto progressExpectations = expectationFactory(DBusRAUCServer::InstallBehaviour::OK, installProgressMock, seq1);
-                client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+                client.sendRPC(rpcInput);
 
                 std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
-                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                     {"/message", ""},
                     {"/status", "in-progress"},
                 });
 
                 waitForCompletionAndBitMore(seq1); // wait for installation to complete
-                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", SR_DS_OPERATIONAL) == std::map<std::string, std::string>{
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == std::map<std::string, std::string>{
                     {"/message", ""},
                     {"/status", "succeeded"},
                 });
@@ -246,18 +249,18 @@ TEST_CASE("Firmware in czechlight-system, RPC")
         SECTION("Installation in progress")
         {
             raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK);
-            client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput);
+            client.sendRPC(rpcInput);
             std::this_thread::sleep_for(10ms);
 
             SECTION("Invoking second installation throws")
             {
-                REQUIRE_THROWS_WITH_AS(client->rpc_send("/czechlight-system:firmware/installation/install", rpcInput), "User callback failed", sysrepo::sysrepo_exception);
+                REQUIRE_THROWS_WITH_AS(client.sendRPC(rpcInput), "Couldn't send RPC: SR_ERR_CALLBACK_FAILED", sysrepo::ErrorWithCode);
             }
 
             SECTION("Firmware slot data are available")
             {
                 // RAUC does not respond to GetSlotStatus when another operation in progress, so let's check we use the cached data
-                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", SR_DS_OPERATIONAL) == std::map<std::string, std::string> {
+                REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                     {"/firmware-slot[name='A']", ""},
                     {"/firmware-slot[name='A']/boot-status", "bad"},
                     {"/firmware-slot[name='A']/installed", "2021-01-13T17:15:50-00:00"},
@@ -367,11 +370,13 @@ TEST_CASE("Firmware in czechlight-system, slot status")
         };
 
         expected = {
+            {"[name='A']", ""},
             {"[name='A']/boot-status", "bad"},
             {"[name='A']/installed", "2021-01-13T17:15:50-00:00"},
             {"[name='A']/name", "A"},
             {"[name='A']/state", "inactive"},
             {"[name='A']/version", "v4-104-ge80fcd4"},
+            {"[name='B']", ""},
             {"[name='B']/boot-status", "good"},
             {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
@@ -415,9 +420,11 @@ TEST_CASE("Firmware in czechlight-system, slot status")
         };
 
         expected = {
+            {"[name='A']", ""},
             {"[name='A']/boot-status", "bad"},
             {"[name='A']/name", "A"},
             {"[name='A']/state", "inactive"},
+            {"[name='B']", ""},
             {"[name='B']/boot-status", "good"},
             {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
@@ -460,6 +467,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
         };
 
         expected = {
+            {"[name='B']", ""},
             {"[name='B']/boot-status", "good"},
             {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
@@ -471,5 +479,5 @@ TEST_CASE("Firmware in czechlight-system, slot status")
     auto raucServer = DBusRAUCServer(*dbusServerConnection, "rootfs.1", dbusRaucStatus);
     auto sysrepo = std::make_shared<velia::system::Firmware>(srConn, *dbusClientConnectionSignals, *dbusClientConnectionMethods);
 
-    REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/firmware-slot", SR_DS_OPERATIONAL) == expected);
+    REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/firmware-slot", sysrepo::Datastore::Operational) == expected);
 }

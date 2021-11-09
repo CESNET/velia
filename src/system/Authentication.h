@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <map>
 #include <optional>
 #include <string>
 #include <sysrepo-cpp/Session.hpp>
@@ -33,7 +34,7 @@ class Authentication {
 public:
     using ChangePassword = std::function<void(const std::string& name, const std::string& password, const std::string& etc_shadow)>;
 
-    Authentication(sysrepo::S_Session srSess, const std::string& etc_passwd, const std::string& etc_shadow, const std::string& authorized_keys_format, ChangePassword changePassword);
+    Authentication(sysrepo::Session srSess, const std::string& etc_passwd, const std::string& etc_shadow, const std::string& authorized_keys_format, ChangePassword changePassword);
 
 private:
     std::vector<std::string> listKeys(const std::string& username);
@@ -49,7 +50,7 @@ private:
     std::string m_etc_passwd;
     std::string m_etc_shadow;
     std::string m_authorized_keys_format;
-    sysrepo::S_Session m_session;
-    sysrepo::S_Subscribe m_sub;
+    sysrepo::Session m_session;
+    std::optional<sysrepo::Subscription> m_sub;
 };
 }

@@ -7,6 +7,7 @@
 #pragma once
 
 #include <filesystem>
+#include <map>
 #include <sysrepo-cpp/Session.hpp>
 #include "utils/log-fwd.h"
 
@@ -17,17 +18,17 @@ class Rtnetlink;
 class IETFInterfacesConfig {
 public:
     using reload_cb_t = std::function<void(const std::vector<std::string>&)>;
-    explicit IETFInterfacesConfig(std::shared_ptr<::sysrepo::Session> srSess, std::filesystem::path configDirectory, std::vector<std::string> managedLinks, reload_cb_t reloadCallback);
+    explicit IETFInterfacesConfig(::sysrepo::Session srSess, std::filesystem::path configDirectory, std::vector<std::string> managedLinks, reload_cb_t reloadCallback);
 
 private:
     velia::Log m_log;
     reload_cb_t m_reloadCb;
     std::filesystem::path m_configDirectory;
     std::vector<std::string> m_managedLinks;
-    std::shared_ptr<::sysrepo::Session> m_srSession;
-    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
+    ::sysrepo::Session m_srSession;
+    std::optional<::sysrepo::Subscription> m_srSubscribe;
 
-    int moduleChange(std::shared_ptr<::sysrepo::Session> session) const;
+    sysrepo::ErrorCode moduleChange(::sysrepo::Session session) const;
     std::vector<std::string> updateNetworkFiles(const std::map<std::string, std::string>& networkConfig, const std::filesystem::path& configDir) const;
 };
 }

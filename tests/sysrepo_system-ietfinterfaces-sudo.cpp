@@ -76,10 +76,9 @@ void nlCacheForeachWrapper(nl_cache* cache, std::function<void(T*)> cb)
         &cb);
 }
 
-auto dataFromSysrepoNoStatistics(const std::shared_ptr<sysrepo::Session>& session, const std::string& xpath, sr_datastore_t datastore)
+auto dataFromSysrepoNoStatistics(sysrepo::Session session, const std::string& xpath, sysrepo::Datastore datastore)
 {
     auto res = dataFromSysrepo(session, xpath, datastore);
-    REQUIRE(res.erase("/statistics") == 1);
     REQUIRE(res.erase("/statistics/in-octets") == 1);
     REQUIRE(res.erase("/statistics/in-errors") == 1);
     REQUIRE(res.erase("/statistics/in-discards") == 1);
@@ -105,15 +104,10 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
     iproute2_exec_and_wait(WAIT, "addr", "add", "::ffff:192.0.2.1", "dev", IFACE);
 
     std::map<std::string, std::string> initialExpected{
-        {"/ietf-ip:ipv4", ""},
-        {"/ietf-ip:ipv4/address[ip='192.0.2.1']", ""},
         {"/ietf-ip:ipv4/address[ip='192.0.2.1']/ip", "192.0.2.1"},
         {"/ietf-ip:ipv4/address[ip='192.0.2.1']/prefix-length", "24"},
-        {"/ietf-ip:ipv6", ""},
-        {"/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']", ""},
         {"/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip", "::ffff:192.0.2.1"},
         {"/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/prefix-length", "128"},
-        {"/ietf-ip:ipv6/autoconf", ""},
         {"/name", IFACE},
         {"/oper-status", "down"},
         {"/phys-address", LINK_MAC},
@@ -128,20 +122,19 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
 
         std::map<std::string, std::string> expected = initialExpected;
         expected["/phys-address"] = LINK_MAC_CHANGED;
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expected);
     }
 
     SECTION("Add and remove IP addresses")
     {
         iproute2_exec_and_wait(WAIT, "addr", "add", "192.0.2.6/24", "dev", IFACE);
         std::map<std::string, std::string> expected = initialExpected;
-        expected["/ietf-ip:ipv4/address[ip='192.0.2.6']"] = "";
         expected["/ietf-ip:ipv4/address[ip='192.0.2.6']/ip"] = "192.0.2.6";
         expected["/ietf-ip:ipv4/address[ip='192.0.2.6']/prefix-length"] = "24";
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expected);
 
         iproute2_exec_and_wait(WAIT, "addr", "del", "192.0.2.6/24", "dev", IFACE);
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == initialExpected);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == initialExpected);
     }
 
     SECTION("IPv6 LL gained when device up")
@@ -150,21 +143,19 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
 
         {
             std::map<std::string, std::string> expected = initialExpected;
-            expected["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']"] = "";
             expected["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip"] = "fe80::2:2ff:fe02:202";
             expected["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length"] = "64";
             expected["/oper-status"] = "unknown";
-            REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
+            REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expected);
         }
 
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "down"); // this discards all addresses, i.e., the link-local address and the ::ffff:192.0.2.1 address
         {
             std::map<std::string, std::string> expected = initialExpected;
-            expected.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']");
             expected.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip");
             expected.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/prefix-length");
             expected["/oper-status"] = "down";
-            REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expected);
+            REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expected);
         }
     }
 
@@ -182,38 +173,33 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         };
 
         iproute2_exec_and_wait(WAIT, "link", "add", "name", IFACE_BRIDGE, "address", MAC_BRIDGE, "type", "bridge");
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", sysrepo::Datastore::Operational) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "master", IFACE_BRIDGE);
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", sysrepo::Datastore::Operational) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "up");
-        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']"] = "";
         expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip"] = "fe80::2:2ff:fe02:202";
         expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length"] = "64";
         expectedIface["/oper-status"] = "unknown";
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", sysrepo::Datastore::Operational) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT_BRIDGE, "link", "set", "dev", IFACE_BRIDGE, "up");
-        expectedBridge["/ietf-ip:ipv6"] = "";
-        expectedBridge["/ietf-ip:ipv6/autoconf"] = "";
-        expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']"] = "";
         expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/ip"] = "fe80::22:22ff:fe22:2222";
         expectedBridge["/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/prefix-length"] = "64";
         expectedBridge["/oper-status"] = "up";
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", sysrepo::Datastore::Operational) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT_BRIDGE, "link", "set", "dev", IFACE_BRIDGE, "down");
-        expectedBridge.erase("/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']");
         expectedBridge.erase("/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/ip");
         expectedBridge.erase("/ietf-ip:ipv6/address[ip='fe80::22:22ff:fe22:2222']/prefix-length");
         expectedBridge["/oper-status"] = "down";
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", sysrepo::Datastore::Operational) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "down");
         expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']");
@@ -223,9 +209,8 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip");
         expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length");
         expectedIface["/oper-status"] = "down";
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
-
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", sysrepo::Datastore::Operational) == expectedBridge);
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "nomaster");
         expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']");
         expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/ip");
@@ -233,8 +218,8 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         expectedIface.erase("/ietf-ip:ipv4");
         expectedIface.erase("/ietf-ip:ipv6/autoconf");
         expectedIface.erase("/ietf-ip:ipv6");
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
-        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", sysrepo::Datastore::Operational) == expectedIface);
+        REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", sysrepo::Datastore::Operational) == expectedBridge);
     }
 
     SECTION("Add and remove routes")
@@ -243,12 +228,9 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         iproute2_exec_and_wait(WAIT, "route", "add", "198.51.100.0/24", "dev", IFACE);
         std::this_thread::sleep_for(WAIT);
 
-        auto data = dataFromSysrepo(client, "/ietf-routing:routing", SR_DS_OPERATIONAL);
-        REQUIRE(data["/control-plane-protocols"] == "");
-        REQUIRE(data["/interfaces"] == "");
-        REQUIRE(data["/ribs"] == "");
+        auto data = dataFromSysrepo(client, "/ietf-routing:routing", sysrepo::Datastore::Operational);
 
-        data = dataFromSysrepo(client, "/ietf-routing:routing/ribs/rib[name='ipv4-master']", SR_DS_OPERATIONAL);
+        data = dataFromSysrepo(client, "/ietf-routing:routing/ribs/rib[name='ipv4-master']", sysrepo::Datastore::Operational);
         REQUIRE(data["/name"] == "ipv4-master");
 
         auto findRouteIndex = [&data](const std::string& prefix) {
@@ -283,7 +265,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
             REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/source-protocol"] == "ietf-routing:direct");
         }
 
-        data = dataFromSysrepo(client, "/ietf-routing:routing/ribs/rib[name='ipv6-master']", SR_DS_OPERATIONAL);
+        data = dataFromSysrepo(client, "/ietf-routing:routing/ribs/rib[name='ipv6-master']", sysrepo::Datastore::Operational);
         REQUIRE(data["/name"] == "ipv6-master");
 
         iproute2_exec_and_wait(WAIT, "route", "del", "198.51.100.0/24");

@@ -8,7 +8,8 @@
 
 #include <atomic>
 #include <filesystem>
-#include <sysrepo-cpp/Session.hpp>
+#include <map>
+#include <sysrepo-cpp/Connection.hpp>
 #include <thread>
 #include "utils/log-fwd.h"
 
@@ -16,7 +17,7 @@ namespace velia::system {
 
 class LED {
 public:
-    LED(const std::shared_ptr<::sysrepo::Connection>& srConn, std::filesystem::path sysfsLeds);
+    LED(::sysrepo::Connection srConn, std::filesystem::path sysfsLeds);
     ~LED();
 
 private:
@@ -24,8 +25,8 @@ private:
 
     velia::Log m_log;
     std::map<std::filesystem::path, uint32_t> m_ledsMaxBrightness;
-    std::shared_ptr<::sysrepo::Session> m_srSession;
-    std::shared_ptr<::sysrepo::Subscribe> m_srSubscribe;
+    ::sysrepo::Session m_srSession;
+    std::optional<::sysrepo::Subscription> m_srSubscribe;
     std::thread m_thr;
     std::atomic<bool> m_thrRunning;
 };

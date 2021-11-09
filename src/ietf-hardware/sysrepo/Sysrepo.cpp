@@ -19,21 +19,22 @@ const auto IETF_HARDWARE_MODULE_PREFIX = "/"s + IETF_HARDWARE_MODULE_NAME + ":ha
 }
 
 /** @brief The constructor expects the HardwareState instance which will provide the actual hardware state data */
-Sysrepo::Sysrepo(std::shared_ptr<::sysrepo::Subscribe> srSubscribe, std::shared_ptr<IETFHardware> hwState)
+Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwState)
     : m_hwState(std::move(hwState))
-    , m_srSubscribe(std::move(srSubscribe))
+    , m_srSubscribe()
 {
-    m_srSubscribe->oper_get_items_subscribe(
+    ::sysrepo::OperGetItemsCb cb = [this](::sysrepo::Session session, auto, auto, auto, auto, auto, auto& parent) {
+        auto hwStateValues = m_hwState->process();
+        utils::valuesToYang(hwStateValues, {}, session, parent);
+
+        spdlog::get("hardware")->trace("Pushing to sysrepo (JSON): {}", parent->printStr(::libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings)->get().get());
+        return ::sysrepo::ErrorCode::Ok;
+    };
+
+    m_srSubscribe = session.onOperGetItems(
         IETF_HARDWARE_MODULE_NAME.c_str(),
-        [this](std::shared_ptr<::sysrepo::Session> session, [[maybe_unused]] const char* module_name, [[maybe_unused]] const char* xpath, [[maybe_unused]] const char* request_xpath, [[maybe_unused]] uint32_t request_id, std::shared_ptr<libyang::Data_Node>& parent) {
-            auto hwStateValues = m_hwState->process();
-            utils::valuesToYang(hwStateValues, {}, session, parent);
-
-            spdlog::get("hardware")->trace("Pushing to sysrepo (JSON): {}", parent->print_mem(LYD_FORMAT::LYD_JSON, 0));
-
-            return SR_ERR_OK;
-        },
+        cb,
         IETF_HARDWARE_MODULE_PREFIX.c_str(),
-        SR_SUBSCR_PASSIVE | SR_SUBSCR_OPER_MERGE | SR_SUBSCR_CTX_REUSE);
+        ::sysrepo::SubscribeOptions::Passive | ::sysrepo::SubscribeOptions::OperMerge);
 }
 }

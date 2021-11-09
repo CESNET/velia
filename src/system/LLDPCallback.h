@@ -20,12 +20,11 @@ namespace velia::system {
 class LLDPCallback {
 public:
     explicit LLDPCallback(std::shared_ptr<LLDPDataProvider> lldp);
-    int operator()(std::shared_ptr<::sysrepo::Session> session, const char* module_name, const char* path, const char* request_xpath, uint32_t request_id, std::shared_ptr<libyang::Data_Node>& parent);
+    sysrepo::ErrorCode operator()(sysrepo::Session session, uint32_t subscriptionId, std::string_view moduleName, std::optional<std::string_view> subXPath, std::optional<std::string_view> requestXPath, uint32_t, std::optional<libyang::DataNode>& output);
 
 private:
     velia::Log m_log;
     std::shared_ptr<LLDPDataProvider> m_lldp;
-    uint64_t m_lastRequestId;
 };
 
 }

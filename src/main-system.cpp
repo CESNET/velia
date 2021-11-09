@@ -59,8 +59,8 @@ int main(int argc, char* argv[])
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
         spdlog::get("system")->set_level(parseLogLevel("System logging", args["--system-log-level"]));
 
-        auto srConn = std::make_shared<sysrepo::Connection>();
-        auto srSess = std::make_shared<sysrepo::Session>(srConn);
+        auto srConn = sysrepo::Connection{};
+        auto srSess = srConn.sessionStart();
 
         DBUS_EVENTLOOP_START
 
@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
         const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network"), persistentNetworkDirectory("/cfg/network/");
         std::filesystem::create_directories(runtimeNetworkDirectory);
         std::filesystem::create_directories(persistentNetworkDirectory);
-        auto srSessStartup = std::make_shared<sysrepo::Session>(srConn, SR_DS_STARTUP);
+        auto srSessStartup = srConn.sessionStart(sysrepo::Datastore::Startup);
         std::vector<std::string> managedLinks = {"br0", "eth0", "eth1", "osc", "oscE", "oscW"};
 
         auto sysrepoIETFInterfacesOperational = std::make_shared<velia::system::IETFInterfaces>(srSess);
@@ -101,14 +101,13 @@ int main(int argc, char* argv[])
 
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 
-        auto srSess2 = std::make_shared<sysrepo::Session>(srConn);
+        auto srSess2 = srConn.sessionStart();
         auto authentication = velia::system::Authentication(srSess2, REAL_ETC_PASSWD_FILE, REAL_ETC_SHADOW_FILE, AUTHORIZED_KEYS_FORMAT, velia::system::impl::changePassword);
 
         auto leds = velia::system::LED(srConn, "/sys/class/leds");
 
         auto lldp = std::make_shared<velia::system::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
-        auto srSubs = std::make_shared<sysrepo::Subscribe>(srSess);
-        srSubs->oper_get_items_subscribe("czechlight-lldp", velia::system::LLDPCallback(lldp), "/czechlight-lldp:nbr-list");
+        auto srSubs = srSess.onOperGet("czechlight-lldp", velia::system::LLDPCallback(lldp), "/czechlight-lldp:nbr-list");
 
         DBUS_EVENTLOOP_END
         return 0;

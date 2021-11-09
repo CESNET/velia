@@ -66,7 +66,7 @@ TEST_CASE("Sysrepo ietf-system")
             }
 
             auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, file, *dbusConnClient, dbusConnServer->getUniqueName());
-            REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", SR_DS_OPERATIONAL) == expected);
+            REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", sysrepo::Datastore::Operational) == expected);
         }
 
         SECTION("Invalid data (missing VERSION and NAME keys)")
@@ -88,20 +88,20 @@ TEST_CASE("Sysrepo ietf-system")
             xpath = "/ietf-system:system/contact";
         }
 
-        client->session_switch_ds(SR_DS_OPERATIONAL);
-        REQUIRE_THROWS_WITH(client->get_item(xpath), "Item not found");
+        client.switchDatastore(sysrepo::Datastore::Operational);
+        REQUIRE(!client.getData(xpath));
 
-        client->session_switch_ds(SR_DS_RUNNING);
-        client->set_item_str(xpath, "lamparna");
+        client.switchDatastore(sysrepo::Datastore::Running);
+        client.setItem(xpath, "lamparna");
 
-        REQUIRE(!!client->get_item(xpath));
+        REQUIRE(client.getData(xpath));
     }
 
     SECTION("clock")
     {
         auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
-        client->session_switch_ds(SR_DS_OPERATIONAL);
-        REQUIRE(!!client->get_item("/ietf-system:system-state/clock/current-datetime"));
+        client.switchDatastore(sysrepo::Datastore::Operational);
+        REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
     }
 
     SECTION("DNS resolvers")
@@ -154,7 +154,7 @@ TEST_CASE("Sysrepo ietf-system")
             };
         }
 
-        REQUIRE(dataFromSysrepo(client, "/ietf-system:system/dns-resolver", SR_DS_OPERATIONAL) == expected);
+        REQUIRE(dataFromSysrepo(client, "/ietf-system:system/dns-resolver", sysrepo::Datastore::Operational) == expected);
     }
 
 #ifdef TEST_RPC_SYSTEM_REBOOT

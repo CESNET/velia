@@ -10,6 +10,7 @@
 #include <iostream>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include "utils/log-init.h"
+#include "utils/sysrepo.h"
 #include "utils/log.h"
 
 #define IMPL_TEST_INIT_LOGS_1                                                       \

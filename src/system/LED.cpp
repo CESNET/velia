@@ -26,10 +26,10 @@ const auto POLL_INTERVAL = 125ms;
 
 namespace velia::system {
 
-LED::LED(const std::shared_ptr<::sysrepo::Connection>& srConn, std::filesystem::path sysfsLeds)
+LED::LED(::sysrepo::Connection srConn, std::filesystem::path sysfsLeds)
     : m_log(spdlog::get("system"))
-    , m_srSession(std::make_shared<::sysrepo::Session>(srConn))
-    , m_srSubscribe(std::make_shared<::sysrepo::Subscribe>(m_srSession))
+    , m_srSession(srConn.sessionStart())
+    , m_srSubscribe()
     , m_thrRunning(true)
 {
     utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_SYSTEM_MODULE_NAME, "2021-01-13");
@@ -51,9 +51,9 @@ LED::LED(const std::shared_ptr<::sysrepo::Connection>& srConn, std::filesystem::
     const auto triggerFile = sysfsLeds / UID_LED / "trigger";
     const auto brightnessFile = sysfsLeds / UID_LED / "brightness";
 
-    m_srSubscribe->rpc_subscribe_tree(
+    m_srSubscribe = m_srSession.onRPCAction(
         (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid").c_str(),
-        [this, uidMaxBrightness, triggerFile, brightnessFile](auto session, auto, auto input, auto, auto, auto) {
+        [this, uidMaxBrightness, triggerFile, brightnessFile](auto session, auto, auto, auto input, auto, auto, auto) {
             std::string val = utils::getValueAsString(utils::getUniqueSubtree(input, (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid/state").c_str()).value());
 
             try {
@@ -69,11 +69,11 @@ LED::LED(const std::shared_ptr<::sysrepo::Connection>& srConn, std::filesystem::
                 }
             } catch (const std::invalid_argument& e) {
                 m_log->warn("Failed to set state of the UID LED: '{}'", e.what());
-                session->set_error("Failed to set state of the UID LED", nullptr);
-                return SR_ERR_OPERATION_FAILED;
+                utils::setErrors(session, "Failed to set state of the UID LED");
+                return sysrepo::ErrorCode::OperationFailed;
             }
 
-            return SR_ERR_OK;
+            return sysrepo::ErrorCode::Ok;
         });
 }
 
@@ -104,7 +104,7 @@ void LED::poll() const
             }
         }
 
-        utils::valuesPush(data, {}, m_srSession, SR_DS_OPERATIONAL);
+        utils::valuesPush(data, {}, m_srSession, sysrepo::Datastore::Operational);
 
         std::this_thread::sleep_for(POLL_INTERVAL);
     }

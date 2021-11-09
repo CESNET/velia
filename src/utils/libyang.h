@@ -10,7 +10,7 @@
 #include <optional>
 
 namespace libyang {
-    class Data_Node;
+    class DataNode;
 }
 
 namespace velia::utils {
@@ -21,11 +21,12 @@ namespace velia::utils {
  * @param node A libyang data node. Mustn't be nullptr. Must be a leaf.
  *
  */
-const char* getValueAsString(const std::shared_ptr<libyang::Data_Node>& node);
+const char* getValueAsString(const libyang::DataNode& node);
 
-/** @brief Gets exactly one node based on `path` starting from `start`.
+/** @brief Gets exactly one node based on `path` starting from `start`. Uses findXPath, so it works even with lists with
+ * missing predicates.
  *
  * Throws if there is more than one matching node. Returns std::nullopt if no node matches.
  */
-std::optional<std::shared_ptr<libyang::Data_Node>> getUniqueSubtree(const std::shared_ptr<libyang::Data_Node>& start, const char* path);
+std::optional<libyang::DataNode> getUniqueSubtree(const libyang::DataNode& start, const char* path);
 }

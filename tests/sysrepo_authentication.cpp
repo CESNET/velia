@@ -57,9 +57,9 @@ TEST_CASE("Authentication")
         auto data = dataFromSysrepo(test_srSess, "/czechlight-system:authentication/users");
         decltype(data) expected = {
             {"[name='ci']/name", "ci"},
-            {"[name='ci']/password-last-change", "2024-10-04T00:00:00Z"},
+            {"[name='ci']/password-last-change", "2024-10-04T00:00:00-00:00"},
             {"[name='root']/name", "root"},
-            {"[name='root']/password-last-change", "2020-09-09T00:00:00Z"},
+            {"[name='root']/password-last-change", "2020-09-09T00:00:00-00:00"},
             {"[name='root']/authorized-keys[index='0']", ""},
             {"[name='root']/authorized-keys[index='0']/index", "0"},
             {"[name='root']/authorized-keys[index='0']/public-key", "ssh-rsa SOME_KEY comment"}

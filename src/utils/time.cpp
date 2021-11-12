@@ -18,7 +18,7 @@ std::string yangTimeFormat(const std::chrono::time_point<std::chrono::system_clo
     auto time = std::chrono::system_clock::to_time_t(timePoint);
 
     std::ostringstream oss;
-    oss << std::put_time(std::gmtime(&time), "%Y-%m-%dT%H:%M:%SZ");
+    oss << std::put_time(std::gmtime(&time), "%Y-%m-%dT%H:%M:%S-00:00");
     return oss.str();
 }
 }

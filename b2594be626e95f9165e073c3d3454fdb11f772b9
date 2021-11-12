@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca78a159_4d86c8c5",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-11-12T12:48:28Z",
+      "side": 1,
+      "message": "velia",
+      "range": {
+        "startLine": 390,
+        "startChar": 32,
+        "endLine": 390,
+        "endChar": 43
+      },
+      "revId": "b2594be626e95f9165e073c3d3454fdb11f772b9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e84ac87_cf48a4f0",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-11-12T12:48:28Z",
+      "side": 1,
+      "message": "\"velia-something\"",
+      "range": {
+        "startLine": 486,
+        "startChar": 28,
+        "endLine": 486,
+        "endChar": 64
+      },
+      "revId": "b2594be626e95f9165e073c3d3454fdb11f772b9",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

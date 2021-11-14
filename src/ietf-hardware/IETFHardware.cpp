@@ -234,7 +234,9 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
 
     // date is specified in MM/YYYY format (source: kernel core/mmc.c) and mfg-date is unfortunately of type yang:date-and-time
     std::string mfgDate = emmcAttrs.at("date");
-    mfgDate = mfgDate.substr(3, 4) + "-" + mfgDate.substr(0, 2) + "-01T00:00:00Z";
+    auto year = std::chrono::year{std::stoi(mfgDate.substr(3, 4))};
+    auto month = std::chrono::month{static_cast<unsigned int>(std::stoul(mfgDate.substr(0, 2)))};
+    mfgDate = velia::utils::yangTimeFormat(std::chrono::sys_days{year / month / 1});
 
     addComponent(m_staticData,
                  m_componentName,

@@ -5,6 +5,7 @@
  *
  */
 
+#include <chrono>
 #include <utility>
 #include "IETFHardware.h"
 #include "utils/log.h"
@@ -234,7 +235,14 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
 
     // date is specified in MM/YYYY format (source: kernel core/mmc.c) and mfg-date is unfortunately of type yang:date-and-time
     std::string mfgDate = emmcAttrs.at("date");
-    mfgDate = mfgDate.substr(3, 4) + "-" + mfgDate.substr(0, 2) + "-01T00:00:00Z";
+    // FIXME: replace this with C++20's <chrono> calendar features once Buildroot gets GCC 11+
+    struct tm date;
+    memset(&date, 0, sizeof(date));
+    date.tm_mday = 1;
+    date.tm_mon = std::stoul(mfgDate.substr(0, 2)) - 1;
+    date.tm_year = std::stoi(mfgDate.substr(3, 4)) - 1900;
+    date.tm_isdst = -1;
+    mfgDate = velia::utils::yangTimeFormat(std::chrono::system_clock::from_time_t(timegm(&date)));
 
     addComponent(m_staticData,
                  m_componentName,

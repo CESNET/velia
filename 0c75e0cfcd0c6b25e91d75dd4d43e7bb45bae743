@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "654ed629_17e3b568",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-11-15T08:42:29Z",
+      "side": 1,
+      "message": "This however doesn\u0027t work yet, because libyang does not support the -00:00 timezone\nhttps://github.com/CESNET/libyang/issues/1734",
+      "revId": "0c75e0cfcd0c6b25e91d75dd4d43e7bb45bae743",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

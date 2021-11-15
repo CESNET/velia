@@ -71,6 +71,10 @@ cmake -GNinja -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Debug} -DCMAKE_INSTALL_PREF
 ninja-build
 ctest -j${CI_PARALLEL_JOBS} --output-on-failure
 
+for i in $(seq 150); do
+    ctest -j${CI_PARALLEL_JOBS} --output-on-failure -R rauc
+done
+
 if [[ $JOB_PERFORM_EXTRA_WORK == 1 ]]; then
     ninja-build doc
     pushd html

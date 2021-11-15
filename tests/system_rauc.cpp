@@ -112,7 +112,8 @@ TEST_CASE("Fetch RAUC data over DBus")
     SECTION("Installation OK")
     {
         server.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK); // Not cool but I don't feel like I should be creating some abstractions here in tests.
-        FAKE_RAUC_OPERATION("installing");
+        //FAKE_RAUC_OPERATION("installing");
+        auto x = NAMED_REQUIRE_CALL(fakeRaucInstallCb, operationCallback("installing")).IN_SEQUENCE(seq1);
         FAKE_RAUC_PROGRESS(0, "Installing");
         FAKE_RAUC_PROGRESS(0, "Determining slot states");
         FAKE_RAUC_PROGRESS(20, "Determining slot states done.");
@@ -139,6 +140,7 @@ TEST_CASE("Fetch RAUC data over DBus")
         FAKE_RAUC_OPERATION("idle");
 
         rauc->install("/path/to/bundle");
+        while(!x->is_satisfied()) std::this_thread::sleep_for(10ms);
         REQUIRE(rauc->operation() == "installing");
 
         SECTION("Invoking another operation before the installation ends")

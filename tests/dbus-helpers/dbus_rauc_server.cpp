@@ -169,7 +169,7 @@ void DBusRAUCServer::installBundleError()
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"LastError", "Progress"});
 
     PROGRESS(0, "Determining slot states", 2);
-    WAIT(25ms);
+    WAIT(500ms);
     PROGRESS(20, "Determining slot states done.", 2);
     PROGRESS(20, "Checking bundle", 2);
     PROGRESS(40, "Checking bundle failed.", 2);

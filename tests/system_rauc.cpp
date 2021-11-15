@@ -5,10 +5,22 @@
 #include "system/RAUC.h"
 #include "test_log_setup.h"
 
+using namespace std::literals::chrono_literals;
+
+/** @brief waits until expectation is saturated, but 150ms at most */
+void waitForSaturation(const std::unique_ptr<trompeloeil::expectation>& exp)
+{
+    static const auto WAIT_FOR_INSTALLATION_START_STEP = 5ms;
+    static const auto WAIT_FOR_INSTALLATION_START_MAX_STEPS = 30;
+
+    for (auto i = 0; i < WAIT_FOR_INSTALLATION_START_MAX_STEPS && !exp->is_saturated(); i++) {
+        std::this_thread::sleep_for(WAIT_FOR_INSTALLATION_START_STEP);
+    }
+    REQUIRE(exp->is_saturated());
+}
+
 TEST_CASE("Fetch RAUC data over DBus")
 {
-    using namespace std::literals::chrono_literals;
-
     TEST_INIT_LOGS;
     trompeloeil::sequence seq1;
 
@@ -112,7 +124,7 @@ TEST_CASE("Fetch RAUC data over DBus")
     SECTION("Installation OK")
     {
         server.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::OK); // Not cool but I don't feel like I should be creating some abstractions here in tests.
-        FAKE_RAUC_OPERATION("installing");
+        auto exp = NAMED_REQUIRE_CALL(fakeRaucInstallCb, operationCallback("installing")).IN_SEQUENCE(seq1);
         FAKE_RAUC_PROGRESS(0, "Installing");
         FAKE_RAUC_PROGRESS(0, "Determining slot states");
         FAKE_RAUC_PROGRESS(20, "Determining slot states done.");
@@ -139,6 +151,7 @@ TEST_CASE("Fetch RAUC data over DBus")
         FAKE_RAUC_OPERATION("idle");
 
         rauc->install("/path/to/bundle");
+        waitForSaturation(exp); // wait until installation starts
         REQUIRE(rauc->operation() == "installing");
 
         SECTION("Invoking another operation before the installation ends")
@@ -154,7 +167,7 @@ TEST_CASE("Fetch RAUC data over DBus")
     {
         server.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::FAILURE);
 
-        FAKE_RAUC_OPERATION("installing");
+        auto exp = NAMED_REQUIRE_CALL(fakeRaucInstallCb, operationCallback("installing")).IN_SEQUENCE(seq1);
         FAKE_RAUC_PROGRESS(0, "Installing");
         FAKE_RAUC_PROGRESS(0, "Determining slot states");
         FAKE_RAUC_PROGRESS(20, "Determining slot states done.");
@@ -165,6 +178,7 @@ TEST_CASE("Fetch RAUC data over DBus")
         FAKE_RAUC_OPERATION("idle");
 
         rauc->install("/path/to/bundle");
+        waitForSaturation(exp); // wait until installation starts
         REQUIRE(rauc->operation() == "installing");
         waitForCompletionAndBitMore(seq1);
         REQUIRE(rauc->lastError() == "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number");

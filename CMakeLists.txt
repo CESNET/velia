@@ -32,7 +32,7 @@ option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${D
 find_package(Boost REQUIRED)
 find_package(docopt REQUIRED)
 find_package(spdlog REQUIRED)
-find_package(sdbus-c++ REQUIRED)
+find_package(sdbus-c++ "1.0.0" REQUIRED)
 find_package(PkgConfig)
 find_package(fmt)
 

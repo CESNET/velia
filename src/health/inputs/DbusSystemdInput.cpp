@@ -22,6 +22,7 @@ DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, con
 
     // Register to a signal introducing new unit
     m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
+        m_log->error("SIGNAL UNITNEW {}", unitName);
         if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end()) {
             registerSystemdUnit(connection, unitName, unitObjectPath);
         }

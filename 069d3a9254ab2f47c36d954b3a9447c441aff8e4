@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb9bba5b_93c86ae3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-11-21T18:44:35Z",
+      "side": 1,
+      "message": "@Vasek, I uglified your patch into some C code, please review this.",
+      "revId": "069d3a9254ab2f47c36d954b3a9447c441aff8e4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

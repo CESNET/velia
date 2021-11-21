@@ -51,6 +51,24 @@
       "parentUuid": "878623cf_21fddd24",
       "revId": "0480591a74ac18a252c2eb7583670d6d2b5cdd00",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8440170e_08b57d48",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-11-21T18:44:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45bb97de_457b687c",
+      "revId": "0480591a74ac18a252c2eb7583670d6d2b5cdd00",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

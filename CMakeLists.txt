@@ -505,8 +505,8 @@ if(BUILD_TESTING)
         # Installing czechlight-firewall automatically installs ietf-access-control-list as implemented (not just
         # imported) but I still need to install it myself to enable the features.
         YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-access-control-list@2019-03-04.yang
-            FEATURE eth
             FEATURE match-on-eth
+            FEATURE eth
             FEATURE match-on-ipv4
             FEATURE ipv4
             FEATURE match-on-ipv6

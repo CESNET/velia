@@ -134,7 +134,7 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
 
     for (const auto& slotName : FIRMWARE_SLOTS) {
         if (auto it = slotStatus.find(slotName); it != slotStatus.end()) { // if there is an update for the slot "slotName"
-            const auto& props = it->second;
+            auto& props = it->second;
             std::string xpathPrefix;
 
             // Better be defensive about provided properties. If somebody removes /slot.raucs, RAUC doesn't provide all the data (at least bundle.version and installed.timestamp).
@@ -143,6 +143,13 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
             } else {
                 m_log->error("RAUC didn't provide 'bootname' property for slot '{}'. Skipping update for that slot.");
                 continue;
+            }
+
+            // sysrepo needs the "-00:00" suffix instead of the "Z" suffix.
+            if (auto pit = props.find("installed.timestamp"); pit != props.end()) {
+                auto& ts = std::get<std::string>(pit->second);
+                ts.pop_back();
+                ts.append("-00:00");
             }
 
             for (const auto& [yangKey, raucKey] : {std::pair{"state", "state"}, {"boot-status", "boot-status"}, {"version", "bundle.version"}, {"installed", "installed.timestamp"}}) {

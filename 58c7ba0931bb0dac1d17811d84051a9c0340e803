@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68633759_1b2a4cd8",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-11-26T15:11:03Z",
+      "side": 1,
+      "message": "That looks very fragile. At least use a regex like \u0027(.*)(Z)$\u0027, please.",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 36
+      },
+      "revId": "58c7ba0931bb0dac1d17811d84051a9c0340e803",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

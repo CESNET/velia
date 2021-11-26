@@ -5,6 +5,7 @@
  *
  */
 
+#include <regex>
 #include "Firmware.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
@@ -16,7 +17,8 @@ namespace {
 const auto CZECHLIGHT_SYSTEM_MODULE_NAME = "czechlight-system"s;
 const auto CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX = "/"s + CZECHLIGHT_SYSTEM_MODULE_NAME + ":firmware/"s;
 const auto FIRMWARE_SLOTS = {"rootfs.0"s, "rootfs.1"s};
-
+// Modified regex of yang:date-and-time
+const auto DATE_TIME_REGEX = std::regex{R"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)"};
 }
 
 namespace velia::system {
@@ -134,7 +136,7 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
 
     for (const auto& slotName : FIRMWARE_SLOTS) {
         if (auto it = slotStatus.find(slotName); it != slotStatus.end()) { // if there is an update for the slot "slotName"
-            const auto& props = it->second;
+            auto& props = it->second;
             std::string xpathPrefix;
 
             // Better be defensive about provided properties. If somebody removes /slot.raucs, RAUC doesn't provide all the data (at least bundle.version and installed.timestamp).
@@ -143,6 +145,17 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
             } else {
                 m_log->error("RAUC didn't provide 'bootname' property for slot '{}'. Skipping update for that slot.");
                 continue;
+            }
+
+            // sysrepo needs the "-00:00" suffix instead of the "Z" suffix.
+            if (auto pit = props.find("installed.timestamp"); pit != props.end()) {
+                auto& ts = std::get<std::string>(pit->second);
+                if (std::regex_match(ts, DATE_TIME_REGEX)) {
+                    ts.pop_back(); // Get rid of the "Z".
+                    ts.append("-00:00");
+                } else {
+                    m_log->warn("RAUC provided a timestamp in an unexpected format: {}", ts);
+                }
             }
 
             for (const auto& [yangKey, raucKey] : {std::pair{"state", "state"}, {"boot-status", "boot-status"}, {"version", "bundle.version"}, {"installed", "installed.timestamp"}}) {

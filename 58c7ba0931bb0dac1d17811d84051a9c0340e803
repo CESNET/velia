@@ -22,6 +22,30 @@
       },
       "revId": "58c7ba0931bb0dac1d17811d84051a9c0340e803",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3dc5a44_2560ce82",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2021-11-27T17:20:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68633759_1b2a4cd8",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 36
+      },
+      "revId": "58c7ba0931bb0dac1d17811d84051a9c0340e803",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

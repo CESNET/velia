@@ -33,6 +33,41 @@
       "message": "recheck",
       "revId": "b7f2635c070becd38ce8397b13a17c4bfcb8b95d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98f0a1f2_f76ac915",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-11-29T08:59:25Z",
+      "side": 1,
+      "message": "this is addressed by https://github.com/sysrepo/sysrepo/pull/2647",
+      "parentUuid": "c4a00973_b82d7394",
+      "revId": "b7f2635c070becd38ce8397b13a17c4bfcb8b95d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e250ad7e_98754cfb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-11-29T08:59:25Z",
+      "side": 1,
+      "message": "this is ",
+      "revId": "b7f2635c070becd38ce8397b13a17c4bfcb8b95d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

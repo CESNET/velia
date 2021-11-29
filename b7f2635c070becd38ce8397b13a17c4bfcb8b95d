@@ -68,6 +68,41 @@
       "message": "this is ",
       "revId": "b7f2635c070becd38ce8397b13a17c4bfcb8b95d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74a70616_006c8fb8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-11-29T09:35:45Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "b7f2635c070becd38ce8397b13a17c4bfcb8b95d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f0f0073_b13b646e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-11-29T09:35:45Z",
+      "side": 1,
+      "message": "...and of course this is nonsense, that one only applies to the libyang2 branches.",
+      "parentUuid": "98f0a1f2_f76ac915",
+      "revId": "b7f2635c070becd38ce8397b13a17c4bfcb8b95d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

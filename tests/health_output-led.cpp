@@ -39,7 +39,7 @@ TEST_CASE("SysFS LED driver")
     using namespace std::literals;
     TEST_INIT_LOGS;
 
-    auto fakeSysfsDir = std::filesystem::path {CMAKE_CURRENT_BINARY_DIR + "/tests/leds/"s};
+    auto fakeSysfsDir = std::filesystem::path {CMAKE_CURRENT_BINARY_DIR + "/tests/health_output-led/"s};
     auto fakeBrightnessFile = fakeSysfsDir / "brightness";
     removeDirectoryTreeIfExists(fakeSysfsDir);
 

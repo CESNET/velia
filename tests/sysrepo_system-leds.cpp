@@ -18,7 +18,7 @@ TEST_CASE("Sysrepo reports system LEDs")
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
 
-    auto fakeSysfsDir = std::filesystem::path {CMAKE_CURRENT_BINARY_DIR + "/tests/leds/"s};
+    auto fakeSysfsDir = std::filesystem::path {CMAKE_CURRENT_BINARY_DIR + "/tests/sysrepo_system-leds/"s};
     removeDirectoryTreeIfExists(fakeSysfsDir);
     std::filesystem::copy(CMAKE_CURRENT_SOURCE_DIR + "/tests/sysfs/leds"s, fakeSysfsDir, std::filesystem::copy_options::recursive);
 

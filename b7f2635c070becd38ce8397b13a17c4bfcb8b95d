@@ -103,6 +103,23 @@
       "parentUuid": "98f0a1f2_f76ac915",
       "revId": "b7f2635c070becd38ce8397b13a17c4bfcb8b95d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c369f430_afe22754",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-12-01T14:45:54Z",
+      "side": 1,
+      "message": "@Tomas, can you please check that these changes are OK with you as the original author?",
+      "revId": "b7f2635c070becd38ce8397b13a17c4bfcb8b95d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

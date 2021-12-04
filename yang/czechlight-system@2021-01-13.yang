@@ -106,6 +106,7 @@ module czechlight-system {
 
       action install {
         nacm:default-deny-all;
+        description "Download and install a new firmware image to the inactive FW slot";
         input {
           leaf url {
             description "URL or path to the new firmware.";
@@ -151,9 +152,11 @@ module czechlight-system {
 
 
   container authentication {
+    description "User management";
     list users {
       config false;
       key 'name';
+      description "All user accounts which are configured in the Linux system";
 
       leaf name {
         type username-type;
@@ -165,6 +168,8 @@ module czechlight-system {
 
       list authorized-keys {
         key 'index';
+        description "List of SSH keys which are recognized for this user";
+
         leaf index {
           type int32;
         }
@@ -176,6 +181,7 @@ module czechlight-system {
 
         action remove {
           nacm:default-deny-all;
+          description "Remove the selected SSH authentication key of the selected user";
           output {
             uses authentication-rpc-result;
           }
@@ -199,6 +205,7 @@ module czechlight-system {
 
       action add-authorized-key {
         nacm:default-deny-all;
+        description "Add a new SSH public key for authentication as the selected user";
         input {
           leaf key {
             mandatory true;

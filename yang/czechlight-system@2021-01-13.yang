@@ -175,6 +175,7 @@ module czechlight-system {
         }
 
         action remove {
+          nacm:default-deny-all;
           output {
             uses authentication-rpc-result;
           }

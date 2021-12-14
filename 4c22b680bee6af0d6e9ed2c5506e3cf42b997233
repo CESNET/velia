@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "ed16cd8d_5693c540",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-12-14T19:38:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d78921f7_cc7ad15d",
+      "revId": "4c22b680bee6af0d6e9ed2c5506e3cf42b997233",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "3377a749_99e7b49a",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -48,6 +66,30 @@
       "writtenOn": "2021-12-14T15:43:43Z",
       "side": 1,
       "message": "\"sometimes, addresses are preserved\" because it\u0027s not on all systems, and because local/global is, technically speaking, just about the IPv6 routability; best not go into that level of detail here",
+      "range": {
+        "startLine": 193,
+        "startChar": 72,
+        "endLine": 193,
+        "endChar": 120
+      },
+      "revId": "4c22b680bee6af0d6e9ed2c5506e3cf42b997233",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0f7fb53_45e461ab",
+        "filename": "tests/sysrepo_system-ietfinterfaces-sudo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2021-12-14T19:38:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19ea3523_9d904aba",
       "range": {
         "startLine": 193,
         "startChar": 72,

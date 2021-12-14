@@ -190,10 +190,14 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "up");
-        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']"] = "";
-        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip"] = "fe80::2:2ff:fe02:202";
-        expectedIface["/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length"] = "64";
+        iproute2_exec_and_wait(WAIT, "addr", "flush", "dev", IFACE); // both local and global IP addresses are preserved, so erase them
         expectedIface["/oper-status"] = "unknown";
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip");
+        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/prefix-length");
+        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']");
+        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/ip");
+        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/prefix-length");
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
 
@@ -216,20 +220,11 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "down");
-        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']");
-        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip");
-        expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/prefix-length");
-        expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']");
-        expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/ip");
-        expectedIface.erase("/ietf-ip:ipv6/address[ip='fe80::2:2ff:fe02:202']/prefix-length");
         expectedIface["/oper-status"] = "down";
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE + "']", SR_DS_OPERATIONAL) == expectedIface);
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", SR_DS_OPERATIONAL) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "nomaster");
-        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']");
-        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/ip");
-        expectedIface.erase("/ietf-ip:ipv4/address[ip='192.0.2.1']/prefix-length");
         expectedIface.erase("/ietf-ip:ipv4");
         expectedIface.erase("/ietf-ip:ipv6/autoconf");
         expectedIface.erase("/ietf-ip:ipv6");

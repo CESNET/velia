@@ -38,7 +38,7 @@ DbusSemaphoreInput::DbusSemaphoreInput(std::shared_ptr<AbstractManager> manager,
 
         if (auto it = changed.find(m_propertyName); it != changed.end()) {
             std::string newState = it->second.get<std::string>();
-            m_log->debug("Changed {} {}: {}", objectPath, propertyName, newState);
+            m_log->debug("Changed {} {}: {}", m_dbusObjectProxy->getObjectPath(), m_propertyName, newState);
             updateState(stateFromString(newState));
         }
     });

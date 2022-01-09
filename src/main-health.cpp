@@ -51,6 +51,8 @@ int main(int argc, char* argv[])
     spdlog::set_level(spdlog::level::info);
 
     try {
+        spdlog::get("health")->set_level(parseLogLevel("Health checker logger", args["--health-log-level"]));
+
         DBUS_EVENTLOOP_START
 
         // health

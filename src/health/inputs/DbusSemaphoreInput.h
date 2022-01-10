@@ -7,6 +7,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <sdbus-c++/sdbus-c++.h>
 #include "health/inputs/AbstractInput.h"
 #include "health/manager/StateManager.h"
@@ -19,6 +20,7 @@ public:
     ~DbusSemaphoreInput() override;
 
 private:
+    std::mutex m_mtx;
     std::shared_ptr<sdbus::IProxy> m_dbusObjectProxy;
     std::string m_propertyName;
     std::string m_propertyInterface;

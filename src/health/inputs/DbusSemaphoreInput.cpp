@@ -39,6 +39,7 @@ DbusSemaphoreInput::DbusSemaphoreInput(std::shared_ptr<AbstractManager> manager,
         if (auto it = changed.find(m_propertyName); it != changed.end()) {
             std::string newState = it->second.get<std::string>();
             m_log->debug("Changed {} {}: {}", m_dbusObjectProxy->getObjectPath(), m_propertyName, newState);
+            std::lock_guard lock(m_mtx);
             updateState(stateFromString(newState));
         }
     });
@@ -49,6 +50,7 @@ DbusSemaphoreInput::DbusSemaphoreInput(std::shared_ptr<AbstractManager> manager,
     // But better than querying the current state before the registration; we might miss a state change that could happen between querying and callback registration
     std::string currentState = m_dbusObjectProxy->getProperty(m_propertyName).onInterface(propertyInterface).get<std::string>();
     m_log->debug("Property initialized to {}", currentState);
+    std::lock_guard lock(m_mtx);
     updateState(stateFromString(currentState));
 }
 

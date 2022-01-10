@@ -5,6 +5,7 @@
 #include <spdlog/spdlog.h>
 #include "VELIA_VERSION.h"
 #include "health/Factory.h"
+#include "health/inputs/DbusSemaphoreInput.h"
 #include "health/inputs/DbusSystemdInput.h"
 #include "health/manager/StateManager.h"
 #include "health/outputs/callables.h"
@@ -73,6 +74,8 @@ int main(int argc, char* argv[])
             spdlog::get("health")->debug("Systemd input will ignore changes of the following units: {}", args["--systemd-ignore-unit"]);
         }
         auto inputSystemdDbus = std::make_shared<velia::health::DbusSystemdInput>(manager, ignoredUnits, *g_dbusConnection);
+
+        auto inputSemaphoreDbusClaSysrepo = std::make_shared<velia::health::DbusSemaphoreInput>(manager, *g_dbusConnection, "cz.cesnet.czechlight.clasysrepo", "/cz/cesnet/czechlight/clasysrepo", "HealthSemaphore", "cz.cesnet.czechlight.Semaphore");
 
         DBUS_EVENTLOOP_END;
 

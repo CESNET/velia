@@ -1,0 +1,29 @@
+   module czechlight-alarms {
+     namespace "urn:czechlight:alarms";
+     prefix cla-al;
+
+     import ietf-alarms {
+       prefix al;
+     }
+
+     identity cla-alarms {
+       base al:alarm-type-id;
+     }
+
+     identity hardware-alarm {
+       base cla-alarms;
+     }
+     identity environmental-alarm {
+       base cla-alarms;
+     }
+     identity network-alarm {
+       base cla-alarms;
+     }
+
+     identity temperature-alarm {
+       base environmental-alarm;
+     }
+     identity psu-alarm {
+       base hardware-alarm;
+     }
+   }

@@ -1,0 +1,99 @@
+module czechlight-alarm-manager {
+	yang-version 1.1;
+	namespace "urn:czechlight:alarm-manager";
+	prefix cla-alm;
+
+	import ietf-yang-types {
+		prefix yang;
+		reference
+			"RFC 6991: Common YANG Data Types.";
+	}
+	import ietf-alarms {
+		prefix al;
+		revision-date 2019-09-11;
+	}
+
+	rpc create-or-update-alarm {
+		input {
+			leaf resource {
+				type al:resource;
+				mandatory true;
+				description
+					"The alarming resource.  See also 'alt-resource'.  This could
+					be, for example, a reference to the alarming interface";
+			}
+			leaf alarm-type-id {
+				type al:alarm-type-id;
+				mandatory true;
+				description
+					"This leaf and the leaf 'alarm-type-qualifier' together
+					provide a unique identification of the alarm type.";
+			}
+			leaf alarm-type-qualifier {
+				type al:alarm-type-qualifier;
+				description
+					"This leaf is used when the 'alarm-type-id' leaf cannot
+					uniquely identify the alarm type.  Normally, this is not the
+				case, and this leaf is the empty string.";
+			}
+			leaf-list alt-resource {
+				type al:resource;
+				description
+					"Used if the alarming resource is available over other
+					interfaces.  This field can contain SNMP OIDs, CIM paths, or
+					3GPP distinguished names, for example.";
+			}
+			leaf time-created {
+				type yang:date-and-time;
+				/* mandatory true; */
+				description
+					"The timestamp when this alarm entry was created.  This
+					represents the first time the alarm appeared; it can
+					also represent that the alarm reappeared after a purge.
+					Further state changes of the same alarm do not change
+					this leaf; these changes will update the 'last-changed'
+					leaf.";
+			}
+			leaf is-cleared {
+				type boolean;
+				/* mandatory true; */
+				description
+					"Indicates the current clearance state of the alarm.  An
+					alarm might toggle from active alarm to cleared alarm and
+					back to active again.";
+			}
+			leaf last-raised {
+				type yang:date-and-time;
+				/* mandatory true; */
+				description
+					"An alarm may change severity level and toggle between
+					active and cleared during its lifetime.  This leaf indicates
+					the last time it was raised ('is-cleared' = 'false').";
+			}
+			leaf last-changed {
+				type yang:date-and-time;
+				/* mandatory true; */
+				description
+					"A timestamp when the 'status-change' or
+					'operator-state-change' list was last changed.";
+			}
+			leaf perceived-severity {
+				type al:severity;
+				/* mandatory true; */
+				description
+					"The last severity of the alarm.
+
+					If an alarm was raised with severity 'warning' but later
+					changed to 'major', this leaf will show 'major'.";
+			}
+			leaf alarm-text {
+				type al:alarm-text;
+				/* mandatory true; */
+				description
+					"The last reported alarm text.  This text should contain
+					information for an operator to be able to understand the
+					problem and how to resolve it.";
+			}
+		}
+	}
+}

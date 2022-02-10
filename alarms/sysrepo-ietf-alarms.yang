@@ -1,0 +1,50 @@
+module sysrepo-ietf-alarms {
+	yang-version 1.1;
+	namespace "urn:sysrepo:ietf-alarms";
+	prefix cla-alm;
+
+	import ietf-yang-types {
+		prefix yang;
+		reference
+			"RFC 6991: Common YANG Data Types.";
+	}
+
+	import ietf-alarms {
+		prefix al;
+		revision-date 2019-09-11;
+	}
+
+	rpc create-or-update-alarm {
+		input {
+			leaf resource {
+				type al:resource;
+				mandatory true;
+			}
+
+			leaf alarm-type-id {
+				type al:alarm-type-id;
+				mandatory true;
+			}
+
+			leaf alarm-type-qualifier {
+				type al:alarm-type-qualifier;
+				default "";
+			}
+
+			leaf severity {
+				type al:severity-with-clear;
+				mandatory true;
+				description
+					"Current severity or clearance state of the alarm.";
+			}
+
+			leaf alarm-text {
+				type al:alarm-text;
+				description
+					"The last reported alarm text.  This text should contain
+					information for an operator to be able to understand the
+					problem and how to resolve it.";
+			}
+		}
+	}
+}

@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d98ba81a_69e65b31",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-02-15T20:00:10Z",
+      "side": 1,
+      "message": "All looks good except the error handling and one FIXME. Haven\u0027t tried this on-HW yet.",
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d62401a_35baeeea",
+        "filename": "src/firewall/Firewall.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-02-15T20:00:10Z",
+      "side": 1,
+      "message": "Is this something that you plan to fix (or, actually, \"soemthing can be fixed in the first place\" here in this repo?\n\nIf you\u0027re unhappy about the sysrepo-cpp design, let\u0027s open an issue there and remove this FIXME.",
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2531f3d2_72834e3d",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-02-15T20:00:10Z",
+      "side": 1,
+      "message": "- let\u0027s do this unconditionally, otherwise we will have to update this in future when RESTCONF happens\n- the originator string in Netopeer2\u0027s documentation is \"netopeer2\"",
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3154ee1a_568de553",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-02-15T20:00:10Z",
+      "side": 1,
+      "message": "it\u0027s the same thing as above, please add a helper for this",
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6572a8c_286ee04c",
+        "filename": "src/system/LED.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-02-15T20:00:10Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 17
+      },
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd0d2a41_8880ae70",
+        "filename": "tests/sysrepo_system-firmware.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-02-15T20:00:10Z",
+      "side": 1,
+      "message": "what events without XPath are flowing through this EventWatcher?",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 9
+      },
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

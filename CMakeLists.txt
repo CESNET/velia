@@ -35,6 +35,7 @@ find_package(spdlog REQUIRED)
 find_package(sdbus-c++ "1.0.0" REQUIRED)
 find_package(PkgConfig)
 find_package(fmt)
+find_package(nlohmann_json REQUIRED)
 
 pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
 if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
@@ -233,6 +234,7 @@ target_link_libraries(velia-system
         PkgConfig::LIBYANG
         PkgConfig::LIBNL
         SDBusCpp::sdbus-c++
+        nlohmann_json::nlohmann_json
     )
 
 # - firewall

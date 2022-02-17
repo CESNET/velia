@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "83939971_d9650e9f",
+        "filename": "src/firewall/Firewall.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2022-02-17T16:17:42Z",
+      "side": 1,
+      "message": "I am kinda unhappy, but I don\u0027t really know how to solve it...\nhttps://github.com/sysrepo/sysrepo-cpp/issues/6",
+      "parentUuid": "9d62401a_35baeeea",
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2531f3d2_72834e3d",
         "filename": "src/system/Firmware.cpp",
         "patchSetId": 19

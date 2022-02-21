@@ -53,6 +53,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f974d674_7c24a39d",
+        "filename": "src/firewall/Firewall.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-02-21T20:00:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83939971_d9650e9f",
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2531f3d2_72834e3d",
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "I don\u0027t even know what happens if you set both of these at the same time, guess we\u0027ll find out lol",
       "parentUuid": "2531f3d2_72834e3d",
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a5f05a9_77a7f3f7",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-02-21T20:00:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44fef281_3b95ef2b",
       "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -207,6 +243,30 @@
       "side": 1,
       "message": "i think it\u0027s Event::Terminate or something",
       "parentUuid": "bd0d2a41_8880ae70",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 9
+      },
+      "revId": "ca8f1800f419cc483fa3657ebba71af67d037950",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d07207ae_16cbf313",
+        "filename": "tests/sysrepo_system-firmware.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-02-21T20:00:03Z",
+      "side": 1,
+      "message": "These were \"notifications about the flow of notifications\", that\u0027s something which this code doesn\u0027t need. Changed so that these are not produced.",
+      "parentUuid": "5106d242_830e14a1",
       "range": {
         "startLine": 68,
         "startChar": 0,

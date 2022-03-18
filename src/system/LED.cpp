@@ -52,9 +52,9 @@ LED::LED(::sysrepo::Connection srConn, std::filesystem::path sysfsLeds)
     const auto brightnessFile = sysfsLeds / UID_LED / "brightness";
 
     m_srSubscribe = m_srSession.onRPCAction(
-        (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid").c_str(),
+        CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid",
         [this, uidMaxBrightness, triggerFile, brightnessFile](auto session, auto, auto, auto input, auto, auto, auto) {
-            std::string val = utils::getValueAsString(utils::getUniqueSubtree(input, (CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid/state").c_str()).value());
+            std::string val = utils::getValueAsString(utils::getUniqueSubtree(input, CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "uid/state").value());
 
             try {
                 if (val == "on") {

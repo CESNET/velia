@@ -91,7 +91,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
         return ::sysrepo::ErrorCode::Ok;
     };
 
-    m_srSubscribeRPC = m_srSessionRPC.onRPCAction((CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/install").c_str(), cbRPC);
+    m_srSubscribeRPC = m_srSessionRPC.onRPCAction(CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/install", cbRPC);
 
     ::sysrepo::OperGetCb cbOper = [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
         std::map<std::string, std::string> data;
@@ -109,9 +109,9 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
     };
 
     m_srSubscribeOps = m_srSessionOps.onOperGet(
-        CZECHLIGHT_SYSTEM_MODULE_NAME.c_str(),
+        CZECHLIGHT_SYSTEM_MODULE_NAME,
         cbOper,
-        (CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "*").c_str(),
+        CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "*",
         ::sysrepo::SubscribeOptions::Passive | ::sysrepo::SubscribeOptions::OperMerge);
 }
 

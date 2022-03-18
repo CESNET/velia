@@ -27,14 +27,14 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         auto hwStateValues = m_hwState->process();
         utils::valuesToYang(hwStateValues, {}, session, parent);
 
-        spdlog::get("hardware")->trace("Pushing to sysrepo (JSON): {}", parent->printStr(::libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings)->get().get());
+        spdlog::get("hardware")->trace("Pushing to sysrepo (JSON): {}", *parent->printStr(::libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
         return ::sysrepo::ErrorCode::Ok;
     };
 
     m_srSubscribe = session.onOperGet(
-        IETF_HARDWARE_MODULE_NAME.c_str(),
+        IETF_HARDWARE_MODULE_NAME,
         cb,
-        IETF_HARDWARE_MODULE_PREFIX.c_str(),
+        IETF_HARDWARE_MODULE_PREFIX,
         ::sysrepo::SubscribeOptions::Passive | ::sysrepo::SubscribeOptions::OperMerge);
 }
 }

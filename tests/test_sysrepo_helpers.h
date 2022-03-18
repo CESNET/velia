@@ -17,9 +17,9 @@ auto dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath)
 {
     spdlog::get("main")->error("dataFrom {}", xpath);
     std::map<std::string, std::string> res;
-    auto data = session.getData((xpath + "/*").c_str());
+    auto data = session.getData(xpath + "/*");
     REQUIRE(data);
-    for (const auto& sibling : data->findXPath(xpath.c_str())) { // Use findXPath here in case the xpath is list without keys.
+    for (const auto& sibling : data->findXPath(xpath)) { // Use findXPath here in case the xpath is list without keys.
         for (const auto& node : sibling.childrenDfs()) {
             const auto briefXPath = std::string(node.path()).substr(boost::algorithm::ends_with(xpath, ":*") ? xpath.size() - 1 : xpath.size());
 
@@ -37,9 +37,9 @@ auto dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath)
 auto rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, std::map<std::string, std::string> input)
 {
     spdlog::get("main")->info("rpcFromSysrepo {}", rpcPath);
-    auto inputNode = session.getContext().newPath(rpcPath.c_str(), nullptr);
+    auto inputNode = session.getContext().newPath(rpcPath, std::nullopt);
     for (const auto& [k, v] : input) {
-        inputNode.newPath((rpcPath + "/" + k).c_str(), v.c_str());
+        inputNode.newPath(rpcPath + "/" + k, v);
     }
 
     auto output = session.sendRPC(inputNode);

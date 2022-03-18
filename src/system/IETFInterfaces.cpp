@@ -208,21 +208,21 @@ IETFInterfaces::IETFInterfaces(::sysrepo::Session srSess)
         return sysrepo::ErrorCode::Ok;
     };
 
-    m_srSubscribe = m_srSession.onOperGet(IETF_INTERFACES_MODULE_NAME.c_str(), statsCb, (IETF_INTERFACES + "/interface/statistics").c_str());
+    m_srSubscribe = m_srSession.onOperGet(IETF_INTERFACES_MODULE_NAME, statsCb, IETF_INTERFACES + "/interface/statistics");
 
     m_srSubscribe->onOperGet(
-        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
+        IETF_INTERFACES_MODULE_NAME, [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
             utils::valuesToYang(collectNeighboursIP(m_rtnetlink, AF_INET, m_log), {}, session, parent);
             return sysrepo::ErrorCode::Ok;
         },
-        (IETF_INTERFACES + "/interface/ietf-ip:ipv4/neighbor").c_str());
+        IETF_INTERFACES + "/interface/ietf-ip:ipv4/neighbor");
 
     m_srSubscribe->onOperGet(
-        IETF_INTERFACES_MODULE_NAME.c_str(), [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
+        IETF_INTERFACES_MODULE_NAME, [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
             utils::valuesToYang(collectNeighboursIP(m_rtnetlink, AF_INET6, m_log), {}, session, parent);
             return sysrepo::ErrorCode::Ok;
         },
-        (IETF_INTERFACES + "/interface/ietf-ip:ipv6/neighbor").c_str());
+        IETF_INTERFACES + "/interface/ietf-ip:ipv6/neighbor");
 }
 
 void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)

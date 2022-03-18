@@ -18,9 +18,9 @@ void valuesToYang(const std::map<std::string, std::string>& values, sysrepo::Ses
 {
     for (const auto& [propertyName, value] : values) {
         if (!parent) {
-            parent = session.getContext().newPath((prefix + propertyName).c_str(), value.c_str(), libyang::CreationOptions::Output);
+            parent = session.getContext().newPath(prefix + propertyName, value, libyang::CreationOptions::Output);
         } else {
-            parent->newPath((prefix + propertyName).c_str(), value.c_str(), libyang::CreationOptions::Output);
+            parent->newPath(prefix + propertyName, value, libyang::CreationOptions::Output);
         }
     }
 }
@@ -65,9 +65,9 @@ int main(int argc, char* argv[])
 
 
         srSub = srSess.onOperGet(
-            MODULE_NAME.c_str(),
+            MODULE_NAME,
             cb,
-            (MODULE_PREFIX + "/*").c_str(),
+            MODULE_PREFIX + "/*",
             sysrepo::SubscribeOptions::Passive | sysrepo::SubscribeOptions::OperMerge);
     } else if (isDaemonSetItem) {
         data = {
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 
         srSess.switchDatastore(sysrepo::Datastore::Operational);
         for (const auto& [k, v] : data) {
-            srSess.setItem((MODULE_PREFIX + k).c_str(), v.c_str());
+            srSess.setItem(MODULE_PREFIX + k, v);
         }
         srSess.applyChanges();
         srSess.switchDatastore(sysrepo::Datastore::Running);

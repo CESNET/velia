@@ -51,7 +51,7 @@ bool protocolEnabled(const libyang::DataNode& linkEntry, const std::string& prot
 {
     const auto xpath = "ietf-ip:" + proto + "/enabled";
 
-    if (auto node = velia::utils::getUniqueSubtree(linkEntry, xpath.c_str())) {
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, xpath)) {
         return velia::utils::getValueAsString(node.value()) == "true"s;
     }
 
@@ -77,9 +77,9 @@ IETFInterfacesConfig::IETFInterfacesConfig(::sysrepo::Session srSess, std::files
     utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_NETWORK_MODULE_NAME, "2021-02-22");
 
     m_srSubscribe = m_srSession.onModuleChange(
-        IETF_INTERFACES_MODULE_NAME.c_str(),
+        IETF_INTERFACES_MODULE_NAME,
         [this](auto session, auto, auto, auto, auto, auto) { return moduleChange(session); },
-        IETF_INTERFACES.c_str(),
+        IETF_INTERFACES,
         0,
         sysrepo::SubscribeOptions::DoneOnly);
 }
@@ -107,7 +107,7 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
                 }
 
                 const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
-                const auto addresses = linkEntry.findXPath(IPAddressListXPath.c_str());
+                const auto addresses = linkEntry.findXPath(IPAddressListXPath);
 
                 for (const auto& ipEntry : addresses) {
                     auto ipAddress = utils::getValueAsString(utils::getUniqueSubtree(ipEntry, "ip").value());

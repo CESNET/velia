@@ -148,7 +148,7 @@ void IETFSystem::initSystemRestart()
             return sysrepo::ErrorCode::Ok;
         };
 
-    m_srSubscribe = m_srSession.onRPCAction(("/" + IETF_SYSTEM_MODULE_NAME + ":system-restart").c_str(), cb);
+    m_srSubscribe = m_srSession.onRPCAction("/" + IETF_SYSTEM_MODULE_NAME + ":system-restart", cb);
 }
 
 void IETFSystem::initHostname()
@@ -180,11 +180,11 @@ void IETFSystem::initHostname()
         return sysrepo::ErrorCode::Ok;
     };
 
-    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbRunning, IETF_SYSTEM_HOSTNAME_PATH);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, hostNameCbRunning, IETF_SYSTEM_HOSTNAME_PATH);
     m_srSession.switchDatastore(sysrepo::Datastore::Startup);
-    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbStartup, IETF_SYSTEM_HOSTNAME_PATH);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, hostNameCbStartup, IETF_SYSTEM_HOSTNAME_PATH);
     m_srSession.switchDatastore(sysrepo::Datastore::Operational);
-    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME.c_str(), hostNameCbOperational, IETF_SYSTEM_HOSTNAME_PATH);
+    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME, hostNameCbOperational, IETF_SYSTEM_HOSTNAME_PATH);
 }
 
 /** @short Acknowledge writes to dummy fields so that they're visible in the operational DS */
@@ -195,7 +195,7 @@ void IETFSystem::initDummies()
         return sysrepo::ErrorCode::Ok;
     };
     for (const auto xpath : {"/ietf-system:system/location", "/ietf-system:system/contact"}) {
-        m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME.c_str(), ignore, xpath, 0, sysrepo::SubscribeOptions::DoneOnly);
+        m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, ignore, xpath, 0, sysrepo::SubscribeOptions::DoneOnly);
     }
 }
 
@@ -203,11 +203,11 @@ void IETFSystem::initDummies()
 void IETFSystem::initClock()
 {
     sysrepo::OperGetCb cb = [] (auto, auto, auto, auto, auto, auto, auto& parent) {
-        parent->newPath((IETF_SYSTEM_STATE_CLOCK_PATH + "/current-datetime"s).c_str(), utils::yangTimeFormat(std::chrono::system_clock::now()).c_str());
+        parent->newPath(IETF_SYSTEM_STATE_CLOCK_PATH + "/current-datetime"s, utils::yangTimeFormat(std::chrono::system_clock::now()));
         return sysrepo::ErrorCode::Ok;
     };
 
-    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME.c_str(), cb, IETF_SYSTEM_STATE_CLOCK_PATH, sysrepo::SubscribeOptions::OperMerge);
+    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME, cb, IETF_SYSTEM_STATE_CLOCK_PATH, sysrepo::SubscribeOptions::OperMerge);
 }
 
 /** @short DNS resolver callbacks */
@@ -226,7 +226,7 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
         return sysrepo::ErrorCode::Ok;
     };
 
-    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME.c_str(), dnsOper, IETF_SYSTEM_DNS_PATH);
+    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME, dnsOper, IETF_SYSTEM_DNS_PATH);
 }
 
 /** This class handles multiple system properties and publishes them via the ietf-system model:

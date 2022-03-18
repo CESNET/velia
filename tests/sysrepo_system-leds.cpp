@@ -101,7 +101,7 @@ TEST_CASE("Sysrepo reports system LEDs")
             expectedBrightness = "256";
         }
 
-        auto rpcInput = client.getContext().newPath("/czechlight-system:leds/uid/state", state.c_str());
+        auto rpcInput = client.getContext().newPath("/czechlight-system:leds/uid/state", state);
 
         auto res = client.sendRPC(rpcInput);
         REQUIRE(res.child() == std::nullopt);

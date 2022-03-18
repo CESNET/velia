@@ -238,19 +238,19 @@ void Authentication::removeKey(const std::string& username, const int index)
 
 void usersToTree(libyang::Context ctx, const std::vector<velia::system::User> users, std::optional<libyang::DataNode>& out)
 {
-    out = ctx.newPath(authentication_container.c_str());
+    out = ctx.newPath(authentication_container);
     for (const auto& user : users) {
-        auto userNode = out->newPath(("users[name='" + user.name + "']").c_str(), nullptr);
+        auto userNode = out->newPath("users[name='" + user.name + "']", std::nullopt);
 
         decltype(user.authorizedKeys)::size_type entries = 0;
         for (const auto& authorizedKey : user.authorizedKeys) {
-            auto entry = userNode->newPath(("authorized-keys[index='" + std::to_string(entries) + "']").c_str());
-            entry->newPath("public-key", authorizedKey.c_str());
+            auto entry = userNode->newPath("authorized-keys[index='" + std::to_string(entries) + "']");
+            entry->newPath("public-key", authorizedKey);
             entries++;
         }
 
         if (user.lastPasswordChange) {
-            userNode->newPath("password-last-change", user.lastPasswordChange->c_str());
+            userNode->newPath("password-last-change", user.lastPasswordChange);
         }
     }
 }
@@ -287,7 +287,7 @@ velia::system::Authentication::Authentication(
 
     sysrepo::RpcActionCb changePasswordCb = [this, changePassword] (auto, auto, auto, auto input, auto, auto, auto output) {
 
-        auto userNode = utils::getUniqueSubtree(input, (authentication_container + "/users" ).c_str()).value();
+        auto userNode = utils::getUniqueSubtree(input, authentication_container + "/users").value();
         auto name = utils::getValueAsString(utils::getUniqueSubtree(userNode, "name").value());
         auto password = utils::getValueAsString(utils::getUniqueSubtree(userNode, "change-password/password-cleartext").value());
         m_log->debug("Changing password for {}", name);
@@ -306,7 +306,7 @@ velia::system::Authentication::Authentication(
 
     sysrepo::RpcActionCb addKeyCb = [this] (auto, auto, auto, auto input, auto, auto, auto output) {
 
-        auto userNode = utils::getUniqueSubtree(input, (authentication_container + "/users").c_str()).value();
+        auto userNode = utils::getUniqueSubtree(input, authentication_container + "/users").value();
         auto name = utils::getValueAsString(utils::getUniqueSubtree(userNode, "name").value());
         auto key = utils::getValueAsString(utils::getUniqueSubtree(userNode, "add-authorized-key/key").value());
         m_log->debug("Adding key for {}", name);
@@ -324,7 +324,7 @@ velia::system::Authentication::Authentication(
     };
 
     sysrepo::RpcActionCb removeKeyCb = [this] (auto, auto, auto, auto input, auto, auto, auto output) {
-        auto userNode = utils::getUniqueSubtree(input, (authentication_container + "/users").c_str()).value();
+        auto userNode = utils::getUniqueSubtree(input, authentication_container + "/users").value();
         auto name = utils::getValueAsString(utils::getUniqueSubtree(userNode, "name").value());
         auto key = std::stol(utils::getValueAsString(utils::getUniqueSubtree(userNode, "authorized-keys/index").value()));
         m_log->debug("Removing key for {}", name);
@@ -341,8 +341,8 @@ velia::system::Authentication::Authentication(
         return sysrepo::ErrorCode::Ok;
     };
 
-    m_sub = m_session.onOperGet(czechlight_system_module.c_str(), listUsersCb, authentication_container.c_str());
-    m_sub->onRPCAction(change_password_action.c_str(), changePasswordCb);
-    m_sub->onRPCAction(add_key_action.c_str(), addKeyCb);
-    m_sub->onRPCAction(remove_key_action.c_str(), removeKeyCb);
+    m_sub = m_session.onOperGet(czechlight_system_module, listUsersCb, authentication_container);
+    m_sub->onRPCAction(change_password_action, changePasswordCb);
+    m_sub->onRPCAction(add_key_action, addKeyCb);
+    m_sub->onRPCAction(remove_key_action, removeKeyCb);
 }

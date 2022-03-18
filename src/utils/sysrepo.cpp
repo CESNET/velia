@@ -78,12 +78,12 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
         log->trace("Processing node deletion {}", propertyName);
 
         if (!parent) {
-            parent = session.getContext().newPath(propertyName.c_str(), nullptr, libyang::CreationOptions::Opaque);
+            parent = session.getContext().newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
         } else {
-            parent->newPath(propertyName.c_str(), nullptr, libyang::CreationOptions::Opaque);
+            parent->newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
         }
 
-        auto deletion = parent->findPath(propertyName.c_str());
+        auto deletion = parent->findPath(propertyName);
         if (!deletion) {
             throw std::logic_error {"Cannot find XPath " + propertyName + " for deletion in libyang's new_path() output"};
         }
@@ -94,9 +94,9 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
         log->trace("Processing node update {} -> {}", propertyName, value);
 
         if (!parent) {
-            parent = session.getContext().newPath(propertyName.c_str(), value.c_str(), libyang::CreationOptions::Output);
+            parent = session.getContext().newPath(propertyName, value, libyang::CreationOptions::Output);
         } else {
-            parent->newPath(propertyName.c_str(), value.c_str(), libyang::CreationOptions::Output);
+            parent->newPath(propertyName, value, libyang::CreationOptions::Output);
         }
     }
 }
@@ -155,7 +155,7 @@ void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::stri
 /** @brief Checks whether a module is implemented in Sysrepo and throws if not. */
 void ensureModuleImplemented(::sysrepo::Session session, const std::string& module, const std::string& revision)
 {
-    if (auto mod = session.getContext().getModule(module.c_str(), revision.c_str()); !mod || !mod->implemented()) {
+    if (auto mod = session.getContext().getModule(module, revision); !mod || !mod->implemented()) {
         throw std::runtime_error(module + "@" + revision + " is not implemented in sysrepo.");
     }
 }
@@ -172,9 +172,9 @@ void setErrors(::sysrepo::Session session, const std::string& msg)
         .tag = "operation-failed",
         .appTag = {},
         .path = {},
-        .message = msg.c_str(),
+        .message = msg,
         .infoElements = {},
     });
-    session.setErrorMessage(msg.c_str());
+    session.setErrorMessage(msg);
 }
 }

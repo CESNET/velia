@@ -27,10 +27,10 @@ sysrepo::ErrorCode LLDPCallback::operator()(sysrepo::Session session, uint32_t, 
     for (const auto& n : m_lldp->getNeighbors()) {
         auto ifc = output->newPath("neighbors");
 
-        auto ifName = ifc->newPath("ifName", n.m_portId.c_str());
+        auto ifName = ifc->newPath("ifName", n.m_portId);
 
         for (const auto& [key, val] : n.m_properties) { // garbage properties in, garbage out
-            ifc->newPath(key.c_str(), val.c_str());
+            ifc->newPath(key, val);
         }
     }
 

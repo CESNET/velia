@@ -59,12 +59,12 @@ std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree)
     for (auto node : tree.childrenDfs()) {
         auto nodeSchemaPath = node.schema().path();
         if (std::any_of(skippedNodes.begin(), skippedNodes.end(), [&nodeSchemaPath] (const auto& skippedNode) { return nodeSchemaPath == skippedNode; })) {
-            logger->trace("skipping: {}", node.path().get().get());
+            logger->trace("skipping: {}", node.path());
             continue;
         }
 
-        logger->trace("processing node: data   {}", node.path().get().get());
-        logger->trace("                 schema {}", nodeSchemaPath.get().get());
+        logger->trace("processing node: data   {}", node.path());
+        logger->trace("                 schema {}", nodeSchemaPath);
         if (nodeSchemaPath == nodepaths::ace_comment) {
             // We will use the ACE name as a comment inside the rule. However, the comment must be at the end, so we
             // save it for later.
@@ -95,7 +95,7 @@ std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree)
             match = "";
             comment = "";
         } else {
-            throw std::logic_error("unsupported node: "s + node.path().get().get());
+            throw std::logic_error("unsupported node: "s + node.path());
         }
     }
 
@@ -113,7 +113,7 @@ velia::firewall::SysrepoFirewall::SysrepoFirewall(sysrepo::Session srSess, NftCo
 
     sysrepo::ModuleChangeCb cb = [logger = m_log, consumer = std::move(consumer)] (sysrepo::Session session, auto, auto, auto, auto, auto) {
         logger->debug("Applying new data from sysrepo");
-        auto data = session.getData(("/" + (ietf_acl_module + ":*")).c_str());
+        auto data = session.getData("/" + ietf_acl_module + ":*");
 
         auto config = generateNftConfig(logger, *data);
         logger->trace("running the consumer...");
@@ -123,5 +123,5 @@ velia::firewall::SysrepoFirewall::SysrepoFirewall(sysrepo::Session srSess, NftCo
         return sysrepo::ErrorCode::Ok;
     };
 
-    m_sub = srSess.onModuleChange(ietf_acl_module.c_str(), cb, nullptr, 0, sysrepo::SubscribeOptions::DoneOnly | sysrepo::SubscribeOptions::Enabled);
+    m_sub = srSess.onModuleChange(ietf_acl_module, cb, std::nullopt, 0, sysrepo::SubscribeOptions::DoneOnly | sysrepo::SubscribeOptions::Enabled);
 }

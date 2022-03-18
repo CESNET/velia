@@ -411,10 +411,10 @@ TEST_CASE("HardwareState")
         {
             const auto xpath = modulePrefix + "/component[name='ne:ctrl:emmc:lifetime']/class";
             client.switchDatastore(sysrepo::Datastore::Operational);
-            auto val = client.getData(xpath.c_str());
+            auto val = client.getData(xpath);
             client.switchDatastore(sysrepo::Datastore::Running);
             REQUIRE(val);
-            REQUIRE(val->findPath(xpath.c_str())->asTerm().valueStr() == "iana-hardware:sensor"s);
+            REQUIRE(val->findPath(xpath)->asTerm().valueStr() == "iana-hardware:sensor"s);
         }
     }
 }

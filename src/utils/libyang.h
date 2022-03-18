@@ -28,5 +28,5 @@ const char* getValueAsString(const libyang::DataNode& node);
  *
  * Throws if there is more than one matching node. Returns std::nullopt if no node matches.
  */
-std::optional<libyang::DataNode> getUniqueSubtree(const libyang::DataNode& start, const char* path);
+std::optional<libyang::DataNode> getUniqueSubtree(const libyang::DataNode& start, const std::string& path);
 }

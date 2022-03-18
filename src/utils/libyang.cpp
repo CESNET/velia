@@ -14,7 +14,7 @@ const char* getValueAsString(const libyang::DataNode& node)
     return node.asTerm().valueStr().data();
 }
 
-std::optional<libyang::DataNode> getUniqueSubtree(const libyang::DataNode& start, const char* path)
+std::optional<libyang::DataNode> getUniqueSubtree(const libyang::DataNode& start, const std::string& path)
 {
     auto set = start.findXPath(path);
 
@@ -24,7 +24,7 @@ std::optional<libyang::DataNode> getUniqueSubtree(const libyang::DataNode& start
     case 1:
         return set.front();
     default:
-        throw std::runtime_error(fmt::format("getUniqueSubtree({}, {}): more than one match (got {})", start.path().get().get(), path, set.size()));
+        throw std::runtime_error(fmt::format("getUniqueSubtree({}, {}): more than one match (got {})", start.path(), path, set.size()));
     }
 }
 }

@@ -89,8 +89,8 @@ TEST_CASE("Config data in ietf-interfaces")
                                              {"osc", "iana-if-type:ethernetCsmacd"},
                                              {"oscW", "iana-if-type:ethernetCsmacd"},
                                              {"oscE", "iana-if-type:ethernetCsmacd"}}) {
-                client.setItem(("/ietf-interfaces:interfaces/interface[name='"s + name + "']/type").c_str(), type);
-                client.setItem(("/ietf-interfaces:interfaces/interface[name='"s + name + "']/enabled").c_str(), "false");
+                client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/type", type);
+                client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/enabled", "false");
             }
             client.applyChanges();
         }

@@ -22,6 +22,30 @@
       },
       "revId": "7b28a8f29b7396731dbda35353b8c5a43de63b52",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9f716b8_6225d30d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-03-21T18:16:56Z",
+      "side": 1,
+      "message": "thanks, fixed (also in other commits)",
+      "parentUuid": "2417c3f0_ab76b154",
+      "range": {
+        "startLine": 7,
+        "startChar": 24,
+        "endLine": 7,
+        "endChar": 31
+      },
+      "revId": "7b28a8f29b7396731dbda35353b8c5a43de63b52",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

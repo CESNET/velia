@@ -1,15 +1,19 @@
+- job:
+    name: velia-f34-clang-asan-ubsan
+    parent: f34-clang-asan-ubsan
+    requires: CzechLight-deps-f34-clang-asan-ubsan
+    required-projects: &projects
+      - CzechLight/dependencies
+    pre-run: ci/pre.yaml
+
 - project:
     check:
       jobs:
         - f34-gcc-cover:
             requires: CzechLight-deps-f34-gcc
-            required-projects: &projects
-              - CzechLight/dependencies
-            pre-run: ci/pre.yaml
-        - f34-clang-asan-ubsan:
-            requires: CzechLight-deps-f34-clang-asan-ubsan
             required-projects: *projects
             pre-run: ci/pre.yaml
+        - velia-f34-clang-asan-ubsan
         - f34-clang-tsan:
             requires: CzechLight-deps-f34-clang-tsan
             required-projects: *projects

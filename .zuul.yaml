@@ -1,3 +1,11 @@
+- job:
+    name: velia-f34-clang-asan-ubsan
+    parent: f34-clang-asan-ubsan
+    pre-run: ci/pre.yaml
+    requires: CzechLight-deps-f34-clang-asan-ubsan
+    vars:
+      zuul_work_dir: "{{ zuul.projects[zuul.project.canonical_hostname + '/CzechLight/velia'].src_dir }}"
+
 - project:
     check:
       jobs:
@@ -6,10 +14,8 @@
             required-projects: &projects
               - CzechLight/dependencies
             pre-run: ci/pre.yaml
-        - f34-clang-asan-ubsan:
-            requires: CzechLight-deps-f34-clang-asan-ubsan
+        - velia-f34-clang-asan-ubsan:
             required-projects: *projects
-            pre-run: ci/pre.yaml
         - f34-clang-tsan:
             requires: CzechLight-deps-f34-clang-tsan
             required-projects: *projects

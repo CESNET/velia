@@ -22,6 +22,7 @@ Usage:
   veliad-firewall
     [--sysrepo-log-level=<Level>]
     [--firewall-log-level=<Level>]
+    [--nftables-include-file=<Path>]...
   veliad-firewall (-h | --help)
   veliad-firewall --version
 
@@ -32,6 +33,7 @@ Options:
   --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
+  --nftables-include-file=<Path>    Files to include in the nftables config file.
 )";
 
 int main(int argc, char* argv[])
@@ -53,6 +55,11 @@ int main(int argc, char* argv[])
         spdlog::get("firewall")->set_level(parseLogLevel("Firewall logging", args["--firewall-log-level"]));
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
+        std::vector<std::filesystem::path> nftIncludeFiles;
+        for (const auto& path : args["--nftables-include-file"].asStringList()) {
+            nftIncludeFiles.emplace_back(path);
+        }
+
         auto srConn = sysrepo::Connection{};
         auto srSess = srConn.sessionStart();
         velia::firewall::SysrepoFirewall firewall(srSess, [] (const auto& config) {
@@ -60,7 +67,7 @@ int main(int argc, char* argv[])
             velia::utils::execAndWait(spdlog::get("firewall"), NFT_EXECUTABLE, {"-f", "-"}, config);
 
             spdlog::get("firewall")->debug("nft config applied.");
-        });
+        }, nftIncludeFiles);
 
         waitUntilSignaled();
 

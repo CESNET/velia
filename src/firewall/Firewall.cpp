@@ -23,7 +23,7 @@ const auto ipv6_matches = "/ietf-access-control-list:acls/acl/aces/ace/matches/i
 const auto action = "/ietf-access-control-list:acls/acl/aces/ace/actions/forwarding";
 }
 
-std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree)
+std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree, const std::vector<std::filesystem::path>& nftIncludes)
 {
     using namespace std::string_view_literals;
     std::ostringstream ss;
@@ -99,11 +99,15 @@ std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree)
         }
     }
 
+    for (const auto& path : nftIncludes) {
+        ss << "include \"" << path.c_str() << "\"\n";
+    }
+
     return ss.str();
 }
 }
 
-velia::firewall::SysrepoFirewall::SysrepoFirewall(sysrepo::Session srSess, NftConfigConsumer consumer)
+velia::firewall::SysrepoFirewall::SysrepoFirewall(sysrepo::Session srSess, NftConfigConsumer consumer, const std::vector<std::filesystem::path>& nftIncludeFiles)
     : m_sub()
     , m_log(spdlog::get("firewall"))
 {
@@ -111,11 +115,11 @@ velia::firewall::SysrepoFirewall::SysrepoFirewall(sysrepo::Session srSess, NftCo
     utils::ensureModuleImplemented(srSess, "ietf-access-control-list", "2019-03-04");
     utils::ensureModuleImplemented(srSess, "czechlight-firewall", "2021-01-25");
 
-    sysrepo::ModuleChangeCb cb = [logger = m_log, consumer = std::move(consumer)] (sysrepo::Session session, auto, auto, auto, auto, auto) {
+    sysrepo::ModuleChangeCb cb = [nftIncludeFiles, logger = m_log, consumer = std::move(consumer)] (sysrepo::Session session, auto, auto, auto, auto, auto) {
         logger->debug("Applying new data from sysrepo");
         auto data = session.getData("/" + ietf_acl_module + ":*");
 
-        auto config = generateNftConfig(logger, *data);
+        auto config = generateNftConfig(logger, *data, nftIncludeFiles);
         logger->trace("running the consumer...");
         consumer(config);
         logger->trace("consumer done.");

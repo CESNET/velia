@@ -38,6 +38,12 @@ TEST_CASE("nftables generator")
     srSess.applyChanges(TIMEOUT);
     MockNft nft;
 
+    SECTION("include files")
+    {
+        REQUIRE_CALL(nft, consumeConfig(NFTABLES_OUTPUT_START + "include \"/some/file\"\n"));
+        velia::firewall::SysrepoFirewall fwWithIncludes(srSess, [&nft] (const std::string& config) {nft.consumeConfig(config);}, {"/some/file"});
+    }
+
     REQUIRE_CALL(nft, consumeConfig(NFTABLES_OUTPUT_START));
     velia::firewall::SysrepoFirewall fw(srSess, [&nft] (const std::string& config) {nft.consumeConfig(config);});
     std::string inputData;

@@ -12,7 +12,7 @@ namespace velia::firewall {
 class SysrepoFirewall {
 public:
     using NftConfigConsumer = std::function<void(const std::string& config)>;
-    SysrepoFirewall(sysrepo::Session srSess, NftConfigConsumer consumer);
+    SysrepoFirewall(sysrepo::Session srSess, NftConfigConsumer consumer, const std::vector<std::filesystem::path>& nftIncludeFiles = {});
 
 private:
     std::optional<sysrepo::Subscription> m_sub;

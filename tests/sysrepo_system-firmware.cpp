@@ -10,44 +10,47 @@
 
 using namespace std::literals;
 
-struct InstallProgressMock {
-    MAKE_CONST_MOCK2(update, void(int32_t, const std::string&));
-};
-
-std::vector<std::unique_ptr<trompeloeil::expectation>> expectationFactory(const DBusRAUCServer::InstallBehaviour& installType, const InstallProgressMock& eventMock, trompeloeil::sequence& seq1)
+std::vector<std::unique_ptr<trompeloeil::expectation>> expectationFactory(const DBusRAUCServer::InstallBehaviour& installType, NotificationWatcher& eventMock, trompeloeil::sequence& seq1)
 {
     std::vector<std::unique_ptr<trompeloeil::expectation>> expectations;
 
+    auto progressData = [](int progress, std::string message) {
+        return NotificationWatcher::data_t{
+            {"progress", std::to_string(progress)},
+            {"message", message},
+        };
+    };
+
     if (installType == DBusRAUCServer::InstallBehaviour::OK) {
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(0, "Installing")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(0, "Determining slot states")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Determining slot states done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Checking bundle")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Veryfing signature")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(40, "Veryfing signature done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(40, "Checking bundle done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(40, "Loading manifest file")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(60, "Loading manifest file done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(60, "Determining target install group")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(80, "Determining target install group done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(80, "Updating slots")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(80, "Checking slot rootfs.0")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(85, "Checking slot rootfs.0 done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(85, "Copying image to rootfs.0")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(90, "Copying image to rootfs.0 done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(90, "Checking slot cfg.0")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(95, "Checking slot cfg.0 done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(95, "Copying image to cfg.0")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(100, "Copying image to cfg.0 done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(100, "Updating slots done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(100, "Installing done.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(0, "Installing"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(0, "Determining slot states"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(20, "Determining slot states done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(20, "Checking bundle"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(20, "Veryfing signature"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(40, "Veryfing signature done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(40, "Checking bundle done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(40, "Loading manifest file"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(60, "Loading manifest file done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(60, "Determining target install group"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(80, "Determining target install group done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(80, "Updating slots"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(80, "Checking slot rootfs.0"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(85, "Checking slot rootfs.0 done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(85, "Copying image to rootfs.0"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(90, "Copying image to rootfs.0 done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(90, "Checking slot cfg.0"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(95, "Checking slot cfg.0 done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(95, "Copying image to cfg.0"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(100, "Copying image to cfg.0 done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(100, "Updating slots done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(100, "Installing done."))).IN_SEQUENCE(seq1));
     } else {
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(0, "Installing")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(0, "Determining slot states")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Determining slot states done.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(20, "Checking bundle")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(40, "Checking bundle failed.")).IN_SEQUENCE(seq1));
-        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, update(100, "Installing failed.")).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(0, "Installing"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(0, "Determining slot states"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(20, "Determining slot states done."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(20, "Checking bundle"))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(40, "Checking bundle failed."))).IN_SEQUENCE(seq1));
+        expectations.push_back(NAMED_REQUIRE_CALL(eventMock, notified(progressData(100, "Installing failed."))).IN_SEQUENCE(seq1));
     }
 
     return expectations;
@@ -61,12 +64,6 @@ TEST_CASE("Firmware in czechlight-system, RPC")
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
-
-    // process install notifications
-    InstallProgressMock installProgressMock;
-    EventWatcher events([&installProgressMock](const EventWatcher::Event& event) {
-        installProgressMock.update(std::stoi(event.data.at("/czechlight-system:firmware/installation/update/progress")), event.data.at("/czechlight-system:firmware/installation/update/message"));
-    });
 
     auto dbusServerConnection = sdbus::createSessionBusConnection("de.pengutronix.rauc");
     auto dbusClientConnectionSignals = sdbus::createSessionBusConnection();
@@ -168,8 +165,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
 
         SECTION("Installation runs")
         {
-            auto subscription = client.onNotification("czechlight-system", events, "/czechlight-system:firmware/installation/update");
-
+            NotificationWatcher installProgressMock{client, "/czechlight-system:firmware/installation/update"};
             DBusRAUCServer::InstallBehaviour installType;
             std::map<std::string, std::string> expectedFinished, expectedInProgress = {
                 {"/message", ""},
@@ -208,8 +204,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
 
         SECTION("Unsuccessfull install followed by successfull install")
         {
-            auto subscription = client.onNotification("czechlight-system", events, "/czechlight-system:firmware/installation/update");
-
+            NotificationWatcher installProgressMock{client, "/czechlight-system:firmware/installation/update"};
             // invoke unsuccessfull install
             {
                 raucServer.installBundleBehaviour(DBusRAUCServer::InstallBehaviour::FAILURE);

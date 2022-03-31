@@ -16,6 +16,29 @@
       "message": "recheck",
       "revId": "48ec07698cfd4c4c1b4c3498c84597f3cd14417c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a945fae_15aea02a",
+        "filename": "tests/mock/sysrepo/events.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-03-31T09:37:09Z",
+      "side": 1,
+      "message": "How is this possible to happen?",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 25
+      },
+      "revId": "48ec07698cfd4c4c1b4c3498c84597f3cd14417c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

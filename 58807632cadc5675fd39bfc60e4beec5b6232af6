@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30f9960f_84ad0e95",
+        "filename": "tests/mock/sysrepo/events.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2022-03-31T16:00:01Z",
+      "side": 1,
+      "message": "This took me a while... I didn\u0027t realize that you need the moduleName. It would help me if xpath.substr(1, pos - 1); was named somehow.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 19
+      },
+      "revId": "58807632cadc5675fd39bfc60e4beec5b6232af6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99a75445_d3bd5e6d",
+        "filename": "tests/mock/sysrepo/events.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000056
+      },
+      "writtenOn": "2022-03-31T16:00:01Z",
+      "side": 1,
+      "message": "I am not a fan of this. I think that usually, this kind of using just makes me look at what the using means.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 54
+      },
+      "revId": "58807632cadc5675fd39bfc60e4beec5b6232af6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

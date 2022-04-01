@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5e40954f_4a69585d",
+        "filename": "tests/mock/sysrepo/events.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-04-01T09:03:13Z",
+      "side": 1,
+      "message": "right, I think I got too excited here",
+      "parentUuid": "30f9960f_84ad0e95",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 19
+      },
+      "revId": "58807632cadc5675fd39bfc60e4beec5b6232af6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "99a75445_d3bd5e6d",
         "filename": "tests/mock/sysrepo/events.h",
         "patchSetId": 3

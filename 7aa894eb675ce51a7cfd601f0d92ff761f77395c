@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "7aa894eb675ce51a7cfd601f0d92ff761f77395c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72b08a94_89c6c768",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-04-04T13:19:23Z",
+      "side": 1,
+      "message": "I\u0027d consider removing the data_t using statement, not sure if it\u0027s worth it. But it\u0027s not a dealbreaker for me.",
+      "revId": "7aa894eb675ce51a7cfd601f0d92ff761f77395c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

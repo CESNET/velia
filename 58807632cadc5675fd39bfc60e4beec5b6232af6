@@ -69,6 +69,30 @@
       },
       "revId": "58807632cadc5675fd39bfc60e4beec5b6232af6",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69d24728_119cfaf2",
+        "filename": "tests/mock/sysrepo/events.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-04-04T13:19:23Z",
+      "side": 1,
+      "message": "I agree that it\u0027s probably not worth the three occurrences of it.",
+      "parentUuid": "99a75445_d3bd5e6d",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 54
+      },
+      "revId": "58807632cadc5675fd39bfc60e4beec5b6232af6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

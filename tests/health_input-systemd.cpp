@@ -3,7 +3,7 @@
  *
  * Written by Tomáš Pecka <tomas.pecka@fit.cvut.cz>
  *
-*/
+ */
 
 #include "trompeloeil_doctest.h"
 #include "dbus-helpers/dbus_systemd_server.h"
@@ -44,7 +44,7 @@ TEST_CASE("Systemd monitor")
     REQUIRE_CALL(*mx, updateState(ANY(void*), velia::health::State::OK)).IN_SEQUENCE(seq1);
     REQUIRE_CALL(*mx, updateState(ANY(void*), velia::health::State::ERROR)).IN_SEQUENCE(seq1);
     REQUIRE_CALL(*mx, updateState(ANY(void*), velia::health::State::ERROR)).IN_SEQUENCE(seq1);
-    auto i1 = std::make_shared<velia::health::DbusSystemdInput>(mx, std::set<std::string> {"unitIgnored.service"}, *clientConnection, serverConnection->getUniqueName(), "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "org.freedesktop.systemd1.Unit");
+    auto i1 = std::make_shared<velia::health::DbusSystemdInput>(mx, std::set<std::string>{"unitIgnored.service"}, *clientConnection, serverConnection->getUniqueName(), "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "org.freedesktop.systemd1.Unit");
     // i1 now listens for dbus events, we can start the semaphore server
 
     // FailedUnits: {unit3} -> ERROR

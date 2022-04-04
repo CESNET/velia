@@ -231,6 +231,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
     m_log->trace("Netlink update on link '{}', action {}", name, nlActionToString(action));
 
     if (action == NL_ACT_DEL) {
+        std::lock_guard<std::mutex> lock(m_mtx);
         utils::valuesPush(std::vector<utils::YANGPair>{}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, m_srSession, sysrepo::Datastore::Operational);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
         std::map<std::string, std::string> values;
@@ -250,6 +251,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
         values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = isBridge(link) ? "iana-if-type:bridge" : arpTypeToString(rtnl_link_get_arptype(link), m_log);
         values[IETF_INTERFACES + "/interface[name='" + name + "']/oper-status"] = operStatusToString(rtnl_link_get_operstate(link), m_log);
 
+        std::lock_guard<std::mutex> lock(m_mtx);
         utils::valuesPush(values, deletePaths, m_srSession, sysrepo::Datastore::Operational);
     } else {
         m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
@@ -284,6 +286,7 @@ void IETFInterfaces::onAddrUpdate(rtnl_addr* addr, int action)
         m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
     }
 
+    std::lock_guard<std::mutex> lock(m_mtx);
     utils::valuesPush(values, deletePaths, m_srSession, sysrepo::Datastore::Operational);
 }
 
@@ -401,6 +404,7 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
         }
     }
 
+    std::lock_guard<std::mutex> lock(m_mtx);
     utils::valuesPush(values, deletePaths, m_srSession, sysrepo::Datastore::Operational);
 }
 }

@@ -29,6 +29,7 @@ private:
     ::sysrepo::Session m_srSession;
     std::optional<::sysrepo::Subscription> m_srSubscribe;
     velia::Log m_log;
+    std::mutex m_mtx;
     std::shared_ptr<Rtnetlink> m_rtnetlink; // first to destroy, because the callback to rtnetlink uses m_srSession and m_log
 };
 }

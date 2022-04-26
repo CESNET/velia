@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include <mutex>
 #include <sysrepo-cpp/Session.hpp>
 #include "utils/log-fwd.h"
 

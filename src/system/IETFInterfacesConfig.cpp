@@ -81,7 +81,7 @@ IETFInterfacesConfig::IETFInterfacesConfig(::sysrepo::Session srSess, std::files
         [this](auto session, auto, auto, auto, auto, auto) { return moduleChange(session); },
         IETF_INTERFACES,
         0,
-        sysrepo::SubscribeOptions::DoneOnly);
+        sysrepo::SubscribeOptions::DoneOnly | sysrepo::SubscribeOptions::Enabled);
 }
 
 sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session) const

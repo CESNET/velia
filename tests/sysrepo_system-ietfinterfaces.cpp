@@ -69,18 +69,19 @@ TEST_CASE("Config data in ietf-interfaces")
     TEST_SYSREPO_INIT_CLIENT;
     trompeloeil::sequence seq1;
 
+    sysrepo::Connection{}.sessionStart(sysrepo::Datastore::Running).copyConfig(sysrepo::Datastore::Startup, "ietf-interfaces");
+
     auto fake = FakeNetworkReload();
 
     const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
     std::filesystem::remove_all(fakeConfigDir);
     std::filesystem::create_directories(fakeConfigDir);
 
+    REQUIRE_CALL(fake, cb(std::vector<std::string>{})).IN_SEQUENCE(seq1);
     auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
 
     SECTION("Link changes disabled")
     {
-        client.switchDatastore(sysrepo::Datastore::Startup);
-
         SECTION("Only specified link names can appear in configurable datastore")
         {
             for (const auto& [name, type] : {std::pair<const char*, const char*>{"eth0", "iana-if-type:ethernetCsmacd"},
@@ -92,6 +93,8 @@ TEST_CASE("Config data in ietf-interfaces")
                 client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/type", type);
                 client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/enabled", "false");
             }
+
+            REQUIRE_CALL(fake, cb(std::vector<std::string>{"br0", "eth0", "eth1"})).IN_SEQUENCE(seq1); // only these are monitored by the test
             client.applyChanges();
         }
 
@@ -143,9 +146,8 @@ TEST_CASE("Config data in ietf-interfaces")
 
     SECTION("Every active protocol must have at least one IP address assigned")
     {
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "false");
-        client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4");
-        client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6");
         REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1).TIMES(AT_MOST(1));
         client.applyChanges();
 

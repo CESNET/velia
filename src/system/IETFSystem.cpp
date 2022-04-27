@@ -180,9 +180,9 @@ void IETFSystem::initHostname()
         return sysrepo::ErrorCode::Ok;
     };
 
-    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, hostNameCbRunning, IETF_SYSTEM_HOSTNAME_PATH);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, hostNameCbRunning, IETF_SYSTEM_HOSTNAME_PATH, 0, sysrepo::SubscribeOptions::DoneOnly | sysrepo::SubscribeOptions::Enabled);
     m_srSession.switchDatastore(sysrepo::Datastore::Startup);
-    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, hostNameCbStartup, IETF_SYSTEM_HOSTNAME_PATH);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, hostNameCbStartup, IETF_SYSTEM_HOSTNAME_PATH, 0, sysrepo::SubscribeOptions::DoneOnly);
     m_srSession.switchDatastore(sysrepo::Datastore::Operational);
     m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME, hostNameCbOperational, IETF_SYSTEM_HOSTNAME_PATH);
 }
@@ -195,7 +195,7 @@ void IETFSystem::initDummies()
         return sysrepo::ErrorCode::Ok;
     };
     for (const auto xpath : {"/ietf-system:system/location", "/ietf-system:system/contact"}) {
-        m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, ignore, xpath, 0, sysrepo::SubscribeOptions::DoneOnly);
+        m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, ignore, xpath, 0, sysrepo::SubscribeOptions::DoneOnly /* it's a dummy write, no need for SubscribeOptions::Enabled */);
     }
 }
 

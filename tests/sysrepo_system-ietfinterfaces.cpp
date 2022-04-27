@@ -77,6 +77,7 @@ TEST_CASE("Config data in ietf-interfaces")
     std::filesystem::remove_all(fakeConfigDir);
     std::filesystem::create_directories(fakeConfigDir);
 
+    REQUIRE_CALL(fake, cb(std::vector<std::string>{})).IN_SEQUENCE(seq1);
     auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
 
     SECTION("Link changes disabled")

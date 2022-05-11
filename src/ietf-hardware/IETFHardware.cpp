@@ -186,14 +186,14 @@ template <> const DataTree sysfsStaticData<SensorType::Power> = {
 template <> const DataTree sysfsStaticData<SensorType::VoltageAC> = {
     {"class", "iana-hardware:sensor"},
     {"sensor-data/value-type", "volts-AC"},
-    {"sensor-data/value-scale", "micro"},
+    {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
     {"sensor-data/oper-status", "ok"}
 };
 template <> const DataTree sysfsStaticData<SensorType::VoltageDC> = {
     {"class", "iana-hardware:sensor"},
     {"sensor-data/value-type", "volts-DC"},
-    {"sensor-data/value-scale", "micro"},
+    {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
     {"sensor-data/oper-status", "ok"}
 };

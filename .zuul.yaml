@@ -6,29 +6,506 @@
     vars:
       zuul_work_dir: "{{ zuul.projects[zuul.project.canonical_hostname + '/CzechLight/velia'].src_dir }}"
 
+- job:
+    name: bench-00
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-01
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-02
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-03
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-04
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-05
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-06
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-07
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-08
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-09
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-10
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-11
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-12
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-13
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-14
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-15
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-16
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-17
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-18
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-19
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-20
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-21
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-22
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-23
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-24
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-25
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-26
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-27
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-28
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-29
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-30
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-31
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-32
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-33
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-34
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-35
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-36
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-37
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-38
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-39
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-40
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-41
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-42
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-43
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-44
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-45
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-46
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-47
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-48
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-49
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-50
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-51
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-52
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-53
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-54
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-55
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-56
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-57
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-58
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-59
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-60
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-61
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-62
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-63
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-64
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-65
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-66
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-67
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-68
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-69
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-70
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-71
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-72
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-73
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-74
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-75
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-76
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-77
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-78
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-79
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-80
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-81
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-82
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-83
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-84
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-85
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-86
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-87
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-88
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-89
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-90
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-91
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-92
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-93
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-94
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-95
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-96
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-97
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-98
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-99
+    parent: velia-f34-clang-asan-ubsan
+
 - project:
     check:
       jobs:
-        - f34-gcc-cover:
-            requires: CzechLight-deps-f34-gcc
-            required-projects: &projects
-              - CzechLight/dependencies
-            pre-run: ci/pre.yaml
-        - velia-f34-clang-asan-ubsan:
-            required-projects: *projects
-        - f34-clang-tsan:
-            requires: CzechLight-deps-f34-clang-tsan
-            required-projects: *projects
-            pre-run: ci/pre.yaml
-        - f34-cpp-coverage-diff:
-            voting: false
-        - clang-format:
-            voting: false
-        - f34-gcc-cover-previous:
-            requires: CzechLight-deps-f34-gcc
-            required-projects: *projects
-            pre-run: ci/pre.yaml
-        - czechlight-clearfog:
-            required-projects:
-              - CzechLight/br2-external
-            requires: CzechLight-br2-build-clearfog
+        - bench-00
+        - bench-01
+        # - bench-02
+        # - bench-03
+        # - bench-04
+        # - bench-05
+        # - bench-06
+        # - bench-07
+        # - bench-08
+        # - bench-09
+        # - bench-10
+        # - bench-11
+        # - bench-12
+        # - bench-13
+        # - bench-14
+        # - bench-15
+        # - bench-16
+        # - bench-17
+        # - bench-18
+        # - bench-19
+        # - bench-20
+        # - bench-21
+        # - bench-22
+        # - bench-23
+        # - bench-24
+        # - bench-25
+        # - bench-26
+        # - bench-27
+        # - bench-28
+        # - bench-29
+        # - bench-30
+        # - bench-31
+        # - bench-32
+        # - bench-33
+        # - bench-34
+        # - bench-35
+        # - bench-36
+        # - bench-37
+        # - bench-38
+        # - bench-39
+        # - bench-40
+        # - bench-41
+        # - bench-42
+        # - bench-43
+        # - bench-44
+        # - bench-45
+        # - bench-46
+        # - bench-47
+        # - bench-48
+        # - bench-49
+        # - bench-50
+        # - bench-51
+        # - bench-52
+        # - bench-53
+        # - bench-54
+        # - bench-55
+        # - bench-56
+        # - bench-57
+        # - bench-58
+        # - bench-59
+        # - bench-60
+        # - bench-61
+        # - bench-62
+        # - bench-63
+        # - bench-64
+        # - bench-65
+        # - bench-66
+        # - bench-67
+        # - bench-68
+        # - bench-69
+        # - bench-70
+        # - bench-71
+        # - bench-72
+        # - bench-73
+        # - bench-74
+        # - bench-75
+        # - bench-76
+        # - bench-77
+        # - bench-78
+        # - bench-79
+        # - bench-80
+        # - bench-81
+        # - bench-82
+        # - bench-83
+        # - bench-84
+        # - bench-85
+        # - bench-86
+        # - bench-87
+        # - bench-88
+        # - bench-89
+        # - bench-90
+        # - bench-91
+        # - bench-92
+        # - bench-93
+        # - bench-94
+        # - bench-95
+        # - bench-96
+        # - bench-97
+        # - bench-98
+        # - bench-99

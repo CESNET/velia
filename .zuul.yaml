@@ -6,29 +6,607 @@
     vars:
       zuul_work_dir: "{{ zuul.projects[zuul.project.canonical_hostname + '/CzechLight/velia'].src_dir }}"
 
+- job:
+    name: bench-00
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-01
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-02
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-03
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-04
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-05
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-06
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-07
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-08
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-09
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-10
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-11
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-12
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-13
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-14
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-15
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-16
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-17
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-18
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-19
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-20
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-21
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-22
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-23
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-24
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-25
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-26
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-27
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-28
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-29
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-30
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-31
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-32
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-33
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-34
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-35
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-36
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-37
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-38
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-39
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-40
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-41
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-42
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-43
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-44
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-45
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-46
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-47
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-48
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-49
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-50
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-51
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-52
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-53
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-54
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-55
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-56
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-57
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-58
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-59
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-60
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-61
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-62
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-63
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-64
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-65
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-66
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-67
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-68
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-69
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-70
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-71
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-72
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-73
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-74
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-75
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-76
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-77
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-78
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-79
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-80
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-81
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-82
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-83
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-84
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-85
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-86
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-87
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-88
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-89
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-90
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-91
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-92
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-93
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-94
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-95
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-96
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-97
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-98
+    parent: velia-f34-clang-asan-ubsan
+
+- job:
+    name: bench-99
+    parent: velia-f34-clang-asan-ubsan
+
 - project:
     check:
       jobs:
-        - f34-gcc-cover:
-            requires: CzechLight-deps-f34-gcc
+        - bench-00:
             required-projects: &projects
               - CzechLight/dependencies
-            pre-run: ci/pre.yaml
-        - velia-f34-clang-asan-ubsan:
+        - bench-01:
             required-projects: *projects
-        - f34-clang-tsan:
-            requires: CzechLight-deps-f34-clang-tsan
+        - bench-02:
             required-projects: *projects
-            pre-run: ci/pre.yaml
-        - f34-cpp-coverage-diff:
-            voting: false
-        - clang-format:
-            voting: false
-        - f34-gcc-cover-previous:
-            requires: CzechLight-deps-f34-gcc
+        - bench-03:
             required-projects: *projects
-            pre-run: ci/pre.yaml
-        - czechlight-clearfog:
-            required-projects:
-              - CzechLight/br2-external
-            requires: CzechLight-br2-build-clearfog
+        - bench-04:
+            required-projects: *projects
+        - bench-05:
+            required-projects: *projects
+        - bench-06:
+            required-projects: *projects
+        - bench-07:
+            required-projects: *projects
+        - bench-08:
+            required-projects: *projects
+        - bench-09:
+            required-projects: *projects
+        - bench-10:
+            required-projects: *projects
+        - bench-11:
+            required-projects: *projects
+        - bench-12:
+            required-projects: *projects
+        - bench-13:
+            required-projects: *projects
+        - bench-14:
+            required-projects: *projects
+        - bench-15:
+            required-projects: *projects
+        - bench-16:
+            required-projects: *projects
+        - bench-17:
+            required-projects: *projects
+        - bench-18:
+            required-projects: *projects
+        - bench-19:
+            required-projects: *projects
+        - bench-20:
+            required-projects: *projects
+        - bench-21:
+            required-projects: *projects
+        - bench-22:
+            required-projects: *projects
+        - bench-23:
+            required-projects: *projects
+        - bench-24:
+            required-projects: *projects
+        - bench-25:
+            required-projects: *projects
+        - bench-26:
+            required-projects: *projects
+        - bench-27:
+            required-projects: *projects
+        - bench-28:
+            required-projects: *projects
+        - bench-29:
+            required-projects: *projects
+        - bench-30:
+            required-projects: *projects
+        - bench-31:
+            required-projects: *projects
+        - bench-32:
+            required-projects: *projects
+        - bench-33:
+            required-projects: *projects
+        - bench-34:
+            required-projects: *projects
+        - bench-35:
+            required-projects: *projects
+        - bench-36:
+            required-projects: *projects
+        - bench-37:
+            required-projects: *projects
+        - bench-38:
+            required-projects: *projects
+        - bench-39:
+            required-projects: *projects
+        - bench-40:
+            required-projects: *projects
+        - bench-41:
+            required-projects: *projects
+        - bench-42:
+            required-projects: *projects
+        - bench-43:
+            required-projects: *projects
+        - bench-44:
+            required-projects: *projects
+        - bench-45:
+            required-projects: *projects
+        - bench-46:
+            required-projects: *projects
+        - bench-47:
+            required-projects: *projects
+        - bench-48:
+            required-projects: *projects
+        - bench-49:
+            required-projects: *projects
+        # - bench-50:
+        #     required-projects: *projects
+        # - bench-51:
+        #     required-projects: *projects
+        # - bench-52:
+        #     required-projects: *projects
+        # - bench-53:
+        #     required-projects: *projects
+        # - bench-54:
+        #     required-projects: *projects
+        # - bench-55:
+        #     required-projects: *projects
+        # - bench-56:
+        #     required-projects: *projects
+        # - bench-57:
+        #     required-projects: *projects
+        # - bench-58:
+        #     required-projects: *projects
+        # - bench-59:
+        #     required-projects: *projects
+        # - bench-60:
+        #     required-projects: *projects
+        # - bench-61:
+        #     required-projects: *projects
+        # - bench-62:
+        #     required-projects: *projects
+        # - bench-63:
+        #     required-projects: *projects
+        # - bench-64:
+        #     required-projects: *projects
+        # - bench-65:
+        #     required-projects: *projects
+        # - bench-66:
+        #     required-projects: *projects
+        # - bench-67:
+        #     required-projects: *projects
+        # - bench-68:
+        #     required-projects: *projects
+        # - bench-69:
+        #     required-projects: *projects
+        # - bench-70:
+        #     required-projects: *projects
+        # - bench-71:
+        #     required-projects: *projects
+        # - bench-72:
+        #     required-projects: *projects
+        # - bench-73:
+        #     required-projects: *projects
+        # - bench-74:
+        #     required-projects: *projects
+        # - bench-75:
+        #     required-projects: *projects
+        # - bench-76:
+        #     required-projects: *projects
+        # - bench-77:
+        #     required-projects: *projects
+        # - bench-78:
+        #     required-projects: *projects
+        # - bench-79:
+        #     required-projects: *projects
+        # - bench-80:
+        #     required-projects: *projects
+        # - bench-81:
+        #     required-projects: *projects
+        # - bench-82:
+        #     required-projects: *projects
+        # - bench-83:
+        #     required-projects: *projects
+        # - bench-84:
+        #     required-projects: *projects
+        # - bench-85:
+        #     required-projects: *projects
+        # - bench-86:
+        #     required-projects: *projects
+        # - bench-87:
+        #     required-projects: *projects
+        # - bench-88:
+        #     required-projects: *projects
+        # - bench-89:
+        #     required-projects: *projects
+        # - bench-90:
+        #     required-projects: *projects
+        # - bench-91:
+        #     required-projects: *projects
+        # - bench-92:
+        #     required-projects: *projects
+        # - bench-93:
+        #     required-projects: *projects
+        # - bench-94:
+        #     required-projects: *projects
+        # - bench-95:
+        #     required-projects: *projects
+        # - bench-96:
+        #     required-projects: *projects
+        # - bench-97:
+        #     required-projects: *projects
+        # - bench-98:
+        #     required-projects: *projects
+        # - bench-99:
+        #     required-projects: *projects

@@ -158,13 +158,25 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
                 }
             }
 
-            for (const auto& [yangKey, raucKey] : {std::pair{"state", "state"}, {"boot-status", "boot-status"}, {"version", "bundle.version"}, {"installed", "installed.timestamp"}}) {
+            for (const auto& [yangKey, raucKey] : {std::pair{"version", "bundle.version"}, {"installed", "installed.timestamp"}}) {
                 if (auto pit = props.find(raucKey); pit != props.end()) {
                     m_slotStatusCache[xpathPrefix + yangKey] = std::get<std::string>(pit->second);
                 } else {
                     m_log->warn("RAUC didn't provide '{}' property for slot '{}'.", raucKey, slotName);
                 }
             }
+
+            if (auto pit = props.find("state"); pit != props.end()) {
+                m_slotStatusCache[xpathPrefix + "is-booted-now"] = (std::get<std::string>(pit->second) == "booted" ? "true" : "false");
+            } else {
+                m_log->warn("RAUC didn't provide 'state' property for slot '{}'.", slotName);
+            }
+            if (auto pit = props.find("boot-status"); pit != props.end()) {
+                m_slotStatusCache[xpathPrefix + "is-healthy"] = (std::get<std::string>(pit->second) == "good" ? "true" : "false");
+            } else {
+                m_log->warn("RAUC didn't provide 'boot-status' property for slot '{}'.", slotName);
+            }
+
         }
     }
 

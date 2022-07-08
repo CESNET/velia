@@ -53,20 +53,14 @@ module czechlight-system {
         type yang:date-and-time;
       }
 
-      leaf state {
-        description "Current state of the slot.";
-        type enumeration {
-          enum inactive;
-          enum booted;
-        }
+      leaf is-booted-now {
+        description "Is the system running from this slot?";
+        type boolean;
       }
 
-      leaf boot-status {
-        description "Boot status.";
-        type enumeration {
-          enum good;
-          enum bad;
-        }
+      leaf is-healthy {
+        description "Only healthy slots are considered for booting. Slots which failed during a boot are marked as non-healthy.";
+        type boolean;
       }
     }
 

@@ -143,16 +143,16 @@ TEST_CASE("Firmware in czechlight-system, RPC")
 
     REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                 {"/firmware-slot[name='A']", ""},
-                {"/firmware-slot[name='A']/boot-status", "bad"},
+                {"/firmware-slot[name='A']/is-healthy", "false"},
                 {"/firmware-slot[name='A']/installed", "2021-01-13T17:15:50-00:00"},
                 {"/firmware-slot[name='A']/name", "A"},
-                {"/firmware-slot[name='A']/state", "inactive"},
+                {"/firmware-slot[name='A']/is-booted-now", "false"},
                 {"/firmware-slot[name='A']/version", "v4-104-ge80fcd4"},
                 {"/firmware-slot[name='B']", ""},
-                {"/firmware-slot[name='B']/boot-status", "good"},
+                {"/firmware-slot[name='B']/is-healthy", "true"},
                 {"/firmware-slot[name='B']/installed", "2021-01-13T17:20:15-00:00"},
                 {"/firmware-slot[name='B']/name", "B"},
-                {"/firmware-slot[name='B']/state", "booted"},
+                {"/firmware-slot[name='B']/is-booted-now", "true"},
                 {"/firmware-slot[name='B']/version", "v4-103-g34d2f48"},
                 {"/installation", ""},
                 {"/installation/message", ""},
@@ -254,16 +254,16 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                 // RAUC does not respond to GetSlotStatus when another operation in progress, so let's check we use the cached data
                 REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware", sysrepo::Datastore::Operational) == std::map<std::string, std::string> {
                     {"/firmware-slot[name='A']", ""},
-                    {"/firmware-slot[name='A']/boot-status", "bad"},
+                    {"/firmware-slot[name='A']/is-healthy", "false"},
                     {"/firmware-slot[name='A']/installed", "2021-01-13T17:15:50-00:00"},
                     {"/firmware-slot[name='A']/name", "A"},
-                    {"/firmware-slot[name='A']/state", "inactive"},
+                    {"/firmware-slot[name='A']/is-booted-now", "false"},
                     {"/firmware-slot[name='A']/version", "v4-104-ge80fcd4"},
                     {"/firmware-slot[name='B']", ""},
-                    {"/firmware-slot[name='B']/boot-status", "good"},
+                    {"/firmware-slot[name='B']/is-healthy", "true"},
                     {"/firmware-slot[name='B']/installed", "2021-01-13T17:20:15-00:00"},
                     {"/firmware-slot[name='B']/name", "B"},
-                    {"/firmware-slot[name='B']/state", "booted"},
+                    {"/firmware-slot[name='B']/is-booted-now", "true"},
                     {"/firmware-slot[name='B']/version", "v4-103-g34d2f48"},
                     {"/installation", ""},
                     {"/installation/message", ""},
@@ -363,16 +363,16 @@ TEST_CASE("Firmware in czechlight-system, slot status")
 
         expected = {
             {"[name='A']", ""},
-            {"[name='A']/boot-status", "bad"},
+            {"[name='A']/is-healthy", "false"},
             {"[name='A']/installed", "2021-01-13T17:15:50-00:00"},
             {"[name='A']/name", "A"},
-            {"[name='A']/state", "inactive"},
+            {"[name='A']/is-booted-now", "false"},
             {"[name='A']/version", "v4-104-ge80fcd4"},
             {"[name='B']", ""},
-            {"[name='B']/boot-status", "good"},
+            {"[name='B']/is-healthy", "true"},
             {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
-            {"[name='B']/state", "booted"},
+            {"[name='B']/is-booted-now", "true"},
             {"[name='B']/version", "v4-103-g34d2f48"},
         };
     }
@@ -413,14 +413,14 @@ TEST_CASE("Firmware in czechlight-system, slot status")
 
         expected = {
             {"[name='A']", ""},
-            {"[name='A']/boot-status", "bad"},
+            {"[name='A']/is-healthy", "false"},
             {"[name='A']/name", "A"},
-            {"[name='A']/state", "inactive"},
+            {"[name='A']/is-booted-now", "false"},
             {"[name='B']", ""},
-            {"[name='B']/boot-status", "good"},
+            {"[name='B']/is-healthy", "true"},
             {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
-            {"[name='B']/state", "booted"},
+            {"[name='B']/is-booted-now", "true"},
             {"[name='B']/version", "v4-103-g34d2f48"},
         };
     }
@@ -460,10 +460,10 @@ TEST_CASE("Firmware in czechlight-system, slot status")
 
         expected = {
             {"[name='B']", ""},
-            {"[name='B']/boot-status", "good"},
+            {"[name='B']/is-healthy", "true"},
             {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
-            {"[name='B']/state", "booted"},
+            {"[name='B']/is-booted-now", "true"},
             {"[name='B']/version", "v4-103-g34d2f48"},
         };
     }

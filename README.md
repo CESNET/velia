@@ -23,4 +23,4 @@ For a full list, consult the [`yang/` directory](./yang/) in this repository.
 - [`ietf-system`, RFC 7317](https://tools.ietf.org/html/rfc7317) (partial support)
 - [`ietf-interfaces`, RFC 8343](https://tools.ietf.org/html/rfc8343) (generating config for [`systemd-networkd`](https://www.freedesktop.org/software/systemd/man/systemd.network.html), with [extensions](./yang/czechlight-network@2021-02-22.yang))
 - [`ietf-routing`, RFC 8349](https://tools.ietf.org/html/rfc8349) (see above)
-- [`czechlight-system`](./yang/czechlight-system@2021-01-13.yang)
+- [`czechlight-system`](./yang/czechlight-system@2022-07-08.yang)

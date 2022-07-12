@@ -73,6 +73,8 @@ set(YANG_SRCS
     yang/ietf-ipv6-unicast-routing@2018-03-13.yang
     yang/czechlight-lldp@2020-11-04.yang
     yang/iana-afn-safi@2013-07-04.yang
+    yang/ietf-alarms@2019-09-11.yang
+    yang/velia-alarms@2022-07-12.yang
     )
 
 # temporary until our CI switches to fmt>=9
@@ -107,6 +109,10 @@ target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTE
 
 # - health
 add_library(velia-health STATIC
+    src/health/alarms/alarms.cpp
+    src/health/alarms/alarms.h
+    src/health/alarms/SystemdUnits.cpp
+    src/health/alarms/SystemdUnits.h
     src/health/inputs/AbstractInput.cpp
     src/health/inputs/DbusSemaphoreInput.cpp
     src/health/inputs/DbusSystemdInput.cpp
@@ -122,6 +128,7 @@ target_link_libraries(velia-health
         Boost::boost
         SDBusCpp::sdbus-c++
         ${STD_FILESYSTEM_LIBRARY}
+        PkgConfig::LIBYANG
     )
 
 # - ietf-hardware
@@ -407,6 +414,14 @@ if(BUILD_TESTING)
     target_link_libraries(test-health_input-systemd velia-health DbusTesting)
     velia_test(health_output-led)
     target_link_libraries(test-health_output-led velia-health)
+
+    set(fixture_sysrepo-alarms
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-alarms@2019-09-11.yang
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/velia-alarms@2022-07-12.yang
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/sysrepo-ietf-alarms@2022-02-17.yang
+    )
+    velia_test(health_systemd-units fixture_sysrepo-alarms)
+    target_link_libraries(test-health_systemd-units velia-health DbusTesting)
 
     velia_test(system_rauc)
     target_link_libraries(test-system_rauc velia-system DbusTesting)

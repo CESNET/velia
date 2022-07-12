@@ -1,0 +1,23 @@
+module velia-alarms {
+    yang-version 1.1;
+    namespace "http://czechlight.cesnet.cz/yang/velia-alarms";
+    prefix ve-al;
+
+    import ietf-alarms {
+        prefix al;
+    }
+
+    revision 2022-07-12 {
+        description
+          "Initial version.";
+    }
+
+    identity velia-alarm {
+        base al:alarm-type-id;
+    }
+
+    identity systemd-unit-failure {
+        base velia-alarm;
+    }
+}
+

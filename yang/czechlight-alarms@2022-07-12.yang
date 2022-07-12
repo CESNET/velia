@@ -1,0 +1,18 @@
+module czechlight-alarms {
+    yang-version 1.1;
+    namespace "http://czechlight.cesnet.cz/yang/czechlight-alarms";
+    prefix cla-al;
+
+    import ietf-alarms {
+        prefix al;
+    }
+
+    identity czechlight-alarm {
+        base al:alarm-type-id;
+    }
+
+    identity systemd-unit-failure {
+        base czechlight-alarm;
+    }
+}
+

@@ -73,6 +73,7 @@ set(YANG_SRCS
     yang/ietf-ipv6-unicast-routing@2018-03-13.yang
     yang/czechlight-lldp@2020-11-04.yang
     yang/iana-afn-safi@2013-07-04.yang
+    yang/czechlight-health@2022-07-12.yang
     )
 
 # Targets
@@ -112,6 +113,10 @@ add_library(velia-health STATIC
     src/health/outputs/LedSysfsDriver.cpp
     src/health/outputs/callables.cpp
     src/health/State.cpp
+    src/health/systemd-alarms.cpp
+    src/health/systemd-alarms.h
+    src/health/alarms.cpp
+    src/health/alarms.h
     )
 target_link_libraries(velia-health
     PUBLIC

@@ -52,7 +52,7 @@ include(GNUInstallDirs)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
 
 set(YANG_SRCS
-    yang/czechlight-system@2021-01-13.yang
+    yang/czechlight-system@2022-07-08.yang
     yang/iana-hardware@2018-03-13.yang
     yang/ietf-hardware@2018-03-13.yang
     yang/iana-crypt-hash@2014-08-06.yang
@@ -428,7 +428,7 @@ if(BUILD_TESTING)
     velia_test(sysrepo_system-ietfsystem fixture_sysrepo-ietf-system)
     target_link_libraries(test-sysrepo_system-ietfsystem velia-system DbusTesting)
 
-    set(fixture_sysrepo-czechlight-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2021-01-13.yang)
+    set(fixture_sysrepo-czechlight-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2022-07-08.yang)
     velia_test(sysrepo_system-firmware fixture_sysrepo-czechlight-system)
     target_link_libraries(test-sysrepo_system-firmware velia-system DbusTesting SysrepoTesting)
     set_tests_properties(

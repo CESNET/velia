@@ -26,6 +26,10 @@ module czechlight-system {
     description "Initial release";
   }
 
+  revision 2022-07-08 {
+    description "Extended firmware slot properties and actions";
+  }
+
   typedef percent {
     type uint8 {
       range "0 .. 100";

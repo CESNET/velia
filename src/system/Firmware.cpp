@@ -58,7 +58,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
     , m_srSubscribeOps()
     , m_srSubscribeRPC()
 {
-    utils::ensureModuleImplemented(m_srSessionOps, "czechlight-system", "2021-01-13");
+    utils::ensureModuleImplemented(m_srSessionOps, "czechlight-system", "2022-07-08");
 
     {
         auto raucOperation = m_rauc->operation();

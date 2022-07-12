@@ -32,7 +32,7 @@ LED::LED(::sysrepo::Connection srConn, std::filesystem::path sysfsLeds)
     , m_srSubscribe()
     , m_thrRunning(true)
 {
-    utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_SYSTEM_MODULE_NAME, "2021-01-13");
+    utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_SYSTEM_MODULE_NAME, "2022-07-08");
 
     for (const auto& entry : std::filesystem::directory_iterator(sysfsLeds)) {
         if (!std::filesystem::is_directory(entry.path())) {

@@ -113,11 +113,6 @@ add_library(velia-health STATIC
     src/health/alarms/alarms.h
     src/health/alarms/SystemdUnits.cpp
     src/health/alarms/SystemdUnits.h
-    src/health/inputs/AbstractInput.cpp
-    src/health/inputs/DbusSemaphoreInput.cpp
-    src/health/inputs/DbusSystemdInput.cpp
-    src/health/manager/AbstractManager.cpp
-    src/health/manager/StateManager.cpp
     src/health/outputs/AlarmsOutputs.cpp
     src/health/outputs/AlarmsOutputs.h
     src/health/outputs/LedSysfsDriver.cpp
@@ -408,12 +403,6 @@ if(BUILD_TESTING)
 
     endfunction()
 
-    velia_test(health_state-manager)
-    target_link_libraries(test-health_state-manager velia-health)
-    velia_test(health_input-semaphore)
-    target_link_libraries(test-health_input-semaphore velia-health DbusTesting)
-    velia_test(health_input-systemd)
-    target_link_libraries(test-health_input-systemd velia-health DbusTesting)
     velia_test(health_output-led)
     target_link_libraries(test-health_output-led velia-health)
 

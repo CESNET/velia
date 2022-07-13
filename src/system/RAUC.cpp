@@ -84,6 +84,8 @@ RAUC::RAUC(sdbus::IConnection& signalConnection, sdbus::IConnection& methodConne
 /** @brief Get current primary slot.
  *
  * RAUC's DBus GetPrimary method wrapper.
+ * Note that the "slot name" is not the boot name. Typically, a boot name is A or B,
+ * while a slot name is something like rootfs.0 or cfg.1.
  * See https://rauc.readthedocs.io/en/v1.4/reference.html#the-getprimary-method).
  */
 std::string RAUC::primarySlot() const

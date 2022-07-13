@@ -24,6 +24,7 @@ private:
     std::mutex m_mtx; //! @brief locks access to cached elements that are shared from multiple threads
     std::string m_installStatus, m_installMessage;
     std::map<std::string, std::string> m_slotStatusCache;
+    std::map<std::string, std::string> m_bootNameToSlot;
     velia::Log m_log;
     ::sysrepo::Connection m_srConn;
     ::sysrepo::Session m_srSessionOps, m_srSessionRPC;

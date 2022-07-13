@@ -118,6 +118,8 @@ add_library(velia-health STATIC
     src/health/inputs/DbusSystemdInput.cpp
     src/health/manager/AbstractManager.cpp
     src/health/manager/StateManager.cpp
+    src/health/outputs/AlarmsOutputs.cpp
+    src/health/outputs/AlarmsOutputs.h
     src/health/outputs/LedSysfsDriver.cpp
     src/health/outputs/callables.cpp
     src/health/State.cpp
@@ -508,6 +510,7 @@ if(BUILD_TESTING)
         YANG ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/sysrepo-ietf-alarms@2022-02-17.yang
     )
 	velia_test(NAME health_systemd-units LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
+	velia_test(NAME sysrepo_health-led-alarms LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
 endif()
 
 if(WITH_DOCS)

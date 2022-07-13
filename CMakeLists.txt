@@ -118,6 +118,8 @@ add_library(velia-health STATIC
     src/health/inputs/DbusSystemdInput.cpp
     src/health/manager/AbstractManager.cpp
     src/health/manager/StateManager.cpp
+    src/health/outputs/AlarmsOutputs.cpp
+    src/health/outputs/AlarmsOutputs.h
     src/health/outputs/LedSysfsDriver.cpp
     src/health/outputs/callables.cpp
     src/health/State.cpp
@@ -422,6 +424,9 @@ if(BUILD_TESTING)
     )
     velia_test(health_systemd-units fixture_sysrepo-alarms)
     target_link_libraries(test-health_systemd-units velia-health DbusTesting)
+
+    velia_test(sysrepo_health-led-alarms fixture_sysrepo-alarms)
+    target_link_libraries(test-sysrepo_health-led-alarms velia-health DbusTesting)
 
     velia_test(system_rauc)
     target_link_libraries(test-system_rauc velia-system DbusTesting)

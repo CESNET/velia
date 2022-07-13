@@ -113,11 +113,6 @@ add_library(velia-health STATIC
     src/health/alarms/alarms.h
     src/health/alarms/SystemdUnits.cpp
     src/health/alarms/SystemdUnits.h
-    src/health/inputs/AbstractInput.cpp
-    src/health/inputs/DbusSemaphoreInput.cpp
-    src/health/inputs/DbusSystemdInput.cpp
-    src/health/manager/AbstractManager.cpp
-    src/health/manager/StateManager.cpp
     src/health/outputs/AlarmsOutputs.cpp
     src/health/outputs/AlarmsOutputs.h
     src/health/outputs/LedSysfsDriver.cpp
@@ -423,9 +418,6 @@ if(BUILD_TESTING)
         add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
     endforeach()
 
-    velia_test(NAME health_state-manager LIBRARIES velia-health)
-    velia_test(NAME health_input-semaphore LIBRARIES velia-health DbusTesting)
-    velia_test(NAME health_input-systemd LIBRARIES velia-health DbusTesting)
     velia_test(NAME health_output-led LIBRARIES velia-health)
 
     velia_test(NAME system_rauc LIBRARIES velia-system DbusTesting RESOURCE_LOCK dbus-rauc)

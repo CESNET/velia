@@ -1,18 +1,19 @@
 #include <docopt.h>
 #include <future>
+#include <health/outputs/AlarmsOutputs.h>
 #include <sdbus-c++/sdbus-c++.h>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
+#include <sysrepo-cpp/Connection.hpp>
 #include "VELIA_VERSION.h"
 #include "health/Factory.h"
-#include "health/inputs/DbusSystemdInput.h"
-#include "health/manager/StateManager.h"
+#include "health/alarms/SystemdUnits.h"
 #include "health/outputs/callables.h"
 #include "main.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
-#include "utils/log.h"
 #include "utils/log-init.h"
+#include "utils/log.h"
 
 static const char usage[] =
     R"(Monitor system health status.
@@ -21,7 +22,6 @@ Usage:
   veliad-health
     [--appliance=<Model>]
     [--health-log-level=<Level>]
-    [--systemd-ignore-unit=<Unit>]...
   veliad-health (-h | --help)
   veliad-health --version
 
@@ -31,7 +31,6 @@ Options:
   --health-log-level=<N>            Log level for the health monitoring [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
-  --systemd-ignore-unit=<Unit>      Ignore state of systemd's unit in systemd state tracker. Can be specified multiple times.
 )";
 
 DBUS_EVENTLOOP_INIT
@@ -55,24 +54,23 @@ int main(int argc, char* argv[])
 
         DBUS_EVENTLOOP_START
 
-        // health
-        auto manager = std::make_shared<velia::health::StateManager>();
+        auto srSessionAlarms = sysrepo::Connection{}.sessionStart();
+        srSessionAlarms.switchDatastore(sysrepo::Datastore::Operational);
 
         // output configuration
+        std::vector<std::function<void(velia::health::State)>> outputHandlers;
         if (const auto& appliance = args["--appliance"]) {
             spdlog::get("health")->debug("Initializing LED drivers");
-            manager->m_outputSignal.connect(velia::health::createOutput(appliance.asString()));
+            outputHandlers.emplace_back(velia::health::createOutput(appliance.asString()));
         }
+        velia::health::AlarmsOutputs alarms(srSessionAlarms, outputHandlers);
 
         spdlog::get("health")->debug("All outputs initialized.");
 
         // input configuration
-        std::set<std::string> ignoredUnits(args["--systemd-ignore-unit"].asStringList().begin(), args["--systemd-ignore-unit"].asStringList().end());
-        spdlog::get("health")->debug("Starting DBus systemd watcher");
-        if (!ignoredUnits.empty()) {
-            spdlog::get("health")->debug("Systemd input will ignore changes of the following units: {}", args["--systemd-ignore-unit"]);
-        }
-        auto inputSystemdDbus = std::make_shared<velia::health::DbusSystemdInput>(manager, ignoredUnits, *g_dbusConnection);
+        spdlog::get("health")->debug("Starting DBus systemd units watcher");
+        auto srSessionSystemdUnits = sysrepo::Connection{}.sessionStart();
+        auto inputSystemdDbus = std::make_shared<velia::health::SystemdUnits>(srSessionSystemdUnits, *g_dbusConnection);
 
         DBUS_EVENTLOOP_END;
 

@@ -67,6 +67,14 @@ module czechlight-system {
         description "Is this slot selected for booting after the next reboot?";
         type boolean;
       }
+
+      action set-active-after-reboot {
+        description "Schedule this slot for activation after the next reboot";
+      }
+
+      action set-unhealthy {
+        description "Mark this slot as having faulted during the last boot";
+      }
     }
 
     container installation {

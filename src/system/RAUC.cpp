@@ -132,6 +132,15 @@ void RAUC::install(const std::string& source)
     m_dbusObjectProxyMethods->callMethod("InstallBundle").onInterface(INTERFACE).withArguments(source, std::map<std::string, sdbus::Variant> {});
 }
 
+/** @brief Mark a given slot as active/good/...
+ *
+ * This wraps RAUC's DBus method `Mark`.
+ */
+void RAUC::mark(const std::string& how, const std::string& slot)
+{
+    m_dbusObjectProxyMethods->callMethod("Mark").onInterface(INTERFACE).withArguments(how, slot);
+}
+
 std::string RAUC::operation() const
 {
     return m_dbusObjectProxyMethods->getProperty("Operation").onInterface(INTERFACE);

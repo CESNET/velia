@@ -93,6 +93,33 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
 
     m_srSubscribeRPC = m_srSessionRPC.onRPCAction(CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/install", cbRPC);
 
+    ::sysrepo::RpcActionCb markSlotAs = [this](auto, auto, auto path, auto input, auto, auto, auto) {
+        auto bootName = std::string{input.parent()->findPath("name")->asTerm().valueStr()};
+        std::string action;
+        if (path == CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot/set-active-after-reboot") {
+            action = "active";
+        } else if (path == CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot/set-unhealthy") {
+            action = "bad";
+        } else {
+            throw std::logic_error{"action callback XPath mismatch"};
+        }
+        std::string slot;
+        {
+            auto lock = updateSlotStatus();
+            auto slotIt = m_bootNameToSlot.find(bootName);
+            if (slotIt == m_bootNameToSlot.end()) {
+                throw std::runtime_error{"cannot map FW slot boot name '" + bootName + "' to a RAUC slot name"};
+            }
+            slot = slotIt->second;
+        }
+        m_log->debug("RAUC: marking boot slot {} ({}) as {}", bootName, slot, action);
+        m_rauc->mark(action, slot);
+        return ::sysrepo::ErrorCode::Ok;
+    };
+
+    m_srSubscribeRPC->onRPCAction(CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot/set-active-after-reboot", markSlotAs);
+    m_srSubscribeRPC->onRPCAction(CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot/set-unhealthy", markSlotAs);
+
     ::sysrepo::OperGetCb cbOper = [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
         std::map<std::string, std::string> data;
 
@@ -135,6 +162,7 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
     }
 
     std::unique_lock<std::mutex> lck(m_mtx);
+    m_bootNameToSlot.clear();
 
     for (const auto& slotName : FIRMWARE_SLOTS) {
         if (auto it = slotStatus.find(slotName); it != slotStatus.end()) { // if there is an update for the slot "slotName"
@@ -144,6 +172,7 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
             // Better be defensive about provided properties. If somebody removes /slot.raucs, RAUC doesn't provide all the data (at least bundle.version and installed.timestamp).
             if (auto pit = props.find("bootname"); pit != props.end()) {
                 xpathPrefix = CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot[name='" + std::get<std::string>(pit->second) + "']/";
+                m_bootNameToSlot[std::get<std::string>(pit->second)] = slotName;
             } else {
                 m_log->error("RAUC didn't provide 'bootname' property for slot '{}'. Skipping update for that slot.");
                 continue;

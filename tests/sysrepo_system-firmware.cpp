@@ -276,6 +276,28 @@ TEST_CASE("Firmware in czechlight-system, RPC")
             }
         }
     }
+
+    SECTION("marking FW slots") {
+        auto rpcInput = client.getContext().newPath("/czechlight-system:firmware/firmware-slot[name='A']/set-active-after-reboot");
+        {
+            REQUIRE_CALL(raucServer, impl_Mark("active", "rootfs.0")).IN_SEQUENCE(seq1);
+            REQUIRE(client.sendRPC(rpcInput).child() == std::nullopt);
+        }
+
+        rpcInput = client.getContext().newPath("/czechlight-system:firmware/firmware-slot[name='B']/set-active-after-reboot");
+        {
+            REQUIRE_CALL(raucServer, impl_Mark("active", "rootfs.1")).IN_SEQUENCE(seq1);
+            REQUIRE(client.sendRPC(rpcInput).child() == std::nullopt);
+        }
+
+        rpcInput = client.getContext().newPath("/czechlight-system:firmware/firmware-slot[name='B']/set-unhealthy");
+        {
+            REQUIRE_CALL(raucServer, impl_Mark("bad", "rootfs.1")).IN_SEQUENCE(seq1);
+            REQUIRE(client.sendRPC(rpcInput).child() == std::nullopt);
+        }
+
+        waitForCompletionAndBitMore(seq1);
+    }
 }
 
 TEST_CASE("Firmware in czechlight-system, slot status")

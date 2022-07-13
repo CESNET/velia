@@ -5,6 +5,7 @@
 #include <sdbus-c++/sdbus-c++.h>
 #include <string>
 #include <thread>
+#include <trompeloeil.hpp>
 #include "system/RAUC.h"
 
 /** @brief Mimics the RAUC DBus behaviour */
@@ -19,6 +20,8 @@ public:
     ~DBusRAUCServer();
 
     void installBundleBehaviour(InstallBehaviour b);
+
+    MAKE_MOCK2(impl_Mark, void(const std::string&, const std::string&));
 
 private:
     using DBusSlotStatus = sdbus::Struct<std::string, std::map<std::string, sdbus::Variant>>;

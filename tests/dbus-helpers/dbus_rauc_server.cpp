@@ -88,6 +88,9 @@ DBusRAUCServer::DBusRAUCServer(sdbus::IConnection& connection, std::string prima
     m_manager->registerProperty("LastError").onInterface(interfaceManager).withGetter([this]() { return m_propLastError; });
     m_manager->registerProperty("Progress").onInterface(interfaceManager).withGetter([this]() { return m_propProgress; });
     m_manager->registerSignal("Completed").onInterface(interfaceManager).withParameters<int32_t>();
+    m_manager->registerMethod("Mark").onInterface(interfaceManager).implementedAs([this](const std::string& how, const std::string& what) {
+        impl_Mark(how, what);
+    });
     m_manager->finishRegistration();
 }
 

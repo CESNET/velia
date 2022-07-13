@@ -148,12 +148,14 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                 {"/firmware-slot[name='A']/name", "A"},
                 {"/firmware-slot[name='A']/is-booted-now", "false"},
                 {"/firmware-slot[name='A']/version", "v4-104-ge80fcd4"},
+                {"/firmware-slot[name='A']/will-boot-next", "false"},
                 {"/firmware-slot[name='B']", ""},
                 {"/firmware-slot[name='B']/is-healthy", "true"},
                 {"/firmware-slot[name='B']/installed", "2021-01-13T17:20:15-00:00"},
                 {"/firmware-slot[name='B']/name", "B"},
                 {"/firmware-slot[name='B']/is-booted-now", "true"},
                 {"/firmware-slot[name='B']/version", "v4-103-g34d2f48"},
+                {"/firmware-slot[name='B']/will-boot-next", "true"},
                 {"/installation", ""},
                 {"/installation/message", ""},
                 {"/installation/status", "none"},
@@ -259,12 +261,14 @@ TEST_CASE("Firmware in czechlight-system, RPC")
                     {"/firmware-slot[name='A']/name", "A"},
                     {"/firmware-slot[name='A']/is-booted-now", "false"},
                     {"/firmware-slot[name='A']/version", "v4-104-ge80fcd4"},
+                    {"/firmware-slot[name='A']/will-boot-next", "false"},
                     {"/firmware-slot[name='B']", ""},
                     {"/firmware-slot[name='B']/is-healthy", "true"},
                     {"/firmware-slot[name='B']/installed", "2021-01-13T17:20:15-00:00"},
                     {"/firmware-slot[name='B']/name", "B"},
                     {"/firmware-slot[name='B']/is-booted-now", "true"},
                     {"/firmware-slot[name='B']/version", "v4-103-g34d2f48"},
+                    {"/firmware-slot[name='B']/will-boot-next", "true"},
                     {"/installation", ""},
                     {"/installation/message", ""},
                     {"/installation/status", "in-progress"},
@@ -368,12 +372,14 @@ TEST_CASE("Firmware in czechlight-system, slot status")
             {"[name='A']/name", "A"},
             {"[name='A']/is-booted-now", "false"},
             {"[name='A']/version", "v4-104-ge80fcd4"},
+            {"[name='A']/will-boot-next", "false"},
             {"[name='B']", ""},
             {"[name='B']/is-healthy", "true"},
             {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
             {"[name='B']/is-booted-now", "true"},
             {"[name='B']/version", "v4-103-g34d2f48"},
+            {"[name='B']/will-boot-next", "true"},
         };
     }
 
@@ -416,12 +422,14 @@ TEST_CASE("Firmware in czechlight-system, slot status")
             {"[name='A']/is-healthy", "false"},
             {"[name='A']/name", "A"},
             {"[name='A']/is-booted-now", "false"},
+            {"[name='A']/will-boot-next", "false"},
             {"[name='B']", ""},
             {"[name='B']/is-healthy", "true"},
             {"[name='B']/installed", "2021-01-13T17:20:15-00:00"},
             {"[name='B']/name", "B"},
             {"[name='B']/is-booted-now", "true"},
             {"[name='B']/version", "v4-103-g34d2f48"},
+            {"[name='B']/will-boot-next", "true"},
         };
     }
 
@@ -465,6 +473,7 @@ TEST_CASE("Firmware in czechlight-system, slot status")
             {"[name='B']/name", "B"},
             {"[name='B']/is-booted-now", "true"},
             {"[name='B']/version", "v4-103-g34d2f48"},
+            {"[name='B']/will-boot-next", "true"},
         };
     }
 

@@ -62,6 +62,11 @@ module czechlight-system {
         description "Only healthy slots are considered for booting. Slots which failed during a boot are marked as non-healthy.";
         type boolean;
       }
+
+      leaf will-boot-next {
+        description "Is this slot selected for booting after the next reboot?";
+        type boolean;
+      }
     }
 
     container installation {

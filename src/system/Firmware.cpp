@@ -125,9 +125,11 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
 std::unique_lock<std::mutex> Firmware::updateSlotStatus()
 {
     std::map<std::string, velia::system::RAUC::SlotProperties> slotStatus;
+    std::string primarySlot;
 
     try {
         slotStatus = m_rauc->slotStatus();
+        primarySlot = m_rauc->primarySlot();
     } catch (sdbus::Error& e) {
         m_log->warn("Could not fetch RAUC slot status data: {}", e.getMessage());
     }
@@ -176,6 +178,7 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
             } else {
                 m_log->warn("RAUC didn't provide 'boot-status' property for slot '{}'.", slotName);
             }
+            m_slotStatusCache[xpathPrefix + "will-boot-next"] = (slotName == primarySlot ? "true" : "false");
 
         }
     }

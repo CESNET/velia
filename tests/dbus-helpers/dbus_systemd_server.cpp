@@ -36,7 +36,7 @@ void DbusSystemdServer::createUnit(sdbus::IConnection& connection, const std::st
     });
     unit.m_object->finishRegistration();
 
-    m_manager->emitSignal("UnitNew").onInterface(interfaceManager).withArguments(std::string(objPath), objPath);
+    m_manager->emitSignal("UnitNew").onInterface(interfaceManager).withArguments(unitName, objPath);
 }
 
 /**

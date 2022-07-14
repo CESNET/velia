@@ -16,6 +16,24 @@
       "message": "I believe there should be a follow-up br2-external patch for czechlight-install-yang.sh. Why didn\u0027t the CI fail?",
       "revId": "21e6f4296f29d610c6f2d4524227785814a118dd",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44347962_52db09f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-07-14T09:50:18Z",
+      "side": 1,
+      "message": "yeah, https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/5869, it is not possible to do this \"atomically\", so if the test in br2-external was correct, this one would have failed. Good catch. If you can fix that in br2-external, I\u0027ll be happy to add a depends-on from here to test it.",
+      "parentUuid": "dcc46ccd_e2a377a0",
+      "revId": "21e6f4296f29d610c6f2d4524227785814a118dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

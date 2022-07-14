@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcc46ccd_e2a377a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-07-14T09:29:18Z",
+      "side": 1,
+      "message": "I believe there should be a follow-up br2-external patch for czechlight-install-yang.sh. Why didn\u0027t the CI fail?",
+      "revId": "21e6f4296f29d610c6f2d4524227785814a118dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -22,6 +22,30 @@
       },
       "revId": "6520f890611a2c8f57f714ac2822be7a3a39da1d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c09a3f5_cc3191c8",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-07-14T09:48:57Z",
+      "side": 1,
+      "message": "I was thinking that as well, but that would be an immediately-invoked-lambda unless I wanted to use a pattern of `string x; if (...) { x \u003d ...; } else { throw }` which I think is not that super-awesome. Well, C++ :).",
+      "parentUuid": "d44a2183_7b3ef2c1",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 34
+      },
+      "revId": "6520f890611a2c8f57f714ac2822be7a3a39da1d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

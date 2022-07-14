@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d44a2183_7b3ef2c1",
+        "filename": "src/system/Firmware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-07-14T09:31:42Z",
+      "side": 1,
+      "message": "nit: Perhaps this could be simplified using if-with-initializer statement.",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 34
+      },
+      "revId": "6520f890611a2c8f57f714ac2822be7a3a39da1d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

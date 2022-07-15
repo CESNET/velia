@@ -407,7 +407,7 @@ if(BUILD_TESTING)
     target_link_libraries(test-health_output-led velia-health)
 
     set(fixture_sysrepo-alarms
-        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-alarms@2019-09-11.yang
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-alarms@2019-09-11.yang FEATURE alarm-shelving
         YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/velia-alarms@2022-07-12.yang
         YANG ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/sysrepo-ietf-alarms@2022-02-17.yang
     )
@@ -506,6 +506,27 @@ if(BUILD_TESTING)
     set_tests_properties(sysrepo_test_merge-start PROPERTIES DEPENDS test-hardware_ietf-hardware)
     set_tests_properties(sysrepo:clean:sysrepo_two-daemons PROPERTIES DEPENDS sysrepo_test_merge-stop)
 
+
+    if(NOT SYSREPO_IETF_ALARMSD_EXECUTABLE)
+        find_program(SYSREPO_IETF_ALARMSD_EXECUTABLE sysrepo-ietf-alarmsd)
+    endif()
+    if(SYSREPO_IETF_ALARMSD_EXECUTABLE)
+        velia_test(sysrepo_ietf-alarms fixture_sysrepo-alarms)
+        target_link_libraries(test-sysrepo_ietf-alarms velia-health DbusTesting)
+
+        add_test(NAME sysrepo_ietf-alarms-start COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_sysrepo-ietf-alarms_control.sh start ${SYSREPO_IETF_ALARMSD_EXECUTABLE})
+        add_test(NAME sysrepo_ietf-alarms-stop  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_sysrepo-ietf-alarms_control.sh stop)
+        set_tests_properties(sysrepo_ietf-alarms-start PROPERTIES FIXTURES_SETUP   sysrepo:ietf-alarms)
+        set_tests_properties(sysrepo_ietf-alarms-stop  PROPERTIES FIXTURES_CLEANUP sysrepo:ietf-alarms)
+        set_property(TEST sysrepo_ietf-alarms-start sysrepo_ietf-alarms-stop APPEND PROPERTY ENVIRONMENT
+            "SYSREPO_REPOSITORY_PATH=${CMAKE_CURRENT_BINARY_DIR}/test_repositories/test_sysrepo_ietf-alarms"
+            "SYSREPO_SHM_PREFIX=velia_test_sysrepo_ietf-alarms"
+            )
+        set_property(TEST test-sysrepo_ietf-alarms APPEND PROPERTY FIXTURES_REQUIRED sysrepo:ietf-alarms)
+
+        set_tests_properties(sysrepo_ietf-alarms-start PROPERTIES DEPENDS sysrepo:prep:sysrepo_ietf-alarms)
+        set_tests_properties(sysrepo:clean:sysrepo_ietf-alarms PROPERTIES DEPENDS sysrepo_ietf-alarms-stop)
+    endif()
 
     find_program(YANGLINT_PATH yanglint)
     if (NOT YANGLINT_PATH)

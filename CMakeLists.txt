@@ -501,6 +501,24 @@ if(BUILD_TESTING)
     )
     velia_test(NAME health_systemd-units LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
     velia_test(NAME sysrepo_health-led-alarms LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
+
+    find_program(SYSREPO_IETF_ALARMSD_EXECUTABLE sysrepo-ietf-alarmsd)
+    if(SYSREPO_IETF_ALARMSD_EXECUTABLE)
+        velia_test(NAME sysrepo_ietf-alarms LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
+
+        add_test(NAME sysrepo_ietf-alarms-start COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_sysrepo-ietf-alarms_control.sh start ${SYSREPO_IETF_ALARMSD_EXECUTABLE} ${CMAKE_BINARY_DIR}/sysrepo-ietf-alarmsd.log)
+        add_test(NAME sysrepo_ietf-alarms-stop  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_sysrepo-ietf-alarms_control.sh stop)
+        set_property(TEST sysrepo_ietf-alarms-start sysrepo_ietf-alarms-stop test-sysrepo_ietf-alarms APPEND PROPERTY ENVIRONMENT
+            "SYSREPO_REPOSITORY_PATH=${CMAKE_CURRENT_BINARY_DIR}/test_repositories/test_sysrepo_ietf-alarms"
+            "SYSREPO_SHM_PREFIX=velia_test_sysrepo_ietf-alarms"
+            )
+        set_tests_properties(sysrepo_ietf-alarms-start PROPERTIES FIXTURES_SETUP   sysrepo-ietf-alarmsd)
+        set_tests_properties(sysrepo_ietf-alarms-stop  PROPERTIES FIXTURES_CLEANUP sysrepo-ietf-alarmsd)
+        set_property(TEST test-sysrepo_ietf-alarms APPEND PROPERTY FIXTURES_REQUIRED sysrepo-ietf-alarmsd)
+
+        set_tests_properties(sysrepo_ietf-alarms-start PROPERTIES DEPENDS sysrepo:prep:sysrepo_ietf-alarms)
+        set_tests_properties(sysrepo:clean:sysrepo_ietf-alarms PROPERTIES DEPENDS sysrepo_ietf-alarms-stop)
+    endif()
 endif()
 
 if(WITH_DOCS)

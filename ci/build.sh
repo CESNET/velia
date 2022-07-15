@@ -68,6 +68,14 @@ fi
 
 curl ${ARTIFACT_URL} | unzstd --stdout | tar -C ${PREFIX} -xf -
 
+# build sysrepo-ietf-alarms project (for tests)
+BUILD_SYSREPO_IETF_ALARMS=~/build-alarms
+mkdir ${BUILD_SYSREPO_IETF_ALARMS}
+pushd ${BUILD_SYSREPO_IETF_ALARMS}
+cmake -GNinja -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Debug} -DCMAKE_INSTALL_PREFIX=${PREFIX} ${ZUUL_PROJECT_SRC_DIR}/../../CzechLight/sysrepo-ietf-alarms
+ninja-build install
+popd
+
 cd ${BUILD_DIR}
 cmake -GNinja -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Debug} -DCMAKE_INSTALL_PREFIX=${PREFIX} ${CMAKE_OPTIONS} ${ZUUL_PROJECT_SRC_DIR}
 ninja-build

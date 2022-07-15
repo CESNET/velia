@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8522050_a201c7b3",
+        "filename": "src/health/alarms/SystemdUnits.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-07-15T16:33:01Z",
+      "side": 1,
+      "message": "what is that \"n\"? \"new\"? I think I would prefer something like \"newActiveState\" here just to make it more boring.",
+      "range": {
+        "startLine": 65,
+        "startChar": 20,
+        "endLine": 65,
+        "endChar": 21
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc42c0bc_6410217f",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-07-15T16:33:01Z",
+      "side": 1,
+      "message": "line-wrap this, please",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 534
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16d1237d_4677c552",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-07-15T16:33:01Z",
+      "side": 1,
+      "message": "nit: \"setup\"",
+      "range": {
+        "startLine": 58,
+        "startChar": 18,
+        "endLine": 58,
+        "endChar": 23
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1dbe2fc_544cfded",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-07-15T16:33:01Z",
+      "side": 1,
+      "message": "IMHO, the test should correspond to a real deployment as closely as possible. In the final product, the monitor of systemd units will be just consuming the D-Bus events, nothing else. I would probably go as far as to create a spearate thread for event submission (i.e., faking the systemd unit progress) and another one for running the sysrepo RPC handler. That way, any extra locking imposed either by trompeloeil or sdbus will not mask out a possible locking issue in the code under test.\n\nOn the other hand, this way you can very easily set up an expectation of that RPC call to be made, and then inject a systemd unit state change event.\n\nWhat do you think?",
+      "range": {
+        "startLine": 58,
+        "startChar": 113,
+        "endLine": 58,
+        "endChar": 144
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1909458f_736407a7",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-07-15T16:33:01Z",
+      "side": 1,
+      "message": "How is this different from unit3.service progression?",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 88
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

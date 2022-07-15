@@ -71,10 +71,24 @@ fi
 
 curl ${ARTIFACT_URL} | unzstd --stdout | tar -C ${PREFIX} -xf -
 
+# build sysrepo-ietf-alarms project (for tests)
+BUILD_SYSREPO_IETF_ALARMS=~/build-alarms
+mkdir ${BUILD_SYSREPO_IETF_ALARMS}
+pushd ${BUILD_SYSREPO_IETF_ALARMS}
+cmake -GNinja -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Debug} -DCMAKE_INSTALL_PREFIX=${PREFIX} ${ZUUL_PROJECT_SRC_DIR}/../sysrepo-ietf-alarms
+ninja-build install
+popd
+
 cd ${BUILD_DIR}
 cmake -GNinja -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Debug} -DCMAKE_INSTALL_PREFIX=${PREFIX} ${CMAKE_OPTIONS} ${ZUUL_PROJECT_SRC_DIR}
 ninja-build
+
+set_save=$-
+set -E
+trap "echo sysrepo-ietf-alarmsd test failed, copying log; cp ${BUILD_DIR}/sysrepo-ietf-alarmsd.log ~/zuul-output/logs" ERR
 ctest -j${CI_PARALLEL_JOBS} --output-on-failure
+trap - ERR
+set +E -$set_save
 
 if [[ $JOB_PERFORM_EXTRA_WORK == 1 ]]; then
     ninja-build doc

@@ -13,6 +13,7 @@
             requires: CzechLight-deps-f34-gcc
             required-projects: &projects
               - CzechLight/dependencies
+              - CzechLight/sysrepo-ietf-alarms
             pre-run: ci/pre.yaml
         - velia-f34-clang-asan-ubsan:
             required-projects: *projects

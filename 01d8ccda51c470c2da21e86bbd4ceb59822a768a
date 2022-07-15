@@ -22,6 +22,30 @@
       },
       "revId": "01d8ccda51c470c2da21e86bbd4ceb59822a768a",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38f40575_16f99965",
+        "filename": "yang/czechlight-alarms@2022-07-12.yang",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-07-15T13:25:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f88e243f_8096eb0c",
+      "range": {
+        "startLine": 1,
+        "startChar": 7,
+        "endLine": 1,
+        "endChar": 24
+      },
+      "revId": "01d8ccda51c470c2da21e86bbd4ceb59822a768a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

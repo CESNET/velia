@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "99d66fbe_55dddd09",
+        "filename": "src/health/alarms/SystemdUnits.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-07-19T09:00:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8522050_a201c7b3",
+      "range": {
+        "startLine": 65,
+        "startChar": 20,
+        "endLine": 65,
+        "endChar": 21
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc42c0bc_6410217f",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-07-15T16:33:01Z",
       "side": 1,
       "message": "line-wrap this, please",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 534
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a079416_9a1d9bdc",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-07-19T09:00:41Z",
+      "side": 1,
+      "message": "Sorry, my clang-format keeps messing this for unknown reason. This is the best I could do without // clang-format off",
+      "parentUuid": "fc42c0bc_6410217f",
       "range": {
         "startLine": 20,
         "startChar": 0,
@@ -95,6 +143,54 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "85a1f33c_76a40b94",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-07-19T09:00:41Z",
+      "side": 1,
+      "message": "Agreed. How about now?",
+      "parentUuid": "c1dbe2fc_544cfded",
+      "range": {
+        "startLine": 58,
+        "startChar": 113,
+        "endLine": 58,
+        "endChar": 144
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fac40c1_bf9e38ec",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-07-19T09:00:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16d1237d_4677c552",
+      "range": {
+        "startLine": 58,
+        "startChar": 18,
+        "endLine": 58,
+        "endChar": 23
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1909458f_736407a7",
         "filename": "tests/health_systemd-units.cpp",
         "patchSetId": 7
@@ -106,6 +202,30 @@
       "writtenOn": "2022-07-15T16:33:01Z",
       "side": 1,
       "message": "How is this different from unit3.service progression?",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 88
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac4fb8d5_31dd9029",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2022-07-19T09:00:41Z",
+      "side": 1,
+      "message": "Unit4 is registered while the code is running and it was intended to test whether we pick up events from newly registered services. However, I have changed behaviour of unit3 in the new version so this question is probably no longer relevant.",
+      "parentUuid": "1909458f_736407a7",
       "range": {
         "startLine": 86,
         "startChar": 0,

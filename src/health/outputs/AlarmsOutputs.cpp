@@ -11,10 +11,24 @@
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
+using namespace std::string_literals;
+
 namespace {
 const auto ietfAlarmsModule = "ietf-alarms";
-const auto alarmList = "/ietf-alarms:alarms/alarm-list";
-const auto alarmListNode = "/ietf-alarms:alarms/alarm-list/alarm";
+const auto alarmSummary = "/ietf-alarms:alarms/summary";
+
+const std::vector<std::pair<const char*, velia::health::State>> severityToHealthStateMapping = {
+    /* This list is sorted by the possible severities and the states corresponding to these severities.
+     * We are iterating the vector in order and if we find any alarms matching the severity, we set the State and bail.
+     */
+    {"critical", velia::health::State::ERROR},
+    {"major", velia::health::State::ERROR},
+    {"minor", velia::health::State::ERROR},
+    {"warning", velia::health::State::WARNING},
+    /* RFC 8632 says that severity level of such severity can't be determined and this level should be avoided.
+     * I have no idea how to handle this severity so let's just says that this is a warning for now.
+     */
+    {"indeterminate", velia::health::State::WARNING}};
 }
 
 namespace velia::health {
@@ -38,24 +52,23 @@ AlarmsOutputs::AlarmsOutputs(sysrepo::Session session, const std::vector<std::fu
              *
              * For now we set output state to ERROR if there is at least one not-cleared error. Otherwise, the state is OK.
              */
+            State state = State::OK; // in case no uncleared alarms found
 
-            State state = State::OK; // in case no data found or all alarms are cleared
+            if (auto data = session.getData(alarmSummary)) {
+                for (const auto& [severity, errorState] : severityToHealthStateMapping) {
+                    const auto activeAlarms = std::stoi(std::string(data->findPath(alarmSummary + "/alarm-summary[severity='"s + severity + "']/not-cleared")->asTerm().valueStr()));
 
-            if (auto data = session.getData(alarmList)) {
-                for (const auto& alarmNode : data->findXPath(alarmListNode)) {
-                    if (alarmNode.findPath("is-cleared")->asTerm().valueStr() == "true") {
-                        continue;
+                    if (activeAlarms > 0) {
+                        state = errorState;
+                        break;
                     }
-
-                    state = State::ERROR;
-                    break;
                 }
             }
             m_outputSignal(state);
 
             return sysrepo::ErrorCode::Ok;
         },
-        alarmList,
+        alarmSummary,
         0,
         sysrepo::SubscribeOptions::Enabled | sysrepo::SubscribeOptions::DoneOnly);
 }

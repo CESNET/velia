@@ -418,8 +418,6 @@ if(BUILD_TESTING)
         add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
     endforeach()
 
-    velia_test(NAME health_output-led LIBRARIES velia-health)
-
     velia_test(NAME system_rauc LIBRARIES velia-system DbusTesting RESOURCE_LOCK dbus-rauc)
     velia_test(NAME system_lldp LIBRARIES velia-system DbusTesting)
 
@@ -496,12 +494,12 @@ if(BUILD_TESTING)
     velia_test(NAME sysrepo-firewall LIBRARIES velia-firewall FIXTURE fixture_sysrepo-firewall)
 
     set(fixture_sysrepo-alarms
-        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-alarms@2019-09-11.yang
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-alarms@2019-09-11.yang FEATURE alarm-shelving FEATURE alarm-summary
         YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/velia-alarms@2022-07-12.yang
         YANG ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/sysrepo-ietf-alarms@2022-02-17.yang
     )
-	velia_test(NAME health_systemd-units LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
-	velia_test(NAME sysrepo_health-led-alarms LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
+    velia_test(NAME health_systemd-units LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
+    velia_test(NAME sysrepo_health-led-alarms LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
 endif()
 
 if(WITH_DOCS)

@@ -14,18 +14,38 @@
 
 using namespace std::literals;
 
+#define EXPECT_COLOUR(STATE) expectations.emplace_back(NAMED_REQUIRE_CALL(fakeLeds, call(STATE)).IN_SEQUENCE(seq1));
+
 struct FakeLedCallback {
     MAKE_CONST_MOCK1(call, void(velia::health::State));
 };
 
-const std::string alarmNode = "/ietf-alarms:alarms/alarm-list/alarm";
+void setSummary(sysrepo::Session sess, unsigned indeterminate, unsigned warning, unsigned minor, unsigned major, unsigned critical)
+{
+    static const auto cleared = 42;
 
-#define EXPECT_COLOUR(STATE) REQUIRE_CALL(fakeLeds, call(STATE)).IN_SEQUENCE(seq1)
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='indeterminate']/total", std::to_string(cleared + indeterminate));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='indeterminate']/not-cleared", std::to_string(indeterminate));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='indeterminate']/cleared", std::to_string(cleared));
 
-#define SET_ALARM(RESOURCE, SEVERITY, IS_CLEARED)                                                                                                                     \
-    srSess.setItem(alarmNode + "[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier=''][resource='" RESOURCE "']/perceived-severity", SEVERITY); \
-    srSess.setItem(alarmNode + "[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier=''][resource='" RESOURCE "']/is-cleared", IS_CLEARED);
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='warning']/total", std::to_string(cleared + warning));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='warning']/not-cleared", std::to_string(warning));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='warning']/cleared", std::to_string(cleared));
 
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='minor']/total", std::to_string(cleared + minor));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='minor']/not-cleared", std::to_string(minor));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='minor']/cleared", std::to_string(cleared));
+
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='major']/total", std::to_string(cleared + major));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='major']/not-cleared", std::to_string(major));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='major']/cleared", std::to_string(cleared));
+
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='critical']/total", std::to_string(cleared + critical));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='critical']/not-cleared", std::to_string(critical));
+    sess.setItem("/ietf-alarms:alarms/summary/alarm-summary[severity='critical']/cleared", std::to_string(cleared));
+
+    sess.applyChanges();
+}
 
 TEST_CASE("Sysrepo reports system LEDs")
 {
@@ -39,52 +59,69 @@ TEST_CASE("Sysrepo reports system LEDs")
     srSess.switchDatastore(sysrepo::Datastore::Operational);
 
     FakeLedCallback fakeLeds;
+	std::vector<std::unique_ptr<trompeloeil::expectation>> expectations;
 
     SECTION("Start with OK")
     {
         EXPECT_COLOUR(velia::health::State::OK);
-        SET_ALARM("unit1", "major", "true");
-        SET_ALARM("unit2", "critical", "true");
-        srSess.applyChanges();
+        setSummary(srSess, 0, 0, 0, 0, 0);
+    }
 
-        velia::health::AlarmsOutputs alarms(client, {[&](velia::health::State state) { fakeLeds.call(state); }});
-
-        EXPECT_COLOUR(velia::health::State::ERROR);
-        SET_ALARM("unit1", "major", "false");
-        srSess.applyChanges();
-
-        EXPECT_COLOUR(velia::health::State::ERROR);
-        SET_ALARM("unit2", "major", "false");
-        srSess.applyChanges();
-
-        EXPECT_COLOUR(velia::health::State::ERROR);
-        SET_ALARM("unit3", "major", "true");
-        srSess.applyChanges();
-
-        EXPECT_COLOUR(velia::health::State::OK);
-        SET_ALARM("unit1", "major", "true");
-        SET_ALARM("unit2", "major", "true");
-        srSess.applyChanges();
-
-        waitForCompletionAndBitMore(seq1);
+    SECTION("Start with WARNING")
+    {
+        EXPECT_COLOUR(velia::health::State::WARNING);
+        setSummary(srSess, 0, 1, 0, 0, 0);
     }
 
     SECTION("Start with ERROR")
     {
         EXPECT_COLOUR(velia::health::State::ERROR);
-        SET_ALARM("unit1", "major", "false");
-        srSess.applyChanges();
-
-        velia::health::AlarmsOutputs alarms(client, {[&](velia::health::State state) { fakeLeds.call(state); }});
-
-        EXPECT_COLOUR(velia::health::State::ERROR);
-        SET_ALARM("unit1", "critical", "false");
-        srSess.applyChanges();
-
-        EXPECT_COLOUR(velia::health::State::OK);
-        SET_ALARM("unit1", "major", "true");
-        srSess.applyChanges();
-
-        waitForCompletionAndBitMore(seq1);
+        setSummary(srSess, 0, 0, 1, 0, 0);
     }
+
+    velia::health::AlarmsOutputs alarms(client, {[&](velia::health::State state) { fakeLeds.call(state); }});
+
+    EXPECT_COLOUR(velia::health::State::ERROR);
+    setSummary(srSess, 0, 0, 2, 0, 0);
+
+    EXPECT_COLOUR(velia::health::State::ERROR);
+    setSummary(srSess, 0, 0, 0, 3, 0);
+
+    EXPECT_COLOUR(velia::health::State::ERROR);
+    setSummary(srSess, 0, 0, 0, 0, 4);
+
+    EXPECT_COLOUR(velia::health::State::WARNING);
+    setSummary(srSess, 0, 5, 0, 0, 0);
+
+    EXPECT_COLOUR(velia::health::State::WARNING);
+    setSummary(srSess, 6, 0, 0, 0, 0);
+
+    EXPECT_COLOUR(velia::health::State::OK);
+    setSummary(srSess, 0, 0, 0, 0, 0);
+
+    EXPECT_COLOUR(velia::health::State::WARNING);
+    setSummary(srSess, 2, 5, 0, 0, 0);
+
+    EXPECT_COLOUR(velia::health::State::ERROR);
+    setSummary(srSess, 2, 5, 3, 0, 0);
+
+    EXPECT_COLOUR(velia::health::State::ERROR);
+    setSummary(srSess, 2, 5, 3, 4, 0);
+
+    EXPECT_COLOUR(velia::health::State::ERROR);
+    setSummary(srSess, 2, 5, 3, 4, 1);
+
+    EXPECT_COLOUR(velia::health::State::OK);
+    setSummary(srSess, 0, 0, 0, 0, 0);
+
+    EXPECT_COLOUR(velia::health::State::ERROR);
+    setSummary(srSess, 0, 1, 1, 0, 0);
+
+    EXPECT_COLOUR(velia::health::State::OK);
+    setSummary(srSess, 0, 0, 0, 0, 0);
+
+    EXPECT_COLOUR(velia::health::State::ERROR);
+    setSummary(srSess, 1, 0, 1, 0, 0);
+
+    waitForCompletionAndBitMore(seq1);
 }

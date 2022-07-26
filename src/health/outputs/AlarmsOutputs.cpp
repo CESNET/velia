@@ -11,10 +11,11 @@
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
+using namespace std::string_literals;
+
 namespace {
 const auto ietfAlarmsModule = "ietf-alarms";
-const auto alarmList = "/ietf-alarms:alarms/alarm-list";
-const auto alarmListNode = "/ietf-alarms:alarms/alarm-list/alarm";
+const auto alarmSummary = "/ietf-alarms:alarms/summary";
 }
 
 namespace velia::health {
@@ -31,30 +32,25 @@ void AlarmsOutputs::activate()
     m_srSubscription = m_srSession.onModuleChange(
         ietfAlarmsModule,
         [&](sysrepo::Session session, auto, auto, auto, auto, auto) {
-            /*
-             * TODO: read ietf-alarms:alarms/summary when feature alarm-summary implemented
-             *       then we can differentiate easily between severities and light the corresponding LED color
-             *
-             * For now we light RED if there is at least one not-cleared error else GREEN
-             */
+            State state = State::OK; // in case no uncleared alarms found
 
-            State state = State::OK; // in case no data found or all alarms are cleared
+            if (auto data = session.getData(alarmSummary)) {
+                for (const auto& [severity, errorState] : {std::pair<const char*, State>{"indeterminate", State::WARNING}, {"warning", State::WARNING}, {"minor", State::ERROR}, {"major", State::ERROR}, {"critical", State::ERROR}}) {
+                    const auto activeAlarms = std::stoi(std::string(data->findPath(alarmSummary + "/alarm-summary[severity='"s + severity + "']/not-cleared")->asTerm().valueStr()));
 
-            if (auto data = session.getData(alarmList)) {
-                for (const auto& alarmNode : data->findXPath(alarmListNode)) {
-                    if (alarmNode.findPath("is-cleared")->asTerm().valueStr() == "true") {
-                        continue;
+                    spdlog::get("main")->error(".......................... {}", activeAlarms);
+
+                    if (activeAlarms > 0) {
+                        state = errorState;
                     }
-
-                    state = State::ERROR;
-                    break;
                 }
             }
+
             outputSignal(state);
 
             return sysrepo::ErrorCode::Ok;
         },
-        alarmList,
+        alarmSummary,
         0,
         sysrepo::SubscribeOptions::Enabled | sysrepo::SubscribeOptions::DoneOnly);
 }

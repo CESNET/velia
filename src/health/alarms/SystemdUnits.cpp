@@ -12,6 +12,7 @@
 namespace {
 const auto ALARM_ID = "velia-alarms:systemd-unit-failure";
 const auto ALARM_SEVERITY = "critical";
+const auto ALARM_INVENTORY_DESCRIPTION = "The systemd service is considered in failed state.";
 }
 
 namespace velia::health {
@@ -27,13 +28,15 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
     utils::ensureModuleImplemented(m_srSession, "sysrepo-ietf-alarms", "2022-02-17");
     utils::ensureModuleImplemented(m_srSession, "velia-alarms", "2022-07-12");
 
+    createOrUpdateAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, {}, {ALARM_SEVERITY}, true, ALARM_INVENTORY_DESCRIPTION);
+
     // Subscribe to systemd events. Systemd may not generate signals unless explicitly called
     m_proxyManager->callMethod("Subscribe").onInterface(managerIface).withArguments().dontExpectReply();
 
     // Register to a signal introducing new unit
     m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
         if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end()) {
-            registerSystemdUnit(connection, unitName, unitObjectPath);
+            registerSystemdUnit(m_srSession, connection, unitName, unitObjectPath);
         }
     });
     m_proxyManager->finishRegistration();
@@ -48,7 +51,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
         const auto& unitName = unit.get<0>();
         const auto& unitObjectPath = unit.get<6>();
 
-        registerSystemdUnit(connection, unitName, unitObjectPath);
+        registerSystemdUnit(m_srSession, connection, unitName, unitObjectPath);
     }
 }
 
@@ -59,8 +62,10 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
 }
 
 /** @brief Registers a systemd unit by its unit name and unit dbus objectpath. */
-void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath)
+void SystemdUnits::registerSystemdUnit(sysrepo::Session session, sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath)
 {
+    createOrUpdateAlarmInventoryEntry(session, ALARM_ID, std::nullopt, {unitName}, {}, true, ALARM_INVENTORY_DESCRIPTION);
+
     auto proxyUnit = sdbus::createProxy(connection, m_busName, unitObjectPath);
     proxyUnit->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([&, unitName](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {
         if (iface != m_unitIface) {

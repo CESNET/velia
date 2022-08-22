@@ -9,6 +9,10 @@
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
+namespace {
+const auto PERCEIVED_SEVERITY = "critical";
+}
+
 namespace velia::health {
 
 /** @brief Construct the systemd unit watcher for arbitrary dbus object. Mainly for tests. */
@@ -28,7 +32,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
     // Register to a signal introducing new unit
     m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
         if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end()) {
-            registerSystemdUnit(connection, unitName, unitObjectPath);
+            registerSystemdUnit(m_srSession, connection, unitName, unitObjectPath);
         }
     });
     m_proxyManager->finishRegistration();
@@ -43,7 +47,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
         const auto& unitName = unit.get<0>();
         const auto& unitObjectPath = unit.get<6>();
 
-        registerSystemdUnit(connection, unitName, unitObjectPath);
+        registerSystemdUnit(m_srSession, connection, unitName, unitObjectPath);
     }
 }
 
@@ -54,7 +58,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
 }
 
 /** @brief Registers a systemd unit by its unit name and unit dbus objectpath. */
-void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath)
+void SystemdUnits::registerSystemdUnit(sysrepo::Session session, sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath)
 {
     auto proxyUnit = sdbus::createProxy(connection, m_busName, unitObjectPath);
     proxyUnit->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([&, unitName](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {
@@ -81,6 +85,8 @@ void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std
     onUnitStateChange(unitName, newActiveState, newSubState);
 
     m_proxyUnits.emplace(std::make_pair(unitObjectPath, std::move(proxyUnit)));
+
+    createOrUpdateAlarmInventoryEntry(session, "velia-alarms:systemd-unit-failure", std::nullopt, {unitName}, true, {PERCEIVED_SEVERITY}, "Alarm triggers when corresponding systemd unit fails.");
 }
 
 /** @brief Callback for unit state change */
@@ -98,7 +104,7 @@ void SystemdUnits::onUnitStateChange(const std::string& name, const std::string&
 
     std::string alarmSeverity;
     if (activeState == "failed" || (activeState == "activating" && subState == "auto-restart")) {
-        alarmSeverity = "critical";
+        alarmSeverity = PERCEIVED_SEVERITY;
     } else {
         alarmSeverity = "cleared";
     }

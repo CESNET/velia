@@ -4,11 +4,14 @@
  * Written by Tomáš Pecka <tomas.pecka@fit.cvut.cz>
  *
  */
+#include <sysrepo-cpp/Enum.hpp>
 #include "alarms.h"
+#include "utils/UniqueResource.h"
 
 using namespace std::string_literals;
 
 namespace {
+const auto alarmInventory = "/ietf-alarms:alarms/alarm-inventory"s;
 const auto alarmRpc = "/sysrepo-ietf-alarms:create-or-update-alarm";
 }
 
@@ -25,4 +28,32 @@ void createOrUpdateAlarm(sysrepo::Session session, const std::string& alarmId, c
 
     session.sendRPC(inputNode);
 }
+
+void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::vector<std::string>& resource, bool willClear, const std::vector<std::string>& severities, const std::string& description)
+{
+    sysrepo::Datastore originalDs;
+    auto x = make_unique_resource(
+        [&]() {
+            originalDs = session.activeDatastore();
+            session.switchDatastore(sysrepo::Datastore::Operational);
+        },
+        [&]() {
+            session.switchDatastore(originalDs);
+        });
+
+    const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='" + alarmTypeQualifier.value_or("") + "']";
+    session.setItem(prefix + "/will-clear", willClear ? "true" : "false");
+    session.setItem(prefix + "/description", description);
+
+    for (const auto& r : resource) {
+        session.setItem(prefix + "/resource", r.c_str());
+    }
+
+    for (const auto& e : severities) {
+        session.setItem(prefix + "/severity-level", e.c_str());
+    }
+
+    session.applyChanges();
+}
+
 }

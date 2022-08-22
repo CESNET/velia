@@ -50,6 +50,22 @@ TEST_CASE("Test raising alarms lighting LEDs with real sysrepo-ietf-alarmsd serv
     alarms.outputSignal.connect([&](velia::health::State state) { fakeLeds.call(state); });
     alarms.activate();
 
+    std::this_thread::sleep_for(75ms); // let's wait for some time so the alarm-inventory is populated
+    // clang-format off
+    REQUIRE(dataFromSysrepo(srSess, "/ietf-alarms:alarms/alarm-inventory", sysrepo::Datastore::Operational) == std::map<std::string, std::string>{
+    		{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']", ""},
+			{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/alarm-type-id", "velia-alarms:systemd-unit-failure"},
+			{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/alarm-type-qualifier", ""},
+			{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/resource[1]", "unit1.service"},
+			{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/resource[2]", "unit2.service"},
+			{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/resource[3]", "unit3.service"},
+			{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/resource[4]", "unit4.service"},
+			{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/will-clear", "true"},
+			{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/severity-level[1]", "critical"},
+			{"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/description", "Alarm triggers when corresponding systemd unit fails."}
+			});
+    // clang-format on
+
     EXPECT_COLOUR(velia::health::State::ERROR);
     systemdServer.changeUnitState("/org/freedesktop/systemd1/unit/unit2", "active", "running");
 

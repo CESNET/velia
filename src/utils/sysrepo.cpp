@@ -147,8 +147,8 @@ void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::stri
     valuesToYang(values, removePaths, session, edit);
 
     if (edit) {
-    session.editBatch(*edit, sysrepo::DefaultOperation::Merge);
-    session.applyChanges();
+        session.editBatch(*edit, sysrepo::DefaultOperation::Merge);
+        session.applyChanges();
     }
 }
 

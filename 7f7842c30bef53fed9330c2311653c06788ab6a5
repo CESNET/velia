@@ -16,6 +16,24 @@
       "message": "fmt::ostream_formatter got added in v9.0.0 https://github.com/fmtlib/fmt/releases/tag/9.0.0 which we do not have; I think the cleanest thing is to define FMT_DEPRECATED_OSTREAM.",
       "revId": "7f7842c30bef53fed9330c2311653c06788ab6a5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c147b09_3bd91843",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-01-16T19:37:53Z",
+      "side": 1,
+      "message": "\u003e but this will be removed in the next major release. \n\u003e Use fmt::streamed or fmt::ostream_formatter to enable formatting via std::ostream instead.\n\nNot sure if this is cleanest. I can use FMT_DEPRECATED_OSTREAM but it will stop working in some time. \nWhat about writing custom formatter that just calls `oss \u003c\u003c object`? Alternatively I can write custom formatter by inlining operator\u003c\u003c code and removing operator\u003c\u003c.",
+      "parentUuid": "9e65439a_438721a8",
+      "revId": "7f7842c30bef53fed9330c2311653c06788ab6a5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

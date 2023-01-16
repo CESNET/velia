@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a304248e_90be70ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-01-16T23:01:14Z",
+      "side": 1,
+      "message": "Note to myself: the first column of timestamps in the log are meaningless; they represent the time when stuff was printed by ctest, which is only after everything has failed.\n\nThere are three threads:\n\n- 18643 is the test\u0027s main one\n- 18782 is the one created by Rtnetlink\u0027s nlCacheMngrWatcher\n- 18783 is the one created by sysrepo for on-demand (pull) retrieval of interface statistics and neighbors\n\nThe main test thread (18643) calls `ip addr flush`, and sleeps for 250ms right after the `ip` exits (which is not directly visible in the logs, but it will affect the next output from thread 18643). The netlink handler thread 18782 starts processing an update about removed addresses immediately:\n \n03.816 [18643 main T] exec: /usr/bin/sudo /sbin/ip -l 0 addr flush dev czechlight0\n03.851 [18782 system T] Netlink update on address of link \u0027czechlight0\u0027, action DEL\n03.851 [18782 main T] Processing node deletion /ietf-interfaces:interfaces/interface[name\u003d\u0027czechlight0\u0027]/ietf-ip:ipv4/address[ip\u003d\u0027192.0.2.1\u0027]\n03.854 [18643 main T] /usr/bin/sudo /sbin/ip exited\n\nThe address flushing thing will result in three address deletions (IPv4, then the IPv6-mapped IPv4, and then the IPv6 link-local based on MAC), but their timestamps indicate that this processing is rather slow:\n \n03.851 [18782 system T] Netlink update on address of link \u0027czechlight0\u0027, action DEL\n03.851 [18782 main T] Processing node deletion /ietf-interfaces:interfaces/interface[name\u003d\u0027czechlight0\u0027]/ietf-ip:ipv4/address[ip\u003d\u0027192.0.2.1\u0027]\n...\n04.055 [18782 system T] Netlink update on address of link \u0027czechlight0\u0027, action DEL\n04.055 [18782 main T] Processing node deletion /ietf-interfaces:interfaces/interface[name\u003d\u0027czechlight0\u0027]/ietf-ip:ipv6/address[ip\u003d\u0027::ffff:192.0.2.1\u0027]\n...\n04.147 [18782 main T] Processing node deletion /ietf-interfaces:interfaces/interface[name\u003d\u0027czechlight0\u0027]/ietf-ip:ipv6/address[ip\u003d\u0027fe80::2:2ff:fe02:202\u0027]\n\nThat\u0027s unfortunately happening concurrently with the request for data from the test\u0027s main thread:\n \n04.105 [18643 main E] dataFrom /ietf-interfaces:interfaces/interface[name\u003d\u0027czechlight0\u0027]\n\nSo TL;DR: this test failure is indeed due to a too short of a delay between flushing the addresses and asking for the updated state.",
+      "revId": "8bbc138a67297545acddbf0136300965ac677076",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

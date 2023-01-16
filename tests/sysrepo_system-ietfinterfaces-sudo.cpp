@@ -28,7 +28,7 @@ namespace {
 
 const auto IFACE = "czechlight0"s;
 const auto LINK_MAC = "02:02:02:02:02:02"s;
-const auto WAIT = 250ms;
+const auto WAIT = 800ms;
 const auto WAIT_BRIDGE = 2500ms;
 
 template <class... Args>
@@ -191,7 +191,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
         REQUIRE(dataFromSysrepoNoStatistics(client, "/ietf-interfaces:interfaces/interface[name='" + IFACE_BRIDGE + "']", sysrepo::Datastore::Operational) == expectedBridge);
 
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "up");
-        iproute2_exec_and_wait(WAIT, "addr", "flush", "dev", IFACE); // sometimes, addresses are preserved even when enslaved
+        iproute2_exec_and_wait(WAIT /* it seems netlink thread is processing the changes rather slowly, let's wait a bit longer */, "-l", "0", "addr", "flush", "dev", IFACE); // sometimes, addresses are preserved even when enslaved
         expectedIface["/oper-status"] = "unknown";
         expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']");
         expectedIface.erase("/ietf-ip:ipv6/address[ip='::ffff:192.0.2.1']/ip");

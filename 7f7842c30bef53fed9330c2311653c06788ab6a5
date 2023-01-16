@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e65439a_438721a8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-01-16T19:22:03Z",
+      "side": 1,
+      "message": "fmt::ostream_formatter got added in v9.0.0 https://github.com/fmtlib/fmt/releases/tag/9.0.0 which we do not have; I think the cleanest thing is to define FMT_DEPRECATED_OSTREAM.",
+      "revId": "7f7842c30bef53fed9330c2311653c06788ab6a5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

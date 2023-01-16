@@ -52,6 +52,24 @@
       "parentUuid": "4c147b09_3bd91843",
       "revId": "7f7842c30bef53fed9330c2311653c06788ab6a5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "581c2555_9aa52b7f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-01-16T20:42:23Z",
+      "side": 1,
+      "message": "I see your point but only the convenience fmt::ostream_formatter was added in 9.0. fmt::formatter is there even in v8 (https://fmt.dev/8.0.0/api.html#formatting-user-defined-types or see ref [1] in commit message). It would be enough to inherit from string formatter and overload its format method to do something like \n\n  ostringstream oss;\n  oss \u003c\u003c object;\n  return formatter\u003cstring\u003e(oss.str(), ctx);\n\n(I am writing the code excerpt from top of my head without actually testing that but it should work)",
+      "parentUuid": "4ad73277_4e488642",
+      "revId": "7f7842c30bef53fed9330c2311653c06788ab6a5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

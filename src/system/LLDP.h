@@ -7,9 +7,9 @@
 
 #pragma once
 
+#include <fmt/ostream.h>
 #include <functional>
 #include <map>
-#include <spdlog/fmt/ostr.h> // allow spdlog to use operator<<(ostream, NeighborEntry)
 #include <string>
 #include <vector>
 #include "utils/log-fwd.h"
@@ -33,3 +33,7 @@ private:
 };
 
 }
+
+template <>
+struct fmt::formatter<velia::system::NeighborEntry> : fmt::ostream_formatter {
+};

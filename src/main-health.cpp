@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
         std::set<std::string> ignoredUnits(args["--systemd-ignore-unit"].asStringList().begin(), args["--systemd-ignore-unit"].asStringList().end());
         spdlog::get("health")->debug("Starting DBus systemd watcher");
         if (!ignoredUnits.empty()) {
-            spdlog::get("health")->debug("Systemd input will ignore changes of the following units: {}", args["--systemd-ignore-unit"]);
+            spdlog::get("health")->debug("Systemd input will ignore changes of the following units: {}", args["--systemd-ignore-unit"].asString());
         }
         auto inputSystemdDbus = std::make_shared<velia::health::DbusSystemdInput>(manager, ignoredUnits, *g_dbusConnection);
 

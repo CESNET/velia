@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <fmt/ostream.h>
 #include <ostream>
-#include <spdlog/fmt/ostr.h> // allow spdlog to use operator<<(ostream, State) to print State
 
 namespace velia::health {
 
@@ -15,3 +15,7 @@ enum class State {
 std::ostream& operator<<(std::ostream& os, State state);
 
 }
+
+template <>
+struct fmt::formatter<velia::health::State> : fmt::ostream_formatter {
+};

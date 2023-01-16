@@ -28,7 +28,7 @@ namespace {
 
 const auto IFACE = "czechlight0"s;
 const auto LINK_MAC = "02:02:02:02:02:02"s;
-const auto WAIT = 250ms;
+const auto WAIT = 500ms;
 const auto WAIT_BRIDGE = 2500ms;
 
 template <class... Args>

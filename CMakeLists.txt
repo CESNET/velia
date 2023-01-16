@@ -75,6 +75,9 @@ set(YANG_SRCS
     yang/iana-afn-safi@2013-07-04.yang
     )
 
+# temporary until our CI switches to fmt>=9
+add_compile_definitions(FMT_DEPRECATED_OSTREAM)
+
 # Targets
 # - utils
 add_library(velia-utils STATIC

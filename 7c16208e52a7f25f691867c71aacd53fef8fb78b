@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "775495f8_24e2044a",
+        "filename": "src/health/State.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-01-16T20:04:41Z",
+      "side": 0,
+      "message": "this looks like a good change (CMake is already properly configured), but please explain in a chagnelog why this switches from the bundled fmt to a standalone one (or even better, push a new commit just for this, please)",
+      "revId": "7c16208e52a7f25f691867c71aacd53fef8fb78b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

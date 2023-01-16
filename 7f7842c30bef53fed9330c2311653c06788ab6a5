@@ -34,6 +34,24 @@
       "parentUuid": "9e65439a_438721a8",
       "revId": "7f7842c30bef53fed9330c2311653c06788ab6a5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ad73277_4e488642",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-01-16T20:04:41Z",
+      "side": 1,
+      "message": "Yes, I know it will bite, eventually, but considering that the CI (and my dev box) are on v8, I don\u0027t think requiring v9 is a better option (at least until the next round of CI image refresh -- volunteers welcome, instructions at https://gerrit.cesnet.cz/plugins/gitiles/ci/ansible-cesnet/+/refs/heads/master/doc/nodepool-openstack.md).",
+      "parentUuid": "4c147b09_3bd91843",
+      "revId": "7f7842c30bef53fed9330c2311653c06788ab6a5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

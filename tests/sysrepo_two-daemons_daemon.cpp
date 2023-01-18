@@ -45,12 +45,10 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    std::map<std::string, std::string> data;
     sysrepo::Connection srConn;
     auto srSess = srConn.sessionStart();
-
     std::optional<sysrepo::Subscription> srSub;
-
-    std::map<std::string, std::string> data;
 
     if (isDaemonSubscribe) {
         data = {

@@ -16,6 +16,24 @@
       "message": "can you please add a minimal version requirement to CMakeLists.txt as well?",
       "revId": "4f18985a454149eb0179605cce28ff50fe1e5293",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52d4c270_57eef8c6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-01-18T14:16:48Z",
+      "side": 1,
+      "message": "Good idea - added a commit before this one.",
+      "parentUuid": "e4f2ada8_e16b325a",
+      "revId": "4f18985a454149eb0179605cce28ff50fe1e5293",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -7,9 +7,9 @@
 
 #pragma once
 
+#include <fmt/format.h>
 #include <functional>
 #include <map>
-#include <spdlog/fmt/ostr.h> // allow spdlog to use operator<<(ostream, NeighborEntry)
 #include <string>
 #include <vector>
 #include "utils/log-fwd.h"

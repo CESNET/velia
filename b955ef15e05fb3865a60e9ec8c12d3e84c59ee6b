@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fdcbba9_0caca976",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-01-18T15:16:56Z",
+      "side": 1,
+      "message": "Do not merge until CI runs fmt\u003e\u003d8",
+      "revId": "b955ef15e05fb3865a60e9ec8c12d3e84c59ee6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

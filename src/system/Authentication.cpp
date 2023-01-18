@@ -141,14 +141,7 @@ std::map<std::string, std::optional<std::string>> Authentication::lastPasswordCh
 std::string Authentication::authorizedKeysPath(const std::string& username)
 {
     using namespace fmt::literals;
-
-#if FMT_VERSION >= 80000 // fmt >= 8.0.0
-    auto str = fmt::runtime(m_authorized_keys_format);
-#else
-    auto str = m_authorized_keys_format;
-#endif
-
-    return fmt::format(str, "USER"_a=username, "HOME"_a=homeDirectory(username));
+    return fmt::format(fmt::runtime(m_authorized_keys_format), "USER"_a=username, "HOME"_a=homeDirectory(username));
 }
 
 std::vector<std::string> Authentication::listKeys(const std::string& username)

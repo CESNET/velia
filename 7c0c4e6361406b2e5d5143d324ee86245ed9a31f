@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d18460db_dd55f192",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-01-18T21:42:50Z",
+      "side": 1,
+      "message": "recheck looks like an unrelated bug in sysrepo, module uninstall which is non-interesting for this use case",
+      "revId": "7c0c4e6361406b2e5d5143d324ee86245ed9a31f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

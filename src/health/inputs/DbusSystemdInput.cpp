@@ -3,7 +3,7 @@
  *
  * Written by Tomáš Pecka <tomas.pecka@fit.cvut.cz>
  *
-*/
+ */
 #include "DbusSystemdInput.h"
 #include "utils/log.h"
 
@@ -21,9 +21,10 @@ DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, con
     m_proxyManager->callMethod("Subscribe").onInterface(managerIface).withArguments().dontExpectReply();
 
     // Register to a signal introducing new unit
-    m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&, ignoredUnits = ignoredUnits](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
-        if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end() && ignoredUnits.find(unitName) == ignoredUnits.end()) {
-			registerSystemdUnit(connection, unitName, unitObjectPath);
+    m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
+        if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end()) {
+            m_log->trace("UnitNew registering");
+            registerSystemdUnit(connection, unitName, unitObjectPath);
         }
     });
     m_proxyManager->finishRegistration();
@@ -39,6 +40,7 @@ DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, con
         const auto& unitObjectPath = unit.get<6>();
 
         if (ignoredUnits.find(unitName) == ignoredUnits.end()) {
+            m_log->trace("existing registering");
             registerSystemdUnit(connection, unitName, unitObjectPath);
         }
     }

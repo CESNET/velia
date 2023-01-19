@@ -3,7 +3,7 @@
  *
  * Written by Tomáš Pecka <tomas.pecka@fit.cvut.cz>
  *
-*/
+ */
 #include "DbusSystemdInput.h"
 #include "utils/log.h"
 
@@ -21,8 +21,8 @@ DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, con
     m_proxyManager->callMethod("Subscribe").onInterface(managerIface).withArguments().dontExpectReply();
 
     // Register to a signal introducing new unit
-    m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
-        if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end()) {
+    m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&, ignoredUnits = ignoredUnits](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
+        if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end() && !ignoredUnits.contains(unitName)) {
             registerSystemdUnit(connection, unitName, unitObjectPath);
         }
     });

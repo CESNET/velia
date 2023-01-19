@@ -21,9 +21,9 @@ DbusSystemdInput::DbusSystemdInput(std::shared_ptr<AbstractManager> manager, con
     m_proxyManager->callMethod("Subscribe").onInterface(managerIface).withArguments().dontExpectReply();
 
     // Register to a signal introducing new unit
-    m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
-        if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end()) {
-            registerSystemdUnit(connection, unitName, unitObjectPath);
+    m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&, ignoredUnits = ignoredUnits](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
+        if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end() && ignoredUnits.find(unitName) == ignoredUnits.end()) {
+			registerSystemdUnit(connection, unitName, unitObjectPath);
         }
     });
     m_proxyManager->finishRegistration();

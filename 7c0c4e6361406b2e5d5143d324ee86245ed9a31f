@@ -16,6 +16,24 @@
       "message": "recheck looks like an unrelated bug in sysrepo, module uninstall which is non-interesting for this use case",
       "revId": "7c0c4e6361406b2e5d5143d324ee86245ed9a31f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4dc016b1_32ce4e11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-01-23T09:59:54Z",
+      "side": 1,
+      "message": "It *might* actually be my bug. There was a data race in the cleanup phase of the two testing daemons which might have corrupted sysrepo? I fixed that in 5994 https://gerrit.cesnet.cz/c/CzechLight/velia/+/5994/3 so let\u0027s see if the error persists.",
+      "parentUuid": "d18460db_dd55f192",
+      "revId": "7c0c4e6361406b2e5d5143d324ee86245ed9a31f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

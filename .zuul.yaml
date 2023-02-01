@@ -20,6 +20,7 @@
             requires: CzechLight-deps-f34-clang-tsan
             required-projects: *projects
             pre-run: ci/pre.yaml
+            voting: false # suspected broken sysrepo/TSAN
         - f34-cpp-coverage-diff:
             voting: false
         - clang-format:

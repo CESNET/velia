@@ -358,11 +358,16 @@ if(BUILD_TESTING)
 
     find_program(SYSREPOCTL sysrepoctl)
     find_program(SYSREPOCFG sysrepocfg)
+    find_program(IPROUTE2_EXECUTABLE ip REQUIRED)
+    find_program(SUDO_EXECUTABLE sudo REQUIRED)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/test_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/test_vars.h @ONLY)
 
-    function(velia_test name)
-        add_executable(test-${name} ${CMAKE_SOURCE_DIR}/tests/${name}.cpp)
-        target_link_libraries(test-${name} DoctestIntegration)
-        target_include_directories(test-${name}
+    function(velia_test)
+        cmake_parse_arguments(TEST "" "NAME;FIXTURE;RESOURCE" "LIBRARIES;COMMAND" ${ARGN})
+
+        add_executable(test-${TEST_NAME} ${CMAKE_SOURCE_DIR}/tests/${TEST_NAME}.cpp)
+        target_link_libraries(test-${TEST_NAME} DoctestIntegration ${TEST_LIBRARIES})
+        target_include_directories(test-${TEST_NAME}
             PUBLIC
                 ${CMAKE_CURRENT_SOURCE_DIR}
             PRIVATE
@@ -370,33 +375,33 @@ if(BUILD_TESTING)
         )
 
         if(NOT CMAKE_CROSSCOMPILING)
-            add_test(test-${name} test-${name})
+            add_test(test-${TEST_NAME} test-${TEST_NAME})
         endif()
 
-        set(test_name_init sysrepo:prep:${name})
-        set(test_name_cleanup sysrepo:clean:${name})
-        set(fixture_name sysrepo:env:${name})
+        set(test_name_init sysrepo:prep:${TEST_NAME})
+        set(test_name_cleanup sysrepo:clean:${TEST_NAME})
+        set(fixture_name sysrepo:env:${TEST_NAME})
+
+        if(TEST_RESOURCE)
+            set_tests_properties(test-${TEST_NAME} PROPERTIES RESOURCE_LOCK "${TEST_RESOURCE}")
+        endif()
 
         # How to do this:
-        # Check ARGN for name of fixture
-        # then take the args for manage module from variable "fixture{fixture_name}"
+        # take the args for manage module from variable "fixture{fixture_name}"
         # and then add set env vars for sysrepo
         # set them ALSO for the init/cleanup tests
-        if(ARGC GREATER 1)
-            set(wanted_fixture ${ARGV1})
-            add_test(NAME ${test_name_init} COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepoctl-manage-module.sh ${SYSREPOCTL} ${SYSREPOCFG} prepare ${${wanted_fixture}})
+        if(TEST_FIXTURE)
+            add_test(NAME ${test_name_init} COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepoctl-manage-module.sh ${SYSREPOCTL} ${SYSREPOCFG} prepare ${${TEST_FIXTURE}})
             set_tests_properties(${test_name_init} PROPERTIES FIXTURES_SETUP ${fixture_name})
-            add_test(NAME ${test_name_cleanup} COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepoctl-manage-module.sh ${SYSREPOCTL} ${SYSREPOCFG} uninstall ${${wanted_fixture}})
+            add_test(NAME ${test_name_cleanup} COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepoctl-manage-module.sh ${SYSREPOCTL} ${SYSREPOCFG} uninstall ${${TEST_FIXTURE}})
             set_tests_properties(${test_name_cleanup} PROPERTIES FIXTURES_CLEANUP ${fixture_name})
 
-            set_tests_properties(test-${name} PROPERTIES FIXTURES_REQUIRED ${fixture_name})
-            set_property(TEST test-${name} ${test_name_init} ${test_name_cleanup} APPEND PROPERTY ENVIRONMENT
-            "SYSREPO_REPOSITORY_PATH=${CMAKE_CURRENT_BINARY_DIR}/test_repositories/test_${name}"
-            "SYSREPO_SHM_PREFIX=velia_test_${name}"
+            set_tests_properties(test-${TEST_NAME} PROPERTIES FIXTURES_REQUIRED ${fixture_name})
+            set_property(TEST test-${TEST_NAME} ${test_name_init} ${test_name_cleanup} APPEND PROPERTY ENVIRONMENT
+              "SYSREPO_REPOSITORY_PATH=${CMAKE_CURRENT_BINARY_DIR}/test_repositories/test_${TEST_NAME}"
+              "SYSREPO_SHM_PREFIX=velia_test_${TEST_NAME}"
             )
-
         endif()
-
     endfunction()
 
     find_program(YANGLINT_PATH yanglint)
@@ -407,51 +412,27 @@ if(BUILD_TESTING)
         add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
     endforeach()
 
-    velia_test(health_state-manager)
-    target_link_libraries(test-health_state-manager velia-health)
-    velia_test(health_input-semaphore)
-    target_link_libraries(test-health_input-semaphore velia-health DbusTesting)
-    velia_test(health_input-systemd)
-    target_link_libraries(test-health_input-systemd velia-health DbusTesting)
-    velia_test(health_output-led)
-    target_link_libraries(test-health_output-led velia-health)
+    velia_test(NAME health_state-manager LIBRARIES velia-health)
+    velia_test(NAME health_input-semaphore LIBRARIES velia-health DbusTesting)
+    velia_test(NAME health_input-systemd LIBRARIES velia-health DbusTesting)
+    velia_test(NAME health_output-led LIBRARIES velia-health)
 
-    velia_test(system_rauc)
-    target_link_libraries(test-system_rauc velia-system DbusTesting)
-    set_tests_properties(
-            test-system_rauc
-            PROPERTIES RESOURCE_LOCK dbus-rauc
-    )
+    velia_test(NAME system_rauc LIBRARIES velia-system DbusTesting RESOURCE dbus-rauc)
+    velia_test(NAME system_lldp LIBRARIES velia-system DbusTesting)
 
-    velia_test(system_lldp)
-    target_link_libraries(test-system_lldp velia-system DbusTesting)
+    velia_test(NAME hardware_emmc LIBRARIES velia-ietf-hardware FsTestUtils)
+    velia_test(NAME hardware_hwmon LIBRARIES velia-ietf-hardware FsTestUtils)
 
     set(fixture_sysrepo-czechlight-lldp YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)
-    velia_test(sysrepo_system-lldp fixture_sysrepo-czechlight-lldp)
-    target_link_libraries(test-sysrepo_system-lldp velia-system DbusTesting)
-
-    velia_test(hardware_emmc)
-    target_link_libraries(test-hardware_emmc velia-ietf-hardware FsTestUtils)
-    velia_test(hardware_hwmon)
-    target_link_libraries(test-hardware_hwmon velia-ietf-hardware FsTestUtils)
+    velia_test(NAME sysrepo_system-lldp LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-czechlight-lldp)
 
     set(fixture_sysrepo-ietf-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang)
-    velia_test(sysrepo_system-ietfsystem fixture_sysrepo-ietf-system)
-    target_link_libraries(test-sysrepo_system-ietfsystem velia-system DbusTesting)
+    velia_test(NAME sysrepo_system-ietfsystem LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-ietf-system)
 
     set(fixture_sysrepo-czechlight-system YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2022-07-08.yang)
-    velia_test(sysrepo_system-firmware fixture_sysrepo-czechlight-system)
-    target_link_libraries(test-sysrepo_system-firmware velia-system DbusTesting SysrepoTesting)
-    set_tests_properties(
-            test-sysrepo_system-firmware
-            PROPERTIES RESOURCE_LOCK dbus-rauc
-    )
-
-    velia_test(sysrepo_authentication fixture_sysrepo-czechlight-system)
-    target_link_libraries(test-sysrepo_authentication velia-system FsTestUtils)
-
-    velia_test(sysrepo_system-leds fixture_sysrepo-czechlight-system)
-    target_link_libraries(test-sysrepo_system-leds velia-system FsTestUtils)
+    velia_test(NAME sysrepo_system-firmware LIBRARIES velia-system DbusTesting SysrepoTesting FIXTURE fixture_sysrepo-czechlight-system RESOURCE dbus-rauc)
+    velia_test(NAME sysrepo_authentication LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
+    velia_test(NAME sysrepo_system-leds LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
 
     set(fixture_sysrepo-czechlight-network
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
@@ -461,34 +442,22 @@ if(BUILD_TESTING)
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
+    velia_test(NAME sysrepo_system-ietfinterfaces LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network)
 
-    velia_test(sysrepo_system-ietfinterfaces fixture_sysrepo-czechlight-network)
-    target_link_libraries(test-sysrepo_system-ietfinterfaces velia-system)
+    velia_test(NAME sysrepo_system-ietfinterfaces-sudo LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network)
+    add_test(NAME network-czechlight0-prepare COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_system-ietfinterfaces-sudo.sh ${SUDO_EXECUTABLE})
+    add_test(NAME network-czechlight0-cleanup COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_system-ietfinterfaces-sudo.sh ${SUDO_EXECUTABLE})
+    set_tests_properties(network-czechlight0-prepare PROPERTIES FIXTURES_SETUP network-czechlight0)
+    set_tests_properties(network-czechlight0-cleanup PROPERTIES FIXTURES_CLEANUP network-czechlight0)
 
-    if(TEST_NETWORK_WITH_SUDO)
-        find_program(SUDO_EXECUTABLE sudo REQUIRED)
-        find_program(IPROUTE2_EXECUTABLE ip REQUIRED)
-        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/test_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/test_vars.h @ONLY)
-
-        add_test(NAME network-czechlight0-prepare COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_system-ietfinterfaces-sudo.sh ${SUDO_EXECUTABLE})
-        add_test(NAME network-czechlight0-cleanup COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_system-ietfinterfaces-sudo.sh ${SUDO_EXECUTABLE})
-        set_tests_properties(network-czechlight0-prepare PROPERTIES FIXTURES_SETUP network-czechlight0)
-        set_tests_properties(network-czechlight0-cleanup PROPERTIES FIXTURES_CLEANUP network-czechlight0)
-
-        velia_test(sysrepo_system-ietfinterfaces-sudo fixture_sysrepo-czechlight-network)
-        target_link_libraries(test-sysrepo_system-ietfinterfaces-sudo velia-system)
-        set_property(TEST test-sysrepo_system-ietfinterfaces-sudo APPEND PROPERTY FIXTURES_REQUIRED network-czechlight0)
-    endif()
 
     set(fixture_sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
-    velia_test(hardware_ietf-hardware fixture_sysrepo-ietf-hardware)
-    target_link_libraries(test-hardware_ietf-hardware velia-ietf-hardware velia-ietf-hardware-sysrepo FsTestUtils)
+    velia_test(NAME hardware_ietf-hardware LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo FsTestUtils FIXTURE fixture_sysrepo-ietf-hardware)
 
-    velia_test(sysrepo_two-daemons fixture_sysrepo-ietf-hardware)
-    target_link_libraries(test-sysrepo_two-daemons velia-ietf-hardware-sysrepo)
     # ctest dance for sysrepo_two-daemons: compile daemon, create a fixture for test, add the test into the fixture
     add_executable(test-sysrepo_test_merge-daemon ${CMAKE_SOURCE_DIR}/tests/sysrepo_two-daemons_daemon.cpp)
     target_link_libraries(test-sysrepo_test_merge-daemon PkgConfig::SYSREPO PkgConfig::LIBYANG)
+    velia_test(NAME sysrepo_two-daemons LIBRARIES velia-ietf-hardware-sysrepo FIXTURE fixture_sysrepo-ietf-hardware)
 
     add_test(NAME sysrepo_test_merge-start COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_two-daemons_control.sh start)
     add_test(NAME sysrepo_test_merge-stop  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_two-daemons_control.sh stop)
@@ -498,7 +467,6 @@ if(BUILD_TESTING)
         "SYSREPO_REPOSITORY_PATH=${CMAKE_CURRENT_BINARY_DIR}/test_repositories/test_sysrepo_two-daemons"
         "SYSREPO_SHM_PREFIX=velia_test_sysrepo_two-daemons"
         )
-
     set_property(TEST test-sysrepo_two-daemons APPEND PROPERTY FIXTURES_REQUIRED sysrepo:two-daemons)
 
     # ensure we run two-daemons merge test and ietf-hardware test sequentially and don't cleanup before everything ends
@@ -519,8 +487,7 @@ if(BUILD_TESTING)
         YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-firewall@2021-01-25.yang
     )
 
-    velia_test(sysrepo-firewall fixture_sysrepo-firewall)
-    target_link_libraries(test-sysrepo-firewall velia-firewall)
+    velia_test(NAME sysrepo-firewall LIBRARIES velia-firewall FIXTURE fixture_sysrepo-firewall)
 endif()
 
 if(WITH_DOCS)

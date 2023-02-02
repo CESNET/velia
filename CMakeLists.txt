@@ -30,12 +30,12 @@ find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
 find_package(Boost REQUIRED)
-find_package(docopt REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ "1.0.0" REQUIRED)
 find_package(PkgConfig)
 find_package(fmt)
 find_package(nlohmann_json REQUIRED)
+pkg_check_modules(DOCOPT REQUIRED IMPORTED_TARGET docopt)
 
 pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
 if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
@@ -103,7 +103,7 @@ add_library(velia-utils STATIC
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::SYSREPO fmt::fmt docopt)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::SYSREPO fmt::fmt PkgConfig::DOCOPT)
 
 # - health
 add_library(velia-health STATIC
@@ -262,7 +262,7 @@ add_executable(veliad-health
 target_link_libraries(veliad-health
     PUBLIC
         velia-health
-        docopt
+        PkgConfig::DOCOPT
     )
 add_dependencies(veliad-health target-VELIA_VERSION)
 target_include_directories(veliad-health PUBLIC ${CMAKE_BINARY_DIR})
@@ -273,7 +273,7 @@ add_executable(veliad-system
 target_link_libraries(veliad-system
     PUBLIC
         velia-system
-        docopt
+        PkgConfig::DOCOPT
     )
 add_dependencies(veliad-system target-VELIA_VERSION)
 target_include_directories(veliad-system PUBLIC ${CMAKE_BINARY_DIR})
@@ -285,7 +285,7 @@ target_link_libraries(veliad-firewall
     PUBLIC
         velia-firewall
         velia-utils
-        docopt
+        PkgConfig::DOCOPT
     )
 add_dependencies(veliad-firewall target-VELIA_VERSION)
 target_include_directories(veliad-firewall PUBLIC ${CMAKE_BINARY_DIR})
@@ -299,7 +299,7 @@ target_link_libraries(veliad-hardware
     PUBLIC
         velia-ietf-hardware
         velia-ietf-hardware-sysrepo
-        docopt
+        PkgConfig::DOCOPT
     )
 add_dependencies(veliad-hardware target-VELIA_VERSION)
 target_include_directories(veliad-hardware PUBLIC ${CMAKE_BINARY_DIR})

@@ -16,6 +16,24 @@
       "message": "Can\u0027t we just supress memcpy (or another func.)?",
       "revId": "3b59ee9bd56d83dc489505e6f673eb25348fb8e5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68e88d85_0cb12442",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-02T08:00:12Z",
+      "side": 1,
+      "message": "Never mind, setting the CI job as *not voting* is much better than suppressing the error +2.",
+      "parentUuid": "de66adda_2b7a9c11",
+      "revId": "3b59ee9bd56d83dc489505e6f673eb25348fb8e5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

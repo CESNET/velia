@@ -34,6 +34,24 @@
       "parentUuid": "de66adda_2b7a9c11",
       "revId": "3b59ee9bd56d83dc489505e6f673eb25348fb8e5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e2eafac_a83c47c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-02T09:33:29Z",
+      "side": 1,
+      "message": "yeah, I think it\u0027s better that way because the suppression definition would be super-generic AFAIK",
+      "parentUuid": "68e88d85_0cb12442",
+      "revId": "3b59ee9bd56d83dc489505e6f673eb25348fb8e5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

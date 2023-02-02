@@ -399,6 +399,14 @@ if(BUILD_TESTING)
 
     endfunction()
 
+    find_program(YANGLINT_PATH yanglint)
+    if (NOT YANGLINT_PATH)
+        message(FATAL_ERROR "Cannot find libyang's yanglint")
+    endif()
+    foreach(yang_file ${YANG_SRCS})
+        add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
+    endforeach()
+
     velia_test(health_state-manager)
     target_link_libraries(test-health_state-manager velia-health)
     velia_test(health_input-semaphore)
@@ -496,15 +504,6 @@ if(BUILD_TESTING)
     # ensure we run two-daemons merge test and ietf-hardware test sequentially and don't cleanup before everything ends
     set_tests_properties(sysrepo_test_merge-start PROPERTIES DEPENDS test-hardware_ietf-hardware)
     set_tests_properties(sysrepo:clean:sysrepo_two-daemons PROPERTIES DEPENDS sysrepo_test_merge-stop)
-
-
-    find_program(YANGLINT_PATH yanglint)
-    if (NOT YANGLINT_PATH)
-        message(FATAL_ERROR "Cannot find libyang's yanglint")
-    endif()
-    foreach(yang_file ${YANG_SRCS})
-        add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
-    endforeach()
 
     set(fixture_sysrepo-firewall
         # Installing czechlight-firewall automatically installs ietf-access-control-list as implemented (not just

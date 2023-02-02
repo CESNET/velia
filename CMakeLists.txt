@@ -310,8 +310,6 @@ if(BUILD_TESTING)
     find_package(trompeloeil 33 REQUIRED)
     find_package(doctest 2.3.1 REQUIRED)
 
-    option(TEST_NETWORK_WITH_SUDO "Include ietf-routing and ietf-interfaces tests that require root privileges" "OFF")
-
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/configure.cmake.h.in ${CMAKE_CURRENT_BINARY_DIR}/tests/configure.cmake.h)
 
     add_library(DoctestIntegration STATIC
@@ -359,7 +357,6 @@ if(BUILD_TESTING)
     find_program(SYSREPOCTL sysrepoctl)
     find_program(SYSREPOCFG sysrepocfg)
     find_program(IPROUTE2_EXECUTABLE ip REQUIRED)
-    find_program(SUDO_EXECUTABLE sudo REQUIRED)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/test_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/test_vars.h @ONLY)
 
     function(velia_test)
@@ -448,11 +445,8 @@ if(BUILD_TESTING)
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
     velia_test(NAME sysrepo_system-ietfinterfaces LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network)
 
-    velia_test(NAME sysrepo_system-ietfinterfaces-sudo LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network)
-    add_test(NAME network-czechlight0-prepare COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_system-ietfinterfaces-sudo.sh ${SUDO_EXECUTABLE})
-    add_test(NAME network-czechlight0-cleanup COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_system-ietfinterfaces-sudo.sh ${SUDO_EXECUTABLE})
-    set_tests_properties(network-czechlight0-prepare PROPERTIES FIXTURES_SETUP network-czechlight0)
-    set_tests_properties(network-czechlight0-cleanup PROPERTIES FIXTURES_CLEANUP network-czechlight0)
+    find_program(UNSHARE_EXECUTABLE unshare REQUIRED)
+    velia_test(NAME sysrepo_system-ietfinterfaces-sudo LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network COMMAND ${UNSHARE_EXECUTABLE} --net --map-root-user ./test-sysrepo_system-ietfinterfaces-sudo)
 
 
     set(fixture_sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)

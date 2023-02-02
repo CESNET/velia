@@ -375,7 +375,11 @@ if(BUILD_TESTING)
         )
 
         if(NOT CMAKE_CROSSCOMPILING)
-            add_test(test-${TEST_NAME} test-${TEST_NAME})
+            if(NOT(TEST_COMMAND))
+                add_test(test-${TEST_NAME} test-${TEST_NAME})
+            else()
+                add_test(NAME test-${TEST_NAME} COMMAND ${TEST_COMMAND})
+            endif()
         endif()
 
         set(test_name_init sysrepo:prep:${TEST_NAME})

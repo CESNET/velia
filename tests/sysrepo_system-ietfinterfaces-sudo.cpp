@@ -42,17 +42,17 @@ void iproute2_run(const Args... args_)
 
     std::vector<std::string> args = {IPROUTE2_EXECUTABLE, args_...};
 
-    logger->trace("exec: {} {}", SUDO_EXECUTABLE, boost::algorithm::join(args, " "));
-    bp::child c(SUDO_EXECUTABLE, boost::process::args = std::move(args), bp::std_out > stdoutStream, bp::std_err > stderrStream);
+    logger->trace("exec: {}", boost::algorithm::join(args, " "));
+    bp::child c(boost::process::args = std::move(args), bp::std_out > stdoutStream, bp::std_err > stderrStream);
     c.wait();
-    logger->trace("{} {} exited", SUDO_EXECUTABLE, IPROUTE2_EXECUTABLE);
+    logger->trace("{} exited", IPROUTE2_EXECUTABLE);
 
     if (c.exit_code() != 0) {
         std::istreambuf_iterator<char> begin(stderrStream), end;
         std::string stderrOutput(begin, end);
-        logger->critical("{} {} ended with a non-zero exit code. stderr: {}", SUDO_EXECUTABLE, IPROUTE2_EXECUTABLE, stderrOutput);
+        logger->critical("{} ended with a non-zero exit code. stderr: {}", IPROUTE2_EXECUTABLE, stderrOutput);
 
-        throw std::runtime_error(SUDO_EXECUTABLE + " "s + IPROUTE2_EXECUTABLE + " returned non-zero exit code " + std::to_string(c.exit_code()));
+        throw std::runtime_error(IPROUTE2_EXECUTABLE + " returned non-zero exit code "s + std::to_string(c.exit_code()));
     }
 }
 

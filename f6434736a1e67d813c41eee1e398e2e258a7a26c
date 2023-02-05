@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d16f329e_0b99d608",
+        "filename": "src/health/alarms/alarms.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T20:32:40Z",
+      "side": 1,
+      "message": "I like it that the code actively tries to maintain the inventory, including the resource names, so that the consumers of the ietf-alarms YANG model will be kept up-to-date about all the systemd units which can fail. However, I think the code would be made easier if this is changed into a two-step process:\n\n1) At first, push a generic entry with an empty list of resources. This is safe, because we\u0027ve decided that sysrepo-ietf-alarms insists that any possible alarm (regardless of the reource list) will be always managed by a single sysrepo connection (which means that when this velia thingy starts, there are no matches in the inventory, even in face of crashes and restarts). Right?\n\n2) When a new systemd unit appears, just push it into the list of resources without any checks of the existing data.",
+      "range": {
+        "startLine": 40,
+        "startChar": 5,
+        "endLine": 40,
+        "endChar": 38
+      },
+      "revId": "f6434736a1e67d813c41eee1e398e2e258a7a26c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6e36bcb_e5e2b372",
+        "filename": "src/health/alarms/alarms.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T20:32:40Z",
+      "side": 1,
+      "message": "I think that `restoreDatastore` is more descriptive",
+      "range": {
+        "startLine": 43,
+        "startChar": 9,
+        "endLine": 43,
+        "endChar": 10
+      },
+      "revId": "f6434736a1e67d813c41eee1e398e2e258a7a26c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72468311_da195439",
+        "filename": "src/health/alarms/alarms.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T20:32:40Z",
+      "side": 1,
+      "message": "nit: whitespace error (also in other places in this patch)",
+      "revId": "f6434736a1e67d813c41eee1e398e2e258a7a26c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

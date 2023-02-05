@@ -16,6 +16,23 @@
       "message": "I\u0027m sorry for the disturbance in the force. I cherry-picked to test with I4dfce3667cdc280c0c6d34a6beca24d7ff9e44e5 but I should have checkouted and rebased. But I guess it does not matter. Thanks for the fix.",
       "revId": "9e8752af0a065018f0059ec7c38c60591baa493c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7a81d54_804d435f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-05T08:46:55Z",
+      "side": 1,
+      "message": "Also: I guess the same fix is needed for cla-sysrepo and netconf-cli.",
+      "revId": "9e8752af0a065018f0059ec7c38c60591baa493c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

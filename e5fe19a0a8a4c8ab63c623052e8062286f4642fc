@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd3c4da5_059e8c94",
+        "filename": "ci/build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:50:12Z",
+      "side": 1,
+      "message": "nit: just `../sysrepo-ietf-alarms` will do as well",
+      "range": {
+        "startLine": 75,
+        "startChar": 117,
+        "endLine": 75,
+        "endChar": 153
+      },
+      "revId": "e5fe19a0a8a4c8ab63c623052e8062286f4642fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e05c0e26_89423449",
+        "filename": "tests/sysrepo_ietf-alarms.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:50:12Z",
+      "side": 1,
+      "message": "same comment as for the earlier patch: https://gerrit.cesnet.cz/c/CzechLight/velia/+/5859/comment/bb33dd1f_354fa0cd",
+      "revId": "e5fe19a0a8a4c8ab63c623052e8062286f4642fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a004069_f4c94f44",
+        "filename": "tests/sysrepo_sysrepo-ietf-alarms_control.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:50:12Z",
+      "side": 1,
+      "message": "English, please",
+      "range": {
+        "startLine": 17,
+        "startChar": 14,
+        "endLine": 17,
+        "endChar": 19
+      },
+      "revId": "e5fe19a0a8a4c8ab63c623052e8062286f4642fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d10fdd0_cb8a4b83",
+        "filename": "tests/sysrepo_sysrepo-ietf-alarms_control.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:50:12Z",
+      "side": 1,
+      "message": "Activating the most verbose log level and redirecting that to /dev/null is weird; let\u0027s make sure that the log is captured somewhere so that we have a chance of debugging CI failures.\n\nA good way of achieving this is to log them to a per-test unique location in the build dir, and then set up a hook in ci/build.sh which copies them around like done in https://gerrit.cesnet.cz/plugins/gitiles/CzechLight/dependencies/+/refs/heads/master/ci/build.sh#140",
+      "range": {
+        "startLine": 33,
+        "startChar": 7,
+        "endLine": 33,
+        "endChar": 52
+      },
+      "revId": "e5fe19a0a8a4c8ab63c623052e8062286f4642fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

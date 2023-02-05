@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a315fed_ccd673ec",
+        "filename": "src/health/outputs/AlarmsOutputs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:56:07Z",
+      "side": 1,
+      "message": "I\u0027m not sure about this one. The YANG Model says that:\n\n Indicates that the severity level could not be determined.  This level SHOULD be avoided.\n\nmaybe at least add a comment that this is just an arbitrary choice and that there\u0027s no good way to treat this particular severity?",
+      "range": {
+        "startLine": 38,
+        "startChar": 89,
+        "endLine": 38,
+        "endChar": 120
+      },
+      "revId": "6641cb944f276e6c971c136ff107af2410c046a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd7bf9fb_a10e1087",
+        "filename": "src/health/outputs/AlarmsOutputs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:56:07Z",
+      "side": 1,
+      "message": "nit: this line deserves a bit nicer formatting, IMHO, like one severity per line",
+      "range": {
+        "startLine": 38,
+        "startChar": 58,
+        "endLine": 38,
+        "endChar": 229
+      },
+      "revId": "6641cb944f276e6c971c136ff107af2410c046a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c36f9076_162ca287",
+        "filename": "tests/sysrepo_health-led-alarms.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:56:07Z",
+      "side": 1,
+      "message": "I think that the test should \"just\" test that it\u0027s only the `notCleared` which matters. So I suggest to change the API so that you pass the number of not-cleared alarms (\"N\"), and to have this function always push \"10\" as the # of cleared ones, and 10 + N for total.",
+      "range": {
+        "startLine": 28,
+        "startChar": 67,
+        "endLine": 28,
+        "endChar": 77
+      },
+      "revId": "6641cb944f276e6c971c136ff107af2410c046a4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

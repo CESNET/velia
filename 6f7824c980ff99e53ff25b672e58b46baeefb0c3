@@ -1,0 +1,164 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc6b548d_927354fe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:37:08Z",
+      "side": 1,
+      "message": "Please also mention that the concept of ignored units is no longer needed because one is supposed to create some filtering rules (right?). And figure out how to push these filtering rules (via a migration script in br2-external I suppose?).",
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ed92965_2767d5ac",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:37:08Z",
+      "side": 1,
+      "message": "there are not libyang-specific symbols in the headers, so I think this one can be PRIVATE",
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "224a6db7_83f4cde1",
+        "filename": "src/health/alarms/SystemdUnits.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:37:08Z",
+      "side": 1,
+      "message": "I recall there was a recent commit (c324c10) which fixed some race in a similar code; I guess this patch is different because these ignores are not implemented, but I\u0027d like you to confirm that this is indeed the case.",
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5083d2e_abf14a3d",
+        "filename": "src/health/alarms/SystemdUnits.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:37:08Z",
+      "side": 1,
+      "message": "something is missing here",
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7848a531_e6d11b40",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:37:08Z",
+      "side": 1,
+      "message": "nit: tabs",
+      "range": {
+        "startLine": 25,
+        "startChar": 1,
+        "endLine": 25,
+        "endChar": 3
+      },
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb33dd1f_354fa0cd",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:37:08Z",
+      "side": 1,
+      "message": "The real reason (IMHO) is to make the test as close to reality as possible. Aren\u0027t there some possible threading/locking issues inherent to using a single D-Bus connection which are bypassed by code like this? If so, let\u0027s tweak the comment, please.",
+      "range": {
+        "startLine": 69,
+        "startChar": 72,
+        "endLine": 69,
+        "endChar": 144
+      },
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b0c2c63_b2fb7702",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:37:08Z",
+      "side": 1,
+      "message": "nit: perhaps something like `systemSimulator`, because this is not about \"event handling\", this is about mocking some systemd-level events. Saying just \"event\" is ambiguous because it might refer to e.g. sysrepo event handling.",
+      "range": {
+        "startLine": 97,
+        "startChar": 16,
+        "endLine": 97,
+        "endChar": 24
+      },
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "058333c1_c63a1c60",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:37:08Z",
+      "side": 1,
+      "message": "It\u0027s unclear why the code uses 5ms, 10ms and 25ms intervals. I would prefer if the interval is always the same (get a variable for this). Also, 5ms \"feels\" like way too short of a delay. If the code works, is there actually a need for a sleep? What happens when they got removed? Does the systemd processing somehow combine these events so that they are effectively getting lost?",
+      "range": {
+        "startLine": 100,
+        "startChar": 36,
+        "endLine": 100,
+        "endChar": 40
+      },
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

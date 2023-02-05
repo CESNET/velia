@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2cd1402_af45382e",
+        "filename": "src/health/outputs/AlarmsOutputs.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-05T19:42:32Z",
+      "side": 1,
+      "message": "I think that the two-step initialization was needed in the original version of this code (the one which implemented stuff directly without going via ietf-alarms) because of sysrepo interaction (but I might be wrong and I cannot find the patch/discussion anymore). Do we need this two-step initialization now?",
+      "revId": "32c00c548a3b8f8f3488771633d9c7ff3a87e934",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

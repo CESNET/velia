@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fce61187_5b0fd399",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-06T22:00:46Z",
+      "side": 1,
+      "message": "nit: we aren\u0027t using that thing which most people would call a container, we\u0027re merely using a bunch of custom namespaces which are often used for running containers (i.e., FS images of which bundle a ton of stuff, quite often a standalone rootfs)",
+      "range": {
+        "startLine": 7,
+        "startChar": 25,
+        "endLine": 7,
+        "endChar": 34
+      },
+      "revId": "53a01e6cc2be6dc17bc0ad1673fc24d52191e13c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4dc044c_dadb0b02",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-06T22:00:46Z",
+      "side": 1,
+      "message": "also, this method doesn\u0027t require any extra privileges, like the ability to run `sudo` in the first place",
+      "range": {
+        "startLine": 18,
+        "startChar": 12,
+        "endLine": 19,
+        "endChar": 32
+      },
+      "revId": "53a01e6cc2be6dc17bc0ad1673fc24d52191e13c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ba14258_62e21404",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-06T22:00:46Z",
+      "side": 1,
+      "message": "IMHO this is more accurate:\n\n The code uses sysfs for checking whether the interface is a bridge because rt-netlink\u0027s support is just horribly broken (see commit f910893aff599cde36fb841f633854c248ed59ee for details). Unfortunately (and contrary to what the docs [link] say), sysfs\u0027 mount namespace is determined by those of the mounting process and then fixed, no matter what mount NS the caller lives in [link]. That\u0027s why we need to create a custom mount NS and remount /sys.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 44
+      },
+      "revId": "53a01e6cc2be6dc17bc0ad1673fc24d52191e13c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adbb95a7_5ecf61aa",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-06T22:00:46Z",
+      "side": 1,
+      "message": "`;` because I don\u0027t think that you really want to mask a failure of mount by not executing the test. Oh wait, this is CMake and `;` is magic (string lists) :p. Still, `;`, not `\u0026\u0026` here, please.",
+      "range": {
+        "startLine": 456,
+        "startChar": 132,
+        "endLine": 456,
+        "endChar": 134
+      },
+      "revId": "53a01e6cc2be6dc17bc0ad1673fc24d52191e13c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

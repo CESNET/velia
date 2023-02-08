@@ -453,7 +453,7 @@ if(BUILD_TESTING)
         set(UNSHARE_MAP_GROUP_ARG "")
     endif()
     velia_test(NAME sysrepo_system-ietfinterfaces-sudo LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network
-               COMMAND ${UNSHARE_EXECUTABLE} --net --mount --map-root-user ${UNSHARE_MAP_GROUP_ARG} sh -c "mount -t sysfs none /sys $<SEMICOLON> ./test-sysrepo_system-ietfinterfaces-sudo")
+               COMMAND ${UNSHARE_EXECUTABLE} --net --mount --map-root-user ${UNSHARE_MAP_GROUP_ARG} sh -c "set -ex $<SEMICOLON> mount -t sysfs none /sys $<SEMICOLON> ./test-sysrepo_system-ietfinterfaces-sudo")
 
     set(fixture_sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
     velia_test(NAME hardware_ietf-hardware LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo FsTestUtils FIXTURE fixture_sysrepo-ietf-hardware)

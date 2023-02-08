@@ -443,7 +443,7 @@ if(BUILD_TESTING)
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
-    velia_test(NAME sysrepo_system-ietfinterfaces LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network)
+    velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network)
 
     find_program(UNSHARE_EXECUTABLE unshare REQUIRED)
     find_program(MOUNT_EXECUTABLE mount REQUIRED)

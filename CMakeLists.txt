@@ -443,8 +443,6 @@ if(BUILD_TESTING)
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
-    velia_test(NAME sysrepo_system-ietfinterfaces LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network)
-
     find_program(UNSHARE_EXECUTABLE unshare REQUIRED)
     pkg_get_variable(SR_GROUP sysrepo SR_GROUP)
     if (SR_GROUP)
@@ -452,7 +450,7 @@ if(BUILD_TESTING)
     else()
         set(UNSHARE_MAP_GROUP_ARG "")
     endif()
-    velia_test(NAME sysrepo_system-ietfinterfaces-sudo LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network
+    velia_test(NAME sysrepo_system-ietfinterfaces LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network
                COMMAND ${UNSHARE_EXECUTABLE} --net --mount --map-root-user ${UNSHARE_MAP_GROUP_ARG} sh -c "mount -t sysfs none /sys $<SEMICOLON> ./test-sysrepo_system-ietfinterfaces-sudo")
 
     set(fixture_sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)

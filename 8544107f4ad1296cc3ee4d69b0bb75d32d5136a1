@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9b1b0c9_fbae550e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-08T21:00:59Z",
+      "side": 1,
+      "message": "This fails because `lo` is not up in the newly created network namespace. The test is IMHO redundant (https://gerrit.cesnet.cz/c/CzechLight/velia/+/6039), and I think that there\u0027s actually no need to merge them because both test a different functionality. I\u0027ve pushed some patches which (hopefully) reflect that in their naming.",
+      "revId": "8544107f4ad1296cc3ee4d69b0bb75d32d5136a1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

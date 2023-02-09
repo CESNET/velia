@@ -16,6 +16,24 @@
       "message": "I think that the two-step initialization was needed in the original version of this code (the one which implemented stuff directly without going via ietf-alarms) because of sysrepo interaction (but I might be wrong and I cannot find the patch/discussion anymore). Do we need this two-step initialization now?",
       "revId": "32c00c548a3b8f8f3488771633d9c7ff3a87e934",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba126ec5_925a9004",
+        "filename": "src/health/outputs/AlarmsOutputs.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-09T14:20:20Z",
+      "side": 1,
+      "message": "Well at first I thought yes but then I realized about this case:\n\n1. AlarmOutputs get instantiated\n1.1. sysrepo onModuleChange callback is initialized and run\n1.2. this triggers boost signals to output something\n2. new output callback is registered to boost signals (light up leds) and there is no one who can trigger this callback.\n\nWe need to register callbacks *before* sr onModuleChange callback is triggered. \n\nSo far we only (plan to) use AlarmOutputs for lighting LEDs, there is no other callback. So I think that we can either give up the generality (and require that all outputs are added in ctor) or keep it two-step.",
+      "parentUuid": "c2cd1402_af45382e",
+      "revId": "32c00c548a3b8f8f3488771633d9c7ff3a87e934",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

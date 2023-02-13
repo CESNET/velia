@@ -189,6 +189,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7693b04a_93416c68",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T11:30:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85a1f33c_76a40b94",
+      "range": {
+        "startLine": 58,
+        "startChar": 113,
+        "endLine": 58,
+        "endChar": 144
+      },
+      "revId": "e85e13be69c9eed404682538f667665236002a84",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1909458f_736407a7",

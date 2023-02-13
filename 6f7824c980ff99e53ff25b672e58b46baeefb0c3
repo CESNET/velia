@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70a1ff82_36c5af09",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T11:30:55Z",
+      "side": 1,
+      "message": "I will add a migration script when migrating velia-health.service in br2-external",
+      "parentUuid": "dc6b548d_927354fe",
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5ed92965_2767d5ac",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-02-05T19:37:08Z",
       "side": 1,
       "message": "there are not libyang-specific symbols in the headers, so I think this one can be PRIVATE",
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fb8bd21_241571b8",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T11:30:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ed92965_2767d5ac",
       "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -52,6 +88,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e7b6890_e8856bf4",
+        "filename": "src/health/alarms/SystemdUnits.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T11:30:55Z",
+      "side": 1,
+      "message": "Yes, mentioned feature is removed by this patch because one shall ignore failed units by setting up alarm ignores.",
+      "parentUuid": "224a6db7_83f4cde1",
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5083d2e_abf14a3d",
@@ -69,6 +123,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c010abf_89c9b68a",
+        "filename": "src/health/alarms/SystemdUnits.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T11:30:55Z",
+      "side": 1,
+      "message": "Added comment.\n\n(This was copied from the original src/health/inputs/DbusSystemdInput.h, it is missing there as well but I am not going to fix because the file is going to be removed by this patch series anyway).",
+      "parentUuid": "f5083d2e_abf14a3d",
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7848a531_e6d11b40",
@@ -82,6 +154,30 @@
       "writtenOn": "2023-02-05T19:37:08Z",
       "side": 1,
       "message": "nit: tabs",
+      "range": {
+        "startLine": 25,
+        "startChar": 1,
+        "endLine": 25,
+        "endChar": 3
+      },
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0767f958_9ccdf1b3",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T11:30:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7848a531_e6d11b40",
       "range": {
         "startLine": 25,
         "startChar": 1,
@@ -117,6 +213,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "763c6eba_e0923d33",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T11:30:55Z",
+      "side": 1,
+      "message": "Well it does not work on a single dbus connection but I don\u0027t know why. I have spent some time on that and I did not figure out why (after we call create(unit4) the dummy server correctly emits signal that is picked by SystemdUnit client but subsequent call to GetProperty does not recieve a repsonse :( )",
+      "parentUuid": "bb33dd1f_354fa0cd",
+      "range": {
+        "startLine": 69,
+        "startChar": 72,
+        "endLine": 69,
+        "endChar": 144
+      },
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1b0c2c63_b2fb7702",
         "filename": "tests/health_systemd-units.cpp",
         "patchSetId": 11
@@ -128,6 +248,30 @@
       "writtenOn": "2023-02-05T19:37:08Z",
       "side": 1,
       "message": "nit: perhaps something like `systemSimulator`, because this is not about \"event handling\", this is about mocking some systemd-level events. Saying just \"event\" is ambiguous because it might refer to e.g. sysrepo event handling.",
+      "range": {
+        "startLine": 97,
+        "startChar": 16,
+        "endLine": 97,
+        "endChar": 24
+      },
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "febef8d7_c47be360",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T11:30:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b0c2c63_b2fb7702",
       "range": {
         "startLine": 97,
         "startChar": 16,
@@ -151,6 +295,30 @@
       "writtenOn": "2023-02-05T19:37:08Z",
       "side": 1,
       "message": "It\u0027s unclear why the code uses 5ms, 10ms and 25ms intervals. I would prefer if the interval is always the same (get a variable for this). Also, 5ms \"feels\" like way too short of a delay. If the code works, is there actually a need for a sleep? What happens when they got removed? Does the systemd processing somehow combine these events so that they are effectively getting lost?",
+      "range": {
+        "startLine": 100,
+        "startChar": 36,
+        "endLine": 100,
+        "endChar": 40
+      },
+      "revId": "6f7824c980ff99e53ff25b672e58b46baeefb0c3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25a9f9c4_661187aa",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T11:30:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "058333c1_c63a1c60",
       "range": {
         "startLine": 100,
         "startChar": 36,

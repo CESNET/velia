@@ -34,6 +34,24 @@
       "parentUuid": "c2cd1402_af45382e",
       "revId": "32c00c548a3b8f8f3488771633d9c7ff3a87e934",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "415ec1cf_9a94be2b",
+        "filename": "src/health/outputs/AlarmsOutputs.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-13T10:00:58Z",
+      "side": 1,
+      "message": "We aggreed on the call that we shall init everythng in the ctor. If any implementation issue happens in the future, it won\u0027t be hard to make it 2step init again.",
+      "parentUuid": "ba126ec5_925a9004",
+      "revId": "32c00c548a3b8f8f3488771633d9c7ff3a87e934",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

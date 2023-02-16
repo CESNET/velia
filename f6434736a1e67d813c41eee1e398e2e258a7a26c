@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "47bde886_43aad115",
+        "filename": "src/health/alarms/alarms.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-16T15:18:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67042ad9_9ab6b036",
+      "revId": "f6434736a1e67d813c41eee1e398e2e258a7a26c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d16f329e_0b99d608",
@@ -64,6 +82,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c81f4370_9b0724b2",
+        "filename": "src/health/alarms/alarms.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-16T15:18:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6e36bcb_e5e2b372",
+      "range": {
+        "startLine": 43,
+        "startChar": 9,
+        "endLine": 43,
+        "endChar": 10
+      },
+      "revId": "f6434736a1e67d813c41eee1e398e2e258a7a26c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72468311_da195439",
@@ -77,6 +119,24 @@
       "writtenOn": "2023-02-05T20:32:40Z",
       "side": 1,
       "message": "nit: whitespace error (also in other places in this patch)",
+      "revId": "f6434736a1e67d813c41eee1e398e2e258a7a26c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cceb4b08_a8d22592",
+        "filename": "src/health/alarms/alarms.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-16T15:18:57Z",
+      "side": 1,
+      "message": "sigh, I have disabled the automtaic clang-format run on :w and forgot about that, sorry.",
+      "parentUuid": "72468311_da195439",
       "revId": "f6434736a1e67d813c41eee1e398e2e258a7a26c",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

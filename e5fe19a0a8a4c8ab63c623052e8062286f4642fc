@@ -175,6 +175,30 @@
       },
       "revId": "e5fe19a0a8a4c8ab63c623052e8062286f4642fc",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95851418_c427a393",
+        "filename": "tests/sysrepo_sysrepo-ietf-alarms_control.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-16T15:58:10Z",
+      "side": 1,
+      "message": "Not done, probabably a wrong rebase. TODO",
+      "parentUuid": "26fcfdf1_cb944516",
+      "range": {
+        "startLine": 33,
+        "startChar": 7,
+        "endLine": 33,
+        "endChar": 52
+      },
+      "revId": "e5fe19a0a8a4c8ab63c623052e8062286f4642fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

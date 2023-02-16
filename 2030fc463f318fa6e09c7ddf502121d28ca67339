@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "deb04105_f1a3b6a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-16T16:58:19Z",
+      "side": 1,
+      "message": "You might want to include a `Fixes: xxx` footer, but that\u0027s not really that important here.",
+      "revId": "2030fc463f318fa6e09c7ddf502121d28ca67339",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

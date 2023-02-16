@@ -199,6 +199,30 @@
       },
       "revId": "e5fe19a0a8a4c8ab63c623052e8062286f4642fc",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40f2fdce_6ee2ee27",
+        "filename": "tests/sysrepo_sysrepo-ietf-alarms_control.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-16T18:39:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95851418_c427a393",
+      "range": {
+        "startLine": 33,
+        "startChar": 7,
+        "endLine": 33,
+        "endChar": 52
+      },
+      "revId": "e5fe19a0a8a4c8ab63c623052e8062286f4642fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

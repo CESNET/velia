@@ -13,7 +13,7 @@ ZUUL_JOB_NAME_NO_PROJECT=${ZUUL_JOB_NAME##${ZUUL_PROJECT_SHORT_NAME}-}
 ZUUL_SRC_COMMON_PREFIX=${ZUUL_PROJECT_SRC_DIR:0:-${#LEAF_PROJECT_NAME}}
 
 CI_PARALLEL_JOBS=$(awk -vcpu=$(getconf _NPROCESSORS_ONLN) 'BEGIN{printf "%.0f", cpu*1.3+1}')
-CMAKE_OPTIONS="-DTEST_NETWORK_WITH_SUDO=ON"
+CMAKE_OPTIONS=""
 CFLAGS="-O2 -g -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"
 CXXFLAGS="-O2 -g -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"
 LDFLAGS=""

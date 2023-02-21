@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d170bc17_31390c3b",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-21T19:43:24Z",
+      "side": 1,
+      "message": "this should not be needed with CMake; just invoke find_program(), it\u0027s still possible to feed CMake with -DSYSREPO_IETF_ALARMSD_EXECUTABLE\u003d... to override that call",
+      "revId": "c07ca7b0323fa870880a6927b5744b8a5a8c5fd7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

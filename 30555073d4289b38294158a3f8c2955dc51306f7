@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01947a6f_f6dbb4d7",
+        "filename": "src/health/outputs/AlarmsOutputs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-21T17:24:34Z",
+      "side": 1,
+      "message": "please add a comment explaining that this list must be ordered by the second value of the pair (and why)",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 1
+      },
+      "revId": "30555073d4289b38294158a3f8c2955dc51306f7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5d6785f_b4e6a75b",
+        "filename": "src/health/outputs/AlarmsOutputs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-21T17:24:34Z",
+      "side": 1,
+      "message": "nit: let\u0027s order that list the other way round, and iterate from its (current) end. That way you can use an early exit and do less work.",
+      "revId": "30555073d4289b38294158a3f8c2955dc51306f7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "baa65b6f_859ab9da",
+        "filename": "src/health/outputs/AlarmsOutputs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-22T16:51:03Z",
+      "side": 1,
+      "message": "Done, also made the vector const.",
+      "parentUuid": "01947a6f_f6dbb4d7",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 1
+      },
+      "revId": "30555073d4289b38294158a3f8c2955dc51306f7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5d6785f_b4e6a75b",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-02-21T17:24:34Z",
       "side": 1,
       "message": "nit: let\u0027s order that list the other way round, and iterate from its (current) end. That way you can use an early exit and do less work.",
+      "revId": "30555073d4289b38294158a3f8c2955dc51306f7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1e9db05_d7b0982a",
+        "filename": "src/health/outputs/AlarmsOutputs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-22T16:51:03Z",
+      "side": 1,
+      "message": "Good idea. Done.",
+      "parentUuid": "f5d6785f_b4e6a75b",
       "revId": "30555073d4289b38294158a3f8c2955dc51306f7",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

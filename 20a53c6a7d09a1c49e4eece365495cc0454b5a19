@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bca1ba3d_58841fa0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-22T16:51:03Z",
+      "side": 1,
+      "message": "I tried to nuke all the occurrences of the word \"daemon\". Also, I rewrote commit message to reflect current state of sr-ietf-alarms daemon and it also does not mention colors now.",
+      "parentUuid": "30a5f664_9e6478a6",
+      "range": {
+        "startLine": 7,
+        "startChar": 16,
+        "endLine": 7,
+        "endChar": 22
+      },
+      "revId": "20a53c6a7d09a1c49e4eece365495cc0454b5a19",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30e9b792_74fc3d04",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-02-21T17:16:25Z",
       "side": 1,
       "message": "since this class works on an OK/WARNING/ERROR, let\u0027s not mention LED colors here",
+      "range": {
+        "startLine": 39,
+        "startChar": 32,
+        "endLine": 39,
+        "endChar": 35
+      },
+      "revId": "20a53c6a7d09a1c49e4eece365495cc0454b5a19",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd76cdd3_b6578133",
+        "filename": "src/health/outputs/AlarmsOutputs.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-22T16:51:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30e9b792_74fc3d04",
       "range": {
         "startLine": 39,
         "startChar": 32,

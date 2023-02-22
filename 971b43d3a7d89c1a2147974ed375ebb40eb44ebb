@@ -33,6 +33,24 @@
       "message": "wrong whitespace",
       "revId": "971b43d3a7d89c1a2147974ed375ebb40eb44ebb",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2b78bfb_02d4128f",
+        "filename": "src/main-health.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-02-22T16:51:03Z",
+      "side": 1,
+      "message": "Thanks, done.",
+      "parentUuid": "1208ed09_5cdb277c",
+      "revId": "971b43d3a7d89c1a2147974ed375ebb40eb44ebb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c07e08b_1d407267",
+        "filename": "src/health/alarms/alarms.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-24T14:03:17Z",
+      "side": 1,
+      "message": "you can remove these (along with the function argument)",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 5
+      },
+      "revId": "d849df665198c135aa9c17e891dcd1e5a37b309e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eed7cf6e_060b6289",
+        "filename": "src/health/alarms/alarms.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-02-24T14:03:17Z",
+      "side": 1,
+      "message": "I just noticed that we don\u0027t have any helper for automatically building list XPaths. There\u0027s soemthing similar in netconf-cli (instanceToString in src/utils.cpp). Just something to keep in mind for future; it\u0027s a lot of places where the code might benefit from more robust quoting.",
+      "revId": "d849df665198c135aa9c17e891dcd1e5a37b309e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+#include <future>
 #include "Factory.h"
 #include "FspYhPsu.h"
 #include "ietf-hardware/IETFHardware.h"
@@ -14,46 +15,48 @@ using velia::ietf_hardware::data_reader::SensorType;
 
 void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware)
 {
+    auto pduHwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/bus/i2c/devices/2-0025/hwmon");
+
     /*
      * The order of reading hwmon files of the PDU is important.
      * Reading properties from hwmon can trigger page change in the device which can take more than 20ms.
      * We have therefore grouped the properties based on their page location to minimize the page changes.
      * See linux/drivers/hwmon/pmbus/fsp-3y.c
      */
-    auto pdu = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/bus/i2c/devices/2-0025/hwmon");
-
     Group pduReader;
     pduReader.registerDataReader(StaticData("ne:pdu", "ne", {{"class", "iana-hardware:power-supply"}}));
 
-    pduReader.registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:pdu:voltage-12V", "ne:pdu", pdu, 1));
-    pduReader.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-12V", "ne:pdu", pdu, 1));
-    pduReader.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-12V", "ne:pdu", pdu, 1));
-    pduReader.registerDataReader(SysfsValue<SensorType::Temperature>("ne:pdu:temperature-1", "ne:pdu", pdu, 1));
-    pduReader.registerDataReader(SysfsValue<SensorType::Temperature>("ne:pdu:temperature-2", "ne:pdu", pdu, 2));
-    pduReader.registerDataReader(SysfsValue<SensorType::Temperature>("ne:pdu:temperature-3", "ne:pdu", pdu, 3));
+    pduReader.registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:pdu:voltage-12V", "ne:pdu", pduHwmon, 1));
+    pduReader.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-12V", "ne:pdu", pduHwmon, 1));
+    pduReader.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-12V", "ne:pdu", pduHwmon, 1));
+    pduReader.registerDataReader(SysfsValue<SensorType::Temperature>("ne:pdu:temperature-1", "ne:pdu", pduHwmon, 1));
+    pduReader.registerDataReader(SysfsValue<SensorType::Temperature>("ne:pdu:temperature-2", "ne:pdu", pduHwmon, 2));
+    pduReader.registerDataReader(SysfsValue<SensorType::Temperature>("ne:pdu:temperature-3", "ne:pdu", pduHwmon, 3));
 
-    pduReader.registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:pdu:voltage-5V", "ne:pdu", pdu, 2));
-    pduReader.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-5V", "ne:pdu", pdu, 2));
-    pduReader.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-5V", "ne:pdu", pdu, 2));
+    pduReader.registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:pdu:voltage-5V", "ne:pdu", pduHwmon, 2));
+    pduReader.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-5V", "ne:pdu", pduHwmon, 2));
+    pduReader.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-5V", "ne:pdu", pduHwmon, 2));
 
-    pduReader.registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:pdu:voltage-3V3", "ne:pdu", pdu, 3));
-    pduReader.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-3V3", "ne:pdu", pdu, 3));
-    pduReader.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-3V3", "ne:pdu", pdu, 3));
+    pduReader.registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:pdu:voltage-3V3", "ne:pdu", pduHwmon, 3));
+    pduReader.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-3V3", "ne:pdu", pduHwmon, 3));
+    pduReader.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-3V3", "ne:pdu", pduHwmon, 3));
 
-    ietfHardware->registerDataReader(pduReader);
+    auto psu1 = std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0058/hwmon",
+                                                                 "psu1",
+                                                                 std::make_shared<TransientI2C>(2, 0x58, "ym2151e"));
+    auto psu2 = std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0059/hwmon",
+                                                                 "psu2",
+                                                                 std::make_shared<TransientI2C>(2, 0x59, "ym2151e"));
 
-    ietfHardware->registerDataReader([psu =
-            std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0058/hwmon",
-                                                             "psu1",
-                                                             std::make_shared<TransientI2C>(2, 0x58, "ym2151e"))] {
-        return psu->readValues();
-    });
+    ietfHardware->registerDataReader([pduReader = std::move(pduReader), psu1, psu2]() {
+        auto f1 = std::async(std::launch::async, [psu1] { return psu1->readValues(); });
+        auto f2 = std::async(std::launch::async, [psu2] { return psu2->readValues(); });
+        auto f3 = std::async(std::launch::async, [&pduReader] { return pduReader(); });
 
-    ietfHardware->registerDataReader([psu =
-            std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0059/hwmon",
-                                                             "psu2",
-                                                             std::make_shared<TransientI2C>(2, 0x59, "ym2151e"))] {
-        return psu->readValues();
+        auto res = f1.get();
+        res.merge(f2.get());
+        res.merge(f3.get());
+        return res;
     });
 }
 

@@ -1,3 +1,4 @@
+#include <future>
 #include "Factory.h"
 #include "FspYhPsu.h"
 #include "ietf-hardware/IETFHardware.h"
@@ -5,12 +6,12 @@
 #include "ietf-hardware/sysfs/HWMon.h"
 
 namespace velia::ietf_hardware {
-using velia::ietf_hardware::data_reader::StaticData;
-using velia::ietf_hardware::data_reader::Fans;
-using velia::ietf_hardware::data_reader::SysfsValue;
 using velia::ietf_hardware::data_reader::EMMC;
+using velia::ietf_hardware::data_reader::Fans;
 using velia::ietf_hardware::data_reader::Group;
 using velia::ietf_hardware::data_reader::SensorType;
+using velia::ietf_hardware::data_reader::StaticData;
+using velia::ietf_hardware::data_reader::SysfsValue;
 
 void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware)
 {
@@ -40,20 +41,22 @@ void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardwar
     pduGroup.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-3V3", "ne:pdu", pduHwmon, 3));
     pduGroup.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-3V3", "ne:pdu", pduHwmon, 3));
 
-    ietfHardware->registerDataReader(pduGroup);
+    auto psu1 = std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0058/hwmon",
+                                                                 "psu1",
+                                                                 std::make_shared<TransientI2C>(2, 0x58, "ym2151e"));
+    auto psu2 = std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0059/hwmon",
+                                                                 "psu2",
+                                                                 std::make_shared<TransientI2C>(2, 0x59, "ym2151e"));
 
-    ietfHardware->registerDataReader([psu =
-            std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0058/hwmon",
-                                                             "psu1",
-                                                             std::make_shared<TransientI2C>(2, 0x58, "ym2151e"))] {
-        return psu->readValues();
-    });
+    ietfHardware->registerDataReader([pduGroup = std::move(pduGroup), psu1, psu2]() {
+        auto psu1Reader = std::async(std::launch::async, [psu1] { return psu1->readValues(); });
+        auto psu2Reader = std::async(std::launch::async, [psu2] { return psu2->readValues(); });
+        auto pduReader = std::async(std::launch::async, [&pduGroup] { return pduGroup(); });
 
-    ietfHardware->registerDataReader([psu =
-            std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0059/hwmon",
-                                                             "psu2",
-                                                             std::make_shared<TransientI2C>(2, 0x59, "ym2151e"))] {
-        return psu->readValues();
+        auto res = psu1Reader.get();
+        res.merge(psu2Reader.get());
+        res.merge(pduReader.get());
+        return res;
     });
 }
 

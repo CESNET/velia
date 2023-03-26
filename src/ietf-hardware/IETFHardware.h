@@ -132,5 +132,17 @@ public:
     EMMC(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc);
     DataTree operator()() const;
 };
+
+/** @brief Use this when you want to wrap reading several properties in one go and still use it as a single DataReader instance            (e.g. in on thread)
+ */
+struct Group {
+private:
+    std::vector<IETFHardware::DataReader> m_readers;
+
+public:
+    void registerDataReader(const IETFHardware::DataReader& callable);
+    DataTree operator()() const;
+};
+
 }
 }

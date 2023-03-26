@@ -276,5 +276,20 @@ DataTree EMMC::operator()() const
 
     return res;
 }
+
+void Group::registerDataReader(const IETFHardware::DataReader& callable)
+{
+    m_readers.emplace_back(callable);
+}
+
+DataTree Group::operator()() const
+{
+    DataTree res;
+    for (const auto& reader : m_readers) {
+        res.merge(reader());
+    }
+    return res;
+}
+
 }
 }

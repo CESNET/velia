@@ -130,13 +130,13 @@ void FspYhPsu::createPower()
     m_properties.emplace_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-2", prefix, m_hwmon, 2));
     m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-in", prefix, m_hwmon, 1));
     m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-12V", prefix, m_hwmon, 2));
-    m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-5Vsb", prefix, m_hwmon, 3));
     m_properties.emplace_back(SysfsValue<SensorType::VoltageAC>(prefix + ":voltage-in", prefix, m_hwmon, 1));
     m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-12V", prefix, m_hwmon, 2));
-    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-5Vsb", prefix, m_hwmon, 3));
     m_properties.emplace_back(SysfsValue<SensorType::Power>(prefix + ":power-in", prefix, m_hwmon, 1));
     m_properties.emplace_back(SysfsValue<SensorType::Power>(prefix + ":power-out", prefix, m_hwmon, 2));
     m_properties.emplace_back(Fans(prefix + ":fan", prefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-5Vsb", prefix, m_hwmon, 3));
+    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-5Vsb", prefix, m_hwmon, 3));
 }
 
 DataTree FspYhPsu::readValues()

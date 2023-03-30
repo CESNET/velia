@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "468fc306_dacaabc1",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-03-30T15:52:28Z",
+      "side": 1,
+      "message": "nit: feel like making these identifiers a bit more descriptive? I was thinking that keeping the `pdu` as `pdu` above, and calling the readers `XXXreader` here, for example.",
+      "range": {
+        "startLine": 52,
+        "startChar": 13,
+        "endLine": 52,
+        "endChar": 15
+      },
+      "revId": "b2cc4ef72c20cc25dd6a1e606e5af92914a67c4e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

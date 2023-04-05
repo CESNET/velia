@@ -23,3 +23,15 @@
         name: docopt-cpp-devel
         state: present
       become: true
+
+    - name: install date-devel
+      package:
+        name: date-devel
+        state: present
+      become: true
+
+    - name: install libdate-tz
+      package:
+        name: libdate-tz
+        state: present
+      become: true

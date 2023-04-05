@@ -113,11 +113,6 @@ add_library(velia-health STATIC
     src/health/alarms/alarms.h
     src/health/alarms/SystemdUnits.cpp
     src/health/alarms/SystemdUnits.h
-    src/health/inputs/AbstractInput.cpp
-    src/health/inputs/DbusSemaphoreInput.cpp
-    src/health/inputs/DbusSystemdInput.cpp
-    src/health/manager/AbstractManager.cpp
-    src/health/manager/StateManager.cpp
     src/health/outputs/AlarmsOutputs.cpp
     src/health/outputs/AlarmsOutputs.h
     src/health/outputs/LedSysfsDriver.cpp
@@ -423,11 +418,6 @@ if(BUILD_TESTING)
         add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
     endforeach()
 
-    velia_test(NAME health_state-manager LIBRARIES velia-health)
-    velia_test(NAME health_input-semaphore LIBRARIES velia-health DbusTesting)
-    velia_test(NAME health_input-systemd LIBRARIES velia-health DbusTesting)
-    velia_test(NAME health_output-led LIBRARIES velia-health)
-
     velia_test(NAME system_rauc LIBRARIES velia-system DbusTesting RESOURCE_LOCK dbus-rauc)
     velia_test(NAME system_lldp LIBRARIES velia-system DbusTesting)
 
@@ -505,12 +495,30 @@ if(BUILD_TESTING)
     velia_test(NAME sysrepo-firewall LIBRARIES velia-firewall FIXTURE fixture_sysrepo-firewall)
 
     set(fixture_sysrepo-alarms
-        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-alarms@2019-09-11.yang
+        YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-alarms@2019-09-11.yang FEATURE alarm-shelving FEATURE alarm-summary
         YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/velia-alarms@2022-07-12.yang
         YANG ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/sysrepo-ietf-alarms@2022-02-17.yang
     )
-	velia_test(NAME health_systemd-units LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
-	velia_test(NAME sysrepo_health-led-alarms LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
+    velia_test(NAME health_systemd-units LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
+    velia_test(NAME sysrepo_health-led-alarms LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
+
+    find_program(SYSREPO_IETF_ALARMSD_EXECUTABLE sysrepo-ietf-alarmsd)
+    if(SYSREPO_IETF_ALARMSD_EXECUTABLE)
+        velia_test(NAME sysrepo_ietf-alarms LIBRARIES velia-health DbusTesting FIXTURE fixture_sysrepo-alarms)
+
+        add_test(NAME sysrepo_ietf-alarms-start COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_sysrepo-ietf-alarms_control.sh start ${SYSREPO_IETF_ALARMSD_EXECUTABLE} ${CMAKE_BINARY_DIR}/sysrepo-ietf-alarmsd.log)
+        add_test(NAME sysrepo_ietf-alarms-stop  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysrepo_sysrepo-ietf-alarms_control.sh stop)
+        set_property(TEST sysrepo_ietf-alarms-start sysrepo_ietf-alarms-stop test-sysrepo_ietf-alarms APPEND PROPERTY ENVIRONMENT
+            "SYSREPO_REPOSITORY_PATH=${CMAKE_CURRENT_BINARY_DIR}/test_repositories/test_sysrepo_ietf-alarms"
+            "SYSREPO_SHM_PREFIX=velia_test_sysrepo_ietf-alarms"
+            )
+        set_tests_properties(sysrepo_ietf-alarms-start PROPERTIES FIXTURES_SETUP   sysrepo-ietf-alarmsd)
+        set_tests_properties(sysrepo_ietf-alarms-stop  PROPERTIES FIXTURES_CLEANUP sysrepo-ietf-alarmsd)
+        set_property(TEST test-sysrepo_ietf-alarms APPEND PROPERTY FIXTURES_REQUIRED sysrepo-ietf-alarmsd)
+
+        set_tests_properties(sysrepo_ietf-alarms-start PROPERTIES DEPENDS sysrepo:prep:sysrepo_ietf-alarms)
+        set_tests_properties(sysrepo:clean:sysrepo_ietf-alarms PROPERTIES DEPENDS sysrepo_ietf-alarms-stop)
+    endif()
 endif()
 
 if(WITH_DOCS)

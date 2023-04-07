@@ -1,5 +1,5 @@
-project(velia LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.19)
+project(velia LANGUAGES CXX)
 cmake_policy(SET CMP0109 NEW)
 
 # Build options

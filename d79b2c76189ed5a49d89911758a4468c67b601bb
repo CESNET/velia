@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a811d9e_99e9f865",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T20:12:54Z",
+      "side": 1,
+      "message": "nit: personally, I think this is a bit too verbose; it would be sufficient, IMHO, to say just something like:\n \nWe will have to raise alarms in future, so prepare for that by\nreading the sensors periodically and switch to pushing the ops\ndata.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 23
+      },
+      "revId": "d79b2c76189ed5a49d89911758a4468c67b601bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea53b38f_2c522384",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T20:12:54Z",
+      "side": 1,
+      "message": "This is racy. If the background thread runs \"too quickly\", these expectations will be consumed after a single loop invocation, so trompeloeil will fail with an \"unexpected call to ...\". Use REQUIRE_CALL(...).TIMES(AT_LEAST(1)), please.",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 36
+      },
+      "revId": "d79b2c76189ed5a49d89911758a4468c67b601bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfafe2e7_c2cc4410",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T20:12:54Z",
+      "side": 1,
+      "message": "Please add a comment that this is just to let the background thread run at least once.",
+      "revId": "d79b2c76189ed5a49d89911758a4468c67b601bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3063c528_046cf46b",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T20:12:54Z",
+      "side": 1,
+      "message": "This is racy, too. The background thread is running, and this code has no control over when exactly the expectations are going to be consumed. It\u0027s quite possible that the background thread will be woken up when only half of these expectations have been set up, for example (unlikely with a 1500ms sleep, but...). Also, these REQUIRE_CALL macros set up a *one-time* change of data, and once they\u0027ve been read once, the background thread will start feeding wrong values again (assuming you implement my suggestion from lines 48-66).\n\nThere are multiple ways of fixing that:\n\n- switch to .TIMES(AT_LEAST(1)) here as well,\n- set up the initial expectations with a LR_RETURN which reads from an atomic variable, and change that atomic variable here (also, you can set a side effect with a latch/barrier for synchronization between the test and the code-under-test which does not poll needlessly).\n\nThis will require abandoning the `waitForCompletionAndBitMore()`.",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 467,
+        "endChar": 115
+      },
+      "revId": "d79b2c76189ed5a49d89911758a4468c67b601bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1574e910_157ecb06",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T20:12:54Z",
+      "side": 1,
+      "message": "it is not clear to me what exactly this code is testing",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 522,
+        "endChar": 9
+      },
+      "revId": "d79b2c76189ed5a49d89911758a4468c67b601bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -5,6 +5,8 @@
  *
  */
 
+#include <chrono>
+#include <thread>
 #include "Sysrepo.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
@@ -12,29 +14,48 @@
 namespace velia::ietf_hardware::sysrepo {
 
 namespace {
-
-const auto IETF_HARDWARE_MODULE_NAME = "ietf-hardware"s;
-const auto IETF_HARDWARE_MODULE_PREFIX = "/"s + IETF_HARDWARE_MODULE_NAME + ":hardware/*"s;
-
+using namespace std::chrono_literals;
+const auto POLL_PERIOD = 1500ms;
 }
 
-/** @brief The constructor expects the HardwareState instance which will provide the actual hardware state data */
+/** @brief The constructor expects the HardwareState instance which will provide the actual hardware state data and valid sd_event object */
 Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwState)
-    : m_hwState(std::move(hwState))
-    , m_srSubscribe()
+    : m_Log(spdlog::get("hardware"))
+    , m_session(std::move(session))
+    , m_hwState(std::move(hwState))
+    , m_quit(false)
+    , m_pollThread([&]() {
+        m_Log->trace("Poll thread started");
+
+        std::map<std::string, std::string> hwStateValues;
+
+        while (!m_quit) {
+            m_Log->trace("IetfHardware poll");
+
+            std::vector<std::string> toDelete;
+            auto newValues = m_hwState->process();
+            for (const auto& [oldKey, oldVal] : hwStateValues) {
+                if (!newValues.contains(oldKey)) {
+                    toDelete.emplace_back(oldKey);
+                    m_Log->trace("deleting {}", oldKey);
+                }
+            }
+
+            hwStateValues = std::move(newValues);
+
+            utils::valuesPush(hwStateValues, toDelete, m_session, ::sysrepo::Datastore::Operational);
+
+            std::this_thread::sleep_for(POLL_PERIOD);
+        }
+        m_Log->trace("Poll thread stopped");
+    })
 {
-    ::sysrepo::OperGetCb cb = [this](::sysrepo::Session session, auto, auto, auto, auto, auto, auto& parent) {
-        auto hwStateValues = m_hwState->process();
-        utils::valuesToYang(hwStateValues, {}, session, parent);
+}
 
-        spdlog::get("hardware")->trace("Pushing to sysrepo (JSON): {}", *parent->printStr(::libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
-        return ::sysrepo::ErrorCode::Ok;
-    };
-
-    m_srSubscribe = session.onOperGet(
-        IETF_HARDWARE_MODULE_NAME,
-        cb,
-        IETF_HARDWARE_MODULE_PREFIX,
-        ::sysrepo::SubscribeOptions::Passive | ::sysrepo::SubscribeOptions::OperMerge);
+Sysrepo::~Sysrepo()
+{
+    m_Log->trace("Requesting poll thread stop");
+    m_quit = true;
+    m_pollThread.join();
 }
 }

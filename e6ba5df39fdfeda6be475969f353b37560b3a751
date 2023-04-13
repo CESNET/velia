@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "424f1521_07ac9789",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T20:19:37Z",
+      "side": 1,
+      "message": "Ah, I see that I completely misunderstood the purpose of that \"psu\" change in the previous patch. I thought that it was just fixing some bug, but it was actually a part of the testcase for disappearing values. I think this should be squashed to the previous commit because the original version of the code supported this use case already.\n\nBUT, please document what this test code is doing, it was not obvious to me at all.",
+      "revId": "e6ba5df39fdfeda6be475969f353b37560b3a751",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "861823b4_f44bc277",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T20:19:37Z",
+      "side": 1,
+      "message": "anything which tries to count the number of invocations is prone to races (even if \"unlikely\" due to a very large waiting time of the background thread)",
+      "revId": "e6ba5df39fdfeda6be475969f353b37560b3a751",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

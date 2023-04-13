@@ -84,6 +84,30 @@ TEST_CASE("HardwareState")
     ietfHardware->registerDataReader(SysfsValue<SensorType::Current>("ne:ctrl:current", "ne:ctrl", sysfsCurrent, 1));
     ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
 
+    /* Some data readers (like our PSU reader, see the FspYhPsu test) can stop returning data.
+     * This means we have to erase such data from the sysrepo operational ds.
+     * We test such situation via the following data reader which does returns data when queried
+     * for the first time and third time.
+     */
+    struct DisappearingDataReader {
+        int seq = 0;
+
+        velia::ietf_hardware::DataTree operator()()
+        {
+            switch (seq++) {
+            case 0:
+            case 2:
+                return {{"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
+                        {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"}};
+            case 1:
+                return {};
+            default:
+                REQUIRE(false);
+            }
+        }
+    };
+    ietfHardware->registerDataReader(DisappearingDataReader());
+
     SECTION("Test HardwareState without sysrepo")
     {
         std::map<std::string, std::string> expected = {
@@ -205,6 +229,9 @@ TEST_CASE("HardwareState")
             {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value-scale", "units"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value-type", "other"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/units-display", "percent"},
+
+            {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
+            {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
         };
 
         // exclude last-change node
@@ -403,6 +430,11 @@ TEST_CASE("HardwareState")
             {"[name='ne:ctrl:emmc:lifetime']/sensor-data/value-scale", "units"},
             {"[name='ne:ctrl:emmc:lifetime']/sensor-data/value-type", "other"},
             {"[name='ne:ctrl:emmc:lifetime']/sensor-data/units-display", "percent"},
+
+            {"[name='ne:psu']", ""},
+            {"[name='ne:psu']/name", "ne:psu"},
+            {"[name='ne:psu']/class", "iana-hardware:power-supply"},
+            {"[name='ne:psu']/parent", "ne"},
         };
 
         waitForCompletionAndBitMore(seq1);
@@ -454,6 +486,11 @@ TEST_CASE("HardwareState")
         attributesEMMC = {{"life_time"s, "50"s}};
         FAKE_EMMC(emmc, attributesEMMC);
         expected["[name='ne:ctrl:emmc:lifetime']/sensor-data/value"] = "50";
+
+        expected.erase("[name='ne:psu']");
+        expected.erase("[name='ne:psu']/name");
+        expected.erase("[name='ne:psu']/class");
+        expected.erase("[name='ne:psu']/parent");
 
         waitForCompletionAndBitMore(seq1);
 
@@ -512,6 +549,11 @@ TEST_CASE("HardwareState")
         attributesEMMC = {{"life_time"s, "50"s}};
         FAKE_EMMC(emmc, attributesEMMC);
         expected["[name='ne:ctrl:emmc:lifetime']/sensor-data/value"] = "50";
+
+        expected["[name='ne:psu']"] = "";
+        expected["[name='ne:psu']/name"] = "ne:psu";
+        expected["[name='ne:psu']/class"] = "iana-hardware:power-supply";
+        expected["[name='ne:psu']/parent"] = "ne";
 
         waitForCompletionAndBitMore(seq1);
 

@@ -26,11 +26,23 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
     , m_pollThread([&]() {
         m_Log->trace("Poll thread started");
 
+        std::map<std::string, std::string> hwStateValues;
+
         while (!m_quit) {
             m_Log->trace("IetfHardware poll");
 
-            auto hwStateValues = m_hwState->process();
-            utils::valuesPush(hwStateValues, {}, m_session, ::sysrepo::Datastore::Operational);
+            /* Some data readers can stop returning data in some cases (e.g. ejected PSU) */
+            std::vector<std::string> toDelete;
+            auto newValues = m_hwState->process();
+            for (const auto& [oldKey, oldVal] : hwStateValues) {
+                if (!newValues.contains(oldKey)) {
+                    toDelete.emplace_back(oldKey);
+                    m_Log->trace("IetfHardware did not provide key '{}' which was provided in previous iteration. Removing.", oldKey);
+                }
+            }
+
+            hwStateValues = std::move(newValues);
+            utils::valuesPush(hwStateValues, toDelete, m_session, ::sysrepo::Datastore::Operational);
 
             std::this_thread::sleep_for(POLL_PERIOD);
         }

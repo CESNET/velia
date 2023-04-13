@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "082181ef_beb4651d",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T16:00:45Z",
+      "side": 0,
+      "message": "nit: extra patch?",
+      "revId": "698fabc7d23ecbe823bddf52d7120c0f9d6f4f7a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

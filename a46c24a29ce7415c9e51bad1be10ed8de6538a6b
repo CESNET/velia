@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e23e6cef_449348ff",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T16:00:45Z",
+      "side": 1,
+      "message": "no event loop",
+      "range": {
+        "startLine": 21,
+        "startChar": 112,
+        "endLine": 21,
+        "endChar": 137
+      },
+      "revId": "a46c24a29ce7415c9e51bad1be10ed8de6538a6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "badea8d0_dbc481eb",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T16:00:45Z",
+      "side": 1,
+      "message": "redundant now that it\u0027s just a background thread?",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 1
+      },
+      "revId": "a46c24a29ce7415c9e51bad1be10ed8de6538a6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2ca6a9b_20e169dc",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T16:00:45Z",
+      "side": 1,
+      "message": "this needs a comment",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 9
+      },
+      "revId": "a46c24a29ce7415c9e51bad1be10ed8de6538a6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03b9f7dc_20522815",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-13T16:00:45Z",
+      "side": 1,
+      "message": "in another patch, please",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 78
+      },
+      "revId": "a46c24a29ce7415c9e51bad1be10ed8de6538a6b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

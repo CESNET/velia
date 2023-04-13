@@ -1,7 +1,7 @@
-#include <iostream>
 #include "trompeloeil_doctest.h"
 #include <fstream>
 #include <future>
+#include <iostream>
 #include <iterator>
 #include "fs-helpers/utils.h"
 #include "ietf-hardware/FspYhPsu.h"
@@ -46,10 +46,10 @@ TEST_CASE("HardwareState")
     };
     FAKE_EMMC(emmc, attributesEMMC);
 
-    REQUIRE_CALL(*fans, attribute("fan1_input"s)).RETURN( 253);
-    REQUIRE_CALL(*fans, attribute("fan2_input"s)).RETURN( 0);
-    REQUIRE_CALL(*fans, attribute("fan3_input"s)).RETURN( 1280);
-    REQUIRE_CALL(*fans, attribute("fan4_input"s)).RETURN( 666);
+    REQUIRE_CALL(*fans, attribute("fan1_input"s)).RETURN(253);
+    REQUIRE_CALL(*fans, attribute("fan2_input"s)).RETURN(0);
+    REQUIRE_CALL(*fans, attribute("fan3_input"s)).RETURN(1280);
+    REQUIRE_CALL(*fans, attribute("fan4_input"s)).RETURN(666);
 
     REQUIRE_CALL(*sysfsTempFront, attribute("temp1_input")).RETURN(30800);
     REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800);
@@ -64,11 +64,11 @@ TEST_CASE("HardwareState")
     attributesEMMC = {{"life_time"s, "40"s}};
     FAKE_EMMC(emmc, attributesEMMC);
 
+    using velia::ietf_hardware::data_reader::EMMC;
+    using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
     using velia::ietf_hardware::data_reader::StaticData;
-    using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SysfsValue;
-    using velia::ietf_hardware::data_reader::EMMC;
     // register components into hw state
     ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
     ietfHardware->registerDataReader(StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
@@ -443,9 +443,7 @@ public:
         std::filesystem::create_directory(m_fakeHwmonRoot);
         std::filesystem::create_directory(m_fakeHwmonRoot / ("hwmon" + std::to_string(m_hwmonNo)));
 
-        for (const auto& filename : {"name", "temp1_input", "temp2_input", "curr1_input", "curr2_input", "curr3_input",
-                "in1_input", "in2_input", "in3_input", "power1_input", "power2_input", "fan1_input"} )
-        {
+        for (const auto& filename : {"name", "temp1_input", "temp2_input", "curr1_input", "curr2_input", "curr3_input", "in1_input", "in2_input", "in3_input", "power1_input", "power2_input", "fan1_input"}) {
             std::ofstream ofs(m_fakeHwmonRoot / ("hwmon" + std::to_string(m_hwmonNo)) / filename);
             // I don't really care about the values here, I just need the HWMon class to think that the files exist.
             ofs << 0 << "\n";
@@ -459,7 +457,6 @@ public:
     }
 
 private:
-
     std::filesystem::path m_fakeHwmonRoot;
     mutable std::atomic<int> m_hwmonNo = 1;
 };

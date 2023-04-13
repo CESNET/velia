@@ -11,7 +11,9 @@
 #include <memory>
 #include <optional>
 #include <sysrepo-cpp/Session.hpp>
+#include <thread>
 #include "ietf-hardware/IETFHardware.h"
+#include "utils/log-fwd.h"
 
 namespace velia::ietf_hardware::sysrepo {
 
@@ -26,9 +28,13 @@ namespace velia::ietf_hardware::sysrepo {
 class Sysrepo {
 public:
     Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> driver);
+    ~Sysrepo();
 
 private:
+    velia::Log m_Log;
+    ::sysrepo::Session m_session;
     std::shared_ptr<IETFHardware> m_hwState;
-    std::optional<::sysrepo::Subscription> m_srSubscribe;
+    std::atomic<bool> m_quit;
+    std::thread m_pollThread;
 };
 }

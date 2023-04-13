@@ -6,6 +6,7 @@
  */
 
 #include <chrono>
+#include <sysrepo-cpp/Connection.hpp>
 #include "Sysrepo.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
@@ -25,11 +26,15 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
     , m_quit(false)
     , m_pollThread([&]() {
         m_Log->trace("Poll thread started");
+        auto conn = m_session.getConnection();
 
         while (!m_quit) {
             m_Log->trace("IetfHardware poll");
 
             auto hwStateValues = m_hwState->process();
+
+            /* Some data readers can stop returning data in some cases (e.g. ejected PSU). Delete tree before. */
+            conn.discardOperationalChanges("/ietf-hardware:hardware");
             utils::valuesPush(hwStateValues, {}, m_session, ::sysrepo::Datastore::Operational);
 
             std::this_thread::sleep_for(POLL_PERIOD);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 CESNET, https://photonics.cesnet.cz/
+ * Copyright (C) 2020-2023 CESNET, https://photonics.cesnet.cz/
  *
  * Written by Tomáš Pecka <tomas.pecka@fit.cvut.cz>
  *
@@ -11,30 +11,33 @@
 
 namespace velia::ietf_hardware::sysrepo {
 
-namespace {
+/** @brief The constructor expects the HardwareState instance which will provide the actual hardware state data and the poll interval */
+Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwState, std::chrono::microseconds pollInterval)
+    : m_Log(spdlog::get("hardware"))
+    , m_pollInterval(std::move(pollInterval))
+    , m_session(std::move(session))
+    , m_hwState(std::move(hwState))
+    , m_quit(false)
+    , m_pollThread([&]() {
+        m_Log->trace("Poll thread started");
 
-const auto IETF_HARDWARE_MODULE_NAME = "ietf-hardware"s;
-const auto IETF_HARDWARE_MODULE_PREFIX = "/"s + IETF_HARDWARE_MODULE_NAME + ":hardware/*"s;
+        while (!m_quit) {
+            m_Log->trace("IetfHardware poll");
 
+            auto hwStateValues = m_hwState->process();
+            utils::valuesPush(hwStateValues, {}, m_session, ::sysrepo::Datastore::Operational);
+
+            std::this_thread::sleep_for(m_pollInterval);
+        }
+        m_Log->trace("Poll thread stopped");
+    })
+{
 }
 
-/** @brief The constructor expects the HardwareState instance which will provide the actual hardware state data */
-Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwState)
-    : m_hwState(std::move(hwState))
-    , m_srSubscribe()
+Sysrepo::~Sysrepo()
 {
-    ::sysrepo::OperGetCb cb = [this](::sysrepo::Session session, auto, auto, auto, auto, auto, auto& parent) {
-        auto hwStateValues = m_hwState->process();
-        utils::valuesToYang(hwStateValues, {}, session, parent);
-
-        spdlog::get("hardware")->trace("Pushing to sysrepo (JSON): {}", *parent->printStr(::libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
-        return ::sysrepo::ErrorCode::Ok;
-    };
-
-    m_srSubscribe = session.onOperGet(
-        IETF_HARDWARE_MODULE_NAME,
-        cb,
-        IETF_HARDWARE_MODULE_PREFIX,
-        ::sysrepo::SubscribeOptions::Passive | ::sysrepo::SubscribeOptions::OperMerge);
+    m_Log->trace("Requesting poll thread stop");
+    m_quit = true;
+    m_pollThread.join();
 }
 }

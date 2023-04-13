@@ -1,3 +1,4 @@
+#include <chrono>
 #include <docopt.h>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
@@ -8,8 +9,8 @@
 #include "ietf-hardware/sysrepo/Sysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/journal.h"
-#include "utils/log.h"
 #include "utils/log-init.h"
+#include "utils/log.h"
 #include "utils/sysrepo.h"
 #include "utils/waitUntilSignalled.h"
 
@@ -64,7 +65,7 @@ int main(int argc, char* argv[])
             ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
         }
 
-        auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSess, ietfHardware);
+        auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSess, ietfHardware, std::chrono::milliseconds{1500});
 
         waitUntilSignaled();
 

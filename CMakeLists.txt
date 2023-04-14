@@ -424,6 +424,7 @@ if(BUILD_TESTING)
     velia_test(NAME hardware_emmc LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_hwmon LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_fspyhpsu LIBRARIES velia-ietf-hardware FsTestUtils)
+    velia_test(NAME hardware_ietf-hardware LIBRARIES velia-ietf-hardware)
 
     set(fixture_sysrepo-czechlight-lldp YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)
     velia_test(NAME sysrepo_system-lldp LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-czechlight-lldp)
@@ -458,7 +459,7 @@ if(BUILD_TESTING)
                COMMAND ${UNSHARE_EXECUTABLE} --net --mount --map-root-user ${UNSHARE_MAP_GROUP_ARG} sh -c "set -ex $<SEMICOLON> ${MOUNT_EXECUTABLE} -t sysfs none /sys $<SEMICOLON> $<TARGET_FILE:test-sysrepo_interfaces-libnl>")
 
     set(fixture_sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
-    velia_test(NAME hardware_ietf-hardware LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo FsTestUtils FIXTURE fixture_sysrepo-ietf-hardware)
+    velia_test(NAME sysrepo_ietf-hardware LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo FsTestUtils FIXTURE fixture_sysrepo-ietf-hardware)
 
     # ctest dance for sysrepo_two-daemons: compile daemon, create a fixture for test, add the test into the fixture
     add_executable(test-sysrepo_test_merge-daemon ${CMAKE_SOURCE_DIR}/tests/sysrepo_two-daemons_daemon.cpp)
@@ -476,7 +477,7 @@ if(BUILD_TESTING)
     set_property(TEST test-sysrepo_two-daemons APPEND PROPERTY FIXTURES_REQUIRED sysrepo:two-daemons)
 
     # ensure we run two-daemons merge test and ietf-hardware test sequentially and don't cleanup before everything ends
-    set_tests_properties(sysrepo_test_merge-start PROPERTIES DEPENDS test-hardware_ietf-hardware)
+    set_tests_properties(sysrepo_test_merge-start PROPERTIES DEPENDS test-sysrepo_ietf-hardware)
     set_tests_properties(sysrepo:clean:sysrepo_two-daemons PROPERTIES DEPENDS sysrepo_test_merge-stop)
 
     set(fixture_sysrepo-firewall

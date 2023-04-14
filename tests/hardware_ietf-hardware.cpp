@@ -1,10 +1,8 @@
 #include "trompeloeil_doctest.h"
 #include "ietf-hardware/IETFHardware.h"
-#include "ietf-hardware/sysrepo/Sysrepo.h"
 #include "mock/ietf_hardware.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
-#include "test_sysrepo_helpers.h"
 
 using namespace std::literals;
 
@@ -67,287 +65,108 @@ TEST_CASE("HardwareState")
     ietfHardware->registerDataReader(SysfsValue<SensorType::Current>("ne:ctrl:current", "ne:ctrl", sysfsCurrent, 1));
     ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
 
-    SECTION("Test HardwareState without sysrepo")
-    {
-        std::map<std::string, std::string> expected = {
-            {"/ietf-hardware:hardware/component[name='ne']/class", "iana-hardware:chassis"},
-            {"/ietf-hardware:hardware/component[name='ne']/mfg-name", "CESNET"},
+    std::map<std::string, std::string> expected = {
+        {"/ietf-hardware:hardware/component[name='ne']/class", "iana-hardware:chassis"},
+        {"/ietf-hardware:hardware/component[name='ne']/mfg-name", "CESNET"},
 
-            {"/ietf-hardware:hardware/component[name='ne:fans']/class", "iana-hardware:module"},
-            {"/ietf-hardware:hardware/component[name='ne:fans']/parent", "ne"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan1']/class", "iana-hardware:fan"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan1']/parent", "ne:fans"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/parent", "ne:fans:fan1"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value", "253"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value-scale", "units"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value-type", "rpm"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan2']/class", "iana-hardware:fan"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan2']/parent", "ne:fans"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/parent", "ne:fans:fan2"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value-scale", "units"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value-type", "rpm"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan3']/class", "iana-hardware:fan"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan3']/parent", "ne:fans"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/parent", "ne:fans:fan3"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value", "1280"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value-scale", "units"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value-type", "rpm"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan4']/class", "iana-hardware:fan"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan4']/parent", "ne:fans"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/parent", "ne:fans:fan4"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value", "666"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value-scale", "units"},
-            {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value-type", "rpm"},
+        {"/ietf-hardware:hardware/component[name='ne:fans']/class", "iana-hardware:module"},
+        {"/ietf-hardware:hardware/component[name='ne:fans']/parent", "ne"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan1']/class", "iana-hardware:fan"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan1']/parent", "ne:fans"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/parent", "ne:fans:fan1"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value", "253"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value-scale", "units"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value-type", "rpm"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan2']/class", "iana-hardware:fan"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan2']/parent", "ne:fans"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/parent", "ne:fans:fan2"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value-scale", "units"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value-type", "rpm"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan3']/class", "iana-hardware:fan"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan3']/parent", "ne:fans"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/parent", "ne:fans:fan3"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value", "1280"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value-scale", "units"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value-type", "rpm"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan4']/class", "iana-hardware:fan"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan4']/parent", "ne:fans"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/parent", "ne:fans:fan4"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value", "666"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value-scale", "units"},
+        {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value-type", "rpm"},
 
-            {"/ietf-hardware:hardware/component[name='ne:ctrl']/parent", "ne"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl']/class", "iana-hardware:module"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl']/parent", "ne"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl']/class", "iana-hardware:module"},
 
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/parent", "ne:ctrl"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value", "41800"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value-scale", "milli"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value-type", "celsius"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/parent", "ne:ctrl"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value", "41800"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value-scale", "milli"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value-type", "celsius"},
 
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/parent", "ne:ctrl"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value", "14000000"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-scale", "micro"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-type", "watts"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/parent", "ne:ctrl"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value", "14000000"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-scale", "micro"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value-type", "watts"},
 
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/parent", "ne:ctrl"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value", "220000"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-scale", "milli"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-type", "volts-AC"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/parent", "ne:ctrl"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value", "12000"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-scale", "milli"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-type", "volts-DC"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/parent", "ne:ctrl"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value", "220000"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-scale", "milli"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value-type", "volts-AC"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/parent", "ne:ctrl"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value", "12000"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-scale", "milli"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value-type", "volts-DC"},
 
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/parent", "ne:ctrl"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value", "200"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-scale", "milli"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-type", "amperes"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/parent", "ne:ctrl"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value", "200"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-scale", "milli"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value-type", "amperes"},
 
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/parent", "ne:ctrl"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/class", "iana-hardware:module"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/serial-num", "0x00a8808d"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/mfg-date", "2017-02-01T00:00:00-00:00"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/model-name", "8GME4R"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/parent", "ne:ctrl:emmc"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value", "40"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value-scale", "units"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value-type", "other"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/units-display", "percent"},
-        };
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/parent", "ne:ctrl"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/class", "iana-hardware:module"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/serial-num", "0x00a8808d"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/mfg-date", "2017-02-01T00:00:00-00:00"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc']/model-name", "8GME4R"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/class", "iana-hardware:sensor"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/parent", "ne:ctrl:emmc"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/oper-status", "ok"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value", "40"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value-precision", "0"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value-scale", "units"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value-type", "other"},
+        {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/units-display", "percent"},
+    };
 
-        // exclude last-change node
-        auto result = ietfHardware->process();
-        result.erase(modulePrefix + "/last-change");
-        REQUIRE(result == expected);
-    }
-
-    SECTION("Test IETF Hardware from sysrepo's view")
-    {
-        TEST_SYSREPO_INIT_LOGS;
-        TEST_SYSREPO_INIT;
-        TEST_SYSREPO_INIT_CLIENT;
-
-        auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSess, ietfHardware);
-
-        SECTION("test last-change")
-        {
-            // at least check that there is some timestamp
-            REQUIRE(dataFromSysrepo(client, modulePrefix, sysrepo::Datastore::Operational).count("/last-change") > 0);
-        }
-
-        SECTION("test components")
-        {
-            std::map<std::string, std::string> expected = {
-                {"[name='ne']", ""},
-                {"[name='ne']/name", "ne"},
-                {"[name='ne']/class", "iana-hardware:chassis"},
-                {"[name='ne']/mfg-name", "CESNET"},
-
-                {"[name='ne:fans']", ""},
-                {"[name='ne:fans']/class", "iana-hardware:module"},
-                {"[name='ne:fans']/name", "ne:fans"},
-                {"[name='ne:fans']/parent", "ne"},
-                {"[name='ne:fans:fan1']", ""},
-                {"[name='ne:fans:fan1']/class", "iana-hardware:fan"},
-                {"[name='ne:fans:fan1']/name", "ne:fans:fan1"},
-                {"[name='ne:fans:fan1']/parent", "ne:fans"},
-                {"[name='ne:fans:fan1:rpm']", ""},
-                {"[name='ne:fans:fan1:rpm']/class", "iana-hardware:sensor"},
-                {"[name='ne:fans:fan1:rpm']/name", "ne:fans:fan1:rpm"},
-                {"[name='ne:fans:fan1:rpm']/parent", "ne:fans:fan1"},
-                {"[name='ne:fans:fan1:rpm']/sensor-data", ""},
-                {"[name='ne:fans:fan1:rpm']/sensor-data/oper-status", "ok"},
-                {"[name='ne:fans:fan1:rpm']/sensor-data/value", "253"},
-                {"[name='ne:fans:fan1:rpm']/sensor-data/value-precision", "0"},
-                {"[name='ne:fans:fan1:rpm']/sensor-data/value-scale", "units"},
-                {"[name='ne:fans:fan1:rpm']/sensor-data/value-type", "rpm"},
-                {"[name='ne:fans:fan2']", ""},
-                {"[name='ne:fans:fan2']/class", "iana-hardware:fan"},
-                {"[name='ne:fans:fan2']/name", "ne:fans:fan2"},
-                {"[name='ne:fans:fan2']/parent", "ne:fans"},
-                {"[name='ne:fans:fan2:rpm']", ""},
-                {"[name='ne:fans:fan2:rpm']/class", "iana-hardware:sensor"},
-                {"[name='ne:fans:fan2:rpm']/name", "ne:fans:fan2:rpm"},
-                {"[name='ne:fans:fan2:rpm']/parent", "ne:fans:fan2"},
-                {"[name='ne:fans:fan2:rpm']/sensor-data", ""},
-                {"[name='ne:fans:fan2:rpm']/sensor-data/oper-status", "ok"},
-                {"[name='ne:fans:fan2:rpm']/sensor-data/value", "0"},
-                {"[name='ne:fans:fan2:rpm']/sensor-data/value-precision", "0"},
-                {"[name='ne:fans:fan2:rpm']/sensor-data/value-scale", "units"},
-                {"[name='ne:fans:fan2:rpm']/sensor-data/value-type", "rpm"},
-                {"[name='ne:fans:fan3']", ""},
-                {"[name='ne:fans:fan3']/class", "iana-hardware:fan"},
-                {"[name='ne:fans:fan3']/name", "ne:fans:fan3"},
-                {"[name='ne:fans:fan3']/parent", "ne:fans"},
-                {"[name='ne:fans:fan3:rpm']", ""},
-                {"[name='ne:fans:fan3:rpm']/class", "iana-hardware:sensor"},
-                {"[name='ne:fans:fan3:rpm']/name", "ne:fans:fan3:rpm"},
-                {"[name='ne:fans:fan3:rpm']/parent", "ne:fans:fan3"},
-                {"[name='ne:fans:fan3:rpm']/sensor-data", ""},
-                {"[name='ne:fans:fan3:rpm']/sensor-data/oper-status", "ok"},
-                {"[name='ne:fans:fan3:rpm']/sensor-data/value", "1280"},
-                {"[name='ne:fans:fan3:rpm']/sensor-data/value-precision", "0"},
-                {"[name='ne:fans:fan3:rpm']/sensor-data/value-scale", "units"},
-                {"[name='ne:fans:fan3:rpm']/sensor-data/value-type", "rpm"},
-                {"[name='ne:fans:fan4']", ""},
-                {"[name='ne:fans:fan4']/class", "iana-hardware:fan"},
-                {"[name='ne:fans:fan4']/name", "ne:fans:fan4"},
-                {"[name='ne:fans:fan4']/parent", "ne:fans"},
-                {"[name='ne:fans:fan4:rpm']", ""},
-                {"[name='ne:fans:fan4:rpm']/class", "iana-hardware:sensor"},
-                {"[name='ne:fans:fan4:rpm']/name", "ne:fans:fan4:rpm"},
-                {"[name='ne:fans:fan4:rpm']/parent", "ne:fans:fan4"},
-                {"[name='ne:fans:fan4:rpm']/sensor-data", ""},
-                {"[name='ne:fans:fan4:rpm']/sensor-data/oper-status", "ok"},
-                {"[name='ne:fans:fan4:rpm']/sensor-data/value", "666"},
-                {"[name='ne:fans:fan4:rpm']/sensor-data/value-precision", "0"},
-                {"[name='ne:fans:fan4:rpm']/sensor-data/value-scale", "units"},
-                {"[name='ne:fans:fan4:rpm']/sensor-data/value-type", "rpm"},
-
-                {"[name='ne:ctrl']", ""},
-                {"[name='ne:ctrl']/name", "ne:ctrl"},
-                {"[name='ne:ctrl']/parent", "ne"},
-                {"[name='ne:ctrl']/class", "iana-hardware:module"},
-
-                {"[name='ne:ctrl:temperature-cpu']", ""},
-                {"[name='ne:ctrl:temperature-cpu']/name", "ne:ctrl:temperature-cpu"},
-                {"[name='ne:ctrl:temperature-cpu']/class", "iana-hardware:sensor"},
-                {"[name='ne:ctrl:temperature-cpu']/parent", "ne:ctrl"},
-                {"[name='ne:ctrl:temperature-cpu']/sensor-data", ""},
-                {"[name='ne:ctrl:temperature-cpu']/sensor-data/oper-status", "ok"},
-                {"[name='ne:ctrl:temperature-cpu']/sensor-data/value", "41800"},
-                {"[name='ne:ctrl:temperature-cpu']/sensor-data/value-precision", "0"},
-                {"[name='ne:ctrl:temperature-cpu']/sensor-data/value-scale", "milli"},
-                {"[name='ne:ctrl:temperature-cpu']/sensor-data/value-type", "celsius"},
-
-                {"[name='ne:ctrl:power']", ""},
-                {"[name='ne:ctrl:power']/name", "ne:ctrl:power"},
-                {"[name='ne:ctrl:power']/class", "iana-hardware:sensor"},
-                {"[name='ne:ctrl:power']/parent", "ne:ctrl"},
-                {"[name='ne:ctrl:power']/sensor-data", ""},
-                {"[name='ne:ctrl:power']/sensor-data/oper-status", "ok"},
-                {"[name='ne:ctrl:power']/sensor-data/value", "14000000"},
-                {"[name='ne:ctrl:power']/sensor-data/value-precision", "0"},
-                {"[name='ne:ctrl:power']/sensor-data/value-scale", "micro"},
-                {"[name='ne:ctrl:power']/sensor-data/value-type", "watts"},
-
-                {"[name='ne:ctrl:voltage-in']", ""},
-                {"[name='ne:ctrl:voltage-in']/name", "ne:ctrl:voltage-in"},
-                {"[name='ne:ctrl:voltage-in']/class", "iana-hardware:sensor"},
-                {"[name='ne:ctrl:voltage-in']/parent", "ne:ctrl"},
-                {"[name='ne:ctrl:voltage-in']/sensor-data", ""},
-                {"[name='ne:ctrl:voltage-in']/sensor-data/oper-status", "ok"},
-                {"[name='ne:ctrl:voltage-in']/sensor-data/value", "220000"},
-                {"[name='ne:ctrl:voltage-in']/sensor-data/value-precision", "0"},
-                {"[name='ne:ctrl:voltage-in']/sensor-data/value-scale", "milli"},
-                {"[name='ne:ctrl:voltage-in']/sensor-data/value-type", "volts-AC"},
-                {"[name='ne:ctrl:voltage-out']", ""},
-                {"[name='ne:ctrl:voltage-out']/name", "ne:ctrl:voltage-out"},
-                {"[name='ne:ctrl:voltage-out']/class", "iana-hardware:sensor"},
-                {"[name='ne:ctrl:voltage-out']/parent", "ne:ctrl"},
-                {"[name='ne:ctrl:voltage-out']/sensor-data", ""},
-                {"[name='ne:ctrl:voltage-out']/sensor-data/oper-status", "ok"},
-                {"[name='ne:ctrl:voltage-out']/sensor-data/value", "12000"},
-                {"[name='ne:ctrl:voltage-out']/sensor-data/value-precision", "0"},
-                {"[name='ne:ctrl:voltage-out']/sensor-data/value-scale", "milli"},
-                {"[name='ne:ctrl:voltage-out']/sensor-data/value-type", "volts-DC"},
-
-                {"[name='ne:ctrl:current']", ""},
-                {"[name='ne:ctrl:current']/name", "ne:ctrl:current"},
-                {"[name='ne:ctrl:current']/class", "iana-hardware:sensor"},
-                {"[name='ne:ctrl:current']/parent", "ne:ctrl"},
-                {"[name='ne:ctrl:current']/sensor-data", ""},
-                {"[name='ne:ctrl:current']/sensor-data/oper-status", "ok"},
-                {"[name='ne:ctrl:current']/sensor-data/value", "200"},
-                {"[name='ne:ctrl:current']/sensor-data/value-precision", "0"},
-                {"[name='ne:ctrl:current']/sensor-data/value-scale", "milli"},
-                {"[name='ne:ctrl:current']/sensor-data/value-type", "amperes"},
-
-                {"[name='ne:ctrl:emmc']", ""},
-                {"[name='ne:ctrl:emmc']/name", "ne:ctrl:emmc"},
-                {"[name='ne:ctrl:emmc']/parent", "ne:ctrl"},
-                {"[name='ne:ctrl:emmc']/class", "iana-hardware:module"},
-                {"[name='ne:ctrl:emmc']/serial-num", "0x00a8808d"},
-                {"[name='ne:ctrl:emmc']/mfg-date", "2017-02-01T00:00:00-00:00"},
-                {"[name='ne:ctrl:emmc']/model-name", "8GME4R"},
-                {"[name='ne:ctrl:emmc:lifetime']", ""},
-                {"[name='ne:ctrl:emmc:lifetime']/name", "ne:ctrl:emmc:lifetime"},
-                {"[name='ne:ctrl:emmc:lifetime']/class", "iana-hardware:sensor"},
-                {"[name='ne:ctrl:emmc:lifetime']/parent", "ne:ctrl:emmc"},
-                {"[name='ne:ctrl:emmc:lifetime']/sensor-data", ""},
-                {"[name='ne:ctrl:emmc:lifetime']/sensor-data/oper-status", "ok"},
-                {"[name='ne:ctrl:emmc:lifetime']/sensor-data/value", "40"},
-                {"[name='ne:ctrl:emmc:lifetime']/sensor-data/value-precision", "0"},
-                {"[name='ne:ctrl:emmc:lifetime']/sensor-data/value-scale", "units"},
-                {"[name='ne:ctrl:emmc:lifetime']/sensor-data/value-type", "other"},
-                {"[name='ne:ctrl:emmc:lifetime']/sensor-data/units-display", "percent"},
-            };
-
-            REQUIRE(dataFromSysrepo(client, modulePrefix + "/component", sysrepo::Datastore::Operational) == expected);
-        }
-
-        SECTION("test leafnode query")
-        {
-            const auto xpath = modulePrefix + "/component[name='ne:ctrl:emmc:lifetime']/class";
-            client.switchDatastore(sysrepo::Datastore::Operational);
-            auto val = client.getData(xpath);
-            client.switchDatastore(sysrepo::Datastore::Running);
-            REQUIRE(val);
-            REQUIRE(val->findPath(xpath)->asTerm().valueStr() == "iana-hardware:sensor"s);
-        }
-    }
+    // exclude last-change node
+    auto result = ietfHardware->process();
+    result.erase(modulePrefix + "/last-change");
+    REQUIRE(result == expected);
 }

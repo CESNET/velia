@@ -18,9 +18,6 @@ TEST_CASE("HardwareState")
 
     auto fans = std::make_shared<FakeHWMon>();
     auto sysfsTempCpu = std::make_shared<FakeHWMon>();
-    auto sysfsTempFront = std::make_shared<FakeHWMon>();
-    auto sysfsTempMII0 = std::make_shared<FakeHWMon>();
-    auto sysfsTempMII1 = std::make_shared<FakeHWMon>();
     auto sysfsVoltageAc = std::make_shared<FakeHWMon>();
     auto sysfsVoltageDc = std::make_shared<FakeHWMon>();
     auto sysfsPower = std::make_shared<FakeHWMon>();
@@ -44,10 +41,7 @@ TEST_CASE("HardwareState")
     REQUIRE_CALL(*fans, attribute("fan3_input"s)).RETURN(1280);
     REQUIRE_CALL(*fans, attribute("fan4_input"s)).RETURN(666);
 
-    REQUIRE_CALL(*sysfsTempFront, attribute("temp1_input")).RETURN(30800);
     REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800);
-    REQUIRE_CALL(*sysfsTempMII0, attribute("temp1_input")).RETURN(39000);
-    REQUIRE_CALL(*sysfsTempMII1, attribute("temp1_input")).RETURN(36000);
 
     REQUIRE_CALL(*sysfsVoltageAc, attribute("in1_input")).RETURN(220000);
     REQUIRE_CALL(*sysfsVoltageDc, attribute("in1_input")).RETURN(12000);
@@ -66,10 +60,7 @@ TEST_CASE("HardwareState")
     ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
     ietfHardware->registerDataReader(StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
     ietfHardware->registerDataReader(Fans("ne:fans", "ne", fans, 4));
-    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-front", "ne:ctrl", sysfsTempFront, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
-    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-0", "ne:ctrl", sysfsTempMII0, 1));
-    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-1", "ne:ctrl", sysfsTempMII1, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageAC>("ne:ctrl:voltage-in", "ne:ctrl", sysfsVoltageAc, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:ctrl:voltage-out", "ne:ctrl", sysfsVoltageDc, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Power>("ne:ctrl:power", "ne:ctrl", sysfsPower, 1));
@@ -131,27 +122,6 @@ TEST_CASE("HardwareState")
             {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value-precision", "0"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value-scale", "milli"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value-type", "celsius"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']/parent", "ne:ctrl"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']/sensor-data/value", "30800"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']/sensor-data/value-scale", "milli"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']/sensor-data/value-type", "celsius"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']/parent", "ne:ctrl"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']/sensor-data/value", "39000"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']/sensor-data/value-scale", "milli"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']/sensor-data/value-type", "celsius"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/class", "iana-hardware:sensor"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/parent", "ne:ctrl"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/oper-status", "ok"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value", "36000"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value-precision", "0"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value-scale", "milli"},
-            {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']/sensor-data/value-type", "celsius"},
 
             {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/class", "iana-hardware:sensor"},
             {"/ietf-hardware:hardware/component[name='ne:ctrl:power']/parent", "ne:ctrl"},
@@ -303,36 +273,6 @@ TEST_CASE("HardwareState")
                 {"[name='ne:ctrl:temperature-cpu']/sensor-data/value-precision", "0"},
                 {"[name='ne:ctrl:temperature-cpu']/sensor-data/value-scale", "milli"},
                 {"[name='ne:ctrl:temperature-cpu']/sensor-data/value-type", "celsius"},
-                {"[name='ne:ctrl:temperature-front']", ""},
-                {"[name='ne:ctrl:temperature-front']/name", "ne:ctrl:temperature-front"},
-                {"[name='ne:ctrl:temperature-front']/class", "iana-hardware:sensor"},
-                {"[name='ne:ctrl:temperature-front']/parent", "ne:ctrl"},
-                {"[name='ne:ctrl:temperature-front']/sensor-data", ""},
-                {"[name='ne:ctrl:temperature-front']/sensor-data/oper-status", "ok"},
-                {"[name='ne:ctrl:temperature-front']/sensor-data/value", "30800"},
-                {"[name='ne:ctrl:temperature-front']/sensor-data/value-precision", "0"},
-                {"[name='ne:ctrl:temperature-front']/sensor-data/value-scale", "milli"},
-                {"[name='ne:ctrl:temperature-front']/sensor-data/value-type", "celsius"},
-                {"[name='ne:ctrl:temperature-internal-0']", ""},
-                {"[name='ne:ctrl:temperature-internal-0']/name", "ne:ctrl:temperature-internal-0"},
-                {"[name='ne:ctrl:temperature-internal-0']/class", "iana-hardware:sensor"},
-                {"[name='ne:ctrl:temperature-internal-0']/parent", "ne:ctrl"},
-                {"[name='ne:ctrl:temperature-internal-0']/sensor-data", ""},
-                {"[name='ne:ctrl:temperature-internal-0']/sensor-data/oper-status", "ok"},
-                {"[name='ne:ctrl:temperature-internal-0']/sensor-data/value", "39000"},
-                {"[name='ne:ctrl:temperature-internal-0']/sensor-data/value-precision", "0"},
-                {"[name='ne:ctrl:temperature-internal-0']/sensor-data/value-scale", "milli"},
-                {"[name='ne:ctrl:temperature-internal-0']/sensor-data/value-type", "celsius"},
-                {"[name='ne:ctrl:temperature-internal-1']", ""},
-                {"[name='ne:ctrl:temperature-internal-1']/name", "ne:ctrl:temperature-internal-1"},
-                {"[name='ne:ctrl:temperature-internal-1']/class", "iana-hardware:sensor"},
-                {"[name='ne:ctrl:temperature-internal-1']/parent", "ne:ctrl"},
-                {"[name='ne:ctrl:temperature-internal-1']/sensor-data", ""},
-                {"[name='ne:ctrl:temperature-internal-1']/sensor-data/oper-status", "ok"},
-                {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value", "36000"},
-                {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-precision", "0"},
-                {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-scale", "milli"},
-                {"[name='ne:ctrl:temperature-internal-1']/sensor-data/value-type", "celsius"},
 
                 {"[name='ne:ctrl:power']", ""},
                 {"[name='ne:ctrl:power']/name", "ne:ctrl:power"},

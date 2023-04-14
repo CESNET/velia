@@ -47,6 +47,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5eb52b19_eb39c3db",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-04-14T11:20:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea53b38f_2c522384",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 36
+      },
+      "revId": "d79b2c76189ed5a49d89911758a4468c67b601bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bfafe2e7_c2cc4410",
@@ -105,6 +129,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c8568db_6917efbc",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-04-14T11:20:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3063c528_046cf46b",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 467,
+        "endChar": 115
+      },
+      "revId": "d79b2c76189ed5a49d89911758a4468c67b601bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1574e910_157ecb06",
@@ -118,6 +166,30 @@
       "writtenOn": "2023-04-13T20:12:54Z",
       "side": 1,
       "message": "it is not clear to me what exactly this code is testing",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 522,
+        "endChar": 9
+      },
+      "revId": "d79b2c76189ed5a49d89911758a4468c67b601bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2808e0b0_b826abcb",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-04-14T11:20:48Z",
+      "side": 1,
+      "message": "removed for now",
+      "parentUuid": "1574e910_157ecb06",
       "range": {
         "startLine": 484,
         "startChar": 0,

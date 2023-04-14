@@ -35,7 +35,7 @@ void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::stri
     const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='" + alarmTypeQualifier.value_or("") + "']";
 
     sysrepo::Datastore originalDS;
-    auto restoreDatastore = make_unique_resource(
+    auto restoreDatastore = utils::make_unique_resource(
         [&]() {
             originalDS = session.activeDatastore();
             session.switchDatastore(sysrepo::Datastore::Operational);
@@ -59,7 +59,7 @@ void addResourceToAlarmInventoryEntry(sysrepo::Session session, const std::strin
     const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='" + alarmTypeQualifier.value_or("") + "']";
 
     sysrepo::Datastore originalDS;
-    auto restoreDatastore = make_unique_resource(
+    auto restoreDatastore = utils::make_unique_resource(
         [&]() {
             originalDS = session.activeDatastore();
             session.switchDatastore(sysrepo::Datastore::Operational);

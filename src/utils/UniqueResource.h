@@ -3,11 +3,13 @@
  *
  * Written by Jan Kundrát <jan.kundrat@cesnet.cz>
  *
-*/
+ */
 
 #pragma once
 
 #include <functional>
+
+namespace velia::utils {
 
 class UniqueResource {
 public:
@@ -33,4 +35,5 @@ private:
 inline auto make_unique_resource(UniqueResource::Func&& init, UniqueResource::Func&& cleanup)
 {
     return UniqueResource(std::move(init), std::move(cleanup));
+}
 }

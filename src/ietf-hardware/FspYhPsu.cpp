@@ -31,7 +31,7 @@ bool TransientI2C::isPresent() const
         throw std::system_error(errno, std::system_category(), "TransientI2C::isPresent: open()");
     }
 
-    auto fdClose = make_unique_resource([] {}, [file] {
+    auto fdClose = utils::make_unique_resource([] {}, [file] {
         close(file);
     });
 

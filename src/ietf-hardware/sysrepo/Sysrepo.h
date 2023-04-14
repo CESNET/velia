@@ -6,8 +6,6 @@
  */
 #pragma once
 
-#include <functional>
-#include <map>
 #include <memory>
 #include <optional>
 #include <sysrepo-cpp/Session.hpp>

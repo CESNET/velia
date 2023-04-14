@@ -423,6 +423,7 @@ if(BUILD_TESTING)
 
     velia_test(NAME hardware_emmc LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_hwmon LIBRARIES velia-ietf-hardware FsTestUtils)
+    velia_test(NAME hardware_fspyhpsu LIBRARIES velia-ietf-hardware FsTestUtils)
 
     set(fixture_sysrepo-czechlight-lldp YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)
     velia_test(NAME sysrepo_system-lldp LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-czechlight-lldp)

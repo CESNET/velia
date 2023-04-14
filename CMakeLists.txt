@@ -105,7 +105,7 @@ add_library(velia-utils STATIC
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::SYSREPO fmt::fmt PkgConfig::DOCOPT)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::LIBYANG PkgConfig::SYSREPO fmt::fmt PkgConfig::DOCOPT)
 
 # - health
 add_library(velia-health STATIC

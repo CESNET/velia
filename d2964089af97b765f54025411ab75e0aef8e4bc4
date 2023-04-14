@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50c71eff_bad40313",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-14T10:39:04Z",
+      "side": 1,
+      "message": "perhaps the name might include \"sysrepo\"?",
+      "range": {
+        "startLine": 427,
+        "startChar": 20,
+        "endLine": 427,
+        "endChar": 42
+      },
+      "revId": "d2964089af97b765f54025411ab75e0aef8e4bc4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

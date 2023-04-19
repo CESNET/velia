@@ -29,10 +29,11 @@ template <typename Value>
 class Watcher {
 public:
     using Signal = boost::signals2::signal<void(State)>;
-    Signal changed;
+    std::shared_ptr<Signal> changed;
 
     Watcher(const Thresholds<Value>& thresholds = Thresholds<Value>())
-        : m_thresholds(thresholds)
+        : changed(std::make_shared<Signal>())
+        , m_thresholds(thresholds)
     {
     }
 
@@ -75,7 +76,7 @@ private:
     void maybeTransition(const State newState, const Value value)
     {
         if (newState != m_state) {
-            changed(newState);
+            (*changed)(newState);
             m_state = newState;
             m_lastChange = value;
         }

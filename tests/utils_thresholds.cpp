@@ -51,7 +51,7 @@ public:
     trompeloeil::sequence seq; \
     Transitions eventLog;      \
     Watcher w(thr);            \
-    w.changed.connect([&eventLog](const auto state) { eventLog.record(state); });
+    w.changed->connect([&eventLog](const auto state) { eventLog.record(state); });
 
 #define EXPECT_EVENT(E) \
     REQUIRE_CALL(eventLog, record(E)).IN_SEQUENCE(seq)

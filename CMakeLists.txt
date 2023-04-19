@@ -105,7 +105,7 @@ add_library(velia-utils STATIC
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::LIBYANG PkgConfig::SYSREPO fmt::fmt PkgConfig::DOCOPT)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog Boost::boost PRIVATE PkgConfig::SYSTEMD PkgConfig::LIBYANG PkgConfig::SYSREPO fmt::fmt PkgConfig::DOCOPT)
 
 # - health
 add_library(velia-health STATIC
@@ -139,6 +139,8 @@ add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/IETFHardware.h
     src/ietf-hardware/FspYhPsu.cpp
     src/ietf-hardware/FspYhPsu.h
+    src/ietf-hardware/thresholds.h
+    src/ietf-hardware/thresholds_fwd.h
     )
 target_link_libraries(velia-ietf-hardware
     PUBLIC
@@ -421,6 +423,7 @@ if(BUILD_TESTING)
     velia_test(NAME system_rauc LIBRARIES velia-system DbusTesting RESOURCE_LOCK dbus-rauc)
     velia_test(NAME system_lldp LIBRARIES velia-system DbusTesting)
 
+    velia_test(NAME hardware_thresholds LIBRARIES velia-ietf-hardware)
     velia_test(NAME hardware_emmc LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_hwmon LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_fspyhpsu LIBRARIES velia-ietf-hardware FsTestUtils)

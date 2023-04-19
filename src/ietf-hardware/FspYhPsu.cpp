@@ -5,8 +5,8 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include "FspYhPsu.h"
-#include "utils/log.h"
 #include "utils/UniqueResource.h"
+#include "utils/log.h"
 
 namespace velia::ietf_hardware {
 
@@ -31,9 +31,7 @@ bool TransientI2C::isPresent() const
         throw std::system_error(errno, std::system_category(), "TransientI2C::isPresent: open()");
     }
 
-    auto fdClose = utils::make_unique_resource([] {}, [file] {
-        close(file);
-    });
+    auto fdClose = utils::make_unique_resource([] {}, [file] { close(file); });
 
     if (ioctl(file, I2C_SLAVE_FORCE, m_address) < 0) {
         throw std::system_error(errno, std::system_category(), "TransientI2C::isPresent: ioctl()");
@@ -41,7 +39,6 @@ bool TransientI2C::isPresent() const
 
     char bufferIn[1];
     return read(file, bufferIn, 1) != -1;
-
 }
 
 void TransientI2C::bind() const
@@ -76,7 +73,6 @@ FspYhPsu::FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psu
 {
     m_exit = false;
     m_psuWatcher = std::thread([this] {
-
         while (!m_exit) {
             if (m_i2c->isPresent()) {
                 if (!std::filesystem::is_directory(m_hwmonDir)) {
@@ -121,10 +117,10 @@ void FspYhPsu::createPower()
 {
     m_hwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(m_hwmonDir);
     const auto prefix = "ne:"s + m_psuName;
-    using velia::ietf_hardware::data_reader::StaticData;
-    using velia::ietf_hardware::data_reader::SysfsValue;
     using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
+    using velia::ietf_hardware::data_reader::StaticData;
+    using velia::ietf_hardware::data_reader::SysfsValue;
     m_properties.emplace_back(StaticData(prefix, "ne", {{"class", "iana-hardware:power-supply"}}));
     m_properties.emplace_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-1", prefix, m_hwmon, 1));
     m_properties.emplace_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-2", prefix, m_hwmon, 2));
@@ -156,7 +152,6 @@ DataTree FspYhPsu::readValues()
             m_cond.notify_all();
             return {};
         }
-
     }
 
     return res;

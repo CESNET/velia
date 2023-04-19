@@ -13,6 +13,7 @@ public:
     virtual bool isPresent() const;
     virtual void bind() const;
     virtual void unbind() const;
+
 private:
     uint8_t m_address;
     std::string m_driverName;

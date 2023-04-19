@@ -8,6 +8,7 @@
 #include <chrono>
 #include <iterator>
 #include <utility>
+#include <vector>
 #include "IETFHardware.h"
 #include "utils/log.h"
 #include "utils/time.h"
@@ -43,6 +44,28 @@ void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& comp
     const auto componentPrefix = xpathForComponent(componentName);
     res[componentPrefix + "sensor-data/value"] = value;
 }
+
+void addAlarm(std::vector<velia::ietf_hardware::Alarm>& res, const std::string& resource, const velia::utils::State state)
+{
+    std::string severity;
+    switch (state) {
+    case velia::utils::State::Initial:
+    case velia::utils::State::Disabled:
+    case velia::utils::State::Normal:
+        severity = "cleared";
+        break;
+    case velia::utils::State::WarningLow:
+    case velia::utils::State::WarningHigh:
+        severity = "warning";
+        break;
+    case velia::utils::State::CriticalHigh:
+    case velia::utils::State::CriticalLow:
+        severity = "critical";
+        break;
+    }
+
+    res.emplace_back("alarmId", "qual", resource, severity);
+}
 }
 
 namespace velia::ietf_hardware {
@@ -50,6 +73,7 @@ namespace velia::ietf_hardware {
 void HardwareInfo::merge(HardwareInfo&& other)
 {
     dataTree.merge(other.dataTree);
+    alarms.insert(alarms.end(), std::make_move_iterator(other.alarms.begin()), std::make_move_iterator(other.alarms.end()));
 }
 
 IETFHardware::IETFHardware() = default;
@@ -99,7 +123,7 @@ StaticData::StaticData(std::string componentName, std::optional<std::string> par
                  dataTree);
 }
 
-HardwareInfo StaticData::operator()() { return HardwareInfo{m_staticData}; }
+HardwareInfo StaticData::operator()() { return HardwareInfo{m_staticData, {}}; }
 
 Fans::Fans(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount)
     : DataReader(std::move(componentName), std::move(parent))
@@ -139,7 +163,7 @@ Fans::Fans(std::string componentName, std::optional<std::string> parent, std::sh
 
 HardwareInfo Fans::operator()()
 {
-    HardwareInfo res{m_staticData};
+    HardwareInfo res{m_staticData, {}};
 
     for (unsigned i = 1; i <= m_fanChannelsCount; i++) {
         const auto sensorComponentName = m_componentName + ":fan" + std::to_string(i) + ":rpm";
@@ -210,10 +234,11 @@ const DataTree sysfsStaticData<SensorType::VoltageDC> = {
     {"sensor-data/oper-status", "ok"}};
 
 template <SensorType TYPE>
-SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr)
+SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr, utils::Thresholds<int64_t> thresholds)
     : DataReader(std::move(componentName), std::move(parent))
     , m_hwmon(std::move(hwmon))
     , m_sysfsFile(getSysfsFilename(TYPE, sysfsChannelNr))
+    , m_thresholdsWatcher(std::move(thresholds))
 {
     addComponent(m_staticData,
                  m_componentName,
@@ -224,10 +249,13 @@ SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::strin
 template <SensorType TYPE>
 HardwareInfo SysfsValue<TYPE>::operator()()
 {
-    HardwareInfo res{m_staticData};
+    HardwareInfo res{m_staticData, {}};
 
     int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
     addSensorValue(res.dataTree, m_componentName, std::to_string(sensorValue));
+
+    auto state = m_thresholdsWatcher.update(sensorValue);
+    addAlarm(res.alarms, m_componentName, state);
 
     return res;
 }
@@ -280,7 +308,7 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
 
 HardwareInfo EMMC::operator()()
 {
-    HardwareInfo res{m_staticData};
+    HardwareInfo res{m_staticData, {}};
 
     auto emmcAttrs = m_emmc->attributes();
     addSensorValue(res.dataTree, m_componentName + ":lifetime", emmcAttrs.at("life_time"));

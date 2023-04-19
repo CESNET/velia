@@ -14,6 +14,7 @@
 #include "ietf-hardware/sysfs/EMMC.h"
 #include "ietf-hardware/sysfs/HWMon.h"
 #include "utils/log-fwd.h"
+#include "utils/thresholds.h"
 
 using namespace std::literals;
 
@@ -21,8 +22,18 @@ namespace velia::ietf_hardware {
 
 using DataTree = std::map<std::string, std::string>;
 
+struct Alarm {
+    std::string alarmType;
+    std::string alarmQualifier;
+    std::string resource;
+    std::string severity;
+
+    auto operator<=>(const Alarm&) const = default;
+};
+
 struct HardwareInfo {
     DataTree dataTree;
+    std::vector<Alarm> alarms;
 
     void merge(HardwareInfo&& other);
 };
@@ -123,9 +134,10 @@ struct SysfsValue : private DataReader {
 private:
     std::shared_ptr<sysfs::HWMon> m_hwmon;
     std::string m_sysfsFile;
+    utils::Watcher<int64_t> m_thresholdsWatcher;
 
 public:
-    SysfsValue(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr);
+    SysfsValue(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr, utils::Thresholds<int64_t> = utils::Thresholds<int64_t>{});
     HardwareInfo operator()();
 };
 

@@ -46,7 +46,7 @@ public:
         update(m_lastValue);
     }
 
-    void update(const Value value)
+    State update(const Value value)
     {
         if (violates<std::less>(value, m_thresholds.criticalLow)) {
             maybeTransition(State::CriticalLow, value);
@@ -62,6 +62,8 @@ public:
             maybeTransition(State::Normal, value);
         }
         m_lastValue = value;
+
+        return m_state;
     }
 
 private:

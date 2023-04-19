@@ -56,7 +56,8 @@ TEST_CASE("IETF Hardware with sysrepo")
                 return {};
 
             return {{{"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
-                     {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"}}};
+                     {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"}},
+                    {}};
         }
     };
     ietfHardware->registerDataReader(PsuDataReader{psuActive});

@@ -3,6 +3,7 @@
 #include "mock/ietf_hardware.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
+#include "utils/thresholds.h"
 
 using namespace std::literals;
 
@@ -54,11 +55,19 @@ TEST_CASE("HardwareState")
     using velia::ietf_hardware::data_reader::SensorType;
     using velia::ietf_hardware::data_reader::StaticData;
     using velia::ietf_hardware::data_reader::SysfsValue;
+    using ThresholdsI64 = velia::utils::Thresholds<int64_t>;
+    using OneThresholdI64 = velia::utils::OneThreshold<int64_t>;
+
     // register components into hw state
     ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
     ietfHardware->registerDataReader(StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
     ietfHardware->registerDataReader(Fans("ne:fans", "ne", fans, 4));
-    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1, ThresholdsI64{
+                                                                                                                                    OneThresholdI64{5000, 2000},
+                                                                                                                                    OneThresholdI64{10000, 2000},
+                                                                                                                                    OneThresholdI64{40000, 2000},
+                                                                                                                                    OneThresholdI64{70000, 2000},
+                                                                                                                                }));
     ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageAC>("ne:ctrl:voltage-in", "ne:ctrl", sysfsVoltageAc, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:ctrl:voltage-out", "ne:ctrl", sysfsVoltageDc, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Power>("ne:ctrl:power", "ne:ctrl", sysfsPower, 1));
@@ -169,4 +178,7 @@ TEST_CASE("HardwareState")
     auto result = ietfHardware->process();
     result.dataTree.erase(modulePrefix + "/last-change");
     REQUIRE(result.dataTree == expected);
+    REQUIRE(result.alarms == std::vector<velia::ietf_hardware::Alarm>{
+                {"alarmId", "qual", "ne:ctrl:temperature-cpu", "warning"},
+            });
 }

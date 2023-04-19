@@ -50,13 +50,13 @@ TEST_CASE("IETF Hardware with sysrepo")
     struct PsuDataReader {
         const std::atomic<bool>& active;
 
-        velia::ietf_hardware::DataTree operator()()
+        velia::ietf_hardware::HardwareInfo operator()()
         {
             if (!active)
                 return {};
 
-            return {{"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
-                    {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"}};
+            return {{{"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
+                     {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"}}};
         }
     };
     ietfHardware->registerDataReader(PsuDataReader{psuActive});

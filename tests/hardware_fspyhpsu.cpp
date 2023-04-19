@@ -190,7 +190,8 @@ TEST_CASE("FspYhPsu")
             break;
         }
 
-        REQUIRE(psu->readValues() == expected);
+        auto hwInfo = psu->readValues();
+        REQUIRE(hwInfo.dataTree == expected);
 
         counter++;
     }

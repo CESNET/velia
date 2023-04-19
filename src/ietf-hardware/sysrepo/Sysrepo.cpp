@@ -26,12 +26,12 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         while (!m_quit) {
             m_Log->trace("IetfHardware poll");
 
-            auto hwStateValues = m_hwState->process();
+            HardwareInfo hwInfo = m_hwState->process();
 
             /* Some data readers can stop returning data in some cases (e.g. ejected PSU).
              * Delete tree before updating to avoid having not current data from previous polls. */
             conn.discardOperationalChanges("/ietf-hardware:hardware");
-            utils::valuesPush(hwStateValues, {}, m_session, ::sysrepo::Datastore::Operational);
+            utils::valuesPush(hwInfo.dataTree, {}, m_session, ::sysrepo::Datastore::Operational);
 
             std::this_thread::sleep_for(m_pollInterval);
         }

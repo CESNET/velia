@@ -135,9 +135,9 @@ void FspYhPsu::createPower()
     m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-5Vsb", prefix, m_hwmon, 3));
 }
 
-DataTree FspYhPsu::readValues()
+HardwareInfo FspYhPsu::readValues()
 {
-    std::map<std::string, std::string> res;
+    HardwareInfo res;
 
     std::unique_lock lock(m_mtx);
     for (auto& reader : m_properties) {

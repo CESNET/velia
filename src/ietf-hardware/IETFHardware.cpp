@@ -6,6 +6,7 @@
  */
 
 #include <chrono>
+#include <iterator>
 #include <utility>
 #include "IETFHardware.h"
 #include "utils/log.h"
@@ -46,19 +47,25 @@ void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& comp
 
 namespace velia::ietf_hardware {
 
+void HardwareInfo::merge(HardwareInfo&& other)
+{
+    dataTree.merge(other.dataTree);
+}
+
 IETFHardware::IETFHardware() = default;
 
 IETFHardware::~IETFHardware() = default;
 
-std::map<std::string, std::string> IETFHardware::process()
+HardwareInfo IETFHardware::process()
 {
-    std::map<std::string, std::string> res;
+    HardwareInfo res;
 
     for (auto& dataReader : m_callbacks) {
         res.merge(dataReader());
     }
 
-    res[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
+    res.dataTree[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
+
     return res;
 }
 
@@ -92,7 +99,7 @@ StaticData::StaticData(std::string componentName, std::optional<std::string> par
                  dataTree);
 }
 
-DataTree StaticData::operator()() const { return m_staticData; }
+HardwareInfo StaticData::operator()() { return HardwareInfo{m_staticData}; }
 
 Fans::Fans(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount)
     : DataReader(std::move(componentName), std::move(parent))
@@ -130,15 +137,15 @@ Fans::Fans(std::string componentName, std::optional<std::string> parent, std::sh
     }
 }
 
-DataTree Fans::operator()() const
+HardwareInfo Fans::operator()()
 {
-    DataTree res(m_staticData);
+    HardwareInfo res{m_staticData};
 
     for (unsigned i = 1; i <= m_fanChannelsCount; i++) {
         const auto sensorComponentName = m_componentName + ":fan" + std::to_string(i) + ":rpm";
         const auto attribute = "fan"s + std::to_string(i) + "_input";
 
-        addSensorValue(res, sensorComponentName, std::to_string(m_hwmon->attribute(attribute)));
+        addSensorValue(res.dataTree, sensorComponentName, std::to_string(m_hwmon->attribute(attribute)));
     }
 
     return res;
@@ -215,12 +222,12 @@ SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::strin
 }
 
 template <SensorType TYPE>
-DataTree SysfsValue<TYPE>::operator()() const
+HardwareInfo SysfsValue<TYPE>::operator()()
 {
-    DataTree res(m_staticData);
+    HardwareInfo res{m_staticData};
 
     int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
-    addSensorValue(res, m_componentName, std::to_string(sensorValue));
+    addSensorValue(res.dataTree, m_componentName, std::to_string(sensorValue));
 
     return res;
 }
@@ -271,12 +278,12 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
                  });
 }
 
-DataTree EMMC::operator()() const
+HardwareInfo EMMC::operator()()
 {
-    DataTree res(m_staticData);
+    HardwareInfo res{m_staticData};
 
     auto emmcAttrs = m_emmc->attributes();
-    addSensorValue(res, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
+    addSensorValue(res.dataTree, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
 
     return res;
 }
@@ -286,9 +293,9 @@ void Group::registerDataReader(const IETFHardware::DataReader& callable)
     m_readers.emplace_back(callable);
 }
 
-DataTree Group::operator()() const
+HardwareInfo Group::operator()()
 {
-    DataTree res;
+    HardwareInfo res;
 
     for (auto& reader : m_readers) {
         res.merge(reader());

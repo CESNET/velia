@@ -21,6 +21,12 @@ namespace velia::ietf_hardware {
 
 using DataTree = std::map<std::string, std::string>;
 
+struct HardwareInfo {
+    DataTree dataTree;
+
+    void merge(HardwareInfo&& other);
+};
+
 /**
  * @brief Readout of hardware-state related data according to RFC 8348 (App. A)
  *
@@ -45,13 +51,13 @@ class IETFHardware {
 
 public:
     /** @brief The component */
-    using DataReader = std::function<DataTree()>;
+    using DataReader = std::function<HardwareInfo()>;
 
     IETFHardware();
     ~IETFHardware();
     void registerDataReader(const DataReader& callable);
 
-    DataTree process();
+    HardwareInfo process();
 
 private:
     /** @brief registered components for individual modules */
@@ -88,7 +94,7 @@ struct DataReader {
 /** @brief Manages any component composing of static data only. The static data are provided as a DataTree in construction time. */
 struct StaticData : private DataReader {
     StaticData(std::string propertyPrefix, std::optional<std::string> parent, DataTree tree);
-    DataTree operator()() const;
+    HardwareInfo operator()();
 };
 
 /** @brief Manages fans component. Data is provided by a sysfs::HWMon object. */
@@ -99,7 +105,7 @@ private:
 
 public:
     Fans(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount);
-    DataTree operator()() const;
+    HardwareInfo operator()();
 };
 
 enum class SensorType {
@@ -120,7 +126,7 @@ private:
 
 public:
     SysfsValue(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr);
-    DataTree operator()() const;
+    HardwareInfo operator()();
 };
 
 /** @brief Manages a single eMMC block device hardware component. Data is provided by a sysfs::EMMC object. */
@@ -130,7 +136,7 @@ private:
 
 public:
     EMMC(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc);
-    DataTree operator()() const;
+    HardwareInfo operator()();
 };
 
 /** @brief Use this when you want to wrap reading several properties in one go and still use it as a single DataReader instance            (e.g. in on thread)
@@ -141,7 +147,7 @@ private:
 
 public:
     void registerDataReader(const IETFHardware::DataReader& callable);
-    DataTree operator()() const;
+    HardwareInfo operator()();
 };
 
 }

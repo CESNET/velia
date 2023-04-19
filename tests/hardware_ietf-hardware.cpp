@@ -167,6 +167,6 @@ TEST_CASE("HardwareState")
 
     // exclude last-change node
     auto result = ietfHardware->process();
-    result.erase(modulePrefix + "/last-change");
-    REQUIRE(result == expected);
+    result.dataTree.erase(modulePrefix + "/last-change");
+    REQUIRE(result.dataTree == expected);
 }

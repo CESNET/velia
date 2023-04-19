@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5bab180_2f073b1c",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-19T10:02:10Z",
+      "side": 1,
+      "message": "This has an immediate effect (it doesn\u0027t go via sr_apply_changes()), which means that there will be some time when operational DS doesn\u0027t contain measurement data. Also, any change-based subscribers such as the streaming telemetry will be notified about this mass-deletion, and then a short time after that about the \"new data\" which might be the same as the old ones. IOW, this is too big of a hammer; it needs much smaller granularity.\n\nIs it feasible to, e.g., gather a list of common/shortest prefixes to be evicted form the DS? I.e., remember the values from the last time, compute which ones are not provided anymore, and extract the common XPath(s) and discard these. The \"common XPath\" is probably a bit tricky because a naive substring match won\u0027t work.",
+      "revId": "246241db41456a54af3d84dc8e95c0d22cfe7749",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13cbbf75_3a164876",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-19T10:02:10Z",
+      "side": 1,
+      "message": "nit: let\u0027s call it a \"step\" or something like that",
+      "range": {
+        "startLine": 154,
+        "startChar": 32,
+        "endLine": 154,
+        "endChar": 37
+      },
+      "revId": "246241db41456a54af3d84dc8e95c0d22cfe7749",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

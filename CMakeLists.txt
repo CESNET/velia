@@ -102,10 +102,12 @@ add_library(velia-utils STATIC
     src/utils/sysrepo.h
     src/utils/time.cpp
     src/utils/time.h
+    src/utils/thresholds.h
+    src/utils/thresholds_fwd.h
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::LIBYANG PkgConfig::SYSREPO fmt::fmt PkgConfig::DOCOPT)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog Boost::boost PRIVATE PkgConfig::SYSTEMD PkgConfig::LIBYANG PkgConfig::SYSREPO fmt::fmt PkgConfig::DOCOPT)
 
 # - health
 add_library(velia-health STATIC
@@ -417,6 +419,8 @@ if(BUILD_TESTING)
     foreach(yang_file ${YANG_SRCS})
         add_test(NAME yang-tree:${yang_file} COMMAND ${YANGLINT_PATH} -f tree ${CMAKE_CURRENT_SOURCE_DIR}/${yang_file})
     endforeach()
+
+    velia_test(NAME utils_thresholds LIBRARIES velia-utils)
 
     velia_test(NAME system_rauc LIBRARIES velia-system DbusTesting RESOURCE_LOCK dbus-rauc)
     velia_test(NAME system_lldp LIBRARIES velia-system DbusTesting)

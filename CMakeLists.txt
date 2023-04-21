@@ -458,7 +458,7 @@ if(BUILD_TESTING)
     velia_test(NAME sysrepo_interfaces-libnl LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network
                COMMAND ${UNSHARE_EXECUTABLE} --net --mount --map-root-user ${UNSHARE_MAP_GROUP_ARG} sh -c "set -ex $<SEMICOLON> ${MOUNT_EXECUTABLE} -t sysfs none /sys $<SEMICOLON> $<TARGET_FILE:test-sysrepo_interfaces-libnl>")
 
-    set(fixture_sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor)
+    set(fixture_sysrepo-ietf-hardware YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-hardware@2018-03-13.yang YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-hardware@2018-03-13.yang FEATURE hardware-sensor FEATURE hardware-state)
     velia_test(NAME sysrepo_ietf-hardware LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo FsTestUtils FIXTURE fixture_sysrepo-ietf-hardware)
 
     # ctest dance for sysrepo_two-daemons: compile daemon, create a fixture for test, add the test into the fixture

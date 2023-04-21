@@ -34,6 +34,8 @@ void addComponent(velia::ietf_hardware::DataTree& res, const std::string& compon
     for (const auto& [k, v] : values) {
         res[componentPrefix + k] = v;
     }
+
+    res[componentPrefix + "state/oper-state"] = "enabled";
 }
 
 /** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */

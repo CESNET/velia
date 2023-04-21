@@ -28,12 +28,15 @@ TEST_CASE("HardwareState with two daemons")
                     {"/component[name='ne']/name", "ne"},
                     {"/component[name='ne']/class", "iana-hardware:module"},
                     {"/component[name='ne']/description", "This data was brought to you by process 2 (subscr)."},
+                    {"/component[name='ne']/state", ""},
                     {"/component[name='ne:edfa']", ""},
                     {"/component[name='ne:edfa']/name", "ne:edfa"},
                     {"/component[name='ne:edfa']/class", "iana-hardware:module"},
+                    {"/component[name='ne:edfa']/state", ""},
                     {"/component[name='ne:ctrl']", ""},
                     {"/component[name='ne:ctrl']/name", "ne:ctrl"},
                     {"/component[name='ne:ctrl']/class", "iana-hardware:module"},
+                    {"/component[name='ne:ctrl']/state", ""},
                 });
         srSess.switchDatastore(sysrepo::Datastore::Running);
     }

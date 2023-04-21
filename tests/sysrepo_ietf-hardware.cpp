@@ -73,6 +73,15 @@ TEST_CASE("IETF Hardware with sysrepo")
         };
 
         REQUIRE(dataFromSysrepo(client, modulePrefix + "/component", sysrepo::Datastore::Operational) == expected);
+
+        // data changes
+        REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(222);
+        REQUIRE_CALL(*sysfsPower, attribute("power1_input")).RETURN(333);
+
+        expected["[name='ne:temperature-cpu']/sensor-data/value"] = "222";
+        expected["[name='ne:power']/sensor-data/value"] = "333";
+
+        REQUIRE(dataFromSysrepo(client, modulePrefix + "/component", sysrepo::Datastore::Operational) == expected);
     }
 
     SECTION("test leafnode query")

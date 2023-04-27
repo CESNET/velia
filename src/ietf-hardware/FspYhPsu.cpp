@@ -72,7 +72,8 @@ void TransientI2C::unbind() const
 FspYhPsu::FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psuName, std::shared_ptr<TransientI2C> i2c)
     : m_i2c(i2c)
     , m_hwmonDir(hwmonDir)
-    , m_psuName(psuName)
+    , m_namePrefix("ne:"s + psuName)
+    , m_staticProperty(velia::ietf_hardware::data_reader::StaticData(m_namePrefix, "ne", {{"class", "iana-hardware:power-supply"}}))
 {
     m_exit = false;
     m_psuWatcher = std::thread([this] {
@@ -120,30 +121,33 @@ FspYhPsu::~FspYhPsu()
 void FspYhPsu::createPower()
 {
     m_hwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(m_hwmonDir);
-    const auto prefix = "ne:"s + m_psuName;
-    using velia::ietf_hardware::data_reader::StaticData;
     using velia::ietf_hardware::data_reader::SysfsValue;
     using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
-    m_properties.emplace_back(StaticData(prefix, "ne", {{"class", "iana-hardware:power-supply"}}));
-    m_properties.emplace_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-1", prefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::Temperature>(prefix + ":temperature-2", prefix, m_hwmon, 2));
-    m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-in", prefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-12V", prefix, m_hwmon, 2));
-    m_properties.emplace_back(SysfsValue<SensorType::VoltageAC>(prefix + ":voltage-in", prefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-12V", prefix, m_hwmon, 2));
-    m_properties.emplace_back(SysfsValue<SensorType::Power>(prefix + ":power-in", prefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::Power>(prefix + ":power-out", prefix, m_hwmon, 2));
-    m_properties.emplace_back(Fans(prefix + ":fan", prefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::Current>(prefix + ":current-5Vsb", prefix, m_hwmon, 3));
-    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(prefix + ":voltage-5Vsb", prefix, m_hwmon, 3));
+    m_properties.emplace_back(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-1", m_namePrefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-2", m_namePrefix, m_hwmon, 2));
+    m_properties.emplace_back(SysfsValue<SensorType::Current>(m_namePrefix + ":current-in", m_namePrefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 2));
+    m_properties.emplace_back(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in", m_namePrefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-12V", m_namePrefix, m_hwmon, 2));
+    m_properties.emplace_back(SysfsValue<SensorType::Power>(m_namePrefix + ":power-in", m_namePrefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::Power>(m_namePrefix + ":power-out", m_namePrefix, m_hwmon, 2));
+    m_properties.emplace_back(Fans(m_namePrefix + ":fan", m_namePrefix, m_hwmon, 1));
+    m_properties.emplace_back(SysfsValue<SensorType::Current>(m_namePrefix + ":current-5Vsb", m_namePrefix, m_hwmon, 3));
+    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-5Vsb", m_namePrefix, m_hwmon, 3));
 }
 
 DataTree FspYhPsu::readValues()
 {
-    std::map<std::string, std::string> res;
-
     std::unique_lock lock(m_mtx);
+
+    DataTree res(m_staticProperty());
+
+    if (m_properties.empty()) {
+        res["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
+        return res;
+    }
+
     for (auto& reader : m_properties) {
         try {
             res.merge(reader());
@@ -152,9 +156,14 @@ DataTree FspYhPsu::readValues()
             // read can fail. We must react to this and catch the exception from readFileInt64. If we cannot get all
             // data, we'll consider the data we got as invalid, so we'll return an empty map.
             spdlog::get("hardware")->warn("Couldn't read PSU sysfs data (maybe the PSU was just ejected?): "s + ex.what());
+
+            res = m_staticProperty();
+            res["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
+
             lock.unlock();
             m_cond.notify_all();
-            return {};
+
+            return res;
         }
 
     }

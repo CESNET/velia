@@ -44,6 +44,9 @@ private:
     std::string m_psuName;
 
     std::shared_ptr<velia::ietf_hardware::sysfs::HWMon> m_hwmon;
+
+    std::string m_namePrefix;
+    std::function<velia::ietf_hardware::DataTree()> m_staticProperty;
     std::vector<std::function<velia::ietf_hardware::DataTree()>> m_properties;
 
     void createPower();

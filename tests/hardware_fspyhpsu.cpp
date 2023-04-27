@@ -2,6 +2,7 @@
 #include <fstream>
 #include "fs-helpers/utils.h"
 #include "ietf-hardware/FspYhPsu.h"
+#include "ietf-hardware/IETFHardware.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
 #include "test_sysrepo_helpers.h"
@@ -85,12 +86,19 @@ TEST_CASE("FspYhPsu")
 
     psu = std::make_shared<velia::ietf_hardware::FspYhPsu>(fakeHwmonRoot, "psu", fakeI2c);
 
+    const velia::ietf_hardware::DataTree expectedDisabled = {
+        {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
+        {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
+        {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"}
+    };
+
     for (auto i : {0, 1, 2, 3, 4}) {
         std::this_thread::sleep_for(std::chrono::seconds(4));
         velia::ietf_hardware::DataTree expected;
 
         switch (i) {
         case 0:
+            expected = expectedDisabled;
             break;
         case 1:
             expected = {
@@ -194,13 +202,16 @@ TEST_CASE("FspYhPsu")
             };
             break;
         case 2:
+            expected = expectedDisabled;
             break;
         case 3:
             // Here I simulate read failure by a file from the hwmon directory. This happens when the user wants data from
             // a PSU that's no longer there and the watcher thread didn't unbind it yet.
             fakeI2c->removeHwmonFile("temp1_input");
+            expected = expectedDisabled;
             break;
         case 4:
+            expected = expectedDisabled;
             break;
         }
 

@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54628d65_c97d8155",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-04-27T17:14:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5bab180_2f073b1c",
+      "revId": "246241db41456a54af3d84dc8e95c0d22cfe7749",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "13cbbf75_3a164876",
@@ -31,6 +49,30 @@
       "writtenOn": "2023-04-19T10:02:10Z",
       "side": 1,
       "message": "nit: let\u0027s call it a \"step\" or something like that",
+      "range": {
+        "startLine": 154,
+        "startChar": 32,
+        "endLine": 154,
+        "endChar": 37
+      },
+      "revId": "246241db41456a54af3d84dc8e95c0d22cfe7749",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "514b96e3_da574862",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-04-27T17:14:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13cbbf75_3a164876",
       "range": {
         "startLine": 154,
         "startChar": 32,

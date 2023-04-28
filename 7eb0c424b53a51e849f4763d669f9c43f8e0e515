@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "037670da_447c83e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-28T09:17:19Z",
+      "side": 1,
+      "message": "I was wondering how come that this doesn\u0027t get reverted in the follow-up commit, but on a second read I understand -- it\u0027s a simple initialization of the \"static\" set of properties, and that one can be overriden by subsequent pushes. That makes sense.",
+      "revId": "7eb0c424b53a51e849f4763d669f9c43f8e0e515",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

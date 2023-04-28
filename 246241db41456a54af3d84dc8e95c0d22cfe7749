@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f25b865e_9bf6a1b0",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-28T09:29:29Z",
+      "side": 1,
+      "message": "The current version of this code still calls a discard that is too broad. Please also add a test for this (register an extra tree change CB for the operational DS in a test, and check that whenever it gets triggered, \"some data\" are always present).",
+      "parentUuid": "54628d65_c97d8155",
+      "revId": "246241db41456a54af3d84dc8e95c0d22cfe7749",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "13cbbf75_3a164876",
         "filename": "tests/sysrepo_ietf-hardware.cpp",
         "patchSetId": 7

@@ -105,7 +105,7 @@ Fans::Fans(std::string componentName, std::optional<std::string> parent, std::sh
     addComponent(m_staticData,
                  m_componentName,
                  m_parent,
-                 DataTree {
+                 DataTree{
                      {"class", "iana-hardware:module"}, // FIXME: Read (or pass via constructor) additional properties (mfg, model, ...). They should be in the fans' tray EEPROM.
                  });
 
@@ -114,7 +114,7 @@ Fans::Fans(std::string componentName, std::optional<std::string> parent, std::sh
         addComponent(m_staticData,
                      m_componentName + ":fan" + std::to_string(i),
                      m_componentName,
-                     DataTree {
+                     DataTree{
                          {"class", "iana-hardware:fan"},
                      });
 
@@ -122,7 +122,7 @@ Fans::Fans(std::string componentName, std::optional<std::string> parent, std::sh
         addComponent(m_staticData,
                      m_componentName + ":fan" + std::to_string(i) + ":rpm",
                      m_componentName + ":fan" + std::to_string(i),
-                     DataTree {
+                     DataTree{
                          {"class", "iana-hardware:sensor"},
                          {"sensor-data/value-type", "rpm"},
                          {"sensor-data/value-scale", "units"},
@@ -149,56 +149,60 @@ DataTree Fans::operator()() const
 std::string getSysfsFilename(const SensorType type, int sysfsChannelNr)
 {
     switch (type) {
-        case SensorType::Temperature:
-            return "temp"s + std::to_string(sysfsChannelNr) + "_input";
-        case SensorType::Current:
-            return "curr"s + std::to_string(sysfsChannelNr) + "_input";
-        case SensorType::Power:
-            return "power"s + std::to_string(sysfsChannelNr) + "_input";
-        case SensorType::VoltageAC:
-        case SensorType::VoltageDC:
-            return "in"s + std::to_string(sysfsChannelNr) + "_input";
+    case SensorType::Temperature:
+        return "temp"s + std::to_string(sysfsChannelNr) + "_input";
+    case SensorType::Current:
+        return "curr"s + std::to_string(sysfsChannelNr) + "_input";
+    case SensorType::Power:
+        return "power"s + std::to_string(sysfsChannelNr) + "_input";
+    case SensorType::VoltageAC:
+    case SensorType::VoltageDC:
+        return "in"s + std::to_string(sysfsChannelNr) + "_input";
     }
 
     __builtin_unreachable();
 }
 
-template <SensorType TYPE> const DataTree sysfsStaticData;
-template <> const DataTree sysfsStaticData<SensorType::Temperature> = {
+template <SensorType TYPE>
+const DataTree sysfsStaticData;
+template <>
+const DataTree sysfsStaticData<SensorType::Temperature> = {
     {"class", "iana-hardware:sensor"},
     {"sensor-data/value-type", "celsius"},
     {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
     {"sensor-data/oper-status", "ok"},
 };
-template <> const DataTree sysfsStaticData<SensorType::Current> = {
+template <>
+const DataTree sysfsStaticData<SensorType::Current> = {
     {"class", "iana-hardware:sensor"},
     {"sensor-data/value-type", "amperes"},
     {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
     {"sensor-data/oper-status", "ok"},
 };
-template <> const DataTree sysfsStaticData<SensorType::Power> = {
+template <>
+const DataTree sysfsStaticData<SensorType::Power> = {
     {"class", "iana-hardware:sensor"},
     {"sensor-data/value-type", "watts"},
     {"sensor-data/value-scale", "micro"},
     {"sensor-data/value-precision", "0"},
     {"sensor-data/oper-status", "ok"},
 };
-template <> const DataTree sysfsStaticData<SensorType::VoltageAC> = {
+template <>
+const DataTree sysfsStaticData<SensorType::VoltageAC> = {
     {"class", "iana-hardware:sensor"},
     {"sensor-data/value-type", "volts-AC"},
     {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
-    {"sensor-data/oper-status", "ok"}
-};
-template <> const DataTree sysfsStaticData<SensorType::VoltageDC> = {
+    {"sensor-data/oper-status", "ok"}};
+template <>
+const DataTree sysfsStaticData<SensorType::VoltageDC> = {
     {"class", "iana-hardware:sensor"},
     {"sensor-data/value-type", "volts-DC"},
     {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
-    {"sensor-data/oper-status", "ok"}
-};
+    {"sensor-data/oper-status", "ok"}};
 
 template <SensorType TYPE>
 SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr)
@@ -246,7 +250,7 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
     addComponent(m_staticData,
                  m_componentName,
                  m_parent,
-                 DataTree {
+                 DataTree{
                      {"class", "iana-hardware:module"},
                      {"mfg-date", mfgDate},
                      {"serial-num", emmcAttrs.at("serial")},
@@ -256,7 +260,7 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
     addComponent(m_staticData,
                  m_componentName + ":lifetime",
                  m_componentName,
-                 DataTree {
+                 DataTree{
                      {"class", "iana-hardware:sensor"},
                      {"sensor-data/value-type", "other"},
                      {"sensor-data/value-scale", "units"},

@@ -73,7 +73,7 @@ FspYhPsu::FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psu
     : m_i2c(i2c)
     , m_hwmonDir(hwmonDir)
     , m_namePrefix("ne:"s + psuName)
-    , m_staticData(velia::ietf_hardware::data_reader::StaticData(m_namePrefix, "ne", {{"class", "iana-hardware:power-supply"}})())
+    , m_staticData(std::get<0>(velia::ietf_hardware::data_reader::StaticData(m_namePrefix, "ne", {{"class", "iana-hardware:power-supply"}})()))
 {
     m_exit = false;
     m_psuWatcher = std::thread([this] {
@@ -137,20 +137,23 @@ void FspYhPsu::createPower()
     m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-5Vsb", m_namePrefix, m_hwmon, 3));
 }
 
-DataTree FspYhPsu::readValues()
+ReaderReturn FspYhPsu::readValues()
 {
     std::unique_lock lock(m_mtx);
 
     DataTree res(m_staticData);
+    std::map<std::string, Thresholds<uint64_t>> thresholds;
 
     if (m_properties.empty()) {
         res["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
-        return res;
+        return {res, {}};
     }
 
     for (auto& reader : m_properties) {
         try {
-            res.merge(reader());
+            auto [data, thresh] = reader();
+            res.merge(data);
+            thresholds.merge(thresh);
         } catch (std::logic_error& ex) {
             // The PSU might get disconnected before the watcher thread is able to react. Because of this, the sysfs
             // read can fail. We must react to this and catch the exception from readFileInt64. If we cannot get all
@@ -163,11 +166,11 @@ DataTree FspYhPsu::readValues()
             lock.unlock();
             m_cond.notify_all();
 
-            return res;
+            return {res, {}};
         }
 
     }
 
-    return res;
+    return {res, {}};
 }
 }

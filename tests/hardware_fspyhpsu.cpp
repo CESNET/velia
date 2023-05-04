@@ -215,7 +215,9 @@ TEST_CASE("FspYhPsu")
             break;
         }
 
-        REQUIRE(psu->readValues() == expected);
+        auto [data, thresholds] = psu->readValues();
+        REQUIRE(data == expected);
+        REQUIRE(thresholds.empty());
 
         counter++;
     }

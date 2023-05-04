@@ -57,7 +57,7 @@ std::map<std::string, std::string> IETFHardware::process()
     std::map<std::string, std::string> res;
 
     for (auto& dataReader : m_callbacks) {
-        res.merge(dataReader());
+        res.merge(std::get<0>(dataReader()));
     }
 
     res[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
@@ -94,7 +94,10 @@ StaticData::StaticData(std::string componentName, std::optional<std::string> par
                  dataTree);
 }
 
-DataTree StaticData::operator()() const { return m_staticData; }
+ReaderReturn StaticData::operator()() const
+{
+    return {m_staticData, {}};
+}
 
 Fans::Fans(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount)
     : DataReader(std::move(componentName), std::move(parent))
@@ -132,7 +135,7 @@ Fans::Fans(std::string componentName, std::optional<std::string> parent, std::sh
     }
 }
 
-DataTree Fans::operator()() const
+ReaderReturn Fans::operator()() const
 {
     DataTree res(m_staticData);
 
@@ -143,7 +146,7 @@ DataTree Fans::operator()() const
         addSensorValue(res, sensorComponentName, std::to_string(m_hwmon->attribute(attribute)));
     }
 
-    return res;
+    return {res, {}};
 }
 
 std::string getSysfsFilename(const SensorType type, int sysfsChannelNr)
@@ -217,14 +220,14 @@ SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::strin
 }
 
 template <SensorType TYPE>
-DataTree SysfsValue<TYPE>::operator()() const
+ReaderReturn SysfsValue<TYPE>::operator()() const
 {
     DataTree res(m_staticData);
 
     int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
     addSensorValue(res, m_componentName, std::to_string(sensorValue));
 
-    return res;
+    return {res, {}};
 }
 
 template struct SysfsValue<SensorType::Current>;
@@ -270,14 +273,14 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
                  });
 }
 
-DataTree EMMC::operator()() const
+ReaderReturn EMMC::operator()() const
 {
     DataTree res(m_staticData);
 
     auto emmcAttrs = m_emmc->attributes();
     addSensorValue(res, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
 
-    return res;
+    return {res, {}};
 }
 
 void Group::registerDataReader(const IETFHardware::DataReader& callable)
@@ -285,13 +288,16 @@ void Group::registerDataReader(const IETFHardware::DataReader& callable)
     m_readers.emplace_back(callable);
 }
 
-DataTree Group::operator()() const
+ReaderReturn Group::operator()() const
 {
     DataTree res;
+    std::map<std::string, Thresholds<uint64_t>> sensorThresholds;
     for (const auto& reader : m_readers) {
-        res.merge(reader());
+        auto [data, thresholds] = reader();
+        res.merge(data);
+        sensorThresholds.merge(thresholds);
     }
-    return res;
+    return {res, sensorThresholds};
 }
 
 }

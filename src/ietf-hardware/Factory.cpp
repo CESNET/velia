@@ -48,15 +48,24 @@ void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardwar
                                                                  "psu2",
                                                                  std::make_shared<TransientI2C>(2, 0x59, "ym2151e"));
 
-    ietfHardware->registerDataReader([pduGroup = std::move(pduGroup), psu1, psu2]() {
+    ietfHardware->registerDataReader([pduGroup = std::move(pduGroup), psu1, psu2]() -> ReaderReturn {
         auto psu1Reader = std::async(std::launch::async, [psu1] { return psu1->readValues(); });
         auto psu2Reader = std::async(std::launch::async, [psu2] { return psu2->readValues(); });
         auto pduReader = std::async(std::launch::async, [&pduGroup] { return pduGroup(); });
 
-        auto res = psu1Reader.get();
-        res.merge(psu2Reader.get());
-        res.merge(pduReader.get());
-        return res;
+        auto [psu1Data, psu1Thresholds] = psu1Reader.get();
+        auto [psu2Data, psu2Thresholds] = psu2Reader.get();
+        auto [pduData, pduThresholds] = pduReader.get();
+
+        auto res = std::move(psu1Data);
+        res.merge(psu2Data);
+        res.merge(pduData);
+
+        auto thresholds = std::move(psu1Thresholds);
+        thresholds.merge(psu2Thresholds);
+        thresholds.merge(pduThresholds);
+
+        return {res, thresholds};
     });
 }
 

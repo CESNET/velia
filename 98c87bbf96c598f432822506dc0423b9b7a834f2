@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d738dbd2_eaf99f0f",
+        "filename": "src/ietf-hardware/thresholds_fwd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-04T23:18:29Z",
+      "side": 1,
+      "message": "nit: \u003ciosfwd\u003e should be enough",
+      "revId": "98c87bbf96c598f432822506dc0423b9b7a834f2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

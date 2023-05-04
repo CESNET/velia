@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <ostream>
 
 namespace velia::ietf_hardware {
 
@@ -24,4 +25,7 @@ enum class State {
     WarningHigh,
     CriticalHigh,
 };
+
+std::ostream& operator<<(std::ostream& os, const State state);
+
 }

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <fmt/ostream.h>
 #include <functional>
 #include <optional>
 #include "ietf-hardware/thresholds_fwd.h"

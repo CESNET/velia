@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "504b2628_391fbaa6",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-04T23:15:34Z",
+      "side": 1,
+      "message": "This is 20 lines of code, I would prefer a regex.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 87
+      },
+      "revId": "44181d02c4e262c8379b5fbdb99135aff0f16473",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72bd2caa_211bcf8b",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-04T23:15:34Z",
+      "side": 1,
+      "message": "let\u0027s remove this (and the \"stopped\" as well)",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 1
+      },
+      "revId": "44181d02c4e262c8379b5fbdb99135aff0f16473",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b841f9d3_712236a2",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-04T23:15:34Z",
+      "side": 1,
+      "message": "This thing stores list keys which are present at any given time in sysrepo. Let\u0027s not call that class `ModuleChangeTester` because it\u0027s not tracking any changes, it\u0027s just recording a state.\n\nAlso, I\u0027d prefer to make the test a bit more thorough, and to simplify the expectation setup at the same time. Because right now, the code below effectively checks that \"some changes at these components have happened\" followed by \"let\u0027s get a copy from the datastore\". There\u0027s some small bit of duplication in there.\n\nHow would you like a pattern like this:\n \n// initial population of data\nREQUIRE_CALL(log, update(XXX{\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne\u0027]\", \"\"},\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]\", \"\"},\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]/operational-status\", \"OK\"},\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]/sensor/value/whatever\", \"666\"},\n}));\n \n// removing a component causes two updates, one about the deletion, the other about a new \"disabled\" state\nREQUIRE_CALL(log, update(X{\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]\", Deleted{}},\n  /* FIXME: perhaps make the log::update() less naive and once it detects that a node X gets deleted, don\u0027t store anything below X; in that case, remove the next three lines */\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]/sensor\", Deleted{}},\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]/sensor/value\", Deleted{}},\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]/sensor/value/whatever\", Deleted{}},\n}));\nREQUIRE_CALL(log, update(X{\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]\", \"\"},\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]/operational-status\", \"pwned\"},\n}));\npsuActive \u003d false;\nsleep(...);\n \n// plugged back in, now we get all the usual sensor data (and just one update)\nREQUIRE_CALL(log, update(X{\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]\", \"\"},\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]/operational-status\", \"OK\"},\n  {\"/ietf-hardware:hardware/component[name\u003d\u0027ne:power\u0027]/sensor/value/whatever\", \"666\"},\n});\npsuActive \u003d true;\nsleep(...);",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 56
+      },
+      "revId": "44181d02c4e262c8379b5fbdb99135aff0f16473",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2110e043_d674e857",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-04T23:15:34Z",
+      "side": 1,
+      "message": "These are redundant because the very next check reads everything and (also) checks for these two values. Previously, the code was testing that because it was a pull-based callback that was only invoked on demand. Now, there\u0027s some code which feeds data to sysrepo asynchronously, and testing it like this would only check the implementation of sysrepo\u0027s own XPath filtering, not that of our callback.",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 127
+      },
+      "revId": "44181d02c4e262c8379b5fbdb99135aff0f16473",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

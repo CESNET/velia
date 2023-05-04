@@ -140,6 +140,7 @@ add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/FspYhPsu.cpp
     src/ietf-hardware/FspYhPsu.h
     src/ietf-hardware/thresholds.h
+    src/ietf-hardware/thresholds.cpp
     src/ietf-hardware/thresholds_fwd.h
     )
 target_link_libraries(velia-ietf-hardware

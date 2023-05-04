@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c143c6c_82a5518e",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-04T22:41:24Z",
+      "side": 1,
+      "message": "This unifies the error handling among the two failure possibilities (unplugging in between the reads, and a failure during the read). I agree that this is a good change, but please let\u0027s describe that in the commit message. It\u0027s a visible change, and the tests had to be adjusted (good!).",
+      "range": {
+        "startLine": 160,
+        "startChar": 12,
+        "endLine": 160,
+        "endChar": 31
+      },
+      "revId": "98abd85075aee816ada35998e2b28dac4723c08b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

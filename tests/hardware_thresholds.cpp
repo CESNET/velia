@@ -12,36 +12,6 @@ using namespace velia::ietf_hardware;
 using Thrs = Thresholds<int16_t>;
 using OneThr = OneThreshold<int16_t>;
 
-namespace velia::ietf_hardware {
-std::ostream& operator<<(std::ostream& s, const State state)
-{
-    switch (state) {
-    case State::Initial:
-        s << "Unknown";
-        break;
-    case State::Disabled:
-        s << "Disabled";
-        break;
-    case State::CriticalLow:
-        s << "CriticalLow";
-        break;
-    case State::WarningLow:
-        s << "WarningLow";
-        break;
-    case State::Normal:
-        s << "Normal";
-        break;
-    case State::WarningHigh:
-        s << "WarningHigh";
-        break;
-    case State::CriticalHigh:
-        s << "CriticalHigh";
-        break;
-    }
-    return s;
-}
-}
-
 class Transitions {
 public:
     MAKE_MOCK1(record, void(State));

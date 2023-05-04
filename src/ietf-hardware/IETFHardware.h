@@ -103,16 +103,16 @@ public:
 };
 
 enum class SensorType {
-   Temperature,
-   Current,
-   VoltageDC,
-   VoltageAC,
-   Power
+    Temperature,
+    Current,
+    VoltageDC,
+    VoltageAC,
+    Power
 
 };
 
 /** @brief Manages a single value from sysfs, data is provided by a sysfs::HWMon object. */
-template<SensorType TYPE>
+template <SensorType TYPE>
 struct SysfsValue : private DataReader {
 private:
     std::shared_ptr<sysfs::HWMon> m_hwmon;

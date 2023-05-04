@@ -57,7 +57,26 @@ std::map<std::string, std::string> IETFHardware::process()
     std::map<std::string, std::string> res;
 
     for (auto& dataReader : m_callbacks) {
-        res.merge(std::get<0>(dataReader()));
+        auto [data, sensorThresholds] = dataReader();
+
+        for (const auto& [xpath, thresholds] : sensorThresholds) {
+            auto watcherIt = m_watchers.find(xpath);
+            auto keyIt = data.find(xpath);
+
+            // we have not seen this xPath yet
+            if (watcherIt == m_watchers.end() && keyIt != data.end()) {
+                watcherIt = m_watchers.emplace(xpath, std::move(thresholds)).first;
+            }
+
+            if (watcherIt != m_watchers.end() && keyIt != data.end()) {
+                auto stateChange = watcherIt->second.update(std::stoul(keyIt->second));
+                if (stateChange) {
+                    spdlog::get("hardware")->debug("Sensor {} changed threshold state to {}", xpath, stateChange.value());
+                }
+            }
+        }
+
+        res.merge(data);
     }
 
     res[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());

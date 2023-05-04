@@ -90,6 +90,9 @@ struct DataReader {
     /** @brief static hw-state related data */
     DataTree m_staticData;
 
+    /** @brief xpaths of sensor values returned by DataReader's op() (so IETFHardware::process knows where to look in the returned DataTree) and corresponding Thresholds */
+    std::map<std::string, Thresholds<uint64_t>> m_sensorValueThresholds;
+
     DataReader(std::string propertyPrefix, std::optional<std::string> parent);
 };
 
@@ -106,7 +109,7 @@ private:
     unsigned m_fanChannelsCount;
 
 public:
-    Fans(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount);
+    Fans(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount, Thresholds<uint64_t> thresholds = {});
     ReaderReturn operator()() const;
 };
 
@@ -127,7 +130,7 @@ private:
     std::string m_sysfsFile;
 
 public:
-    SysfsValue(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr);
+    SysfsValue(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr, Thresholds<uint64_t> thresholds = {});
     ReaderReturn operator()() const;
 };
 
@@ -137,7 +140,7 @@ private:
     std::shared_ptr<sysfs::EMMC> m_emmc;
 
 public:
-    EMMC(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc);
+    EMMC(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc, Thresholds<uint64_t> thresholds = {});
     ReaderReturn operator()() const;
 };
 

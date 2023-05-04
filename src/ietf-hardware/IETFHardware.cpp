@@ -99,7 +99,7 @@ ReaderReturn StaticData::operator()() const
     return {m_staticData, {}};
 }
 
-Fans::Fans(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount)
+Fans::Fans(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount, Thresholds<uint64_t> thresholds)
     : DataReader(std::move(componentName), std::move(parent))
     , m_hwmon(std::move(hwmon))
     , m_fanChannelsCount(fanChannelsCount)
@@ -122,6 +122,7 @@ Fans::Fans(std::string componentName, std::optional<std::string> parent, std::sh
                      });
 
         // fans -> fan_i -> sensor-data
+        m_sensorValueThresholds.emplace(xpathForComponent(m_componentName + ":fan" + std::to_string(i) + ":rpm/sensor-data/values"), thresholds);
         addComponent(m_staticData,
                      m_componentName + ":fan" + std::to_string(i) + ":rpm",
                      m_componentName + ":fan" + std::to_string(i),
@@ -146,7 +147,7 @@ ReaderReturn Fans::operator()() const
         addSensorValue(res, sensorComponentName, std::to_string(m_hwmon->attribute(attribute)));
     }
 
-    return {res, {}};
+    return {res, m_sensorValueThresholds};
 }
 
 std::string getSysfsFilename(const SensorType type, int sysfsChannelNr)
@@ -208,7 +209,7 @@ const DataTree sysfsStaticData<SensorType::VoltageDC> = {
     {"sensor-data/oper-status", "ok"}};
 
 template <SensorType TYPE>
-SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr)
+SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr, Thresholds<uint64_t> thresholds)
     : DataReader(std::move(componentName), std::move(parent))
     , m_hwmon(std::move(hwmon))
     , m_sysfsFile(getSysfsFilename(TYPE, sysfsChannelNr))
@@ -217,6 +218,8 @@ SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::strin
                  m_componentName,
                  m_parent,
                  sysfsStaticData<TYPE>);
+
+    m_sensorValueThresholds.emplace(xpathForComponent(m_componentName) + "sensor-data/value", std::move(thresholds));
 }
 
 template <SensorType TYPE>
@@ -227,7 +230,7 @@ ReaderReturn SysfsValue<TYPE>::operator()() const
     int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
     addSensorValue(res, m_componentName, std::to_string(sensorValue));
 
-    return {res, {}};
+    return {res, m_sensorValueThresholds};
 }
 
 template struct SysfsValue<SensorType::Current>;
@@ -236,7 +239,7 @@ template struct SysfsValue<SensorType::Temperature>;
 template struct SysfsValue<SensorType::VoltageAC>;
 template struct SysfsValue<SensorType::VoltageDC>;
 
-EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc)
+EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc, Thresholds<uint64_t> thresholds)
     : DataReader(std::move(componentName), std::move(parent))
     , m_emmc(std::move(emmc))
 {
@@ -271,6 +274,8 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
                      {"sensor-data/oper-status", "ok"},
                      {"sensor-data/units-display", "percent"s},
                  });
+
+    m_sensorValueThresholds.emplace(xpathForComponent(m_componentName + ":lifetime") + "sensor-data/value", std::move(thresholds));
 }
 
 ReaderReturn EMMC::operator()() const
@@ -280,7 +285,7 @@ ReaderReturn EMMC::operator()() const
     auto emmcAttrs = m_emmc->attributes();
     addSensorValue(res, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
 
-    return {res, {}};
+    return {res, m_sensorValueThresholds};
 }
 
 void Group::registerDataReader(const IETFHardware::DataReader& callable)

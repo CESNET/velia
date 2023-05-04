@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <boost/signals2/signal.hpp>
 #include <functional>
 #include <optional>
 #include "ietf-hardware/thresholds_fwd.h"
@@ -28,9 +27,6 @@ struct Thresholds {
 template <typename Value>
 class Watcher {
 public:
-    using Signal = boost::signals2::signal<void(State)>;
-    Signal changed;
-
     Watcher(const Thresholds<Value>& thresholds = Thresholds<Value>())
         : m_thresholds(thresholds)
     {
@@ -38,15 +34,17 @@ public:
 
     ~Watcher() = default;
 
-    void setThresholds(const Thresholds<Value>& thresholds)
+    std::optional<State> setThresholds(const Thresholds<Value>& thresholds)
     {
         m_thresholds = thresholds;
         m_state = State::Initial;
-        update(m_lastValue);
+        return update(m_lastValue);
     }
 
-    void update(const Value value)
+    std::optional<State> update(const Value value)
     {
+        State oldState = m_state;
+
         if (violates<std::less>(value, m_thresholds.criticalLow)) {
             maybeTransition(State::CriticalLow, value);
         } else if (violates<std::greater>(value, m_thresholds.criticalHigh)) {
@@ -61,6 +59,10 @@ public:
             maybeTransition(State::Normal, value);
         }
         m_lastValue = value;
+
+        if (oldState != m_state)
+            return m_state;
+        return std::nullopt;
     }
 
 private:
@@ -75,7 +77,6 @@ private:
     void maybeTransition(const State newState, const Value value)
     {
         if (newState != m_state) {
-            changed(newState);
             m_state = newState;
             m_lastChange = value;
         }

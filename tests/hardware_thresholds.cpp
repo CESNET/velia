@@ -50,11 +50,21 @@ public:
 #define EVENTS_INIT            \
     trompeloeil::sequence seq; \
     Transitions eventLog;      \
-    Watcher w(thr);            \
-    w.changed.connect([&eventLog](const auto state) { eventLog.record(state); });
+    Watcher w(thr);
 
-#define EXPECT_EVENT(E) \
-    REQUIRE_CALL(eventLog, record(E)).IN_SEQUENCE(seq)
+
+#define EXPECT_EVENT(E, STATE)          \
+    {                                   \
+        auto statusChange = E;          \
+        REQUIRE(statusChange);          \
+        REQUIRE(statusChange == STATE); \
+    }
+
+#define EXPECT_NONE(E)          \
+    {                           \
+        auto statusChange = E;  \
+        REQUIRE(!statusChange); \
+    }
 
 TEST_CASE("just one threshold")
 {
@@ -64,54 +74,38 @@ TEST_CASE("just one threshold")
     {
         thr.criticalLow = OneThr{0, 1};
         EVENTS_INIT
-        {
-            EXPECT_EVENT(State::Normal);
-            w.update(10);
-        }
-        {
-            EXPECT_EVENT(State::CriticalLow);
-            w.update(-10);
-        }
-        {
-            EXPECT_EVENT(State::Normal);
-            w.update(10);
-        }
+        EXPECT_EVENT(w.update(10), State::Normal);
+        EXPECT_EVENT(w.update(-10), State::CriticalLow);
+        EXPECT_EVENT(w.update(10), State::Normal);
     }
 
     SECTION("critical-low failed")
     {
         thr.criticalLow = OneThr{0, 1};
         EVENTS_INIT
-        EXPECT_EVENT(State::CriticalLow);
-        w.update(-10);
+        EXPECT_EVENT(w.update(-10), State::CriticalLow);
     }
 
     SECTION("warning-low ok")
     {
         thr.warningLow = OneThr{0, 1};
         EVENTS_INIT
-        EXPECT_EVENT(State::Normal);
-        w.update(10);
+        EXPECT_EVENT(w.update(10), State::Normal);
     }
 
     SECTION("warning-low failed -> ignoring")
     {
         thr.warningLow = OneThr{0, 1};
         EVENTS_INIT
-        {
-            EXPECT_EVENT(State::WarningLow);
-            w.update(-10);
-        }
+        EXPECT_EVENT(w.update(-10), State::WarningLow);
         thr.warningLow.reset();
-        {
-            EXPECT_EVENT(State::Disabled);
-            w.setThresholds(thr);
-        }
-        w.update(-20);
-        w.update(-10);
-        w.update(0);
-        w.update(10);
-        w.update(-10);
+        EXPECT_EVENT(w.setThresholds(thr), State::Disabled);
+
+        EXPECT_NONE(w.update(-20));
+        EXPECT_NONE(w.update(-10));
+        EXPECT_NONE(w.update(0));
+        EXPECT_NONE(w.update(10));
+        EXPECT_NONE(w.update(-10));
     }
 }
 
@@ -122,42 +116,21 @@ TEST_CASE("state transitions")
 
     EVENTS_INIT
 
-    {
-        EXPECT_EVENT(State::Normal);
-        w.update(10);
-    }
-    w.update(12);
-    {
-        EXPECT_EVENT(State::CriticalLow);
-        w.update(8);
-    }
+    EXPECT_EVENT(w.update(10), State::Normal);
+    EXPECT_NONE(w.update(12));
+    EXPECT_EVENT(w.update(8), State::CriticalLow);
 
-    {
-        EXPECT_EVENT(State::CriticalLow);
-        thr.warningHigh = OneThr{20, 1};
-        w.setThresholds(thr);
-    }
+    thr.warningHigh = OneThr{20, 1};
+    EXPECT_EVENT(w.setThresholds(thr), State::CriticalLow);
 
-    {
-        EXPECT_EVENT(State::CriticalLow);
-        w.setThresholds(thr);
-    }
+    EXPECT_EVENT(w.setThresholds(thr), State::CriticalLow);
+    EXPECT_EVENT(w.update(10), State::Normal);
 
-    {
-        EXPECT_EVENT(State::Normal);
-        w.update(10);
-    }
+    thr.warningLow = OneThr{13, 1};
+    thr.criticalHigh = OneThr{30, 1};
+    EXPECT_EVENT( w.setThresholds(thr), State::WarningLow);
 
-    {
-        EXPECT_EVENT(State::WarningLow);
-        thr.warningLow = OneThr{13, 1};
-        thr.criticalHigh = OneThr{30, 1};
-        w.setThresholds(thr);
-    }
-    {
-        // no update now
-        w.update(12);
-    }
+    EXPECT_NONE(w.update(12));
 }
 
 TEST_CASE("hysteresis")
@@ -169,34 +142,23 @@ TEST_CASE("hysteresis")
     thr.criticalLow = OneThr{10, 2};
     EVENTS_INIT
 
-    {
-        EXPECT_EVENT(State::Normal);
-        w.update(25);
-    }
+    EXPECT_EVENT(w.update(25), State::Normal);
+    EXPECT_EVENT(w.update(31), State::WarningHigh);
 
-    {
-        EXPECT_EVENT(State::WarningHigh);
-        w.update(31);
-    }
-    w.update(31);
-    w.update(31);
-    w.update(29);
-    w.update(29);
-    w.update(29);
-    w.update(31);
-    w.update(29);
-    w.update(31);
-    w.update(29);
+    EXPECT_NONE(w.update(31));
+    EXPECT_NONE(w.update(31));
+    EXPECT_NONE(w.update(29));
+    EXPECT_NONE(w.update(29));
+    EXPECT_NONE(w.update(29));
+    EXPECT_NONE(w.update(31));
+    EXPECT_NONE(w.update(29));
+    EXPECT_NONE(w.update(31));
+    EXPECT_NONE(w.update(29));
 
-    {
-        EXPECT_EVENT(State::CriticalHigh);
-        w.update(41);
-    }
-    {
-        EXPECT_EVENT(State::WarningHigh);
-        w.update(37);
-    }
-    w.update(38);
-    w.update(39);
-    w.update(40);
+    EXPECT_EVENT(w.update(41), State::CriticalHigh);
+    EXPECT_EVENT(w.update(37), State::WarningHigh);
+
+    EXPECT_NONE(w.update(38));
+    EXPECT_NONE(w.update(39));
+    EXPECT_NONE(w.update(40));
 }

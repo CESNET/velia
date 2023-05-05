@@ -46,6 +46,30 @@
       },
       "revId": "98abd85075aee816ada35998e2b28dac4723c08b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b3c6b4d_418f3e83",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-05T09:57:58Z",
+      "side": 1,
+      "message": "I am not sure I correctly understood what should have been put in the commit message. Please check the new version.",
+      "parentUuid": "8c143c6c_82a5518e",
+      "range": {
+        "startLine": 160,
+        "startChar": 12,
+        "endLine": 160,
+        "endChar": 31
+      },
+      "revId": "98abd85075aee816ada35998e2b28dac4723c08b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e120744_f260fa97",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-05T09:57:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "504b2628_391fbaa6",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 87
+      },
+      "revId": "44181d02c4e262c8379b5fbdb99135aff0f16473",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72bd2caa_211bcf8b",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-05-04T23:15:34Z",
       "side": 1,
       "message": "let\u0027s remove this (and the \"stopped\" as well)",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 1
+      },
+      "revId": "44181d02c4e262c8379b5fbdb99135aff0f16473",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91ebbcdc_81c08867",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-05T09:57:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72bd2caa_211bcf8b",
       "range": {
         "startLine": 57,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2ace0c5_a2e1341f",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-05T09:57:58Z",
+      "side": 1,
+      "message": "Good idea. Done",
+      "parentUuid": "b841f9d3_712236a2",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 56
+      },
+      "revId": "44181d02c4e262c8379b5fbdb99135aff0f16473",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2110e043_d674e857",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-05-04T23:15:34Z",
       "side": 1,
       "message": "These are redundant because the very next check reads everything and (also) checks for these two values. Previously, the code was testing that because it was a pull-based callback that was only invoked on demand. Now, there\u0027s some code which feeds data to sysrepo asynchronously, and testing it like this would only check the implementation of sysrepo\u0027s own XPath filtering, not that of our callback.",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 127
+      },
+      "revId": "44181d02c4e262c8379b5fbdb99135aff0f16473",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddb40a52_8cfa4e3d",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-05T09:57:58Z",
+      "side": 1,
+      "message": "Removed. I kept only direct fetching of last-change to test that the timestamp has increased. \n(I can\u0027t test it properly in expectations [unless we come with some sort of time-testing code similar to alarmsd tests])",
+      "parentUuid": "2110e043_d674e857",
       "range": {
         "startLine": 119,
         "startChar": 0,

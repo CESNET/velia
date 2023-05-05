@@ -22,6 +22,30 @@
       },
       "revId": "98abd85075aee816ada35998e2b28dac4723c08b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c75606b1_a4be25c6",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-05T08:08:40Z",
+      "side": 1,
+      "message": "This is BS, sorry :). The code would return empty data even before.",
+      "parentUuid": "8c143c6c_82a5518e",
+      "range": {
+        "startLine": 160,
+        "startChar": 12,
+        "endLine": 160,
+        "endChar": 31
+      },
+      "revId": "98abd85075aee816ada35998e2b28dac4723c08b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

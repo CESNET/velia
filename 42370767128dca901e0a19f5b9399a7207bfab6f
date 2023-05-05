@@ -16,6 +16,24 @@
       "message": "also update CMakeLists.txt, please",
       "revId": "42370767128dca901e0a19f5b9399a7207bfab6f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cd5e975_b675890d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-05T13:20:42Z",
+      "side": 1,
+      "message": "Done. \nBoost dependency was added to wrong target in parent btw. Velia-hardware already had boost dependency, so fixed up in parent only (by not adding boost to deps).",
+      "parentUuid": "d40544b5_026e44cd",
+      "revId": "42370767128dca901e0a19f5b9399a7207bfab6f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

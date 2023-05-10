@@ -48,20 +48,39 @@ void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& comp
 
 namespace velia::ietf_hardware {
 
-IETFHardware::IETFHardware() = default;
+IETFHardware::IETFHardware()
+    : m_log(spdlog::get("hardware"))
+{
+}
 
 IETFHardware::~IETFHardware() = default;
 
-std::map<std::string, std::string> IETFHardware::process()
+HardwareInfo IETFHardware::process()
 {
-    std::map<std::string, std::string> res;
+    DataTree res;
+    std::map<std::string, ThresholdInfo> alarms;
 
     for (auto& dataReader : m_callbacks) {
         res.merge(dataReader());
     }
 
+    for (auto& [sensorXPath, thresholdsWatcher] : m_thresholdsWatchers) {
+        if (auto it = res.find(sensorXPath); it != res.end()) {
+            if (auto newState = thresholdsWatcher.update(std::stoll(it->second)); newState && *newState != State::Disabled) {
+                m_log->debug("Sensor '{}' thresholds watcher changed state to {}", sensorXPath, *newState);
+                alarms.emplace(sensorXPath, ThresholdInfo{newState, false});
+            } else {
+                alarms.emplace(sensorXPath, ThresholdInfo{std::nullopt, false});
+            }
+        } else {
+            m_log->debug("Data for sensor '{}' were not returned. Was the sensor unplugged?", sensorXPath);
+            alarms.emplace(sensorXPath, ThresholdInfo{std::nullopt, true});
+        }
+    }
+
     res[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
-    return res;
+
+    return {res, alarms};
 }
 
 /** @brief A namespace containing predefined data readers for IETFHardware class.

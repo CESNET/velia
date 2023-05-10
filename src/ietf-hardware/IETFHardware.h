@@ -23,6 +23,11 @@ namespace velia::ietf_hardware {
 using DataTree = std::map<std::string, std::string>;
 using ThresholdsBySensorPath = std::map<std::string, Thresholds<int64_t>>;
 
+struct HardwareInfo {
+    DataTree dataTree;
+    std::map<std::string, State> updatedTresholdCrossing;
+};
+
 /**
  * @brief Readout of hardware-state related data according to RFC 8348 (App. A)
  *
@@ -56,13 +61,22 @@ public:
     void registerDataReader(const DataReaderType& callable)
     {
         m_callbacks.push_back(callable);
+
+        for (const auto& [sensorPath, thresholds] : callable.thresholds()) {
+            m_thresholdsWatchers.emplace(sensorPath, thresholds);
+        }
     }
 
-    DataTree process();
+    HardwareInfo process();
 
 private:
+    velia::Log m_log;
+
     /** @brief registered components for individual modules */
     std::vector<DataReader> m_callbacks;
+
+    /** @brief watchers for any sensor value xPath reported by data readers */
+    std::map<std::string, Watcher<int64_t>> m_thresholdsWatchers;
 };
 
 /**

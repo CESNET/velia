@@ -48,7 +48,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         while (!m_quit) {
             m_log->trace("IetfHardware poll");
 
-            auto hwStateValues = m_hwState->process();
+            auto [hwStateValues, thresholds] = m_hwState->process();
             std::set<std::string> deletedComponents;
 
             /* Some data readers can stop returning data in some cases (e.g. ejected PSU).

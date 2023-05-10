@@ -119,6 +119,10 @@ TEST_CASE("IETF Hardware with sysrepo")
 
             return res;
         }
+
+        velia::ietf_hardware::ThresholdsBySensorPath thresholds() const {
+            return {};
+        }
     };
     ietfHardware->registerDataReader(PsuDataReader{psuActive});
 

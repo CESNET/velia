@@ -48,16 +48,40 @@ void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardwar
                                                                  "psu2",
                                                                  std::make_shared<TransientI2C>(2, 0x59, "ym2151e"));
 
-    ietfHardware->registerDataReader([pduGroup = std::move(pduGroup), psu1, psu2]() {
-        auto psu1Reader = std::async(std::launch::async, [psu1] { return psu1->readValues(); });
-        auto psu2Reader = std::async(std::launch::async, [psu2] { return psu2->readValues(); });
-        auto pduReader = std::async(std::launch::async, [&pduGroup] { return pduGroup(); });
+    struct ParallelPDUReader {
+        Group pduGroup;
+        std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu1;
+        std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu2;
 
-        auto res = psu1Reader.get();
-        res.merge(psu2Reader.get());
-        res.merge(pduReader.get());
-        return res;
-    });
+        ParallelPDUReader(Group&& pduGroup, std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu1, std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu2)
+            : pduGroup(std::move(pduGroup))
+            , psu1(std::move(psu1))
+            , psu2(std::move(psu2))
+        {
+        }
+
+        DataTree operator()()
+        {
+            auto psu1Reader = std::async(std::launch::async, [&] { return psu1->readValues(); });
+            auto psu2Reader = std::async(std::launch::async, [&] { return psu2->readValues(); });
+            auto pduReader = std::async(std::launch::async, [&] { return pduGroup(); });
+
+            auto res = psu1Reader.get();
+            res.merge(psu2Reader.get());
+            res.merge(pduReader.get());
+            return res;
+        }
+
+        ThresholdsBySensorPath thresholds() const
+        {
+            auto res = psu1->thresholds();
+            res.merge(psu2->thresholds());
+            res.merge(pduGroup.thresholds());
+            return res;
+        }
+    };
+
+    ietfHardware->registerDataReader(ParallelPDUReader(std::move(pduGroup), psu1, psu2));
 }
 
 std::shared_ptr<IETFHardware> create(const std::string& applianceName)

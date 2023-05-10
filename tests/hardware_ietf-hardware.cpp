@@ -1,10 +1,19 @@
 #include "trompeloeil_doctest.h"
+#include <cstdint>
 #include "ietf-hardware/IETFHardware.h"
+#include "ietf-hardware/thresholds.h"
 #include "mock/ietf_hardware.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
 
 using namespace std::literals;
+
+namespace velia::ietf_hardware {
+bool operator==(const ThresholdInfo& a, const ThresholdInfo& b)
+{
+    return std::tie(a.disappeared, a.state) == std::tie(b.disappeared, b.state);
+}
+}
 
 TEST_CASE("HardwareState")
 {
@@ -34,36 +43,40 @@ TEST_CASE("HardwareState")
     };
     FAKE_EMMC(emmc, attributesEMMC);
 
-    REQUIRE_CALL(*fans, attribute("fan1_input"s)).RETURN(253);
-    REQUIRE_CALL(*fans, attribute("fan2_input"s)).RETURN(0);
-    REQUIRE_CALL(*fans, attribute("fan3_input"s)).RETURN(1280);
-    REQUIRE_CALL(*fans, attribute("fan4_input"s)).RETURN(666);
+    std::vector<int64_t> fanValues = {253, 0, 1280, 666};
+    REQUIRE_CALL(*fans, attribute("fan1_input"s)).LR_RETURN(fanValues[0]).TIMES(5);
+    REQUIRE_CALL(*fans, attribute("fan2_input"s)).LR_RETURN(fanValues[1]).TIMES(5);
+    REQUIRE_CALL(*fans, attribute("fan3_input"s)).LR_RETURN(fanValues[2]).TIMES(5);
+    REQUIRE_CALL(*fans, attribute("fan4_input"s)).LR_RETURN(fanValues[3]).TIMES(5);
 
-    REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800);
+    REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800).TIMES(5);
 
-    REQUIRE_CALL(*sysfsVoltageAc, attribute("in1_input")).RETURN(220000);
-    REQUIRE_CALL(*sysfsVoltageDc, attribute("in1_input")).RETURN(12000);
-    REQUIRE_CALL(*sysfsPower, attribute("power1_input")).RETURN(14000000);
-    REQUIRE_CALL(*sysfsCurrent, attribute("curr1_input")).RETURN(200);
+    REQUIRE_CALL(*sysfsVoltageAc, attribute("in1_input")).RETURN(220000).TIMES(5);
+    REQUIRE_CALL(*sysfsVoltageDc, attribute("in1_input")).RETURN(12000).TIMES(5);
+    REQUIRE_CALL(*sysfsPower, attribute("power1_input")).RETURN(14000000).TIMES(5);
+    REQUIRE_CALL(*sysfsCurrent, attribute("curr1_input")).RETURN(200).TIMES(5);
 
     attributesEMMC = {{"life_time"s, "40"s}};
-    FAKE_EMMC(emmc, attributesEMMC);
+    FAKE_EMMC(emmc, attributesEMMC).TIMES(5);
 
+    using velia::ietf_hardware::OneThreshold;
+    using velia::ietf_hardware::Thresholds;
     using velia::ietf_hardware::data_reader::EMMC;
     using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
     using velia::ietf_hardware::data_reader::StaticData;
     using velia::ietf_hardware::data_reader::SysfsValue;
+
     // register components into hw state
     ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
     ietfHardware->registerDataReader(StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
-    ietfHardware->registerDataReader(Fans("ne:fans", "ne", fans, 4));
-    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
+    ietfHardware->registerDataReader(Fans("ne:fans", "ne", fans, 4, Thresholds<int64_t>{std::nullopt, std::nullopt, OneThreshold<int64_t>{10000, 2000}, OneThreshold<int64_t>{15000, 2000}}));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1, Thresholds<int64_t>{OneThreshold<int64_t>{5000, 1000}, OneThreshold<int64_t>{10000, 1000}, OneThreshold<int64_t>{50000, 1000}, OneThreshold<int64_t>{60000, 1000}}));
     ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageAC>("ne:ctrl:voltage-in", "ne:ctrl", sysfsVoltageAc, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:ctrl:voltage-out", "ne:ctrl", sysfsVoltageDc, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Power>("ne:ctrl:power", "ne:ctrl", sysfsPower, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Current>("ne:ctrl:current", "ne:ctrl", sysfsCurrent, 1));
-    ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
+    ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc, Thresholds<int64_t>{OneThreshold<int64_t>{10, 0}, OneThreshold<int64_t>{20, 0}, std::nullopt, std::nullopt}));
 
     std::map<std::string, std::string> expected = {
         {"/ietf-hardware:hardware/component[name='ne']/class", "iana-hardware:chassis"},
@@ -183,8 +196,63 @@ TEST_CASE("HardwareState")
         {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/state/oper-state", "enabled"},
     };
 
-    // exclude last-change node
-    auto result = ietfHardware->process();
-    result.erase(modulePrefix + "/last-change");
-    REQUIRE(result == expected);
+    {
+        auto [data, alarms] = ietfHardware->process();
+        data.erase(modulePrefix + "/last-change"); // exclude last-change node
+        REQUIRE(data == expected);
+        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::ThresholdInfo>{
+                    {"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value", velia::ietf_hardware::ThresholdInfo{velia::ietf_hardware::State::Normal, false}},
+                    {"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value", velia::ietf_hardware::ThresholdInfo{velia::ietf_hardware::State::Normal, false}},
+                    {"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value", velia::ietf_hardware::ThresholdInfo{velia::ietf_hardware::State::Normal, false}},
+                    {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value", velia::ietf_hardware::ThresholdInfo{velia::ietf_hardware::State::Normal, false}},
+                    {"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value", velia::ietf_hardware::ThresholdInfo{velia::ietf_hardware::State::Normal, false}},
+                    {"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value", velia::ietf_hardware::ThresholdInfo{velia::ietf_hardware::State::Normal, false}},
+                });
+    }
+
+    fanValues[1] = 11500;
+    expected["/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value"] = "11500";
+
+    {
+        auto [data, alarms] = ietfHardware->process();
+        data.erase(modulePrefix + "/last-change"); // exclude last-change node
+        REQUIRE(data == expected);
+        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::ThresholdInfo>{
+                    {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value", velia::ietf_hardware::ThresholdInfo{velia::ietf_hardware::State::WarningHigh, false}},
+                });
+    }
+
+    fanValues[1] = 16500;
+    expected["/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value"] = "16500";
+
+    {
+        auto [data, alarms] = ietfHardware->process();
+        data.erase(modulePrefix + "/last-change"); // exclude last-change node
+        REQUIRE(data == expected);
+        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::ThresholdInfo>{
+                    {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value", velia::ietf_hardware::ThresholdInfo{velia::ietf_hardware::State::CriticalHigh, false}},
+                });
+    }
+
+    fanValues[1] = 16400;
+    expected["/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value"] = "16400";
+
+    {
+        auto [data, alarms] = ietfHardware->process();
+        data.erase(modulePrefix + "/last-change"); // exclude last-change node
+        REQUIRE(data == expected);
+        REQUIRE(alarms.empty());
+    }
+
+    fanValues[1] = 0;
+    expected["/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value"] = "0";
+
+    {
+        auto [data, alarms] = ietfHardware->process();
+        data.erase(modulePrefix + "/last-change"); // exclude last-change node
+        REQUIRE(data == expected);
+        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::ThresholdInfo>{
+                    {"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value", velia::ietf_hardware::ThresholdInfo{velia::ietf_hardware::State::Normal, false}},
+                });
+    }
 }

@@ -44,11 +44,12 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         auto conn = m_session.getConnection();
 
         DataTree prevValues;
+        std::map<std::string, ThresholdInfo> prevThresholds;
 
         while (!m_quit) {
             m_log->trace("IetfHardware poll");
 
-            auto hwStateValues = m_hwState->process();
+            auto [hwStateValues, thresholds] = m_hwState->process();
             std::set<std::string> deletedComponents;
 
             /* Some data readers can stop returning data in some cases (e.g. ejected PSU).
@@ -64,9 +65,27 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                 conn.discardOperationalChanges(component);
             }
 
+            for (const auto& [sensorXPath, info] : thresholds) {
+                auto itPrevInfo = prevThresholds.find(sensorXPath);
+
+                if (info.disappeared == true && itPrevInfo->second.disappeared == false) {
+                    // invoke alarm disappeared
+                } else if (info.disappeared == false && itPrevInfo->second.disappeared == true) {
+                    // clear alarm disappeared
+                } else if (info.state) {
+                    // create or update alarm thresholds based on the state
+                    // State::Normal -> CLEAR
+                    // State::WarningLow -> WARN
+                    // State::WarningHigh -> WARN
+                    // State::CriticalHigh -> CRIT
+                    // State::CriticalLow -> CRIT
+                }
+            }
+
             utils::valuesPush(hwStateValues, {}, m_session, ::sysrepo::Datastore::Operational);
 
             prevValues = std::move(hwStateValues);
+            prevThresholds = std::move(thresholds);
             std::this_thread::sleep_for(m_pollInterval);
         }
     })

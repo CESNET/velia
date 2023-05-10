@@ -124,17 +124,24 @@ void FspYhPsu::createPower()
     using velia::ietf_hardware::data_reader::SysfsValue;
     using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
-    m_properties.emplace_back(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-1", m_namePrefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-2", m_namePrefix, m_hwmon, 2));
-    m_properties.emplace_back(SysfsValue<SensorType::Current>(m_namePrefix + ":current-in", m_namePrefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 2));
-    m_properties.emplace_back(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in", m_namePrefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-12V", m_namePrefix, m_hwmon, 2));
-    m_properties.emplace_back(SysfsValue<SensorType::Power>(m_namePrefix + ":power-in", m_namePrefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::Power>(m_namePrefix + ":power-out", m_namePrefix, m_hwmon, 2));
-    m_properties.emplace_back(Fans(m_namePrefix + ":fan", m_namePrefix, m_hwmon, 1));
-    m_properties.emplace_back(SysfsValue<SensorType::Current>(m_namePrefix + ":current-5Vsb", m_namePrefix, m_hwmon, 3));
-    m_properties.emplace_back(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-5Vsb", m_namePrefix, m_hwmon, 3));
+
+
+    auto registerReader = [&]<typename DataReaderType>(DataReaderType&& reader) {
+        m_thresholds.merge(reader.thresholds());
+        m_properties.emplace_back(reader);
+    };
+
+    registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-1", m_namePrefix, m_hwmon, 1));
+    registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-2", m_namePrefix, m_hwmon, 2));
+    registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-in", m_namePrefix, m_hwmon, 1));
+    registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 2));
+    registerReader(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in", m_namePrefix, m_hwmon, 1));
+    registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-12V", m_namePrefix, m_hwmon, 2));
+    registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-in", m_namePrefix, m_hwmon, 1));
+    registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-out", m_namePrefix, m_hwmon, 2));
+    registerReader(Fans(m_namePrefix + ":fan", m_namePrefix, m_hwmon, 1));
+    registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-5Vsb", m_namePrefix, m_hwmon, 3));
+    registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-5Vsb", m_namePrefix, m_hwmon, 3));
 }
 
 DataTree FspYhPsu::readValues()
@@ -169,5 +176,10 @@ DataTree FspYhPsu::readValues()
     }
 
     return res;
+}
+
+ThresholdsBySensorPath FspYhPsu::thresholds() const
+{
+    return m_thresholds;
 }
 }

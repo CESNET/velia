@@ -48,20 +48,46 @@ void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& comp
 
 namespace velia::ietf_hardware {
 
-IETFHardware::IETFHardware() = default;
+IETFHardware::IETFHardware()
+    : m_log(spdlog::get("hardware"))
+{
+}
 
 IETFHardware::~IETFHardware() = default;
 
-std::map<std::string, std::string> IETFHardware::process()
+/**
+ * Calls individual registered data readers and processes information obtained from them.
+ * The sensor values are then passed to threshold watchers to detect if the newly value violated a threshold.
+ * This function does not raise any alarms. It only returns the data tree *and* any changes in the threshold crossings (as a mapping from sensor XPath to threshold watcher State (@see Watcher).
+ **/
+HardwareInfo IETFHardware::process()
 {
-    std::map<std::string, std::string> res;
+    DataTree dataTree;
+    std::map<std::string, State> alarms;
 
     for (auto& dataReader : m_callbacks) {
-        res.merge(dataReader());
+        dataTree.merge(dataReader());
     }
 
-    res[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
-    return res;
+    for (auto& [sensorXPath, thresholdsWatcher] : m_thresholdsWatchers) {
+        std::optional<int64_t> newValue;
+
+        if (auto it = dataTree.find(sensorXPath); it != dataTree.end()) {
+            newValue = std::stoll(it->second);
+        } else {
+            newValue = std::nullopt;
+            m_log->debug("Data for sensor '{}' were not returned. Was the sensor unplugged?", sensorXPath);
+        }
+
+        if (auto newState = thresholdsWatcher.update(newValue)) {
+            m_log->debug("Sensor '{}' thresholds watcher changed state to {}", sensorXPath, *newState);
+            alarms.emplace(sensorXPath, *newState);
+        }
+    }
+
+    dataTree[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
+
+    return {dataTree, alarms};
 }
 
 /** @brief A namespace containing predefined data readers for IETFHardware class.

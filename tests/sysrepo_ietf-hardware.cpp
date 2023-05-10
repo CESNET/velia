@@ -110,6 +110,11 @@ TEST_CASE("IETF Hardware with sysrepo")
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/class"] = "iana-hardware:sensor";
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/parent"] = "ne:psu";
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state"] = "enabled";
+                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status"] = "ok";
+                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value"] = "12000";
+                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision"] = "0";
+                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale"] = "milli";
+                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type"] = "volts-DC";
             }
 
             return res;
@@ -182,6 +187,12 @@ TEST_CASE("IETF Hardware with sysrepo")
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", "iana-hardware:sensor"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/name", "ne:psu:child"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", "ne:psu"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", "(container)"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", "ok"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", "12000"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", "0"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", "milli"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", "volts-DC"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", "(container)"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", "enabled"},
                                {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']", "(list instance)"},
@@ -210,6 +221,12 @@ TEST_CASE("IETF Hardware with sysrepo")
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/name", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", Deleted{}},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", Deleted{}},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", Deleted{}},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", Deleted{}},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", Deleted{}},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", Deleted{}},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", Deleted{}},
                            }))
@@ -236,6 +253,12 @@ TEST_CASE("IETF Hardware with sysrepo")
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", "iana-hardware:sensor"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/name", "ne:psu:child"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", "ne:psu"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", "(container)"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", "ok"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", "12000"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", "0"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", "milli"},
+                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", "volts-DC"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", "(container)"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", "enabled"},
                            }))

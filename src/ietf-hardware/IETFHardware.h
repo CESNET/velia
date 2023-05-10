@@ -13,6 +13,7 @@
 #include <utility>
 #include "ietf-hardware/sysfs/EMMC.h"
 #include "ietf-hardware/sysfs/HWMon.h"
+#include "ietf-hardware/thresholds.h"
 #include "utils/log-fwd.h"
 
 using namespace std::literals;
@@ -20,6 +21,7 @@ using namespace std::literals;
 namespace velia::ietf_hardware {
 
 using DataTree = std::map<std::string, std::string>;
+using ThresholdsBySensorPath = std::map<std::string, Thresholds<int64_t>>;
 
 /**
  * @brief Readout of hardware-state related data according to RFC 8348 (App. A)
@@ -49,7 +51,12 @@ public:
 
     IETFHardware();
     ~IETFHardware();
-    void registerDataReader(const DataReader& callable);
+
+    template <class DataReaderType>
+    void registerDataReader(const DataReaderType& callable)
+    {
+        m_callbacks.push_back(callable);
+    }
 
     DataTree process();
 
@@ -89,6 +96,7 @@ struct DataReader {
 struct StaticData : private DataReader {
     StaticData(std::string propertyPrefix, std::optional<std::string> parent, DataTree tree);
     DataTree operator()() const;
+    ThresholdsBySensorPath thresholds() const;
 };
 
 /** @brief Manages fans component. Data is provided by a sysfs::HWMon object. */
@@ -96,10 +104,12 @@ struct Fans : private DataReader {
 private:
     std::shared_ptr<sysfs::HWMon> m_hwmon;
     unsigned m_fanChannelsCount;
+    Thresholds<int64_t> m_thresholds;
 
 public:
-    Fans(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount);
+    Fans(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount, Thresholds<int64_t> thresholds = {});
     DataTree operator()() const;
+    ThresholdsBySensorPath thresholds() const;
 };
 
 enum class SensorType {
@@ -117,20 +127,24 @@ struct SysfsValue : private DataReader {
 private:
     std::shared_ptr<sysfs::HWMon> m_hwmon;
     std::string m_sysfsFile;
+    Thresholds<int64_t> m_thresholds;
 
 public:
-    SysfsValue(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr);
+    SysfsValue(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr, Thresholds<int64_t> thresholds = {});
     DataTree operator()() const;
+    ThresholdsBySensorPath thresholds() const;
 };
 
 /** @brief Manages a single eMMC block device hardware component. Data is provided by a sysfs::EMMC object. */
 struct EMMC : private DataReader {
 private:
     std::shared_ptr<sysfs::EMMC> m_emmc;
+    Thresholds<int64_t> m_thresholds;
 
 public:
-    EMMC(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc);
+    EMMC(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc, Thresholds<int64_t> thresholds = {});
     DataTree operator()() const;
+    ThresholdsBySensorPath thresholds() const;
 };
 
 /** @brief Use this when you want to wrap reading several properties in one go and still use it as a single DataReader instance            (e.g. in on thread)
@@ -138,10 +152,18 @@ public:
 struct Group {
 private:
     std::vector<IETFHardware::DataReader> m_readers;
+    ThresholdsBySensorPath m_thresholds;
 
 public:
-    void registerDataReader(const IETFHardware::DataReader& callable);
     DataTree operator()() const;
+    ThresholdsBySensorPath thresholds() const;
+
+    template <class DataReaderType>
+    void registerDataReader(const DataReaderType& callable)
+    {
+        m_readers.push_back(callable);
+        m_thresholds.merge(callable.thresholds());
+    }
 };
 
 }

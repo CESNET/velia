@@ -83,6 +83,8 @@ add_compile_definitions(FMT_DEPRECATED_OSTREAM)
 # Targets
 # - utils
 add_library(velia-utils STATIC
+    src/utils/alarms.cpp
+    src/utils/alarms.h
     src/utils/exceptions.cpp
     src/utils/exceptions.h
     src/utils/exec.cpp
@@ -109,8 +111,6 @@ target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTE
 
 # - health
 add_library(velia-health STATIC
-    src/health/alarms/alarms.cpp
-    src/health/alarms/alarms.h
     src/health/alarms/SystemdUnits.cpp
     src/health/alarms/SystemdUnits.h
     src/health/outputs/AlarmsOutputs.cpp

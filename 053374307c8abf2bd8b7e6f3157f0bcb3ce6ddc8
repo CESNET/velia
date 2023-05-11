@@ -34,6 +34,24 @@
       "parentUuid": "9b9784e5_3c1770a5",
       "revId": "053374307c8abf2bd8b7e6f3157f0bcb3ce6ddc8",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "338e1650_10842234",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-11T10:13:30Z",
+      "side": 1,
+      "message": "also: https://regex101.com/r/9U9rRE/1",
+      "parentUuid": "0261c2b1_38d041f2",
+      "revId": "053374307c8abf2bd8b7e6f3157f0bcb3ce6ddc8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

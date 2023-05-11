@@ -53,6 +53,25 @@ struct DatastoreChange {
     MAKE_CONST_MOCK1(change, void(const std::map<std::string, std::variant<std::string, Deleted>>&));
 };
 
+void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const std::set<std::string>& ignoredPaths)
+{
+    std::map<std::string, std::variant<std::string, Deleted>> changes;
+
+    for (const auto& change : session.getChanges()) {
+        if (ignoredPaths.contains(change.node.schema().path())) {
+            continue;
+        }
+
+        if (change.operation == sysrepo::ChangeOperation::Deleted) {
+            changes.emplace(change.node.path(), Deleted());
+        } else {
+            changes.emplace(change.node.path(), nodeAsString(change.node));
+        }
+    }
+
+    dsChange.change(changes);
+}
+
 TEST_CASE("IETF Hardware with sysrepo")
 {
     TEST_SYSREPO_INIT_LOGS;
@@ -131,21 +150,7 @@ TEST_CASE("IETF Hardware with sysrepo")
     auto changeSub = client.onModuleChange(
         "ietf-hardware",
         [&](sysrepo::Session session, auto, auto, auto, auto, auto) {
-            std::map<std::string, std::variant<std::string, Deleted>> changes;
-
-            for (const auto& change : session.getChanges()) {
-                if (change.node.path() == "/ietf-hardware:hardware/last-change") { // skip timestamp changes - we can't test them properly in expectations with current code
-                    continue;
-                }
-
-                if (change.operation == sysrepo::ChangeOperation::Deleted) {
-                    changes.emplace(change.node.path(), Deleted());
-                } else {
-                    changes.emplace(change.node.path(), nodeAsString(change.node));
-                }
-            }
-
-            dsChange.change(changes);
+            processDsChanges(session, dsChange, {"/ietf-hardware:hardware/last-change"});
             return sysrepo::ErrorCode::Ok;
         },
         "/ietf-hardware:hardware/component",

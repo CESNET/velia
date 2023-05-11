@@ -259,6 +259,20 @@ TEST_CASE("HardwareState")
         {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", "volts-DC"},
     };
 
+    REQUIRE(ietfHardware->sensorsXPaths() == std::vector<std::string>{
+                "/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value",
+            });
+
     {
         auto [data, alarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);

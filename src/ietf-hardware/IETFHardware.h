@@ -73,6 +73,7 @@ public:
     }
 
     HardwareInfo process();
+    std::vector<std::string> sensorsXPaths() const ;
 
 private:
     velia::Log m_log;

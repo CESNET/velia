@@ -16,6 +16,24 @@
       "message": "I think that this will be too greedy on an XPath with multiple list keys (or multiple lists). Can that ever happen?",
       "revId": "053374307c8abf2bd8b7e6f3157f0bcb3ce6ddc8",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0261c2b1_38d041f2",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-11T10:13:01Z",
+      "side": 1,
+      "message": "Yes, you are right.\nWell, neither nested lists nor lists with multiple keys are present in our current ietf-hardware model (but I cannot predict any possible future deviations).\nI have edited the regexp to make it nongreedy (? means  and I have also removed unnecessary capture groups (hence the parentheses removals).",
+      "parentUuid": "9b9784e5_3c1770a5",
+      "revId": "053374307c8abf2bd8b7e6f3157f0bcb3ce6ddc8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

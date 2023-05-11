@@ -111,13 +111,13 @@ target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTE
 
 # - health
 add_library(velia-health STATIC
-    src/health/alarms/SystemdUnits.cpp
-    src/health/alarms/SystemdUnits.h
     src/health/outputs/AlarmsOutputs.cpp
     src/health/outputs/AlarmsOutputs.h
     src/health/outputs/LedSysfsDriver.cpp
     src/health/outputs/callables.cpp
     src/health/State.cpp
+    src/health/SystemdUnits.cpp
+    src/health/SystemdUnits.h
     )
 target_link_libraries(velia-health
     PUBLIC

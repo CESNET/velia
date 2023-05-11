@@ -16,7 +16,7 @@ const auto alarmInventory = "/ietf-alarms:alarms/alarm-inventory"s;
 const auto alarmRpc = "/sysrepo-ietf-alarms:create-or-update-alarm";
 }
 
-namespace velia::health {
+namespace velia::utils {
 void createOrUpdateAlarm(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::string& resource, const std::string& severity, const std::string& text)
 {
     auto inputNode = session.getContext().newPath(alarmRpc, std::nullopt);

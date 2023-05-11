@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2772f292_34fb24fb",
+        "filename": "src/ietf-hardware/thresholds.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-11T07:45:52Z",
+      "side": 1,
+      "message": "what is this used for?",
+      "revId": "c0ab052600e8ce03fde12e1e4a7f75a22e7bb57b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

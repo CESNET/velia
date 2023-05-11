@@ -28,7 +28,7 @@ start() {
         return 1
     fi
 
-    $1 --sysrepo-log-level=5 1>$2 2>&1 &
+    $1 --log-level=5 --sysrepo-log-level=5 1>$2 2>&1 &
     PID="$!"
     echo "$PID" > $PIDFILE
 

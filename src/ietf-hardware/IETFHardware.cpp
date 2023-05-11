@@ -83,6 +83,17 @@ HardwareInfo IETFHardware::process()
     return {res, alarms};
 }
 
+std::vector<std::string> IETFHardware::sensorsXPaths() const 
+{
+    std::vector<std::string> res;
+
+    for (const auto& [sensorXPath, thresholds] : m_thresholdsWatchers) {
+        res.emplace_back(sensorXPath);
+    }
+
+    return res;
+}
+
 /** @brief A namespace containing predefined data readers for IETFHardware class.
  * @see IETFHardware for more information
  */

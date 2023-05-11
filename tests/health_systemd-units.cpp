@@ -11,7 +11,7 @@
 #include <sysrepo-cpp/Subscription.hpp>
 #include <thread>
 #include "dbus-helpers/dbus_systemd_server.h"
-#include "health/alarms/SystemdUnits.h"
+#include "health/SystemdUnits.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
 #include "test_sysrepo_helpers.h"

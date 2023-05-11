@@ -7,7 +7,7 @@
 #include <sysrepo-cpp/Connection.hpp>
 #include "VELIA_VERSION.h"
 #include "health/Factory.h"
-#include "health/alarms/SystemdUnits.h"
+#include "health/SystemdUnits.h"
 #include "health/outputs/callables.h"
 #include "main.h"
 #include "utils/exceptions.h"

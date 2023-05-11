@@ -3,7 +3,7 @@
 #include <trompeloeil.hpp>
 #include "dbus-helpers/dbus_rauc_server.h"
 #include "health/State.h"
-#include "health/alarms/SystemdUnits.h"
+#include "health/SystemdUnits.h"
 #include "health/outputs/AlarmsOutputs.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"

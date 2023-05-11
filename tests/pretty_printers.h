@@ -16,6 +16,20 @@
 namespace doctest {
 
 template <>
+struct StringMaker<std::vector<std::string>> {
+    static String convert(const std::vector<std::string>& v)
+    {
+        std::ostringstream os;
+        os << "{" << std::endl;
+        for (const auto& value : v) {
+            os << "  \"" << value << "\"," << std::endl;
+        }
+        os << "}";
+        return os.str().c_str();
+    }
+};
+
+template <>
 struct StringMaker<std::map<std::string, std::string>> {
     static String convert(const std::map<std::string, std::string>& map)
     {

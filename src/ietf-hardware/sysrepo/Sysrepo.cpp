@@ -8,10 +8,14 @@
 #include <regex>
 #include <sysrepo-cpp/Connection.hpp>
 #include "Sysrepo.h"
+#include "utils/alarms.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
 namespace {
+
+const auto ALARM_THRESHOLD = "velia-alarms:sensor-reading-out-of-range";
+const auto ALARM_MISSING = "velia-alarms:sensor-missing";
 
 /** @brief Extracts component path prefix from an XPath under /ietf-hardware/component node
  *
@@ -40,7 +44,14 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
     , m_session(std::move(session))
     , m_hwState(std::move(hwState))
     , m_quit(false)
-    , m_pollThread([&]() {
+{
+    for (const auto& sensorXPath : m_hwState->sensorsXPaths()) {
+        auto componentXPath = extractComponentPrefix(sensorXPath);
+        utils::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD, std::nullopt, componentXPath);
+        utils::addResourceToAlarmInventoryEntry(m_session, ALARM_MISSING, std::nullopt, componentXPath);
+    }
+
+    m_pollThread = std::thread([&]() {
         auto conn = m_session.getConnection();
 
         DataTree prevValues;
@@ -67,12 +78,26 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
 
             utils::valuesPush(hwStateValues, {}, m_session, ::sysrepo::Datastore::Operational);
 
+            for (const auto& [sensorXPath, thresholdInfo] : thresholds) {
+                auto itPrevInfo = prevThresholds.find(sensorXPath);
+
+                if (itPrevInfo == prevThresholds.end())
+                    spdlog::get("hardware")->error("asdasdad .... {} ... {}", sensorXPath, "none");
+                else
+                    spdlog::get("hardware")->error("asdasdad .... {} ... past={} curr={}", sensorXPath, itPrevInfo->second.disappeared, thresholdInfo.disappeared);
+
+                if (thresholdInfo.disappeared == true && (itPrevInfo == prevThresholds.end() || itPrevInfo->second.disappeared == false)) {
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), "critical", "Sensor is missing. Maybe it was unplugged?");
+                } else if (thresholdInfo.disappeared == false && (itPrevInfo != prevThresholds.end() && itPrevInfo->second.disappeared == true)) {
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), "cleared", "Sensor is missing. Maybe it was unplugged?");
+                }
+            }
+
             prevValues = std::move(hwStateValues);
             prevThresholds = std::move(thresholds);
             std::this_thread::sleep_for(m_pollInterval);
         }
-    })
-{
+    });
 }
 
 Sysrepo::~Sysrepo()

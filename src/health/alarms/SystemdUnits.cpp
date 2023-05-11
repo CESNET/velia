@@ -5,7 +5,7 @@
  *
  */
 #include "SystemdUnits.h"
-#include "alarms.h"
+#include "utils/alarms.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
@@ -28,7 +28,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
     utils::ensureModuleImplemented(m_srSession, "sysrepo-ietf-alarms", "2022-02-17");
     utils::ensureModuleImplemented(m_srSession, "velia-alarms", "2022-07-12");
 
-    createOrUpdateAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, {ALARM_SEVERITY}, true, ALARM_INVENTORY_DESCRIPTION);
+    utils::createOrUpdateAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, {ALARM_SEVERITY}, true, ALARM_INVENTORY_DESCRIPTION);
 
     // Subscribe to systemd events. Systemd may not generate signals unless explicitly called
     m_proxyManager->callMethod("Subscribe").onInterface(managerIface).withArguments().dontExpectReply();
@@ -64,7 +64,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
 /** @brief Registers a systemd unit by its unit name and unit dbus objectpath. */
 void SystemdUnits::registerSystemdUnit(sysrepo::Session session, sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath)
 {
-    addResourceToAlarmInventoryEntry(session, ALARM_ID, std::nullopt, unitName);
+    utils::addResourceToAlarmInventoryEntry(session, ALARM_ID, std::nullopt, unitName);
 
     auto proxyUnit = sdbus::createProxy(connection, m_busName, unitObjectPath);
     proxyUnit->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([&, unitName](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {
@@ -117,7 +117,7 @@ void SystemdUnits::onUnitStateChange(const std::string& name, const std::string&
     m_log->debug("Systemd unit '{}' changed state ({} {})", name, activeState, subState);
     lastState->second = systemdState;
 
-    createOrUpdateAlarm(m_srSession, ALARM_ID, std::nullopt, name, alarmSeverity, "systemd unit state: (" + activeState + ", " + subState + ")");
+    utils::createOrUpdateAlarm(m_srSession, ALARM_ID, std::nullopt, name, alarmSeverity, "systemd unit state: (" + activeState + ", " + subState + ")");
 }
 
 SystemdUnits::~SystemdUnits() = default;

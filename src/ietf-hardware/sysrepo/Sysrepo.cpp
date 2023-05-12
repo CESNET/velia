@@ -16,6 +16,7 @@ namespace {
 
 const auto ALARM_THRESHOLD = "velia-alarms:threshold-crossing-alarm";
 const auto ALARM_MISSING = "velia-alarms:sensor-missing";
+const auto ALARM_MISSING_DESCRIPTION = "Sensor is missing. Maybe it was unplugged?";
 
 /** @brief Extracts component path prefix from an XPath under /ietf-hardware/component node
  *
@@ -55,6 +56,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         auto conn = m_session.getConnection();
 
         DataTree prevValues;
+        std::map<std::string, State> thresholdsStates;
 
         while (!m_quit) {
             m_log->trace("IetfHardware poll");
@@ -76,6 +78,18 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             }
 
             utils::valuesPush(hwStateValues, {}, m_session, ::sysrepo::Datastore::Operational);
+
+            for (const auto& [sensorXPath, state] : thresholds) {
+                auto prevState = thresholdsStates.find(sensorXPath);
+
+                if (state == State::NoValue) {
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), "critical", ALARM_MISSING_DESCRIPTION);
+                } else if (prevState != thresholdsStates.end() && state != State::NoValue) {
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), "cleared", ALARM_MISSING_DESCRIPTION);
+                }
+
+                thresholdsStates[sensorXPath] = state;
+            }
 
             prevValues = std::move(hwStateValues);
             std::this_thread::sleep_for(m_pollInterval);

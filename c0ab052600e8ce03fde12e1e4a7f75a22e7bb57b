@@ -34,6 +34,24 @@
       "parentUuid": "2772f292_34fb24fb",
       "revId": "c0ab052600e8ce03fde12e1e4a7f75a22e7bb57b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c82caa5a_b19d00d0",
+        "filename": "src/ietf-hardware/thresholds.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-12T15:06:45Z",
+      "side": 1,
+      "message": "What happens if this include gets accidentally removed later on, is that a compile-time error, or a runtime garbage in the logs? If it\u0027s a runtime garbage, then this needs a comment. If the compiler can catch this, is there a way to do that directly in the header as well via some static_assert?\n\nI\u0027m asking for \"something\" because I\u0027m not super-happy with a \"magic include\" that is \"not needed\", but when removed it \"break some other part of the code\". Perhaps I\u0027m mistaken because I haven\u0027t seen any such error before?",
+      "parentUuid": "00fcea7b_80c27269",
+      "revId": "c0ab052600e8ce03fde12e1e4a7f75a22e7bb57b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

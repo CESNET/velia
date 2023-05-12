@@ -19,6 +19,7 @@ std::string nodeAsString(const libyang::DataNode& node)
     case libyang::NodeType::List:
         return "(list instance)";
     case libyang::NodeType::Leaf:
+    case libyang::NodeType::Leaflist:
         return std::string(node.asTerm().valueStr());
     default:
         return "(unprintable)";
@@ -77,11 +78,14 @@ TEST_CASE("IETF Hardware with sysrepo")
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
+    auto alarmsClient = sysrepo::Connection{}.sessionStart(sysrepo::Datastore::Operational);
+
     static const auto modulePrefix = "/ietf-hardware:hardware"s;
 
     client.switchDatastore(sysrepo::Datastore::Operational);
 
-    DatastoreChange dsChange;
+    DatastoreChange dsChangeHardware;
+    DatastoreChange dsChangeAlarmInventory;
 
     trompeloeil::sequence seq1;
 
@@ -150,10 +154,20 @@ TEST_CASE("IETF Hardware with sysrepo")
     auto changeSub = client.onModuleChange(
         "ietf-hardware",
         [&](sysrepo::Session session, auto, auto, auto, auto, auto) {
-            processDsChanges(session, dsChange, {"/ietf-hardware:hardware/last-change"});
+            processDsChanges(session, dsChangeHardware, {"/ietf-hardware:hardware/last-change"});
             return sysrepo::ErrorCode::Ok;
         },
         "/ietf-hardware:hardware/component",
+        0,
+        sysrepo::SubscribeOptions::DoneOnly);
+
+    auto alarmsInvSub = alarmsClient.onModuleChange(
+        "ietf-alarms",
+        [&](sysrepo::Session session, auto, auto, auto, auto, auto) {
+            processDsChanges(session, dsChangeAlarmInventory, {});
+            return sysrepo::ErrorCode::Ok;
+        },
+        "/ietf-alarms:alarms/alarm-inventory",
         0,
         sysrepo::SubscribeOptions::DoneOnly);
 
@@ -163,7 +177,40 @@ TEST_CASE("IETF Hardware with sysrepo")
     psuActive = true;
     REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
     REQUIRE_CALL(*sysfsPower, attribute("power1_input")).LR_RETURN(powerValue).TIMES(AT_LEAST(1));
-    REQUIRE_CALL(dsChange, change(std::map<std::string, std::variant<std::string, Deleted>>{
+    REQUIRE_CALL(dsChangeAlarmInventory, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                             {"/ietf-alarms:alarms", "(container)"},
+                                             {"/ietf-alarms:alarms/alarm-inventory", "(container)"},
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:threshold-crossing-alarm'][alarm-type-qualifier='']", "(list instance)"},
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:threshold-crossing-alarm'][alarm-type-qualifier='']/alarm-type-id", "velia-alarms:threshold-crossing-alarm"},
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:threshold-crossing-alarm'][alarm-type-qualifier='']/alarm-type-qualifier", ""},
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:threshold-crossing-alarm'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='ne:power']"},
+                                         }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(dsChangeAlarmInventory, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-missing'][alarm-type-qualifier='']", "(list instance)"},
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-missing'][alarm-type-qualifier='']/alarm-type-id", "velia-alarms:sensor-missing"},
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-missing'][alarm-type-qualifier='']/alarm-type-qualifier", ""},
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-missing'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='ne:power']"},
+                                         }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(dsChangeAlarmInventory, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:threshold-crossing-alarm'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='ne:psu:child']"},
+                                         }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(dsChangeAlarmInventory, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-missing'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='ne:psu:child']"},
+                                         }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(dsChangeAlarmInventory, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:threshold-crossing-alarm'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='ne:temperature-cpu']"},
+                                         }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(dsChangeAlarmInventory, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-missing'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='ne:temperature-cpu']"},
+                                         }))
+        .IN_SEQUENCE(seq1);
+
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                {"/ietf-hardware:hardware", "(container)"},
                                {"/ietf-hardware:hardware/component[name='ne']", "(list instance)"},
                                {"/ietf-hardware:hardware/component[name='ne']/class", "iana-hardware:chassis"},
@@ -222,7 +269,7 @@ TEST_CASE("IETF Hardware with sysrepo")
     std::string lastChange = directLeafNodeQuery(modulePrefix + "/last-change");
 
     // second batch of values, sensor data changed, PSU ejected
-    REQUIRE_CALL(dsChange, change(std::map<std::string, std::variant<std::string, Deleted>>{
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/name", Deleted{}},
@@ -237,7 +284,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", Deleted{}},
                            }))
         .IN_SEQUENCE(seq1);
-    REQUIRE_CALL(dsChange, change(std::map<std::string, std::variant<std::string, Deleted>>{
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "11222333"},
                                {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"},
                                {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value", "222"},
@@ -253,7 +300,7 @@ TEST_CASE("IETF Hardware with sysrepo")
     REQUIRE(directLeafNodeQuery(modulePrefix + "/last-change") > lastChange); // check that last-change leaf has timestamp that is greater than the previous one
 
     // third batch of changes, wild PSU appears
-    REQUIRE_CALL(dsChange, change(std::map<std::string, std::variant<std::string, Deleted>>{
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "enabled"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']", "(list instance)"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", "iana-hardware:sensor"},

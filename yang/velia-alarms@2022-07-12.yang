@@ -19,5 +19,13 @@ module velia-alarms {
     identity systemd-unit-failure {
         base velia-alarm;
     }
+
+    identity sensor-reading-out-of-range {
+        base velia-alarm;
+    }
+
+    identity sensor-missing {
+        base velia-alarm;
+    }
 }
 

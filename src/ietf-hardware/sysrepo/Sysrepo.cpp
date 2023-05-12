@@ -14,7 +14,11 @@
 
 namespace {
 
+const auto ALARM_CLEARED = "cleared";
 const auto ALARM_SENSOR_MISSING = "velia-alarms:sensor-missing-alarm";
+const auto ALARM_MISSING = "velia-alarms:sensor-missing-alarm";
+const auto ALARM_MISSING_SEVERITY = "warning";
+const auto ALARM_MISSING_DESCRIPTION = "Sensor value not reported. Maybe the sensor was unplugged?";
 const auto ALARM_THRESHOLD_CROSSING_LOW = "velia-alarms:sensor-low-value-alarm";
 const auto ALARM_THRESHOLD_CROSSING_HIGH = "velia-alarms:sensor-high-value-alarm";
 
@@ -33,6 +37,11 @@ std::string extractComponentPrefix(const std::string& componentXPath)
     }
 
     throw std::logic_error("Invalid xPath provided ('" + componentXPath + "')");
+}
+
+void logAlarm(velia::Log logger, const std::string_view sensor, const std::string_view alarm, const std::string_view severity, const velia::ietf_hardware::State state, const velia::ietf_hardware::State prevState)
+{
+    logger->trace("Sensor '{}': threshold state changed from '{}' to '{}'. Updating {} alarm to severity {}.", sensor, prevState, state, alarm, severity);
 }
 }
 
@@ -57,6 +66,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         auto conn = m_session.getConnection();
 
         DataTree prevValues;
+        std::map<std::string, State> thresholdsStates;
 
         while (!m_quit) {
             m_log->trace("IetfHardware poll");
@@ -78,6 +88,20 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             std::copy(deletedComponents.begin(), deletedComponents.end(), std::back_inserter(discards));
 
             utils::valuesPush(hwStateValues, {}, discards, m_session, ::sysrepo::Datastore::Operational);
+
+            for (const auto& [sensorXPath, state] : thresholds) {
+                auto prevState = thresholdsStates.find(sensorXPath);
+
+                if (state == State::NoValue) {
+                    logAlarm(m_log, sensorXPath, ALARM_MISSING, ALARM_MISSING_SEVERITY, state, prevState == thresholdsStates.end() ? State::NoValue : prevState->second);
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), ALARM_MISSING_SEVERITY, ALARM_MISSING_DESCRIPTION);
+                } else if (state != State::NoValue && prevState != thresholdsStates.end() && prevState->second == State::NoValue) {
+                    logAlarm(m_log, sensorXPath, ALARM_MISSING, ALARM_CLEARED, state, prevState == thresholdsStates.end() ? State::NoValue : prevState->second);
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), ALARM_CLEARED, ALARM_MISSING_DESCRIPTION);
+                }
+
+                thresholdsStates[sensorXPath] = state;
+            }
 
             prevValues = std::move(hwStateValues);
             std::this_thread::sleep_for(m_pollInterval);

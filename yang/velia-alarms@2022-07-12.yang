@@ -19,5 +19,30 @@ module velia-alarms {
     identity systemd-unit-failure {
         base velia-alarm;
     }
+
+    identity sensor-alarm {
+        base velia-alarm;
+        description "Abstract base for hardware sensor related alarms.";
+    }
+
+    identity sensor-missing-alarm {
+        base sensor-alarm;
+        description "Alarm to model that sensor is missing.";
+    }
+
+    identity sensor-threshold-crossing-alarm {
+        base sensor-alarm;
+        description "Abstract base for sensor threshold crossing.";
+    }
+
+    identity sensor-low-value-alarm {
+        base sensor-threshold-crossing-alarm;
+        description "Sensor value is too low.";
+    }
+
+    identity sensor-high-value-alarm {
+        base sensor-threshold-crossing-alarm;
+        description "Sensor value is too high.";
+    }
 }
 

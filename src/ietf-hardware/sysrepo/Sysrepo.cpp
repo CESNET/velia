@@ -78,6 +78,16 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
 
             utils::valuesPush(hwStateValues, {}, m_session, ::sysrepo::Datastore::Operational);
 
+            for (const auto& [sensorXPath, thresholdInfo] : thresholds) {
+                auto itPrevInfo = prevThresholds.find(sensorXPath);
+
+                if (thresholdInfo.disappeared == true && (itPrevInfo == prevThresholds.end() || itPrevInfo->second.disappeared == false)) {
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), "critical", "Sensor is missing. Maybe it was unplugged?");
+                } else if (thresholdInfo.disappeared == false && (itPrevInfo != prevThresholds.end() && itPrevInfo->second.disappeared == true)) {
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), "cleared", "Sensor is missing. Maybe it was unplugged?");
+                }
+            }
+
             prevValues = std::move(hwStateValues);
             prevThresholds = std::move(thresholds);
             std::this_thread::sleep_for(m_pollInterval);

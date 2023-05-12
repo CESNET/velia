@@ -54,6 +54,10 @@ struct DatastoreChange {
     MAKE_CONST_MOCK1(change, void(const std::map<std::string, std::variant<std::string, Deleted>>&));
 };
 
+struct AlarmEvent {
+    MAKE_CONST_MOCK1(event, void(const std::map<std::string, std::string>&));
+};
+
 void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const std::set<std::string>& ignoredPaths)
 {
     std::map<std::string, std::variant<std::string, Deleted>> changes;
@@ -86,8 +90,21 @@ TEST_CASE("IETF Hardware with sysrepo")
 
     DatastoreChange dsChangeHardware;
     DatastoreChange dsChangeAlarmInventory;
+    AlarmEvent alarmEvents;
 
     trompeloeil::sequence seq1;
+
+    auto alarmsRPC = alarmsClient.onRPCAction("/sysrepo-ietf-alarms:create-or-update-alarm", [&](auto, auto, auto, const libyang::DataNode input, auto, auto, auto) {
+        std::map<std::string, std::string> inputData;
+
+        for (const auto& node : input.childrenDfs()) {
+            inputData.emplace(node.path(), nodeAsString(node));
+        }
+
+        alarmEvents.event(inputData);
+
+        return sysrepo::ErrorCode::Ok;
+    });
 
     auto directLeafNodeQuery = [&](const std::string& xpath) {
         auto val = client.getData(xpath);
@@ -145,7 +162,13 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         velia::ietf_hardware::ThresholdsBySensorPath thresholds() const
         {
-            return {{"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", {}}};
+            using namespace velia::ietf_hardware;
+            return {{"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", Thresholds<int64_t>{
+                                                                                                     .criticalLow = std::nullopt,
+                                                                                                     .warningLow = OneThreshold<int64_t>{10000, 2000},
+                                                                                                     .warningHigh = OneThreshold<int64_t>{15000, 2000},
+                                                                                                     .criticalHigh = std::nullopt,
+                                                                                                 }}};
         }
     };
     ietfHardware->registerDataReader(PsuDataReader{psuActive});
@@ -305,6 +328,15 @@ TEST_CASE("IETF Hardware with sysrepo")
                                        {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value", "222"},
                                    }))
         .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", "Sensor value not reported. Maybe the sensor was unplugged?"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:sensor-missing-alarm"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", "/ietf-hardware:hardware/component[name='ne:psu:child']"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", "warning"},
+                              }))
+        .IN_SEQUENCE(seq1);
     REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
     REQUIRE_CALL(*sysfsPower, attribute("power1_input")).LR_RETURN(powerValue).TIMES(AT_LEAST(1));
     cpuTempValue = 222;
@@ -331,6 +363,16 @@ TEST_CASE("IETF Hardware with sysrepo")
                                        {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", "enabled"},
                                    }))
         .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", "Sensor value not reported. Maybe the sensor was unplugged?"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:sensor-missing-alarm"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", "/ietf-hardware:hardware/component[name='ne:psu:child']"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", "cleared"},
+                              }))
+        .IN_SEQUENCE(seq1);
+
     psuActive = true;
 
     waitForCompletionAndBitMore(seq1);

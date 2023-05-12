@@ -14,7 +14,11 @@
 
 namespace {
 
+const auto ALARM_CLEARED = "cleared";
 const auto ALARM_SENSOR_MISSING = "velia-alarms:sensor-missing-alarm";
+const auto ALARM_MISSING = "velia-alarms:sensor-missing-alarm";
+const auto ALARM_MISSING_SEVERITY = "warning";
+const auto ALARM_MISSING_DESCRIPTION = "Sensor value not reported. Maybe the sensor was unplugged?";
 const auto ALARM_THRESHOLD_CROSSING_LOW = "velia-alarms:sensor-low-value-alarm";
 const auto ALARM_THRESHOLD_CROSSING_HIGH = "velia-alarms:sensor-high-value-alarm";
 
@@ -33,6 +37,11 @@ std::string extractComponentPrefix(const std::string& componentXPath)
     }
 
     throw std::logic_error("Invalid xPath provided ('" + componentXPath + "')");
+}
+
+void logAlarm(velia::Log logger, const std::string_view sensor, const std::string_view alarm, const std::string_view severity)
+{
+    logger->info("Alarm {}: {} for {}", alarm, severity, sensor);
 }
 }
 
@@ -57,6 +66,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         auto conn = m_session.getConnection();
 
         DataTree prevValues;
+        std::map<std::string, State> thresholdsStates;
 
         while (!m_quit) {
             m_log->trace("IetfHardware poll");
@@ -78,6 +88,31 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             std::copy(deletedComponents.begin(), deletedComponents.end(), std::back_inserter(discards));
 
             utils::valuesPush(hwStateValues, {}, discards, m_session, ::sysrepo::Datastore::Operational);
+
+            for (const auto& [sensorXPath, state] : thresholds) {
+                // missing prevState can be considered as Normal
+                const State prevState = [&] {
+                    if (auto it = thresholdsStates.find(sensorXPath); it != thresholdsStates.end()) {
+                        return it->second;
+                    }
+                    return State::Normal;
+                }();
+                const auto componentXPath = extractComponentPrefix(sensorXPath);
+
+                if (state == State::NoValue) {
+                    logAlarm(m_log, componentXPath, ALARM_MISSING, ALARM_MISSING_SEVERITY);
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, componentXPath, ALARM_MISSING_SEVERITY, ALARM_MISSING_DESCRIPTION);
+                } else if (prevState == State::NoValue) {
+                    logAlarm(m_log, componentXPath, ALARM_MISSING, ALARM_CLEARED);
+                    /* The alarm message is same for both setting and clearing the alarm. RFC8632 says that it is
+                     * "The string used to inform operators about the alarm. This MUST contain enough information for an operator to be able to understand the problem and how to resolve it.",
+                     * i.e., from my POV it does not make sense to say something like "cleared" when clearing the alarm as this would not be beneficial for the operator to understand what happened.
+                     */
+                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, componentXPath, ALARM_CLEARED, ALARM_MISSING_DESCRIPTION);
+                }
+
+                thresholdsStates[sensorXPath] = state;
+            }
 
             prevValues = std::move(hwStateValues);
             std::this_thread::sleep_for(m_pollInterval);

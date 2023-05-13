@@ -52,6 +52,24 @@
       "parentUuid": "00fcea7b_80c27269",
       "revId": "c0ab052600e8ce03fde12e1e4a7f75a22e7bb57b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47ab6efe_f80ef43e",
+        "filename": "src/ietf-hardware/thresholds.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-13T07:52:00Z",
+      "side": 1,
+      "message": "Sorry, I really don\u0027t understand the problem. This enables some fmtlib automagic so it can pick up op\u003c\u003c(ostream\u0026, State) to use when formatting, e.g. in `logger-\u003eerror(\"state\u003d{}\", State{bar});` stmt.\nIn case the header is not included you get a compile error when used in formatting.\nIt is also a pattern we used before (a41d3d9b2).\n\n  $ git grep -n fmt/ostream \n  src/health/State.h:3:#include \u003cfmt/ostream.h\u003e\n  src/ietf-hardware/thresholds_fwd.h:9:#include \u003cfmt/ostream.h\u003e\n  src/system/LLDP.h:10:#include \u003cfmt/ostream.h\u003e\n\n  $ git grep -n fmt/ostream | while IFS\u003d: read i j k; do git blame -f -L $j,$j $i; done\n  3 months ago    Tomáš Pecka     a41d3d9b2│  3 │ #include \u003cfmt/ostream.h\u003e\n  a week ago      Tomáš Pecka     867206f98│  9 │ #include \u003cfmt/ostream.h\u003e\n  3 months ago    Tomáš Pecka     a41d3d9b2│ 10 │ #include \u003cfmt/ostream.h\u003e\n\n\u003e If the compiler can catch this, is there a way to do that directly in the header as well via some static_assert?\n\nTo do what exactly?",
+      "parentUuid": "c82caa5a_b19d00d0",
+      "revId": "c0ab052600e8ce03fde12e1e4a7f75a22e7bb57b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -70,6 +70,24 @@
       "parentUuid": "c82caa5a_b19d00d0",
       "revId": "c0ab052600e8ce03fde12e1e4a7f75a22e7bb57b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0aaf86c1_075c92b1",
+        "filename": "src/ietf-hardware/thresholds.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-16T23:25:46Z",
+      "side": 1,
+      "message": "Thanks for explaining this. My concern was that this include is \"not required\" for using/consuming this particular header, and I thought that someone might try to remove that #include in future. Check 74b885fd4ab2257c1022d624cccc083c7ce19c4e which added this header for the first time, it has a comment explaining why it\u0027s needed.\n\nNow, the static_assert I wanted you to consider would be a way of making that include mandatory in this header itself (or maybe in its associated .cpp file). Not terribly important, just a way of (potentially) saving some time after a too eager application of IWYU, for example.\n\nBut since it\u0027s a compile-time error, I\u0027m OK with this patch. Thanks for your patience :).",
+      "parentUuid": "47ab6efe_f80ef43e",
+      "revId": "c0ab052600e8ce03fde12e1e4a7f75a22e7bb57b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

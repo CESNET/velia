@@ -4,6 +4,7 @@
  * Written by Tomáš Pecka <tomas.pecka@fit.cvut.cz>
  *
  */
+#include <mutex>
 #include "SystemdUnits.h"
 #include "alarms.h"
 #include "utils/log.h"
@@ -35,9 +36,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
 
     // Register to a signal introducing new unit
     m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
-        if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end()) {
-            registerSystemdUnit(connection, unitName, unitObjectPath);
-        }
+        registerSystemdUnit(connection, unitName, unitObjectPath);
     });
     m_proxyManager->finishRegistration();
 
@@ -64,9 +63,18 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
 /** @brief Registers a systemd unit by its unit name and unit dbus objectpath. */
 void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath)
 {
-    addResourceToAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, unitName);
+    sdbus::IProxy* proxyUnit;
 
-    auto proxyUnit = sdbus::createProxy(connection, m_busName, unitObjectPath);
+    {
+        std::lock_guard lck(m_mtx);
+        if (m_proxyUnits.contains(unitObjectPath)) {
+            return;
+        }
+
+        proxyUnit = m_proxyUnits.emplace(unitObjectPath, sdbus::createProxy(connection, m_busName, unitObjectPath)).first->second.get();
+        addResourceToAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, unitName);
+    }
+
     proxyUnit->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([&, unitName](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {
         if (iface != m_unitIface) {
             return;
@@ -89,13 +97,13 @@ void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std
     std::string newActiveState = proxyUnit->getProperty("ActiveState").onInterface(m_unitIface);
     std::string newSubState = proxyUnit->getProperty("SubState").onInterface(m_unitIface);
     onUnitStateChange(unitName, newActiveState, newSubState);
-
-    m_proxyUnits.emplace(std::make_pair(unitObjectPath, std::move(proxyUnit)));
 }
 
 /** @brief Callback for unit state change */
 void SystemdUnits::onUnitStateChange(const std::string& name, const std::string& activeState, const std::string& subState)
 {
+    std::lock_guard lck(m_mtx);
+
     auto systemdState = std::make_pair(activeState, subState);
 
     auto lastState = m_unitState.find(name);

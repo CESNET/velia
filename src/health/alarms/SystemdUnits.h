@@ -30,6 +30,8 @@ private:
     std::string m_unitIface;
     std::unique_ptr<sdbus::IProxy> m_proxyManager;
 
+    std::mutex m_mtx;
+
     /** List of registered unit watchers */
     std::map<sdbus::ObjectPath, std::unique_ptr<sdbus::IProxy>> m_proxyUnits;
 

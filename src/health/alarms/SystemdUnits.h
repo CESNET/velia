@@ -7,6 +7,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <sdbus-c++/sdbus-c++.h>
 #include <set>
 #include <sysrepo-cpp/Session.hpp>
@@ -29,6 +30,8 @@ private:
     std::string m_busName;
     std::string m_unitIface;
     std::unique_ptr<sdbus::IProxy> m_proxyManager;
+
+    std::mutex m_mtx;
 
     /** List of registered unit watchers */
     std::map<sdbus::ObjectPath, std::unique_ptr<sdbus::IProxy>> m_proxyUnits;

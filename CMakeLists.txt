@@ -331,6 +331,8 @@ if(BUILD_TESTING)
     add_library(SysrepoTesting STATIC
         tests/mock/sysrepo/events.cpp
         tests/mock/sysrepo/events.h
+        tests/mock/ietf_hardware.h
+        tests/mock/system.h
         )
     target_link_libraries(SysrepoTesting DoctestIntegration PkgConfig::SYSREPO)
 

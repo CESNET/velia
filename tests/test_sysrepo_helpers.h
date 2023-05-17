@@ -18,7 +18,7 @@ auto dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath)
     spdlog::get("main")->error("dataFrom {}", xpath);
     std::map<std::string, std::string> res;
     auto data = session.getData(xpath + "/*");
-    REQUIRE(data);
+    REQUIRE(data.has_value());
     for (const auto& sibling : data->findXPath(xpath)) { // Use findXPath here in case the xpath is list without keys.
         for (const auto& node : sibling.childrenDfs()) {
             const auto briefXPath = std::string(node.path()).substr(boost::algorithm::ends_with(xpath, ":*") ? xpath.size() - 1 : xpath.size());

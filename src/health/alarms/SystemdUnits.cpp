@@ -36,7 +36,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
     // Register to a signal introducing new unit
     m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
         if (m_proxyUnits.find(unitObjectPath) == m_proxyUnits.end()) {
-            registerSystemdUnit(m_srSession, connection, unitName, unitObjectPath);
+            registerSystemdUnit(connection, unitName, unitObjectPath);
         }
     });
     m_proxyManager->finishRegistration();
@@ -51,7 +51,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
         const auto& unitName = unit.get<0>();
         const auto& unitObjectPath = unit.get<6>();
 
-        registerSystemdUnit(m_srSession, connection, unitName, unitObjectPath);
+        registerSystemdUnit(connection, unitName, unitObjectPath);
     }
 }
 
@@ -62,9 +62,9 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
 }
 
 /** @brief Registers a systemd unit by its unit name and unit dbus objectpath. */
-void SystemdUnits::registerSystemdUnit(sysrepo::Session session, sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath)
+void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath)
 {
-    addResourceToAlarmInventoryEntry(session, ALARM_ID, std::nullopt, unitName);
+    addResourceToAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, unitName);
 
     auto proxyUnit = sdbus::createProxy(connection, m_busName, unitObjectPath);
     proxyUnit->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([&, unitName](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {

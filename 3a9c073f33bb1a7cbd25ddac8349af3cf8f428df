@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23a3c2f9_3f488c46",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:23:21Z",
+      "side": 1,
+      "message": "nit: \"are\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 13
+      },
+      "revId": "3a9c073f33bb1a7cbd25ddac8349af3cf8f428df",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5e71e40_92470f6f",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:23:21Z",
+      "side": 1,
+      "message": "This assumes that all fans have the exact same properties, which is probably a reasonable assumption. It\u0027s definitely OK for our HW.",
+      "revId": "3a9c073f33bb1a7cbd25ddac8349af3cf8f428df",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

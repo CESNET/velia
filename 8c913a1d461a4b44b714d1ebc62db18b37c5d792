@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97a5eaee_f0b0d39f",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:23:21Z",
+      "side": 1,
+      "message": "nit: I\u0027d prefer some symmetry with the code in operator()() above, i.e., `auto res \u003d psu1-\u003ethreshold()`",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 42
+      },
+      "revId": "8c913a1d461a4b44b714d1ebc62db18b37c5d792",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

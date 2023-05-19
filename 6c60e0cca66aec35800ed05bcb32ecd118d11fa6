@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3016a05_0b492d39",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:40:45Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "range": {
+        "startLine": 86,
+        "startChar": 60,
+        "endLine": 86,
+        "endChar": 61
+      },
+      "revId": "6c60e0cca66aec35800ed05bcb32ecd118d11fa6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f8634ae_b07c1556",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:40:45Z",
+      "side": 1,
+      "message": "random unactionable rant: I want Python\u0027s list comprehension in C++ :)",
+      "revId": "6c60e0cca66aec35800ed05bcb32ecd118d11fa6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a20ee4b_564d018c",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:40:45Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "range": {
+        "startLine": 76,
+        "startChar": 50,
+        "endLine": 76,
+        "endChar": 51
+      },
+      "revId": "6c60e0cca66aec35800ed05bcb32ecd118d11fa6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

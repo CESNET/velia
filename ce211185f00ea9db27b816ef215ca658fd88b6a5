@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71212990_35fc421a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:48:56Z",
+      "side": 1,
+      "message": "nit; I don\u0027t really care either way, but I don\u0027t think this is used anywhere else, right?",
+      "revId": "ce211185f00ea9db27b816ef215ca658fd88b6a5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

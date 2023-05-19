@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "815a0d37_9552996a",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:48:29Z",
+      "side": 1,
+      "message": "Is it correct to keep the same string here now that the problem has been resolved? Maybe it is from a YANG PoV, but the code actively confuses me; perhaps it deserves a comment?",
+      "range": {
+        "startLine": 87,
+        "startChar": 136,
+        "endLine": 87,
+        "endChar": 178
+      },
+      "revId": "9e86374942e47d30e27da89b4bfa6010283c94ef",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

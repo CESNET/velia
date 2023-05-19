@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a4ec79c_481a4ae3",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:46:14Z",
+      "side": 1,
+      "message": "in some networking circles this is often called a \"TCA\", a Threshold Crossing Alarm. I\u0027d prefer the entity to be called just that, `threshold-crossing-alarm`, because \"out of range\" might imply to some readers that it\u0027s about a faulty sensor reading which is clearly out of the possible (as opposed to healthy) range.",
+      "range": {
+        "startLine": 17,
+        "startChar": 43,
+        "endLine": 17,
+        "endChar": 70
+      },
+      "revId": "0f30a7cd1c48bb8a8137d596e75e6ab36d96ce6e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

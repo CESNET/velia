@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fab7510b_e118af02",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-19T08:54:58Z",
+      "side": 1,
+      "message": "right, I usually do that via REQUIRE(!!data), nice catch",
+      "revId": "0c08d458c7a5be37d7c202b03b794da4e2b71203",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

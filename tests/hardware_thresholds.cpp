@@ -90,6 +90,12 @@ TEST_CASE("state transitions")
     EXPECT_NONE(w.update(12));
     EXPECT_EVENT(w.update(8), State::CriticalLow);
 
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_NONE(w.update(std::nullopt));
+    EXPECT_EVENT(w.update(10), State::Normal);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_EVENT(w.update(6), State::CriticalLow);
+
     thr.warningHigh = OneThr{20, 1};
     EXPECT_EVENT(w.setThresholds(thr), State::CriticalLow);
 
@@ -131,4 +137,15 @@ TEST_CASE("hysteresis")
     EXPECT_NONE(w.update(38));
     EXPECT_NONE(w.update(39));
     EXPECT_NONE(w.update(40));
+
+    EXPECT_EVENT(w.update(41), State::CriticalHigh);
+    EXPECT_NONE(w.update(39));
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_EVENT(w.update(41), State::CriticalHigh);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_EVENT(w.update(39), State::WarningHigh);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+
+    thr.criticalHigh.reset();
+    EXPECT_EVENT(w.setThresholds(thr), State::NoValue);
 }

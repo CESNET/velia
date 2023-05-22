@@ -77,6 +77,13 @@ TEST_CASE("just one threshold")
         EXPECT_NONE(w.update(10));
         EXPECT_NONE(w.update(-10));
     }
+
+    SECTION("setting thresholds before updating first value does not trigger any events")
+    {
+        EVENTS_INIT;
+        thr.criticalLow = OneThr{0, 1};
+        EXPECT_NONE(w.setThresholds(thr));
+    }
 }
 
 TEST_CASE("state transitions")
@@ -89,6 +96,12 @@ TEST_CASE("state transitions")
     EXPECT_EVENT(w.update(10), State::Normal);
     EXPECT_NONE(w.update(12));
     EXPECT_EVENT(w.update(8), State::CriticalLow);
+
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_NONE(w.update(std::nullopt));
+    EXPECT_EVENT(w.update(10), State::Normal);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_EVENT(w.update(6), State::CriticalLow);
 
     thr.warningHigh = OneThr{20, 1};
     EXPECT_EVENT(w.setThresholds(thr), State::CriticalLow);
@@ -131,4 +144,19 @@ TEST_CASE("hysteresis")
     EXPECT_NONE(w.update(38));
     EXPECT_NONE(w.update(39));
     EXPECT_NONE(w.update(40));
+
+    EXPECT_EVENT(w.update(41), State::CriticalHigh);
+    EXPECT_NONE(w.update(39));
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_EVENT(w.update(41), State::CriticalHigh);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_EVENT(w.update(39), State::WarningHigh);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+
+    thr.criticalHigh.reset();
+    EXPECT_NONE(w.setThresholds(thr));
+
+    thr.criticalHigh = OneThr{40, 2};
+    EXPECT_NONE(w.setThresholds(thr));
+    EXPECT_EVENT(w.update(41), State::CriticalHigh);
 }

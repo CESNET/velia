@@ -14,8 +14,8 @@ namespace velia::ietf_hardware {
 std::ostream& operator<<(std::ostream& os, const State state)
 {
     switch (state) {
-    case State::Initial:
-        os << "Unknown";
+    case State::NoValue:
+        os << "NoValue";
         break;
     case State::Disabled:
         os << "Disabled";

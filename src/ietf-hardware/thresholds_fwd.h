@@ -18,7 +18,7 @@ template <typename Value>
 class Watcher;
 
 enum class State {
-    Initial, /**< @short Unknown state. This should never be visible externally. */
+    NoValue, /**< @short No value associated (after initialization, or after updating with empty value). */
     Disabled, /**< @short No thresholds are set. */
     CriticalLow,
     WarningLow,

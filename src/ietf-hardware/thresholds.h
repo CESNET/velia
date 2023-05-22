@@ -42,11 +42,13 @@ public:
         return update(m_lastValue);
     }
 
-    std::optional<State> update(const Value value)
+    std::optional<State> update(const std::optional<Value> value)
     {
         State oldState = m_state;
 
-        if (violates<std::less>(value, m_thresholds.criticalLow)) {
+        if (!value) {
+            maybeTransition(State::NoValue, value);
+        } else if (violates<std::less>(value, m_thresholds.criticalLow)) {
             maybeTransition(State::CriticalLow, value);
         } else if (violates<std::greater>(value, m_thresholds.criticalHigh)) {
             maybeTransition(State::CriticalHigh, value);
@@ -59,6 +61,7 @@ public:
         } else {
             maybeTransition(State::Normal, value);
         }
+
         m_lastValue = value;
 
         if (oldState != m_state)
@@ -67,15 +70,15 @@ public:
     }
 
 private:
-    static bool isWithinHysteresis(const Value value, const std::optional<OneThreshold<Value>> threshold)
+    static bool isWithinHysteresis(const std::optional<Value>& value, const std::optional<OneThreshold<Value>> threshold)
     {
-        if (!threshold) {
+        if (!threshold || !value) {
             return false;
         }
         return value >= threshold->value - threshold->hysteresis && value <= threshold->value + threshold->hysteresis;
     }
 
-    void maybeTransition(const State newState, const Value value)
+    void maybeTransition(const State newState, const std::optional<Value>& value)
     {
         if (newState != m_state) {
             m_state = newState;
@@ -84,17 +87,17 @@ private:
     }
 
     template <template <typename> class Compare>
-    bool violates(const Value value, const std::optional<OneThreshold<Value>> threshold)
+    bool violates(const std::optional<Value>& value, const std::optional<OneThreshold<Value>> threshold)
     {
-        if (!threshold) {
+        if (!threshold || !value) {
             return false;
         }
 
         const auto validHistory = m_state >= State::CriticalLow && m_state <= State::CriticalHigh;
         const auto beforeFuzzy = isWithinHysteresis(m_lastChange, threshold);
         const auto nowFuzzy = isWithinHysteresis(value, threshold);
-        const auto before = Compare<Value>{}(m_lastChange, threshold->value);
-        const auto now = Compare<Value>{}(value, threshold->value);
+        const auto before = m_lastChange && Compare<Value>{}(*m_lastChange, threshold->value);
+        const auto now = Compare<Value>{}(*value, threshold->value);
 
         if (now) {
             if (validHistory && !before && beforeFuzzy && nowFuzzy) {
@@ -112,8 +115,8 @@ private:
     }
 
     Thresholds<Value> m_thresholds;
-    Value m_lastChange{std::numeric_limits<Value>::lowest()};
-    Value m_lastValue{std::numeric_limits<Value>::lowest()};
+    std::optional<Value> m_lastChange{std::numeric_limits<Value>::lowest()};
+    std::optional<Value> m_lastValue{std::numeric_limits<Value>::lowest()};
     State m_state{State::Initial};
 };
 

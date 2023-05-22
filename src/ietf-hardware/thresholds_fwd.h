@@ -20,6 +20,7 @@ class Watcher;
 enum class State {
     Initial, /**< @short Unknown state. This should never be visible externally. */
     Disabled, /**< @short No thresholds are set. */
+    NoValue, /**< @short Value not present. */
     CriticalLow,
     WarningLow,
     Normal,

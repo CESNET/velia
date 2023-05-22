@@ -8,6 +8,7 @@
 #pragma once
 
 #include <functional>
+#include <limits>
 #include <optional>
 #include "ietf-hardware/thresholds_fwd.h"
 

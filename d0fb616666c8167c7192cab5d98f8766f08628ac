@@ -41,6 +41,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3c2909d_19be4628",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-22T17:33:42Z",
+      "side": 1,
+      "message": "This is discarded after https://gerrit.cesnet.cz/c/CzechLight/velia/+/6237",
+      "parentUuid": "bff9a9d5_db7b79ab",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 21
+      },
+      "revId": "d0fb616666c8167c7192cab5d98f8766f08628ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7fe4503a_678a52f2",
@@ -54,6 +78,24 @@
       "writtenOn": "2023-05-19T08:38:57Z",
       "side": 1,
       "message": "From the tests (and the commit message) it seems that the second member does not contain information about all the thresholds, but instead info about *updated* threshold-crossings. I\u0027d prefer to call it something like `updatedThresholdCrossings` (or something shorter).",
+      "revId": "d0fb616666c8167c7192cab5d98f8766f08628ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5eae4e3_20d9bf40",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-22T17:33:42Z",
+      "side": 1,
+      "message": "Agreed. But I don\u0027t have a shorter name now, so updatedThresholdCrossings it is.",
+      "parentUuid": "7fe4503a_678a52f2",
       "revId": "d0fb616666c8167c7192cab5d98f8766f08628ac",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -75,6 +117,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf69ff9b_bfab726d",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-22T17:33:42Z",
+      "side": 1,
+      "message": "This is discarded after https://gerrit.cesnet.cz/c/CzechLight/velia/+/6237",
+      "parentUuid": "11c044b2_3a039eed",
+      "revId": "d0fb616666c8167c7192cab5d98f8766f08628ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "38667d63_75569f89",
@@ -88,6 +148,30 @@
       "writtenOn": "2023-05-19T08:38:57Z",
       "side": 1,
       "message": "nit: I know I wrote that code years ago, but I don\u0027t think it\u0027s super-readable. I\u0027m thinking about options, maybe a pattern like this would be easier to read (and slower to write):\n \nThresholds\u003cint64_t\u003e{\n  .lowCritical \u003d {...},\n  .lowWarning \u003d {...},\n  .highWarning \u003d {...},\n  .highCritical \u003d {...},\n}\n\nNo need to change now I guess, but I wonder what you think about that.",
+      "range": {
+        "startLine": 73,
+        "startChar": 68,
+        "endLine": 73,
+        "endChar": 187
+      },
+      "revId": "d0fb616666c8167c7192cab5d98f8766f08628ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4ca95f8_f525852e",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-22T17:33:42Z",
+      "side": 1,
+      "message": "Agreed. Definitely more readable.",
+      "parentUuid": "38667d63_75569f89",
       "range": {
         "startLine": 73,
         "startChar": 68,
@@ -121,6 +205,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "12bcd26e_32d9849f",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-22T17:33:42Z",
+      "side": 1,
+      "message": "I tried but I am open to suggestions.",
+      "parentUuid": "0b93e417_09a82905",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 182
+      },
+      "revId": "d0fb616666c8167c7192cab5d98f8766f08628ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "547d2915_b8446430",
@@ -134,6 +242,30 @@
       "writtenOn": "2023-05-19T08:38:57Z",
       "side": 1,
       "message": "a long test that\u0027s copy-pasted four times; please simplify this (I think a macro might be a good thing here)",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 222,
+        "endChar": 19
+      },
+      "revId": "d0fb616666c8167c7192cab5d98f8766f08628ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05be268a_9d147d7b",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-22T17:33:42Z",
+      "side": 1,
+      "message": "I have (almost completely) rewritten the test. It is probably even worse than before :(",
+      "parentUuid": "547d2915_b8446430",
       "range": {
         "startLine": 220,
         "startChar": 0,

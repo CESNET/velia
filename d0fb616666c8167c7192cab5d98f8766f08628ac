@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "80f19d7f_232664e3",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-22T17:33:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "591e3e94_9e77fe08",
+      "revId": "d0fb616666c8167c7192cab5d98f8766f08628ac",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bff9a9d5_db7b79ab",

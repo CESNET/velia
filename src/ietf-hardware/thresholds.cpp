@@ -20,6 +20,9 @@ std::ostream& operator<<(std::ostream& os, const State state)
     case State::Disabled:
         os << "Disabled";
         break;
+    case State::NoValue:
+        os << "NoValue";
+        break;
     case State::CriticalLow:
         os << "CriticalLow";
         break;

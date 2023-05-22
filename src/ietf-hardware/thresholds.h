@@ -42,24 +42,27 @@ public:
         return update(m_lastValue);
     }
 
-    std::optional<State> update(const Value value)
+    std::optional<State> update(const std::optional<Value> value)
     {
         State oldState = m_state;
 
-        if (violates<std::less>(value, m_thresholds.criticalLow)) {
-            maybeTransition(State::CriticalLow, value);
-        } else if (violates<std::greater>(value, m_thresholds.criticalHigh)) {
-            maybeTransition(State::CriticalHigh, value);
-        } else if (violates<std::less>(value, m_thresholds.warningLow)) {
-            maybeTransition(State::WarningLow, value);
-        } else if (violates<std::greater>(value, m_thresholds.warningHigh)) {
-            maybeTransition(State::WarningHigh, value);
+        if (!value) {
+            maybeTransition(State::NoValue, std::numeric_limits<Value>::min());
+        } else if (violates<std::less>(*value, m_thresholds.criticalLow)) {
+            maybeTransition(State::CriticalLow, *value);
+        } else if (violates<std::greater>(*value, m_thresholds.criticalHigh)) {
+            maybeTransition(State::CriticalHigh, *value);
+        } else if (violates<std::less>(*value, m_thresholds.warningLow)) {
+            maybeTransition(State::WarningLow, *value);
+        } else if (violates<std::greater>(*value, m_thresholds.warningHigh)) {
+            maybeTransition(State::WarningHigh, *value);
         } else if (!m_thresholds.criticalHigh && !m_thresholds.criticalLow && !m_thresholds.warningHigh && !m_thresholds.warningLow) {
-            maybeTransition(State::Disabled, value);
+            maybeTransition(State::Disabled, *value);
         } else {
-            maybeTransition(State::Normal, value);
+            maybeTransition(State::Normal, *value);
         }
-        m_lastValue = value;
+
+        m_lastValue = value.value_or(std::numeric_limits<Value>::min());
 
         if (oldState != m_state)
             return m_state;

@@ -22,6 +22,30 @@
       },
       "revId": "8c913a1d461a4b44b714d1ebc62db18b37c5d792",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d265a08_9941d35a",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-22T17:33:42Z",
+      "side": 1,
+      "message": "Done\n\nI was also thinking whether this pattern of merging maps is actually OK. In case there are duplicate keys in the maps the original value is kept and the new one is discarded (i.e., not merged in, https://en.cppreference.com/w/cpp/container/map/merge).\n\nWe don\u0027t have duplicated values as of now but perhaps this small check could be worth it to save us some debugging time in the future.",
+      "parentUuid": "97a5eaee_f0b0d39f",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 42
+      },
+      "revId": "8c913a1d461a4b44b714d1ebc62db18b37c5d792",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

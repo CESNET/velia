@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "856efd2b_417bbff4",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-23T19:32:41Z",
+      "side": 1,
+      "message": "What does the RFC say, is it \"better\" to define all different alarm identities like here, or is it preferable to just create a single `sensor-alarm` which comprises both missing alarms and threshold-crossing alarms?",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 104
+      },
+      "revId": "e41667e8eb269f424267a7935d1c444c4a7ca301",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9d814307_a4072001",
         "filename": "yang/velia-alarms@2022-07-12.yang",
         "patchSetId": 8
@@ -14,6 +37,30 @@
       "writtenOn": "2023-05-23T16:46:33Z",
       "side": 1,
       "message": "We should inherit two alarms here, one for crossing the lower limit and one for the upper limit.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 5
+      },
+      "revId": "e41667e8eb269f424267a7935d1c444c4a7ca301",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f962acc_2d13562e",
+        "filename": "yang/velia-alarms@2022-07-12.yang",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-23T19:32:41Z",
+      "side": 1,
+      "message": "Yeah. And even a little bit further:\n\n - velia-alarm\n   | \n   +- sensor-alarm\n      |\n      +- sensor-missing-alarm\n      |\n      +- sensor-crossing-alarm\n         |\n         +- low-value-alarm\n         |\n         +- high-value-alarm",
+      "parentUuid": "9d814307_a4072001",
       "range": {
         "startLine": 23,
         "startChar": 0,

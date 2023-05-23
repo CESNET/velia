@@ -46,6 +46,30 @@
       },
       "revId": "8c913a1d461a4b44b714d1ebc62db18b37c5d792",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f3ca8d6_7c2a0388",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-23T08:28:24Z",
+      "side": 1,
+      "message": "It\u0027s nice to read the docs every now and then; I just found out that it\u0027s not copying elements, but instead it\u0027s \"taking\" the elements from the source. Nice.\n\nWhat check do you propose -- to see that the merged-from map is empty? I would say it\u0027s a waste of time, but you\u0027re the one writing this code.",
+      "parentUuid": "4d265a08_9941d35a",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 42
+      },
+      "revId": "8c913a1d461a4b44b714d1ebc62db18b37c5d792",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

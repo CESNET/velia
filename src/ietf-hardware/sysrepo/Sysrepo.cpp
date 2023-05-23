@@ -15,6 +15,7 @@
 namespace {
 
 const auto ALARM_THRESHOLD = "velia-alarms:threshold-crossing-alarm";
+const auto ALARM_THRESHOLD_DESCRIPTION = "Sensor threshold crossed.";
 const auto ALARM_MISSING = "velia-alarms:sensor-missing";
 const auto ALARM_MISSING_DESCRIPTION = "Sensor is missing. Maybe it was unplugged?";
 
@@ -84,8 +85,16 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
 
                 if (state == State::NoValue) {
                     utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), "critical", ALARM_MISSING_DESCRIPTION);
-                } else if (prevState != thresholdsStates.end() && state != State::NoValue) {
+                } else if (prevState != thresholdsStates.end() && prevState->second == State::NoValue && state != State::NoValue) {
                     utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), "cleared", ALARM_MISSING_DESCRIPTION);
+                }
+
+                if (state == State::CriticalLow || state == State::CriticalHigh) {
+                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD, std::nullopt, extractComponentPrefix(sensorXPath), "critical", ALARM_THRESHOLD_DESCRIPTION);
+                } else if (state == State::WarningLow || state == State::WarningHigh) {
+                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD, std::nullopt, extractComponentPrefix(sensorXPath), "warning", ALARM_THRESHOLD_DESCRIPTION);
+                } else if (state == State::Normal && prevState != thresholdsStates.end() && prevState->second >= State::CriticalLow && prevState->second <= State::CriticalHigh) {
+                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD, std::nullopt, extractComponentPrefix(sensorXPath), "cleared", ALARM_THRESHOLD_DESCRIPTION);
                 }
 
                 thresholdsStates[sensorXPath] = state;

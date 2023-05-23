@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f45d815_97cea4ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-23T08:24:28Z",
+      "side": 1,
+      "message": "this looks pretty much like Initial. Any reason not to use that one (after adjusting the docs so that it is \"allowed\" to be externally visible)?",
+      "revId": "9944bef7b7f5cfbfa1fd3f0e4605753b1bfa3ace",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

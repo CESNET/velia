@@ -8,6 +8,8 @@
 
 using namespace std::literals;
 
+#define NUKE_LAST_CHANGE(DATA) DATA.erase("/ietf-hardware:hardware/last-change")
+
 #define THRESHOLD_STATE(RESOURCE, STATE) {"/ietf-hardware:hardware/component[name='" RESOURCE "']/sensor-data/value", STATE}
 
 using velia::ietf_hardware::State;
@@ -15,7 +17,6 @@ using velia::ietf_hardware::State;
 TEST_CASE("HardwareState")
 {
     TEST_INIT_LOGS;
-    static const auto modulePrefix = "/ietf-hardware:hardware"s;
 
     trompeloeil::sequence seq1;
     auto ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
@@ -260,7 +261,7 @@ TEST_CASE("HardwareState")
 
     {
         auto [data, alarms] = ietfHardware->process();
-        data.erase(modulePrefix + "/last-change"); // exclude last-change node
+        NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
                     THRESHOLD_STATE("ne:ctrl:current", State::Disabled),
@@ -281,7 +282,7 @@ TEST_CASE("HardwareState")
     expected["/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value"] = "11500";
     {
         auto [data, alarms] = ietfHardware->process();
-        data.erase(modulePrefix + "/last-change"); // exclude last-change node
+        NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
                     THRESHOLD_STATE("ne:fans:fan2:rpm", State::WarningHigh),
@@ -307,7 +308,7 @@ TEST_CASE("HardwareState")
 
     {
         auto [data, alarms] = ietfHardware->process();
-        data.erase(modulePrefix + "/last-change"); // exclude last-change node
+        NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
@@ -331,7 +332,7 @@ TEST_CASE("HardwareState")
 
     {
         auto [data, alarms] = ietfHardware->process();
-        data.erase(modulePrefix + "/last-change"); // exclude last-change node
+        NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{

@@ -20,7 +20,9 @@ const auto ALARM_MISSING = "velia-alarms:sensor-missing-alarm";
 const auto ALARM_MISSING_SEVERITY = "warning";
 const auto ALARM_MISSING_DESCRIPTION = "Sensor value not reported. Maybe the sensor was unplugged?";
 const auto ALARM_THRESHOLD_CROSSING_LOW = "velia-alarms:sensor-low-value-alarm";
+const auto ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION = "Sensor value crossed low threshold.";
 const auto ALARM_THRESHOLD_CROSSING_HIGH = "velia-alarms:sensor-high-value-alarm";
+const auto ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION = "Sensor value crossed high threshold.";
 
 /** @brief Extracts component path prefix from an XPath under /ietf-hardware/component node
  *
@@ -42,6 +44,33 @@ std::string extractComponentPrefix(const std::string& componentXPath)
 void logAlarm(velia::Log logger, const std::string_view sensor, const std::string_view alarm, const std::string_view severity, const velia::ietf_hardware::State state, const velia::ietf_hardware::State prevState)
 {
     logger->trace("Sensor '{}': threshold state changed from '{}' to '{}'. Updating {} alarm to severity {}.", sensor, prevState, state, alarm, severity);
+}
+
+bool isThresholdCrossingLow(velia::ietf_hardware::State state)
+{
+    return state == velia::ietf_hardware::State::WarningLow || state == velia::ietf_hardware::State::CriticalLow;
+}
+
+bool isThresholdCrossingHigh(velia::ietf_hardware::State state)
+{
+    return state == velia::ietf_hardware::State::WarningHigh || state == velia::ietf_hardware::State::CriticalHigh;
+}
+
+std::string stateToSeverity(velia::ietf_hardware::State state)
+{
+    switch (state) {
+    case velia::ietf_hardware::State::WarningLow:
+    case velia::ietf_hardware::State::WarningHigh:
+        return "warning";
+    case velia::ietf_hardware::State::CriticalLow:
+    case velia::ietf_hardware::State::CriticalHigh:
+        return "critical";
+    default: {
+        std::ostringstream oss;
+        oss << "No severity associated with sensor threshold State " << state;
+        throw std::logic_error(oss.str());
+    }
+    }
 }
 }
 
@@ -98,6 +127,24 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                 } else if (state != State::NoValue && prevState != thresholdsStates.end() && prevState->second == State::NoValue) {
                     logAlarm(m_log, sensorXPath, ALARM_MISSING, ALARM_CLEARED, state, prevState == thresholdsStates.end() ? State::NoValue : prevState->second);
                     utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, extractComponentPrefix(sensorXPath), ALARM_CLEARED, ALARM_MISSING_DESCRIPTION);
+                }
+
+                // set new threshold alarms first (in case the sensor value transitions from high to low (or low to high) so we don't lose any active alarm on the resource)
+                if (isThresholdCrossingLow(state) && prevState != thresholdsStates.end() && prevState->second != state) {
+                    logAlarm(m_log, sensorXPath, ALARM_THRESHOLD_CROSSING_LOW, stateToSeverity(state), state, prevState == thresholdsStates.end() ? State::NoValue : prevState->second);
+                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, extractComponentPrefix(sensorXPath), stateToSeverity(state), ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION);
+                } else if (isThresholdCrossingHigh(state) && prevState != thresholdsStates.end() && prevState->second != state) {
+                    logAlarm(m_log, sensorXPath, ALARM_THRESHOLD_CROSSING_HIGH, stateToSeverity(state), state, prevState == thresholdsStates.end() ? State::NoValue : prevState->second);
+                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, extractComponentPrefix(sensorXPath), stateToSeverity(state), ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION);
+                }
+
+                // clear old threshold alarms
+                if (!isThresholdCrossingLow(state) && prevState != thresholdsStates.end() && isThresholdCrossingLow(prevState->second)) {
+                    logAlarm(m_log, sensorXPath, ALARM_THRESHOLD_CROSSING_LOW, ALARM_CLEARED, state, prevState == thresholdsStates.end() ? State::NoValue : prevState->second);
+                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, extractComponentPrefix(sensorXPath), ALARM_CLEARED, ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION);
+                } else if (!isThresholdCrossingHigh(state) && prevState != thresholdsStates.end() && isThresholdCrossingHigh(prevState->second)) {
+                    logAlarm(m_log, sensorXPath, ALARM_THRESHOLD_CROSSING_HIGH, ALARM_CLEARED, state, prevState == thresholdsStates.end() ? State::NoValue : prevState->second);
+                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, extractComponentPrefix(sensorXPath), ALARM_CLEARED, ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION);
                 }
 
                 thresholdsStates[sensorXPath] = state;

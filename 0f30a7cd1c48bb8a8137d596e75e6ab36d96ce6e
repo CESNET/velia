@@ -22,6 +22,30 @@
       },
       "revId": "0f30a7cd1c48bb8a8137d596e75e6ab36d96ce6e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12005ff9_2277f42d",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-23T07:48:06Z",
+      "side": 1,
+      "message": "The names are just a draft to discuss. Will change.",
+      "parentUuid": "4a4ec79c_481a4ae3",
+      "range": {
+        "startLine": 17,
+        "startChar": 43,
+        "endLine": 17,
+        "endChar": 70
+      },
+      "revId": "0f30a7cd1c48bb8a8137d596e75e6ab36d96ce6e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

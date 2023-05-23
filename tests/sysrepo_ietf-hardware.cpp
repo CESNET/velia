@@ -115,11 +115,14 @@ TEST_CASE("IETF Hardware with sysrepo")
     auto sysfsTempCpu = std::make_shared<FakeHWMon>();
     auto sysfsPower = std::make_shared<FakeHWMon>();
 
+    using velia::ietf_hardware::OneThreshold;
+    using velia::ietf_hardware::Thresholds;
     using velia::ietf_hardware::data_reader::SensorType;
     using velia::ietf_hardware::data_reader::StaticData;
     using velia::ietf_hardware::data_reader::SysfsValue;
 
     std::atomic<bool> psuActive; // this needs to be destroyed after ietfHardware to avoid dangling reference (we are passing it as a ref to PsuDataReader)
+    std::atomic<int64_t> psuSensorValue;
     std::atomic<int64_t> cpuTempValue;
     std::atomic<int64_t> powerValue;
 
@@ -127,7 +130,12 @@ TEST_CASE("IETF Hardware with sysrepo")
     auto ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
     ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:temperature-cpu", "ne", sysfsTempCpu, 1));
-    ietfHardware->registerDataReader(SysfsValue<SensorType::Power>("ne:power", "ne", sysfsPower, 1));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Power>("ne:power", "ne", sysfsPower, 1, Thresholds<int64_t>{
+                                                                                                        .criticalLow = OneThreshold<int64_t>{8'000'000, 500'000},
+                                                                                                        .warningLow = OneThreshold<int64_t>{10'000'000, 500'000},
+                                                                                                        .warningHigh = OneThreshold<int64_t>{20'000'000, 500'000},
+                                                                                                        .criticalHigh = OneThreshold<int64_t>{22'000'000, 500'000},
+                                                                                                    }));
 
     /* Some data readers (like our PSU reader, see the FspYhPsu test) may set oper-state to enabled/disabled depending on whether the device is present and Some
      * data might not even be pushed (e.g. the child sensors).
@@ -136,6 +144,7 @@ TEST_CASE("IETF Hardware with sysrepo")
      */
     struct PsuDataReader {
         const std::atomic<bool>& active;
+        const std::atomic<int64_t>& value;
 
         velia::ietf_hardware::DataTree operator()()
         {
@@ -151,7 +160,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/parent"] = "ne:psu";
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state"] = "enabled";
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status"] = "ok";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value"] = "12000";
+                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value"] = std::to_string(value);
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision"] = "0";
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale"] = "milli";
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type"] = "volts-DC";
@@ -162,7 +171,6 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         velia::ietf_hardware::ThresholdsBySensorPath thresholds() const
         {
-            using namespace velia::ietf_hardware;
             return {{"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", Thresholds<int64_t>{
                                                                                                      .criticalLow = std::nullopt,
                                                                                                      .warningLow = OneThreshold<int64_t>{10000, 2000},
@@ -171,7 +179,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                                                                                  }}};
         }
     };
-    ietfHardware->registerDataReader(PsuDataReader{psuActive});
+    ietfHardware->registerDataReader(PsuDataReader{psuActive, psuSensorValue});
 
     /* Ensure that there are sane data after each sysrepo change callback (all the component subtrees are expected). */
     auto changeSub = client.onModuleChange(
@@ -198,6 +206,7 @@ TEST_CASE("IETF Hardware with sysrepo")
     cpuTempValue = 41800;
     powerValue = 14000000;
     psuActive = true;
+    psuSensorValue = 12000;
     REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
     REQUIRE_CALL(*sysfsPower, attribute("power1_input")).LR_RETURN(powerValue).TIMES(AT_LEAST(1));
     REQUIRE_CALL(dsChangeAlarmInventory, change(std::map<std::string, std::variant<std::string, Deleted>>{
@@ -331,7 +340,7 @@ TEST_CASE("IETF Hardware with sysrepo")
     std::this_thread::sleep_for(2000ms); // longer sleep here: last-change does not report milliseconds so this should increase last-change timestamp at least by one second
     REQUIRE(directLeafNodeQuery(modulePrefix + "/last-change") > lastChange); // check that last-change leaf has timestamp that is greater than the previous one
 
-    // third batch of changes, wild PSU appears
+    // third batch of changes, wild PSU appears with a warning
     REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                        {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "enabled"},
                                        {"/ietf-hardware:hardware/component[name='ne:psu:child']", "(list instance)"},
@@ -340,7 +349,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                        {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", "ne:psu"},
                                        {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", "(container)"},
                                        {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", "ok"},
-                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", "12000"},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", "50000"},
                                        {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", "0"},
                                        {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", "milli"},
                                        {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", "volts-DC"},
@@ -357,8 +366,114 @@ TEST_CASE("IETF Hardware with sysrepo")
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", "cleared"},
                               }))
         .IN_SEQUENCE(seq1);
-
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", "Sensor threshold crossed."},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:threshold-crossing-alarm"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", "/ietf-hardware:hardware/component[name='ne:psu:child']"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", "warning"},
+                              }))
+        .IN_SEQUENCE(seq1);
+    psuSensorValue = 50000;
     psuActive = true;
 
+    waitForCompletionAndBitMore(seq1);
+
+    // fourth round. We unplug with a warning
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/name", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", Deleted{}},
+                                       {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", Deleted{}},
+                                   }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                       {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"},
+                                   }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", "Sensor is missing. Maybe it was unplugged?"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:sensor-missing"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", "/ietf-hardware:hardware/component[name='ne:psu:child']"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", "critical"},
+                              }))
+        .IN_SEQUENCE(seq1);
+    psuActive = false;
+    waitForCompletionAndBitMore(seq1);
+
+    // 5+th round: test threshold crossings
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                       {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "21000000"},
+                                   }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", "Sensor threshold crossed."},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:threshold-crossing-alarm"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", "/ietf-hardware:hardware/component[name='ne:power']"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", "warning"},
+                              }))
+        .IN_SEQUENCE(seq1);
+    powerValue = 21'000'000;
+    waitForCompletionAndBitMore(seq1);
+
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                       {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "24000000"},
+                                   }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", "Sensor threshold crossed."},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:threshold-crossing-alarm"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", "/ietf-hardware:hardware/component[name='ne:power']"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", "critical"},
+                              }))
+        .IN_SEQUENCE(seq1);
+    powerValue = 24'000'000;
+    waitForCompletionAndBitMore(seq1);
+
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                       {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "1"},
+                                   }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", "Sensor threshold crossed."},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:threshold-crossing-alarm"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", "/ietf-hardware:hardware/component[name='ne:power']"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", "critical"},
+                              }))
+        .IN_SEQUENCE(seq1);
+    powerValue = 1;
+    waitForCompletionAndBitMore(seq1);
+
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                       {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "14000000"},
+                                   }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", "Sensor threshold crossed."},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:threshold-crossing-alarm"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", "/ietf-hardware:hardware/component[name='ne:power']"},
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", "cleared"},
+                              }))
+        .IN_SEQUENCE(seq1);
+    powerValue = 14'000'000;
     waitForCompletionAndBitMore(seq1);
 }

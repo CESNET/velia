@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a67914f_ff7f83a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-24T07:52:45Z",
+      "side": 1,
+      "message": "Thanks. Can I squash into https://gerrit.cesnet.cz/c/CzechLight/velia/+/6197 ?",
+      "revId": "d55c9a18984a4874121c1bf44411b0f14359a89d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

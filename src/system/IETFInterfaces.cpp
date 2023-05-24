@@ -299,7 +299,6 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
      */
 
     std::vector<utils::YANGPair> values;
-    std::vector<std::string> deletePaths;
 
     auto routes = m_rtnetlink->getRoutes();
     auto links = m_rtnetlink->getLinks();
@@ -405,6 +404,6 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
     }
 
     std::lock_guard<std::mutex> lock(m_mtx);
-    utils::valuesPush(values, deletePaths, m_srSession, sysrepo::Datastore::Operational);
+    utils::valuesPush(values, {}, m_srSession, sysrepo::Datastore::Operational);
 }
 }

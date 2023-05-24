@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0a0c3b61_00782df9",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-24T09:52:58Z",
+      "side": 1,
+      "message": "I disagree with the claim on the part you highlighted. Even the whole condition is not always false. But whole condition seems fishy, I will revisit it.",
+      "parentUuid": "35dfd0cd_412bf2fc",
+      "range": {
+        "startLine": 87,
+        "startChar": 63,
+        "endLine": 87,
+        "endChar": 89
+      },
+      "revId": "13bbc4499d32a8f87aacfa0e251d4d9dd15cd52e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f6a7b8b2_e1e3a0e7",
         "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
         "patchSetId": 3

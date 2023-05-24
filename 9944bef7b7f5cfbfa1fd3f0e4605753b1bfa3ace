@@ -16,6 +16,24 @@
       "message": "this looks pretty much like Initial. Any reason not to use that one (after adjusting the docs so that it is \"allowed\" to be externally visible)?",
       "revId": "9944bef7b7f5cfbfa1fd3f0e4605753b1bfa3ace",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8535db3_6be0bca7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-24T07:18:59Z",
+      "side": 1,
+      "message": "Good point. I think we can merge Initial and NoValue states into NoValue, I can\u0027t think of any reasons why not.",
+      "parentUuid": "3f45d815_97cea4ef",
+      "revId": "9944bef7b7f5cfbfa1fd3f0e4605753b1bfa3ace",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -245,7 +245,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
             // delete physical address from sysrepo if not provided by rtnetlink
             // Note: During testing I have noticed that my wireless interface loses a physical address. There were several change callbacks invoked
             // when simply bringing the interface down and up. In some of those, nl_addr2str returned "none".
-            deletePaths.push_back({IETF_INTERFACES + "/interface[name='" + name + "']/phys-address"});
+            deletePaths.emplace_back(IETF_INTERFACES + "/interface[name='" + name + "']/phys-address");
         }
 
         values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = isBridge(link) ? "iana-if-type:bridge" : arpTypeToString(rtnl_link_get_arptype(link), m_log);
@@ -279,7 +279,7 @@ void IETFInterfaces::onAddrUpdate(rtnl_addr* addr, int action)
     const auto yangPrefix = IETF_INTERFACES + "/interface[name='" + linkName + "']/ietf-ip:" + ipVersion + "/address[ip='" + ipAddress + "']";
 
     if (action == NL_ACT_DEL) {
-        deletePaths.push_back({yangPrefix});
+        deletePaths.emplace_back(yangPrefix);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
         values[yangPrefix + "/prefix-length"] = std::to_string(rtnl_addr_get_prefixlen(addr));
     } else {

@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "02370fd8_e02c8802",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-24T07:18:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42737b7d_1504ee6b",
+      "range": {
+        "startLine": 60,
+        "startChar": 76,
+        "endLine": 60,
+        "endChar": 81
+      },
+      "revId": "c7d097d26f65a463d643e3907808c54f5a921eca",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "ee0a0049_03b2d9c3",
         "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
         "patchSetId": 14
@@ -60,6 +84,30 @@
       "writtenOn": "2023-05-23T19:24:45Z",
       "side": 1,
       "message": "nit: an std::array, maybe?",
+      "range": {
+        "startLine": 43,
+        "startChar": 9,
+        "endLine": 43,
+        "endChar": 15
+      },
+      "revId": "c7d097d26f65a463d643e3907808c54f5a921eca",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bd3b069_310dbe27",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-24T07:18:59Z",
+      "side": 1,
+      "message": "Okay.",
+      "parentUuid": "138ebfb7_42ae1145",
       "range": {
         "startLine": 43,
         "startChar": 9,

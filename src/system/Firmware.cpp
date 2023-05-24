@@ -43,7 +43,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
             std::optional<libyang::DataNode> dataNode;
             auto session = m_srConn.sessionStart();
 
-            utils::valuesToYang(data, {}, session, dataNode);
+            utils::valuesToYang(data, {}, {}, session, dataNode);
             session.sendNotification(*dataNode, sysrepo::Wait::No); // No need to wait, it's just a notification.
         },
         [this](int32_t retVal, const std::string& lastError) {
@@ -131,7 +131,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
             data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message"] = m_installMessage;
         }
 
-        utils::valuesToYang(data, {}, session, parent);
+        utils::valuesToYang(data, {}, {}, session, parent);
         return ::sysrepo::ErrorCode::Ok;
     };
 

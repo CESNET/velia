@@ -60,11 +60,11 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                 }
             }
 
-            for (const auto& component : deletedComponents) {
-                conn.discardOperationalChanges(component);
-            }
+            std::vector<std::string> discards;
+            discards.reserve(deletedComponents.size());
+            std::copy(deletedComponents.begin(), deletedComponents.end(), std::back_inserter(discards));
 
-            utils::valuesPush(hwStateValues, {}, m_session, ::sysrepo::Datastore::Operational);
+            utils::valuesPush(hwStateValues, {}, discards, m_session, ::sysrepo::Datastore::Operational);
 
             prevValues = std::move(hwStateValues);
             std::this_thread::sleep_for(m_pollInterval);

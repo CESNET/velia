@@ -132,7 +132,7 @@ void IETFSystem::initStaticProperties(const std::filesystem::path& osRelease)
         {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-version", osReleaseContents.at("VERSION")},
     };
 
-    utils::valuesPush(opsSystemStateData, {}, m_srSession, sysrepo::Datastore::Operational);
+    utils::valuesPush(opsSystemStateData, {}, {}, m_srSession, sysrepo::Datastore::Operational);
 }
 
 void IETFSystem::initSystemRestart()
@@ -222,7 +222,7 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
             values[IETF_SYSTEM_DNS_PATH + "/server[name='"s + e + "']/udp-and-tcp/address"] = e;
         }
 
-        utils::valuesToYang(values, {}, session, parent);
+        utils::valuesToYang(values, {}, {}, session, parent);
         return sysrepo::ErrorCode::Ok;
     };
 

@@ -64,12 +64,12 @@ void initLogsSysrepo()
     sr_log_set_cb(spdlog_sr_log_cb);
 }
 
-void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent)
+void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent)
 {
-    valuesToYang(mapToVector(values), removePaths, std::move(session), parent);
+    valuesToYang(mapToVector(values), removePaths, discardPaths, std::move(session), parent);
 }
 
-void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent)
+void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent)
 {
     auto netconf = session.getContext().getModuleImplemented("ietf-netconf");
     auto log = spdlog::get("main");
@@ -99,26 +99,39 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
             parent->newPath(propertyName, value, libyang::CreationOptions::Output);
         }
     }
+
+    for (const auto& propertyName : discardPaths) {
+        log->trace("Processing node discard {}", propertyName);
+
+        auto discard = session.getContext().newOpaqueJSON("sysrepo", "discard-items", libyang::JSON{propertyName});
+
+        if (!parent) {
+            parent = discard;
+        } else {
+            parent->insertSibling(*discard);
+            parent->newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
+        }
+    }
 }
 
 /** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
-void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, ::sysrepo::Session session, sysrepo::Datastore datastore)
+void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, sysrepo::Datastore datastore)
 {
     auto oldDatastore = session.activeDatastore();
     session.switchDatastore(datastore);
 
-    valuesPush(values, removePaths, session);
+    valuesPush(values, removePaths, discardPaths, session);
 
     session.switchDatastore(oldDatastore);
 }
 
 /** @brief Set or remove paths in Sysrepo's current datastore. */
-void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, ::sysrepo::Session session)
+void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session)
 {
     if (values.empty() && removePaths.empty()) return;
 
     std::optional<libyang::DataNode> edit;
-    valuesToYang(values, removePaths, session, edit);
+    valuesToYang(values, removePaths, discardPaths, session, edit);
 
     if (edit) {
         session.editBatch(*edit, sysrepo::DefaultOperation::Merge);
@@ -127,24 +140,24 @@ void valuesPush(const std::map<std::string, std::string>& values, const std::vec
 }
 
 /** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
-void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, sysrepo::Session session, sysrepo::Datastore datastore)
+void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, sysrepo::Session session, sysrepo::Datastore datastore)
 {
     auto oldDatastore = session.activeDatastore();
     session.switchDatastore(datastore);
 
-    valuesPush(values, removePaths, session);
+    valuesPush(values, removePaths, discardPaths, session);
 
     session.switchDatastore(oldDatastore);
 }
 
 /** @brief Set or remove paths in Sysrepo's current datastore. */
-void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, sysrepo::Session session)
+void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, sysrepo::Session session)
 {
     if (values.empty() && removePaths.empty())
         return;
 
     std::optional<libyang::DataNode> edit;
-    valuesToYang(values, removePaths, session, edit);
+    valuesToYang(values, removePaths, discardPaths, session, edit);
 
     if (edit) {
         session.editBatch(*edit, sysrepo::DefaultOperation::Merge);

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b88887de_d2bf0f26",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-24T17:52:03Z",
+      "side": 1,
+      "message": "Just so I don\u0027t forget. This needs to be adapted as we are now using two alarms for threshold crossings. Also, we need to deal with a corner case where we go from low threshold straight into high threshold. The alarm API cannot set two alarms in one transaction (edit) unfortunately so we should first create new alarm and then clear the old one, i.e., when transitioning from low to high, first create high alarm then clear low alarm.",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 102,
+        "endChar": 17
+      },
+      "revId": "2d4626b58bb8470d61e5d8a8135b4d5a9d7c7c31",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

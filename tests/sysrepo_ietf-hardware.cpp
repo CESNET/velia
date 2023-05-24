@@ -213,9 +213,7 @@ TEST_CASE("IETF Hardware with sysrepo")
 
     // second batch of values, sensor data changed, PSU ejected
     REQUIRE_CALL(dsChange, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                               {"/ietf-hardware:hardware/component[name='ne:psu:child']", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", Deleted{}},
-                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/name", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", Deleted{}},
@@ -225,9 +223,6 @@ TEST_CASE("IETF Hardware with sysrepo")
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", Deleted{}},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", Deleted{}},
-                           }))
-        .IN_SEQUENCE(seq1);
-    REQUIRE_CALL(dsChange, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "11222333"},
                                {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"},
                                {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value", "222"},
@@ -245,9 +240,7 @@ TEST_CASE("IETF Hardware with sysrepo")
     // third batch of changes, wild PSU appears
     REQUIRE_CALL(dsChange, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "enabled"},
-                               {"/ietf-hardware:hardware/component[name='ne:psu:child']", "(list instance)"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", "iana-hardware:sensor"},
-                               {"/ietf-hardware:hardware/component[name='ne:psu:child']/name", "ne:psu:child"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", "ne:psu"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", "(container)"},
                                {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", "ok"},

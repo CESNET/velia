@@ -16,6 +16,23 @@
       "message": "Just for the record re CI failures -- the TSAN one is a false positive, and czechlight-clearfog fails because it doesn\u0027t know about the netconf-cli update.",
       "revId": "498c3f889aab15ed357bf8bd244df8bebb16d5c4",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdfe4e04_cd26fa58",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-25T10:19:46Z",
+      "side": 1,
+      "message": "@Tomas, do these look sane?",
+      "revId": "498c3f889aab15ed357bf8bd244df8bebb16d5c4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

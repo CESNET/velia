@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "f39c755fec0811887d3decf58892848725c53e34",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f58a9fc4_4b3ec6b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-29T21:08:17Z",
+      "side": 1,
+      "message": "(overriding CI because this cannot be upgraded atomically)",
+      "revId": "f39c755fec0811887d3decf58892848725c53e34",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

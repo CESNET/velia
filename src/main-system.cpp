@@ -32,10 +32,11 @@ Usage:
 Options:
   -h --help                         Show this screen.
   --version                         Show version.
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
-  --system-log-level=<N>            Log level for the system stuff [default: 3]
+  --main-log-level=<N>              Log level for other messages [default: 2]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
+  --system-log-level=<N>            Log level for the system stuff [default: 3]
 )";
 
 DBUS_EVENTLOOP_INIT
@@ -56,6 +57,7 @@ int main(int argc, char* argv[])
     spdlog::set_level(spdlog::level::info);
 
     try {
+        spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
         spdlog::get("system")->set_level(parseLogLevel("System logging", args["--system-log-level"]));
 

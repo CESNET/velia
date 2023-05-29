@@ -31,6 +31,8 @@ Options:
   --health-log-level=<N>            Log level for the health monitoring [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
+  --main-log-level=<N>              Log level for other messages [default: 2]
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
 )";
 
 DBUS_EVENTLOOP_INIT
@@ -51,6 +53,8 @@ int main(int argc, char* argv[])
 
     try {
         spdlog::get("health")->set_level(parseLogLevel("Health checker logger", args["--health-log-level"]));
+        spdlog::get("main")->set_level(parseLogLevel("System logging", args["--main-log-level"]));
+        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
         DBUS_EVENTLOOP_START
 

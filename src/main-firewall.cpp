@@ -30,9 +30,10 @@ Options:
   -h --help                         Show this screen.
   --version                         Show version.
   --firewall-log-level=<N>          Log level for the firewall [default: 3]
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
+  --main-log-level=<N>              Log level for other messages [default: 2]
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
   --nftables-include-file=<Path>    Files to include in the nftables config file.
 )";
 
@@ -53,6 +54,7 @@ int main(int argc, char* argv[])
 
     try {
         spdlog::get("firewall")->set_level(parseLogLevel("Firewall logging", args["--firewall-log-level"]));
+        spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
         spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
         std::vector<std::filesystem::path> nftIncludeFiles;

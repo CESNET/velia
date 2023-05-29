@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "9144b7b23533c5d9532d369ca395a249c6df5c76",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b5f3260_4eb2717a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-29T21:07:35Z",
+      "side": 1,
+      "message": "CI failures are fixed via https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/6257 that we cannot depend-on to prevent a cycle.",
+      "revId": "9144b7b23533c5d9532d369ca395a249c6df5c76",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

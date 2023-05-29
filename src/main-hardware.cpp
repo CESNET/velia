@@ -20,8 +20,9 @@ static const char usage[] =
 Usage:
   veliad-hardware
     [--appliance=<Model>]
-    [--sysrepo-log-level=<Level>]
     [--hardware-log-level=<Level>]
+    [--main-log-level=<Level>]
+    [--sysrepo-log-level=<Level>]
   veliad-hardware (-h | --help)
   veliad-hardware --version
 
@@ -29,10 +30,11 @@ Options:
   -h --help                         Show this screen.
   --version                         Show version.
   --appliance=<Model>               Initialize IETF Hardware and outputs for specific appliance.
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
   --hardware-log-level=<N>          Log level for the hardware drivers [default: 3]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
+  --main-log-level=<N>              Log level for other messages [default: 2]
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
 )";
 
 int main(int argc, char* argv[])
@@ -51,8 +53,9 @@ int main(int argc, char* argv[])
     spdlog::set_level(spdlog::level::info);
 
     try {
-        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
         spdlog::get("hardware")->set_level(parseLogLevel("Hardware loggers", args["--hardware-log-level"]));
+        spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
+        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
         auto srConn = sysrepo::Connection{};
         auto srSess = srConn.sessionStart();

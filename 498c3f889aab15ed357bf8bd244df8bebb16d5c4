@@ -18,6 +18,23 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8b99c9a_0291c341",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-29T20:51:29Z",
+      "side": 1,
+      "message": "This thing works, but I\u0027ve asked upstream for a confirmation that the externally visible change of behavior is desirable. We can still merge in the meanwhile, though.",
+      "revId": "498c3f889aab15ed357bf8bd244df8bebb16d5c4",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cdfe4e04_cd26fa58",

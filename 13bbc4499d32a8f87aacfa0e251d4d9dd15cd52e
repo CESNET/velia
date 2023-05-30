@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e23b9600_ff1fb671",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-30T11:31:18Z",
+      "side": 1,
+      "message": "Is the current version better understandable?",
+      "parentUuid": "0a0c3b61_00782df9",
+      "range": {
+        "startLine": 87,
+        "startChar": 63,
+        "endLine": 87,
+        "endChar": 89
+      },
+      "revId": "13bbc4499d32a8f87aacfa0e251d4d9dd15cd52e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f6a7b8b2_e1e3a0e7",
         "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
         "patchSetId": 3
@@ -73,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "db2a02d3_e5d1add9",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-30T11:31:18Z",
+      "side": 1,
+      "message": "Can you please elaborate? I am checking whether we transitioned from the alarmable state to nonalarmable state (please see the latest PS).",
+      "parentUuid": "f6a7b8b2_e1e3a0e7",
+      "range": {
+        "startLine": 88,
+        "startChar": 20,
+        "endLine": 88,
+        "endChar": 162
+      },
+      "revId": "13bbc4499d32a8f87aacfa0e251d4d9dd15cd52e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "63be6663_0a4b711c",
         "filename": "tests/sysrepo_ietf-hardware.cpp",
         "patchSetId": 3
@@ -84,6 +132,30 @@
       "writtenOn": "2023-05-23T19:39:43Z",
       "side": 1,
       "message": "this needs a macro, it\u0027s already used twice",
+      "range": {
+        "startLine": 317,
+        "startChar": 0,
+        "endLine": 322,
+        "endChar": 103
+      },
+      "revId": "13bbc4499d32a8f87aacfa0e251d4d9dd15cd52e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7836f121_480978fe",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-30T11:31:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63be6663_0a4b711c",
       "range": {
         "startLine": 317,
         "startChar": 0,

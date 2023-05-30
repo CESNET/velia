@@ -34,6 +34,24 @@
       "parentUuid": "3a67914f_ff7f83a2",
       "revId": "d55c9a18984a4874121c1bf44411b0f14359a89d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32ca86b6_a792d04b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-30T11:07:23Z",
+      "side": 1,
+      "message": "Done. However, I can\u0027t abandon your change.",
+      "parentUuid": "bf55b05c_1014ab47",
+      "revId": "d55c9a18984a4874121c1bf44411b0f14359a89d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

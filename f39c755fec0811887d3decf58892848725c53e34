@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "69b5821a_3eaec44e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-30T06:06:30Z",
+      "side": 1,
+      "message": "It\u0027s docopt, not doctest.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 7
+      },
+      "revId": "f39c755fec0811887d3decf58892848725c53e34",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bcffbf2f_b903eead",
@@ -31,6 +54,23 @@
       "writtenOn": "2023-05-29T21:08:17Z",
       "side": 1,
       "message": "(overriding CI because this cannot be upgraded atomically)",
+      "revId": "f39c755fec0811887d3decf58892848725c53e34",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74e236f1_9aa54f17",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-30T06:06:30Z",
+      "side": 1,
+      "message": "This will probably need an update in other projects too. I have copied this from cla-sysrepo.\n\nAlso: Did you submit a patch upstream? I can do it (if you don\u0027t want to).",
       "revId": "f39c755fec0811887d3decf58892848725c53e34",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

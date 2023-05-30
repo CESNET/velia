@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b1e798d_07b25870",
+        "filename": "src/ietf-hardware/thresholds.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-30T14:25:22Z",
+      "side": 1,
+      "message": "These variables should IMHO be initialized to std::nullopt. I *think* that right now a test which just takes a default-initialized Watcher and pushes into it new Thresholds which set critical low would trigger a state change now, while the desirable behavior is to not trigger any transition in that case.\n\nEven if I\u0027m wrong, initializing to a \"random\" value like the lowest possible one smells fishy now that it explicitly supports an empty state.",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 75
+      },
+      "revId": "78a024f3178eceaabbf3ae6ba4c2e3b37d8cb23f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

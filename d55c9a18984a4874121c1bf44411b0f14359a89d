@@ -52,6 +52,24 @@
       "parentUuid": "bf55b05c_1014ab47",
       "revId": "d55c9a18984a4874121c1bf44411b0f14359a89d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13366c6b_37a6e5cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-30T12:34:36Z",
+      "side": 1,
+      "message": "you should have that permissions now, sorry (https://gerrit.cesnet.cz/c/CzechLight/acl/+/6269)",
+      "parentUuid": "32ca86b6_a792d04b",
+      "revId": "d55c9a18984a4874121c1bf44411b0f14359a89d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

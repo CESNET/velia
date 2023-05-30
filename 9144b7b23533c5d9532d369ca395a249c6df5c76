@@ -33,6 +33,29 @@
       "message": "CI failures are fixed via https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/6257 that we cannot depend-on to prevent a cycle.",
       "revId": "9144b7b23533c5d9532d369ca395a249c6df5c76",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34a0a641_5e815863",
+        "filename": "src/main-hardware.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-30T06:08:33Z",
+      "side": 1,
+      "message": "I think we should name it \"other messages\" as it is named in other files. Or is this intentional?",
+      "range": {
+        "startLine": 57,
+        "startChar": 54,
+        "endLine": 57,
+        "endChar": 68
+      },
+      "revId": "9144b7b23533c5d9532d369ca395a249c6df5c76",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

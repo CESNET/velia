@@ -70,6 +70,24 @@
       "parentUuid": "32ca86b6_a792d04b",
       "revId": "d55c9a18984a4874121c1bf44411b0f14359a89d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3d942fa_40fb1133",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-30T19:46:31Z",
+      "side": 1,
+      "message": "I still don\u0027t have the permissions :(",
+      "parentUuid": "13366c6b_37a6e5cc",
+      "revId": "d55c9a18984a4874121c1bf44411b0f14359a89d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

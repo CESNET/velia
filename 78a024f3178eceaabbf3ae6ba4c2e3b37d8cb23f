@@ -22,6 +22,30 @@
       },
       "revId": "78a024f3178eceaabbf3ae6ba4c2e3b37d8cb23f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2bd2672b_30402c21",
+        "filename": "src/ietf-hardware/thresholds.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T06:03:57Z",
+      "side": 1,
+      "message": "You are correct, this was a mistake. Modified the initialization and added a test for the situation you described.",
+      "parentUuid": "2b1e798d_07b25870",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 75
+      },
+      "revId": "78a024f3178eceaabbf3ae6ba4c2e3b37d8cb23f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

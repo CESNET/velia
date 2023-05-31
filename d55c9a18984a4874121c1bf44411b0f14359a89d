@@ -88,6 +88,24 @@
       "parentUuid": "13366c6b_37a6e5cc",
       "revId": "d55c9a18984a4874121c1bf44411b0f14359a89d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "278e8565_a7d83c37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:17:12Z",
+      "side": 1,
+      "message": "FYI I was just waiting for another team at CESNET who manages the GitHub Proxy IdP so that I can get another account and try to debug the abandoning ACLs, but let\u0027s not bother now",
+      "parentUuid": "c3d942fa_40fb1133",
+      "revId": "d55c9a18984a4874121c1bf44411b0f14359a89d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

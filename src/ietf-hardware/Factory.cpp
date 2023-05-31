@@ -122,7 +122,16 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"description", "Czechlight project"s}}));
 
         ietfHardware->registerDataReader(StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
-        ietfHardware->registerDataReader(Fans("ne:fans", "ne", fans, 4));
+        ietfHardware->registerDataReader(Fans("ne:fans",
+                                              "ne",
+                                              fans,
+                                              4,
+                                              Thresholds<int64_t>{
+                                                  .criticalLow = OneThreshold<int64_t>{3680, 300}, /* 40 % of 9200 RPM */
+                                                  .warningLow = OneThreshold<int64_t>{7360, 300}, /* 80 % of 9200 RPM */
+                                                  .warningHigh = std::nullopt,
+                                                  .criticalHigh = std::nullopt,
+                                              }));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-front", "ne:ctrl", tempMainBoard, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", tempCpu, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-rear", "ne:ctrl", tempFans, 1));

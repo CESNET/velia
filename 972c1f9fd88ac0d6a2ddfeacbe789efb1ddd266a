@@ -69,6 +69,30 @@
       },
       "revId": "972c1f9fd88ac0d6a2ddfeacbe789efb1ddd266a",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd497a98_00902099",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T09:10:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14cbb082_921adb55",
+      "range": {
+        "startLine": 137,
+        "startChar": 53,
+        "endLine": 137,
+        "endChar": 118
+      },
+      "revId": "972c1f9fd88ac0d6a2ddfeacbe789efb1ddd266a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

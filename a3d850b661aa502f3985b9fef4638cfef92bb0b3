@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7ef86eb_b5af7dbf",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T08:13:13Z",
+      "side": 1,
+      "message": "These expressions differ a bit but I tried anyway.",
+      "parentUuid": "57043452_9701b304",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 226,
+        "endChar": 27
+      },
+      "revId": "a3d850b661aa502f3985b9fef4638cfef92bb0b3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e4fb2431_edacad22",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-05-31T00:15:47Z",
       "side": 1,
       "message": "these should be:\n base sensor-threshold-crossing-alarm;",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 5
+      },
+      "revId": "a3d850b661aa502f3985b9fef4638cfef92bb0b3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbf1427c_63e4780d",
+        "filename": "yang/velia-alarms@2022-07-12.yang",
+        "patchSetId": 11
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T08:13:13Z",
+      "side": 1,
+      "message": "Oh, thanks.",
+      "parentUuid": "e4fb2431_edacad22",
       "range": {
         "startLine": 38,
         "startChar": 0,

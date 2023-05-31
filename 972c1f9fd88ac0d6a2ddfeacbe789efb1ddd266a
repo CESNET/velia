@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f5d833f_25035a21",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:41:23Z",
+      "side": 1,
+      "message": "nit: `toAlarmSeverity` or `toYangAlarmSeverity`, please",
+      "range": {
+        "startLine": 59,
+        "startChar": 12,
+        "endLine": 59,
+        "endChar": 27
+      },
+      "revId": "972c1f9fd88ac0d6a2ddfeacbe789efb1ddd266a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14cbb082_921adb55",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:41:23Z",
+      "side": 1,
+      "message": "I think that this condition is wrong; if the first value that\u0027s ever reported for this sensor exceeds some threshold, the alarm will be never raised. It has to go to the normal range first, and only then the TCAs will be reported. The fix is IMHO to treat \"no previous value\" as State::Normal (so I just suggested that in the previous patch).\n\nCan you please also add a test for this?",
+      "range": {
+        "startLine": 137,
+        "startChar": 53,
+        "endLine": 137,
+        "endChar": 118
+      },
+      "revId": "972c1f9fd88ac0d6a2ddfeacbe789efb1ddd266a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

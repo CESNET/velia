@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b68b402_81fa37cd",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:11:50Z",
+      "side": 1,
+      "message": "nit: wrap this, please",
+      "range": {
+        "startLine": 61,
+        "startChar": 119,
+        "endLine": 61,
+        "endChar": 193
+      },
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0bcd9a2_f0c2760e",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:11:50Z",
+      "side": 1,
+      "message": "won\u0027t this spam the log during each run of that loop? besides, all important transitions are already reported by the logging below",
+      "range": {
+        "startLine": 79,
+        "startChar": 26,
+        "endLine": 79,
+        "endChar": 91
+      },
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d964591_776e842d",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:11:50Z",
+      "side": 1,
+      "message": "I think this one will look better on a device:\n\n \"threshold: {} {}\", sensorXPath, *newState",
+      "range": {
+        "startLine": 83,
+        "startChar": 26,
+        "endLine": 83,
+        "endChar": 76
+      },
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d825b1b0_d2981cd9",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:11:50Z",
+      "side": 1,
+      "message": "I know this is just a test, but in the real world what you typically alert on is not a fan spinning too quickly (which is rather rare), but instead a fan blocked by dust which won\u0027t rotate anymore (or which is slowing down significantly). If it isn\u0027t too much work, can you please change this one the lower bound?",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 123
+      },
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b93e579_5dbad702",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:11:50Z",
+      "side": 1,
+      "message": "this one gets overwritten, not removed (the code is \"not wrong\" because it\u0027s reassigned on line 305, but still)",
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

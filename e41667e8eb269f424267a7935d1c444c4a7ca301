@@ -71,6 +71,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f163f2de_44d63a52",
+        "filename": "yang/velia-alarms@2022-07-12.yang",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T09:48:54Z",
+      "side": 1,
+      "message": "I don\u0027t care that much, so let\u0027s take it in as-is",
+      "parentUuid": "fb57d125_283d6502",
+      "range": {
+        "startLine": 10,
+        "startChar": 4,
+        "endLine": 10,
+        "endChar": 23
+      },
+      "revId": "e41667e8eb269f424267a7935d1c444c4a7ca301",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d814307_a4072001",

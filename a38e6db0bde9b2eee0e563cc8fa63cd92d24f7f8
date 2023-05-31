@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e94095c_3cb610f2",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T06:03:57Z",
+      "side": 1,
+      "message": "I wrapped the line (if that is what you meant).",
+      "parentUuid": "2b68b402_81fa37cd",
+      "range": {
+        "startLine": 61,
+        "startChar": 119,
+        "endLine": 61,
+        "endChar": 193
+      },
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b0bcd9a2_f0c2760e",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-05-31T00:11:50Z",
       "side": 1,
       "message": "won\u0027t this spam the log during each run of that loop? besides, all important transitions are already reported by the logging below",
+      "range": {
+        "startLine": 79,
+        "startChar": 26,
+        "endLine": 79,
+        "endChar": 91
+      },
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc291934_6c8bfb42",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T06:03:57Z",
+      "side": 1,
+      "message": "Agreed, removed.",
+      "parentUuid": "b0bcd9a2_f0c2760e",
       "range": {
         "startLine": 79,
         "startChar": 26,
@@ -70,6 +118,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed281fa1_d366717c",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T06:03:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d964591_776e842d",
+      "range": {
+        "startLine": 83,
+        "startChar": 26,
+        "endLine": 83,
+        "endChar": 76
+      },
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d825b1b0_d2981cd9",
@@ -93,6 +165,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c57455c_5ecc6a5b",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T06:03:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d825b1b0_d2981cd9",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 123
+      },
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4b93e579_5dbad702",
@@ -106,6 +202,24 @@
       "writtenOn": "2023-05-31T00:11:50Z",
       "side": 1,
       "message": "this one gets overwritten, not removed (the code is \"not wrong\" because it\u0027s reassigned on line 305, but still)",
+      "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a59e7d0e_560c1aa0",
+        "filename": "tests/hardware_ietf-hardware.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T06:03:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b93e579_5dbad702",
       "revId": "a38e6db0bde9b2eee0e563cc8fa63cd92d24f7f8",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

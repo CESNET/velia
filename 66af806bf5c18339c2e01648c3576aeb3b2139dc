@@ -22,6 +22,29 @@
       },
       "revId": "66af806bf5c18339c2e01648c3576aeb3b2139dc",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a311504_c497398b",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:38:19Z",
+      "side": 1,
+      "message": "Actually I think the code (and especially the code in the next patch) can be made simpler if you assume that a missing previous value is the normal state. Then you can stop dealing with iterators in/equal to x.end(), and just work with a State value State::Normal.",
+      "range": {
+        "startLine": 93,
+        "startChar": 16,
+        "endLine": 93,
+        "endChar": 68
+      },
+      "revId": "66af806bf5c18339c2e01648c3576aeb3b2139dc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

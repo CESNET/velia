@@ -96,6 +96,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "950b0ccb_5d0a7f28",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T08:13:13Z",
+      "side": 1,
+      "message": "Thanks, now I understand. I tried to edit the code once again. The original comment misled me because the RHS of the \u0026\u0026 expr was not always false but actually always true.",
+      "parentUuid": "fed82dd7_8a44a7ad",
+      "range": {
+        "startLine": 87,
+        "startChar": 63,
+        "endLine": 87,
+        "endChar": 89
+      },
+      "revId": "13bbc4499d32a8f87aacfa0e251d4d9dd15cd52e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f6a7b8b2_e1e3a0e7",

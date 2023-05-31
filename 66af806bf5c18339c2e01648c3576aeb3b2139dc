@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9539804c_2cce7e48",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T08:13:13Z",
+      "side": 1,
+      "message": "Done but I also added a sensor path (resource) to the log string.",
+      "parentUuid": "2a6435ca_c602350a",
+      "range": {
+        "startLine": 44,
+        "startChar": 19,
+        "endLine": 44,
+        "endChar": 108
+      },
+      "revId": "66af806bf5c18339c2e01648c3576aeb3b2139dc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0a311504_c497398b",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-05-31T00:38:19Z",
       "side": 1,
       "message": "Actually I think the code (and especially the code in the next patch) can be made simpler if you assume that a missing previous value is the normal state. Then you can stop dealing with iterators in/equal to x.end(), and just work with a State value State::Normal.",
+      "range": {
+        "startLine": 93,
+        "startChar": 16,
+        "endLine": 93,
+        "endChar": 68
+      },
+      "revId": "66af806bf5c18339c2e01648c3576aeb3b2139dc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c33e6287_da61d285",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-05-31T08:13:13Z",
+      "side": 1,
+      "message": "That is actually a good idea and I am going to implement that. Thanks",
+      "parentUuid": "0a311504_c497398b",
       "range": {
         "startLine": 93,
         "startChar": 16,

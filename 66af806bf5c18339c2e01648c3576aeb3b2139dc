@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a6435ca_c602350a",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:27:51Z",
+      "side": 1,
+      "message": "Let\u0027s make this more compact. The threshold code already logs the threshold changes, so I think it\u0027s OK to only log the actual alarm, like this:\n \"Alarm {alarm}: {severity}\"\n\nBut it\u0027s actually a valuable message, so let\u0027s mark it as `info`.",
+      "range": {
+        "startLine": 44,
+        "startChar": 19,
+        "endLine": 44,
+        "endChar": 108
+      },
+      "revId": "66af806bf5c18339c2e01648c3576aeb3b2139dc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

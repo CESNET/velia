@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fed82dd7_8a44a7ad",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:27:51Z",
+      "side": 1,
+      "message": "The point is that this is a condition which is always true when it\u0027s checked at this place, so let\u0027s make the code more readable by reducing the expression length by 1/3 and remove this check.\n\nOr, if you prefer and if you want to stress out that the state is something else, feel free to turn this into nested ifs if you think that\u0027s more readable:\n\n if (state \u003d\u003d State::NoValue) {\n   ...\n } else {\n   if (prevState !\u003d thresholdsStates.end() \u0026\u0026 prevState-\u003esecond \u003d\u003d State::NoValue) {\n     ...\n   }\n }",
+      "parentUuid": "e23b9600_ff1fb671",
+      "range": {
+        "startLine": 87,
+        "startChar": 63,
+        "endLine": 87,
+        "endChar": 89
+      },
+      "revId": "13bbc4499d32a8f87aacfa0e251d4d9dd15cd52e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f6a7b8b2_e1e3a0e7",
         "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
         "patchSetId": 3
@@ -109,6 +133,30 @@
       "side": 1,
       "message": "Can you please elaborate? I am checking whether we transitioned from the alarmable state to nonalarmable state (please see the latest PS).",
       "parentUuid": "f6a7b8b2_e1e3a0e7",
+      "range": {
+        "startLine": 88,
+        "startChar": 20,
+        "endLine": 88,
+        "endChar": 162
+      },
+      "revId": "13bbc4499d32a8f87aacfa0e251d4d9dd15cd52e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c362698_bafa9c3c",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-31T00:27:51Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "db2a02d3_e5d1add9",
       "range": {
         "startLine": 88,
         "startChar": 20,

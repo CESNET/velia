@@ -5,8 +5,9 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include "FspYhPsu.h"
-#include "utils/log.h"
+#include "ietf-hardware/thresholds.h"
 #include "utils/UniqueResource.h"
+#include "utils/log.h"
 
 namespace velia::ietf_hardware {
 
@@ -121,9 +122,11 @@ FspYhPsu::~FspYhPsu()
 void FspYhPsu::createPower()
 {
     m_hwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(m_hwmonDir);
-    using velia::ietf_hardware::data_reader::SysfsValue;
+    using velia::ietf_hardware::OneThreshold;
+    using velia::ietf_hardware::Thresholds;
     using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
+    using velia::ietf_hardware::data_reader::SysfsValue;
 
 
     auto registerReader = [&]<typename DataReaderType>(DataReaderType&& reader) {
@@ -139,7 +142,12 @@ void FspYhPsu::createPower()
     registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-12V", m_namePrefix, m_hwmon, 2));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-out", m_namePrefix, m_hwmon, 2));
-    registerReader(Fans(m_namePrefix + ":fan", m_namePrefix, m_hwmon, 1));
+    registerReader(Fans(m_namePrefix + ":fan", m_namePrefix, m_hwmon, 1, Thresholds<int64_t>{
+                                                                             .criticalLow = OneThreshold<int64_t>{1500, 150}, // datasheet YH5151 (sec. 3.4) says critical is 1000 and warning 2000; giving 500rpm extra reserve
+                                                                             .warningLow = OneThreshold<int64_t>{2500, 150},
+                                                                             .warningHigh = std::nullopt,
+                                                                             .criticalHigh = std::nullopt,
+                                                                         }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-5Vsb", m_namePrefix, m_hwmon, 3));
     registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-5Vsb", m_namePrefix, m_hwmon, 3));
 }

@@ -148,7 +148,12 @@ void FspYhPsu::createPower()
                                                                                                                   }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 2));
-    registerReader(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in", m_namePrefix, m_hwmon, 1));
+    registerReader(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in", m_namePrefix, m_hwmon, 1, Thresholds<int64_t>{
+                                                                                                                 .criticalLow = OneThreshold<int64_t>{90000, 3000},
+                                                                                                                 .warningLow = OneThreshold<int64_t>{100000, 3000},
+                                                                                                                 .warningHigh = OneThreshold<int64_t>{245000, 3000},
+                                                                                                                 .criticalHigh = OneThreshold<int64_t>{264000, 3000},
+                                                                                                             }));
     registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-12V", m_namePrefix, m_hwmon, 2));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-out", m_namePrefix, m_hwmon, 2));

@@ -132,8 +132,26 @@ void FspYhPsu::createPower()
         m_properties.emplace_back(reader);
     };
 
-    registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-1", m_namePrefix, m_hwmon, 1));
-    registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-2", m_namePrefix, m_hwmon, 2));
+    registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-1",
+                                                       m_namePrefix,
+                                                       m_hwmon,
+                                                       1,
+                                                       Thresholds<int64_t>{
+                                                           .criticalLow = std::nullopt,
+                                                           .warningLow = std::nullopt,
+                                                           .warningHigh = OneThreshold<int64_t>{40000, 1000},
+                                                           .criticalHigh = OneThreshold<int64_t>{45000, 1000},
+                                                       }));
+    registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-2",
+                                                       m_namePrefix,
+                                                       m_hwmon,
+                                                       2,
+                                                       Thresholds<int64_t>{
+                                                           .criticalLow = std::nullopt,
+                                                           .warningLow = std::nullopt,
+                                                           .warningHigh = OneThreshold<int64_t>{40000, 1000},
+                                                           .criticalHigh = OneThreshold<int64_t>{45000, 1000},
+                                                       }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 2));
     registerReader(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in", m_namePrefix, m_hwmon, 1));

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0becd8e_b065d5c2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-06-09T22:10:16Z",
+      "side": 1,
+      "message": "Just FYI, that \"random mail\" was actually the part number; the 40% default is set by a HW configuration of the PCB. The MAX31790 has two pins for that, and since the PWM_START0 is grounded and PWM_START1 is connected to Vcc, the datasheet https://www.analog.com/media/en/technical-documentation/data-sheets/MAX31790.pdf on p. 25 says that it\u0027s 40%.",
+      "range": {
+        "startLine": 9,
+        "startChar": 59,
+        "endLine": 10,
+        "endChar": 61
+      },
+      "revId": "2ba9ea52224b8242fb0df415cd3a0b08bd5c4bbb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86f055b1_cf3b6b66",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-06-09T22:10:16Z",
+      "side": 1,
+      "message": "This is hysteresis, and IMHO it should not be dependent (as some percentages of) on the target RPMs. Let\u0027s just put 300 in there, that should be plenty. Also below, please.",
+      "range": {
+        "startLine": 126,
+        "startChar": 185,
+        "endLine": 126,
+        "endChar": 224
+      },
+      "revId": "2ba9ea52224b8242fb0df415cd3a0b08bd5c4bbb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

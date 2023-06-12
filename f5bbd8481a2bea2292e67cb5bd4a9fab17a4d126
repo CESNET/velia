@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9527392c_dbbff36c",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-06-12T21:36:38Z",
+      "side": 1,
+      "message": "I think that just 50mV hysteresis is a bit too optimistic (I wonder what resolution is actually on the wire in the pmbus spec, but I don\u0027t feel like checking what VOUT format this model uses; it was very painful last time). Let\u0027s use 100mV there, that should hopefully mask out any measurement noise.",
+      "range": {
+        "startLine": 158,
+        "startChar": 158,
+        "endLine": 158,
+        "endChar": 160
+      },
+      "revId": "f5bbd8481a2bea2292e67cb5bd4a9fab17a4d126",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

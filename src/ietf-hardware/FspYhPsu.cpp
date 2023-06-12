@@ -164,7 +164,16 @@ void FspYhPsu::createPower()
                                                          .warningHigh = OneThreshold<int64_t>{245000, 3000},
                                                          .criticalHigh = OneThreshold<int64_t>{264000, 3000},
                                                      }));
-    registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-12V", m_namePrefix, m_hwmon, 2));
+    registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-12V",
+                                                     m_namePrefix,
+                                                     m_hwmon,
+                                                     2,
+                                                     Thresholds<int64_t>{
+                                                         .criticalLow = OneThreshold<int64_t>{11640, 50},
+                                                         .warningLow = OneThreshold<int64_t>{11790, 50},
+                                                         .warningHigh = OneThreshold<int64_t>{12450, 50},
+                                                         .criticalHigh = OneThreshold<int64_t>{12600, 50},
+                                                     }));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-out", m_namePrefix, m_hwmon, 2));
     registerReader(Fans(m_namePrefix + ":fan",
@@ -178,7 +187,16 @@ void FspYhPsu::createPower()
                             .criticalHigh = std::nullopt,
                         }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-5Vsb", m_namePrefix, m_hwmon, 3));
-    registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-5Vsb", m_namePrefix, m_hwmon, 3));
+    registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-5Vsb",
+                                                     m_namePrefix,
+                                                     m_hwmon,
+                                                     3,
+                                                     Thresholds<int64_t>{
+                                                         .criticalLow = OneThreshold<int64_t>{4800, 50},
+                                                         .warningLow = OneThreshold<int64_t>{4900, 50},
+                                                         .warningHigh = OneThreshold<int64_t>{5150, 50},
+                                                         .criticalHigh = OneThreshold<int64_t>{5250, 50},
+                                                     }));
 }
 
 DataTree FspYhPsu::readValues()

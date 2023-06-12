@@ -16,6 +16,24 @@
       "message": "the commit message says that the critical threshold is 45 deg, but the actual code sets that to 50 deg C",
       "revId": "0b743984f82a49d164c5d5b0b2555645fe569dab",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50a0631f_e1247e3e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-06-12T06:47:44Z",
+      "side": 1,
+      "message": "thanks, fixed",
+      "parentUuid": "abdc353e_e4439a33",
+      "revId": "0b743984f82a49d164c5d5b0b2555645fe569dab",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

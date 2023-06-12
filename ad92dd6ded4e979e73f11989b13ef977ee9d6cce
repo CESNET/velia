@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e1b25fa_ccf9fa24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-06-12T21:41:57Z",
+      "side": 1,
+      "message": "I did some component checking as well (because the PSU\u0027s own margins are IMHO less important than the tolerance of the powered components):\n\n- clearfog base is happy with 9-32V\n- WSS \"A\": 4.75-5.25V\n- WSS \"A\": 11.4-12.6V\n- WSS \"B\": 4.75-5.25V\n- EDFA: \u003c\u003d5.5V\n- OCM \"A\": 3.3V, no tolerance specified\n- OCM \"B\": 4.75-5.25V\n- tap array: 4.75-5.25\n- SFP MSA: \"3.3V +/- 5%\", which yields 3.135-3.465V\n\nSo these numeric values are probably OK.\n\nI\u0027m a bit too nervous about the hysteresis which looks way too low to me, but honestly I don\u0027t know how to set it properly given that 5% of 3V is just 165mV... so let\u0027s take this one in as-is.",
+      "revId": "ad92dd6ded4e979e73f11989b13ef977ee9d6cce",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

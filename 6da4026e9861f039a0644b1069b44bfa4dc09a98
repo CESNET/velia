@@ -34,6 +34,24 @@
       "parentUuid": "167d8ac9_27527b6f",
       "revId": "6da4026e9861f039a0644b1069b44bfa4dc09a98",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4af40250_e44ac675",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-06-13T09:38:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5267e3e2_d5244737",
+      "revId": "6da4026e9861f039a0644b1069b44bfa4dc09a98",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

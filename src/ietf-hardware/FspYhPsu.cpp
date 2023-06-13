@@ -5,8 +5,8 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include "FspYhPsu.h"
-#include "utils/log.h"
 #include "utils/UniqueResource.h"
+#include "utils/log.h"
 
 namespace velia::ietf_hardware {
 
@@ -41,7 +41,6 @@ bool TransientI2C::isPresent() const
 
     char bufferIn[1];
     return read(file, bufferIn, 1) != -1;
-
 }
 
 void TransientI2C::bind() const
@@ -77,7 +76,6 @@ FspYhPsu::FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psu
 {
     m_exit = false;
     m_psuWatcher = std::thread([this] {
-
         while (!m_exit) {
             if (m_i2c->isPresent()) {
                 if (!std::filesystem::is_directory(m_hwmonDir)) {
@@ -121,9 +119,9 @@ FspYhPsu::~FspYhPsu()
 void FspYhPsu::createPower()
 {
     m_hwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(m_hwmonDir);
-    using velia::ietf_hardware::data_reader::SysfsValue;
     using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
+    using velia::ietf_hardware::data_reader::SysfsValue;
 
 
     auto registerReader = [&]<typename DataReaderType>(DataReaderType&& reader) {
@@ -172,7 +170,6 @@ DataTree FspYhPsu::readValues()
 
             return res;
         }
-
     }
 
     return res;

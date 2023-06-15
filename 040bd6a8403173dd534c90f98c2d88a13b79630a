@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea254db4_559adc95",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-06-15T12:40:56Z",
+      "side": 1,
+      "message": "Let\u0027s take this one as-is, but I wonder if it makes more sense to consider the airflow (PDU\u0027s intake -\u003e PDU\u0027s internals -\u003e PDU\u0027s exhaust -\u003e PSU\u0027s intake -\u003e PSU\u0027s exhaust, in the order of increasing heat) and vary the threshold accordingly. No clue, TBH.",
+      "revId": "040bd6a8403173dd534c90f98c2d88a13b79630a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

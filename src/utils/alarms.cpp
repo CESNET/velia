@@ -14,6 +14,7 @@ using namespace std::string_literals;
 namespace {
 const auto alarmInventory = "/ietf-alarms:alarms/alarm-inventory"s;
 const auto alarmRpc = "/sysrepo-ietf-alarms:create-or-update-alarm";
+const auto lastIndex = "[2147483647]"s;
 }
 
 namespace velia::utils {
@@ -48,7 +49,7 @@ void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::stri
     session.setItem(prefix + "/description", description);
 
     for (const auto& severity : severities) {
-        session.setItem(prefix + "/severity-level", severity);
+        session.setItem(prefix + "/severity-level" + lastIndex, severity);
     }
 
     session.applyChanges();
@@ -68,7 +69,7 @@ void addResourceToAlarmInventoryEntry(sysrepo::Session session, const std::strin
             session.switchDatastore(originalDS);
         });
 
-    session.setItem(prefix + "/resource", resource);
+    session.setItem(prefix + "/resource" + lastIndex, resource);
     session.applyChanges();
 }
 }

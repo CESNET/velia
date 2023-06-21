@@ -74,6 +74,19 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
     auto netconf = session.getContext().getModuleImplemented("ietf-netconf");
     auto log = spdlog::get("main");
 
+    for (const auto& propertyName : discardPaths) {
+        log->trace("Processing node discard {}", propertyName);
+
+        auto discard = session.getContext().newOpaqueJSON("sysrepo", "discard-items", libyang::JSON{propertyName});
+
+        if (!parent) {
+            parent = discard;
+        } else {
+            parent->insertSibling(*discard);
+            parent->newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
+        }
+    }
+
     for (const auto& propertyName : removePaths) {
         log->trace("Processing node deletion {}", propertyName);
 
@@ -97,19 +110,6 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
             parent = session.getContext().newPath(propertyName, value, libyang::CreationOptions::Output);
         } else {
             parent->newPath(propertyName, value, libyang::CreationOptions::Output);
-        }
-    }
-
-    for (const auto& propertyName : discardPaths) {
-        log->trace("Processing node discard {}", propertyName);
-
-        auto discard = session.getContext().newOpaqueJSON("sysrepo", "discard-items", libyang::JSON{propertyName});
-
-        if (!parent) {
-            parent = discard;
-        } else {
-            parent->insertSibling(*discard);
-            parent->newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
         }
     }
 }

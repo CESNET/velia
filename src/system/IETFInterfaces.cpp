@@ -404,6 +404,6 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
     }
 
     std::lock_guard<std::mutex> lock(m_mtx);
-    utils::valuesPush(values, {}, {}, m_srSession, sysrepo::Datastore::Operational);
+    utils::valuesPush(values, {}, {"/ietf-routing:routing/ribs/rib"}, m_srSession, sysrepo::Datastore::Operational);
 }
 }

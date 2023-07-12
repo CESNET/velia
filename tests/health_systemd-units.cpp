@@ -121,7 +121,7 @@ TEST_CASE("systemd unit state monitoring (alarms)")
         server.createUnit(*serverConnection, "unit4.service", "/org/freedesktop/systemd1/unit/unit4", "failed", "failed");
 
         // Sleep for a while; the rest of the code might be too fast and we need to be sure that we pick up event for (failed, failed) before the state of unit4 is changed in the DBus server
-        std::this_thread::sleep_for(25ms);
+        std::this_thread::sleep_for(250ms);
 
         server.changeUnitState("/org/freedesktop/systemd1/unit/unit3", "activating", "auto-restart");
         server.changeUnitState("/org/freedesktop/systemd1/unit/unit3", "active", "running");

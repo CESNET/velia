@@ -128,7 +128,7 @@ void valuesPush(const std::map<std::string, std::string>& values, const std::vec
 /** @brief Set or remove paths in Sysrepo's current datastore. */
 void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session)
 {
-    if (values.empty() && removePaths.empty()) return;
+    if (values.empty() && removePaths.empty() && discardPaths.empty()) return;
 
     std::optional<libyang::DataNode> edit;
     valuesToYang(values, removePaths, discardPaths, session, edit);
@@ -153,7 +153,7 @@ void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::stri
 /** @brief Set or remove paths in Sysrepo's current datastore. */
 void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, sysrepo::Session session)
 {
-    if (values.empty() && removePaths.empty())
+    if (values.empty() && removePaths.empty() && discardPaths.empty())
         return;
 
     std::optional<libyang::DataNode> edit;

@@ -169,10 +169,10 @@ void FspYhPsu::createPower()
                                                      m_hwmon,
                                                      2,
                                                      Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{11640, 50},
-                                                         .warningLow = OneThreshold<int64_t>{11790, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{12450, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{12600, 50},
+                                                         .criticalLow = OneThreshold<int64_t>{11300, 50},
+                                                         .warningLow = OneThreshold<int64_t>{11500, 50},
+                                                         .warningHigh = OneThreshold<int64_t>{12500, 50},
+                                                         .criticalHigh = OneThreshold<int64_t>{12700, 50},
                                                      }));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-out", m_namePrefix, m_hwmon, 2));
@@ -192,10 +192,10 @@ void FspYhPsu::createPower()
                                                      m_hwmon,
                                                      3,
                                                      Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{4800, 50},
-                                                         .warningLow = OneThreshold<int64_t>{4900, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{5150, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{5250, 50},
+                                                         .criticalLow = OneThreshold<int64_t>{4600, 50},
+                                                         .warningLow = OneThreshold<int64_t>{4700, 50},
+                                                         .warningHigh = OneThreshold<int64_t>{5300, 50},
+                                                         .criticalHigh = OneThreshold<int64_t>{5400, 50},
                                                      }));
 }
 

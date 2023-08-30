@@ -54,7 +54,7 @@ module czechlight-network {
     // User should not create new links or reconfigure link types
     deviation /if:interfaces/if:interface/if:name {
         deviate add {
-            must '. = "br0" or . = "eth0" or . = "eth1" or . = "osc" or . = "oscW" or . = "oscE"' {
+            must '. = "br0" or . = "eth0" or . = "eth1" or . = "eth2" or . = "osc" or . = "oscW" or . = "oscE"' {
                 error-message "Link name must be chosen from the following options: {br0, eth0, eth1, osc, oscW, oscE}.";
             }
         }
@@ -65,6 +65,7 @@ module czechlight-network {
             must '(../if:name = "br0" and . = "ianaift:bridge") or
                   (../if:name = "eth0" and . = "ianaift:ethernetCsmacd") or
                   (../if:name = "eth1" and . = "ianaift:ethernetCsmacd") or
+                  (../if:name = "eth2" and . = "ianaift:ethernetCsmacd") or
                   (../if:name = "osc" and . = "ianaift:ethernetCsmacd") or
                   (../if:name = "oscW" and . = "ianaift:ethernetCsmacd") or
                   (../if:name = "oscE" and . = "ianaift:ethernetCsmacd")' {

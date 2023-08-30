@@ -48,6 +48,7 @@ TEST_CASE("Config data in ietf-interfaces")
         {
             for (const auto& [name, type] : {std::pair<const char*, const char*>{"eth0", "iana-if-type:ethernetCsmacd"},
                                              {"eth1", "iana-if-type:ethernetCsmacd"},
+                                             {"eth2", "iana-if-type:ethernetCsmacd"},
                                              {"br0", "iana-if-type:bridge"},
                                              {"osc", "iana-if-type:ethernetCsmacd"},
                                              {"oscW", "iana-if-type:ethernetCsmacd"},

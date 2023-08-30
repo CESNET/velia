@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
         std::filesystem::create_directories(runtimeNetworkDirectory);
         std::filesystem::create_directories(persistentNetworkDirectory);
         auto srSessStartup = srConn.sessionStart(sysrepo::Datastore::Startup);
-        std::vector<std::string> managedLinks = {"br0", "eth0", "eth1", "osc", "oscE", "oscW"};
+        std::vector<std::string> managedLinks = {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW"};
 
         auto sysrepoIETFInterfacesOperational = std::make_shared<velia::system::IETFInterfaces>(srSess);
         auto sysrepoIETFInterfacesStartup = velia::system::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, managedLinks, [](const auto&) {});

@@ -79,11 +79,11 @@ std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree, 
             // Action is the last statement we get, so this is where we create the actual rule.
             ss << "add rule inet filter acls" << match;
             auto action = velia::utils::getValueAsString(node);
-            if (action ==  "accept"sv) {
+            if (action ==  "ietf-access-control-list:accept"sv) {
                 ss << " accept";
-            } else if (action ==  "drop"sv) {
+            } else if (action ==  "ietf-access-control-list:drop"sv) {
                 ss << " drop";
-            } else if (action ==  "reject"sv) {
+            } else if (action ==  "ietf-access-control-list:reject"sv) {
                 ss << " reject";
             } else {
                 // This should theoretically never happen.

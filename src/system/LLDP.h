@@ -33,3 +33,6 @@ private:
 };
 
 }
+
+template <>
+struct fmt::formatter<velia::system::NeighborEntry> : ostream_formatter { };

@@ -29,3 +29,5 @@ enum class State {
 
 std::ostream& operator<<(std::ostream& os, const State state);
 }
+
+template <> struct fmt::formatter<velia::ietf_hardware::State> : ostream_formatter {};

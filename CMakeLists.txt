@@ -315,8 +315,8 @@ target_include_directories(veliad-hardware PUBLIC ${CMAKE_BINARY_DIR})
 # Testing
 include(CTest)
 if(BUILD_TESTING)
-    find_package(trompeloeil 33 REQUIRED)
-    find_package(doctest 2.3.1 REQUIRED)
+    find_package(trompeloeil 45 REQUIRED)
+    find_package(doctest 2.4.11 REQUIRED)
 
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tests/configure.cmake.h.in ${CMAKE_CURRENT_BINARY_DIR}/tests/configure.cmake.h)
 

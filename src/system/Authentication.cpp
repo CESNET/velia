@@ -55,7 +55,7 @@ void changePassword(const std::string& name, const std::string& password, const 
 
 auto file_open(const char* filename, const char* mode)
 {
-    auto res = std::unique_ptr<std::FILE, decltype(&std::fclose)>(std::fopen(filename, mode), std::fclose);
+    auto res = std::unique_ptr<std::FILE, decltype([](auto fp) { std::fclose(fp); })>(std::fopen(filename, mode));
     if (!res.get()) {
         throw std::system_error{errno, std::system_category(), "fopen("s + filename + ") failed"};
     }

@@ -38,12 +38,24 @@ void addComponent(velia::ietf_hardware::DataTree& res, const std::string& compon
     res[componentPrefix + "state/oper-state"] = "enabled";
 }
 
-/** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */
-void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::string& value)
+void writeSensorValue(velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::string& value, const std::string& operStatus)
 {
     const auto componentPrefix = xpathForComponent(componentName);
     res[componentPrefix + "sensor-data/value"] = value;
-    res[componentPrefix + "sensor-data/oper-status"] = "ok";
+    res[componentPrefix + "sensor-data/oper-status"] = operStatus;
+}
+
+/** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */
+void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& componentName, const int64_t& value)
+{
+    writeSensorValue(res, componentName, std::to_string(value), "ok");
+}
+
+/** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */
+void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::string& value)
+{
+    // TODO: Perhaps we should check if the string value is conforming to sensor-value type
+    writeSensorValue(res, componentName, value, "ok");
 }
 }
 
@@ -174,7 +186,7 @@ DataTree Fans::operator()() const
         const auto sensorComponentName = m_componentName + ":fan" + std::to_string(i) + ":rpm";
         const auto attribute = "fan"s + std::to_string(i) + "_input";
 
-        addSensorValue(res, sensorComponentName, std::to_string(m_hwmon->attribute(attribute)));
+        addSensorValue(res, sensorComponentName, m_hwmon->attribute(attribute));
     }
 
     return res;
@@ -265,7 +277,7 @@ DataTree SysfsValue<TYPE>::operator()() const
     DataTree res(m_staticData);
 
     int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
-    addSensorValue(res, m_componentName, std::to_string(sensorValue));
+    addSensorValue(res, m_componentName, sensorValue);
 
     return res;
 }

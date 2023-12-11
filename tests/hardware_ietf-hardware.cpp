@@ -42,20 +42,20 @@ TEST_CASE("HardwareState")
     FAKE_EMMC(emmc, attributesEMMC);
 
     std::array<int64_t, 4> fanValues = {777, 0, 1280, 666};
-    REQUIRE_CALL(*fans, attribute("fan1_input"s)).LR_RETURN(fanValues[0]).TIMES(4);
-    REQUIRE_CALL(*fans, attribute("fan2_input"s)).LR_RETURN(fanValues[1]).TIMES(4);
-    REQUIRE_CALL(*fans, attribute("fan3_input"s)).LR_RETURN(fanValues[2]).TIMES(4);
-    REQUIRE_CALL(*fans, attribute("fan4_input"s)).LR_RETURN(fanValues[3]).TIMES(4);
+    REQUIRE_CALL(*fans, attribute("fan1_input"s)).LR_RETURN(fanValues[0]).TIMES(5);
+    REQUIRE_CALL(*fans, attribute("fan2_input"s)).LR_RETURN(fanValues[1]).TIMES(5);
+    REQUIRE_CALL(*fans, attribute("fan3_input"s)).LR_RETURN(fanValues[2]).TIMES(5);
+    REQUIRE_CALL(*fans, attribute("fan4_input"s)).LR_RETURN(fanValues[3]).TIMES(5);
 
-    REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800).TIMES(4);
+    REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800).TIMES(5);
 
-    REQUIRE_CALL(*sysfsVoltageAc, attribute("in1_input")).RETURN(220000).TIMES(4);
-    REQUIRE_CALL(*sysfsVoltageDc, attribute("in1_input")).RETURN(12000).TIMES(4);
-    REQUIRE_CALL(*sysfsPower, attribute("power1_input")).RETURN(14000000).TIMES(4);
-    REQUIRE_CALL(*sysfsCurrent, attribute("curr1_input")).RETURN(200).TIMES(4);
+    REQUIRE_CALL(*sysfsVoltageAc, attribute("in1_input")).RETURN(220000).TIMES(5);
+    REQUIRE_CALL(*sysfsVoltageDc, attribute("in1_input")).RETURN(12000).TIMES(5);
+    REQUIRE_CALL(*sysfsPower, attribute("power1_input")).RETURN(14000000).TIMES(5);
+    REQUIRE_CALL(*sysfsCurrent, attribute("curr1_input")).RETURN(200).TIMES(5);
 
     attributesEMMC = {{"life_time"s, "40"s}};
-    FAKE_EMMC(emmc, attributesEMMC).TIMES(4);
+    FAKE_EMMC(emmc, attributesEMMC).TIMES(5);
 
     using velia::ietf_hardware::OneThreshold;
     using velia::ietf_hardware::Thresholds;
@@ -350,6 +350,25 @@ TEST_CASE("HardwareState")
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
                     THRESHOLD_STATE("ne:psu:child", State::WarningHigh),
+                });
+    }
+
+
+    fanValues[0] = -1'000'000'001;
+    fanValues[1] = 1'000'000'001;
+    expected["/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value"] = "-1000000000";
+    expected["/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/oper-status"] = "nonoperational";
+    expected["/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value"] = "1000000000";
+    expected["/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/oper-status"] = "nonoperational";
+
+    {
+        auto [data, alarms] = ietfHardware->process();
+        NUKE_LAST_CHANGE(data);
+
+        REQUIRE(data == expected);
+        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
+                    THRESHOLD_STATE("ne:fans:fan1:rpm", State::CriticalLow),
+                    THRESHOLD_STATE("ne:fans:fan2:rpm", State::Normal),
                 });
     }
 }

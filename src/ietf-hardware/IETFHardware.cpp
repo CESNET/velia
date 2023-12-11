@@ -46,13 +46,26 @@ void writeSensorValue(velia::ietf_hardware::DataTree& res, const std::string& co
 }
 
 /** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */
-void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& componentName, const int64_t& value)
+void addSensorValue(velia::Log log, velia::ietf_hardware::DataTree& res, const std::string& componentName, int64_t value)
 {
-    writeSensorValue(res, componentName, std::to_string(value), "ok");
+    static constexpr const int64_t YANG_SENSOR_VALUE_MIN = -1'000'000'000;
+    static constexpr const int64_t YANG_SENSOR_VALUE_MAX = 1'000'000'000;
+
+    // FIXME: Valid value range depends on sensor-type as well, see ietf-hardware's sensor-value type description
+
+    if (value <= YANG_SENSOR_VALUE_MIN) {
+        log->error("Sensor's '{}' value '{}' underflow. Setting sensor as nonoperational.", componentName, value);
+        writeSensorValue(res, componentName, std::to_string(YANG_SENSOR_VALUE_MIN), "nonoperational");
+    } else if (value >= YANG_SENSOR_VALUE_MAX) {
+        log->error("Sensor's '{}' value '{}' overflow. Setting sensor as nonoperational.", componentName, value);
+        writeSensorValue(res, componentName, std::to_string(YANG_SENSOR_VALUE_MAX), "nonoperational");
+    } else {
+        writeSensorValue(res, componentName, std::to_string(value), "ok");
+    }
 }
 
 /** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */
-void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::string& value)
+void addSensorValue(velia::Log, velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::string& value)
 {
     // TODO: Perhaps we should check if the string value is conforming to sensor-value type
     writeSensorValue(res, componentName, value, "ok");
@@ -122,6 +135,7 @@ namespace data_reader {
 DataReader::DataReader(std::string componentName, std::optional<std::string> parent)
     : m_componentName(std::move(componentName))
     , m_parent(std::move(parent))
+    , m_log(spdlog::get("hardware"))
 {
 }
 
@@ -186,7 +200,7 @@ DataTree Fans::operator()() const
         const auto sensorComponentName = m_componentName + ":fan" + std::to_string(i) + ":rpm";
         const auto attribute = "fan"s + std::to_string(i) + "_input";
 
-        addSensorValue(res, sensorComponentName, m_hwmon->attribute(attribute));
+        addSensorValue(m_log, res, sensorComponentName, m_hwmon->attribute(attribute));
     }
 
     return res;
@@ -277,7 +291,7 @@ DataTree SysfsValue<TYPE>::operator()() const
     DataTree res(m_staticData);
 
     int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
-    addSensorValue(res, m_componentName, sensorValue);
+    addSensorValue(m_log, res, m_componentName, sensorValue);
 
     return res;
 }
@@ -336,7 +350,7 @@ DataTree EMMC::operator()() const
     DataTree res(m_staticData);
 
     auto emmcAttrs = m_emmc->attributes();
-    addSensorValue(res, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
+    addSensorValue(m_log, res, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
 
     return res;
 }

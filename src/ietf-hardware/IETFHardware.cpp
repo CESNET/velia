@@ -43,6 +43,7 @@ void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& comp
 {
     const auto componentPrefix = xpathForComponent(componentName);
     res[componentPrefix + "sensor-data/value"] = value;
+    res[componentPrefix + "sensor-data/oper-status"] = "ok";
 }
 }
 
@@ -161,7 +162,6 @@ Fans::Fans(std::string componentName, std::optional<std::string> parent, std::sh
                          {"sensor-data/value-type", "rpm"},
                          {"sensor-data/value-scale", "units"},
                          {"sensor-data/value-precision", "0"},
-                         {"sensor-data/oper-status", "ok"},
                      });
     }
 }
@@ -216,7 +216,6 @@ const DataTree sysfsStaticData<SensorType::Temperature> = {
     {"sensor-data/value-type", "celsius"},
     {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
-    {"sensor-data/oper-status", "ok"},
 };
 template <>
 const DataTree sysfsStaticData<SensorType::Current> = {
@@ -224,7 +223,6 @@ const DataTree sysfsStaticData<SensorType::Current> = {
     {"sensor-data/value-type", "amperes"},
     {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
-    {"sensor-data/oper-status", "ok"},
 };
 template <>
 const DataTree sysfsStaticData<SensorType::Power> = {
@@ -232,7 +230,6 @@ const DataTree sysfsStaticData<SensorType::Power> = {
     {"sensor-data/value-type", "watts"},
     {"sensor-data/value-scale", "micro"},
     {"sensor-data/value-precision", "0"},
-    {"sensor-data/oper-status", "ok"},
 };
 template <>
 const DataTree sysfsStaticData<SensorType::VoltageAC> = {
@@ -240,14 +237,14 @@ const DataTree sysfsStaticData<SensorType::VoltageAC> = {
     {"sensor-data/value-type", "volts-AC"},
     {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
-    {"sensor-data/oper-status", "ok"}};
+};
 template <>
 const DataTree sysfsStaticData<SensorType::VoltageDC> = {
     {"class", "iana-hardware:sensor"},
     {"sensor-data/value-type", "volts-DC"},
     {"sensor-data/value-scale", "milli"},
     {"sensor-data/value-precision", "0"},
-    {"sensor-data/oper-status", "ok"}};
+};
 
 template <SensorType TYPE>
 SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, int sysfsChannelNr, Thresholds<int64_t> thresholds)
@@ -318,7 +315,6 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
                      {"sensor-data/value-type", "other"},
                      {"sensor-data/value-scale", "units"},
                      {"sensor-data/value-precision", "0"},
-                     {"sensor-data/oper-status", "ok"},
                      {"sensor-data/units-display", "percent"s},
                  });
 }

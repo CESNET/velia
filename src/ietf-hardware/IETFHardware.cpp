@@ -46,9 +46,19 @@ void writeSensorValue(velia::ietf_hardware::DataTree& res, const std::string& co
 }
 
 /** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */
-void addSensorValue(velia::Log, velia::ietf_hardware::DataTree& res, const std::string& componentName, const int64_t& value)
+void addSensorValue(velia::Log log, velia::ietf_hardware::DataTree& res, const std::string& componentName, int64_t value)
 {
-    writeSensorValue(res, componentName, std::to_string(value), "ok");
+    static constexpr const int64_t YANG_SENSOR_VALUE_MIN = -1000000000;
+    static constexpr const int64_t YANG_SENSOR_VALUE_MAX = 1000000000;
+
+    // FIXME: Valid value range depends on sensor-type as well, see typedef sensor-value description
+
+    if (value > YANG_SENSOR_VALUE_MIN && value < YANG_SENSOR_VALUE_MAX) {
+        writeSensorValue(res, componentName, std::to_string(value), "ok");
+    } else {
+        log->error("Sensor's '{}' value '{}' is out of YANG's sensor-value range. Setting sensor as nonoperational.", componentName, value);
+        writeSensorValue(res, componentName, "0", "nonoperational");
+    }
 }
 
 /** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */

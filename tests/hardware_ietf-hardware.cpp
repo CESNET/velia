@@ -10,7 +10,10 @@ using namespace std::literals;
 
 #define NUKE_LAST_CHANGE(DATA) DATA.erase("/ietf-hardware:hardware/last-change")
 
-#define THRESHOLD_STATE(RESOURCE, STATE) {"/ietf-hardware:hardware/component[name='" RESOURCE "']/sensor-data/value", STATE}
+#define THRESHOLD_STATE(RESOURCE, STATE)                                                  \
+    {                                                                                     \
+        "/ietf-hardware:hardware/component[name='" RESOURCE "']/sensor-data/value", STATE \
+    }
 
 using velia::ietf_hardware::State;
 
@@ -357,7 +360,7 @@ TEST_CASE("HardwareState")
         }
     }
 
-    SECTION("Invalid string data passed")
+    SECTION("Invalid data passed")
     {
         // initialize all mocks
         attributesEMMC = {
@@ -380,6 +383,17 @@ TEST_CASE("HardwareState")
         SECTION("Valid number at beginning of the value (stoll parses this)")
         {
             attributesEMMC = {{"life_time"s, "3a"s}};
+        }
+        SECTION("Out of range")
+        {
+            SECTION("Upper range")
+            {
+                attributesEMMC = {{"life_time"s, "66666666666"s}}; // + 666 bil.
+            }
+            SECTION("Lower range")
+            {
+                attributesEMMC = {{"life_time"s, "-666666666666"s}}; // -666 bil.
+            }
         }
 
         FAKE_EMMC(emmc, attributesEMMC).TIMES(1);

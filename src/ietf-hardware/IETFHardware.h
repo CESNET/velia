@@ -104,6 +104,8 @@ struct DataReader {
     /** @brief static hw-state related data */
     DataTree m_staticData;
 
+    velia::Log m_log;
+
     DataReader(std::string propertyPrefix, std::optional<std::string> parent);
 };
 

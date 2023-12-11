@@ -38,12 +38,37 @@ void addComponent(velia::ietf_hardware::DataTree& res, const std::string& compon
     res[componentPrefix + "state/oper-state"] = "enabled";
 }
 
-/** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */
-void addSensorValue(velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::string& value)
+void writeSensorValue(velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::string& value, const std::string& operStatus)
 {
     const auto componentPrefix = xpathForComponent(componentName);
     res[componentPrefix + "sensor-data/value"] = value;
-    res[componentPrefix + "sensor-data/oper-status"] = "ok";
+    res[componentPrefix + "sensor-data/oper-status"] = operStatus;
+}
+
+/** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */
+void addSensorValue(velia::Log, velia::ietf_hardware::DataTree& res, const std::string& componentName, const int64_t& value)
+{
+    writeSensorValue(res, componentName, std::to_string(value), "ok");
+}
+
+/** @brief Write a sensor-data @p value for a component @p componentName and push it into the @p res DataTree */
+void addSensorValue(velia::Log log, velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::string& value)
+{
+    try {
+        size_t pos{};
+        int64_t intVal = std::stoll(value, &pos);
+        if (pos != value.size()) {
+            throw std::invalid_argument("Non-numeric value '" + value + "'");
+        }
+
+        return addSensorValue(log, res, componentName, intVal);
+    } catch (const std::invalid_argument& e) {
+        log->error("Sensor's '{}' value '{}' is not numeric. Setting sensor as nonoperational.", componentName, value);
+    } catch (const std::out_of_range& e) {
+        log->error("Sensor's '{}' value '{}' is out of int64_t's range. Setting sensor as nonoperational.", componentName, value);
+    }
+
+    writeSensorValue(res, componentName, "0", "nonoperational");
 }
 }
 
@@ -110,6 +135,7 @@ namespace data_reader {
 DataReader::DataReader(std::string componentName, std::optional<std::string> parent)
     : m_componentName(std::move(componentName))
     , m_parent(std::move(parent))
+    , m_log(spdlog::get("hardware"))
 {
 }
 
@@ -174,7 +200,7 @@ DataTree Fans::operator()() const
         const auto sensorComponentName = m_componentName + ":fan" + std::to_string(i) + ":rpm";
         const auto attribute = "fan"s + std::to_string(i) + "_input";
 
-        addSensorValue(res, sensorComponentName, std::to_string(m_hwmon->attribute(attribute)));
+        addSensorValue(m_log, res, sensorComponentName, m_hwmon->attribute(attribute));
     }
 
     return res;
@@ -265,7 +291,7 @@ DataTree SysfsValue<TYPE>::operator()() const
     DataTree res(m_staticData);
 
     int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
-    addSensorValue(res, m_componentName, std::to_string(sensorValue));
+    addSensorValue(m_log, res, m_componentName, sensorValue);
 
     return res;
 }
@@ -324,7 +350,7 @@ DataTree EMMC::operator()() const
     DataTree res(m_staticData);
 
     auto emmcAttrs = m_emmc->attributes();
-    addSensorValue(res, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
+    addSensorValue(m_log, res, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
 
     return res;
 }

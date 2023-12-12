@@ -30,6 +30,11 @@ module velia-alarms {
         description "Alarm to model that sensor is missing.";
     }
 
+    identity sensor-nonoperational {
+        base sensor-alarm;
+        description "Sensor is set as nonoperational.";
+    }
+
     identity sensor-threshold-crossing-alarm {
         base sensor-alarm;
         description "Abstract base for sensor threshold crossing.";

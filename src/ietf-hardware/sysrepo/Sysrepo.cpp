@@ -5,6 +5,7 @@
  *
  */
 
+#include <boost/algorithm/string.hpp>
 #include <regex>
 #include <sysrepo-cpp/Connection.hpp>
 #include "Sysrepo.h"
@@ -23,6 +24,9 @@ const auto ALARM_THRESHOLD_CROSSING_LOW = "velia-alarms:sensor-low-value-alarm";
 const auto ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION = "Sensor value crossed low threshold.";
 const auto ALARM_THRESHOLD_CROSSING_HIGH = "velia-alarms:sensor-high-value-alarm";
 const auto ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION = "Sensor value crossed high threshold.";
+const auto ALARM_SENSOR_NONOPERATIONAL = "velia-alarms:sensor-nonoperational";
+const auto ALARM_SENSOR_NONOPERATIONAL_SEVERITY = "warning";
+const auto ALARM_SENSOR_NONOPERATIONAL_DESCRIPTION = "Sensor is nonoperational. The values it reports may not be relevant.";
 
 /** @brief Extracts component path prefix from an XPath under /ietf-hardware/component node
  *
@@ -89,6 +93,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         utils::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, componentXPath);
         utils::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, componentXPath);
         utils::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath);
+        utils::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, componentXPath);
     }
 
     m_pollThread = std::thread([&]() {
@@ -117,6 +122,23 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             std::copy(deletedComponents.begin(), deletedComponents.end(), std::back_inserter(discards));
 
             utils::valuesPush(hwStateValues, {}, discards, m_session, ::sysrepo::Datastore::Operational);
+
+            /* Look for nonoperational sensors to set alarms */
+            for (const auto& [leaf, value] : hwStateValues) {
+                if (boost::ends_with(leaf, "/sensor-data/oper-status")) {
+                    std::optional<std::string> oldValue;
+
+                    if (auto it = prevValues.find(leaf); it != prevValues.end()) {
+                        oldValue = it->second;
+                    }
+
+                    if (value == "nonoperational" && oldValue != "nonoperational") {
+                        utils::createOrUpdateAlarm(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, extractComponentPrefix(leaf), ALARM_SENSOR_NONOPERATIONAL_SEVERITY, ALARM_SENSOR_NONOPERATIONAL_DESCRIPTION);
+                    } else if (value == "ok" && oldValue && oldValue != "ok" /* don't call clear-alarm if we see this node for the first time, i.e., oldvalue is nullopt */) {
+                        utils::createOrUpdateAlarm(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, extractComponentPrefix(leaf), ALARM_CLEARED, ALARM_SENSOR_NONOPERATIONAL_DESCRIPTION);
+                    }
+                }
+            }
 
             for (const auto& [sensorXPath, state] : thresholds) {
                 // missing prevState can be considered as Normal

@@ -243,14 +243,17 @@ TEST_CASE("IETF Hardware with sysrepo")
         .IN_SEQUENCE(seq1); // the first alarm-inventory change also adds the two container leafs therefore I have not used the REQUIRE_ALARM_INVENTORY_ADD_ALARM macro
     REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
     REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-missing-alarm", "ne:power").IN_SEQUENCE(seq1);
+    REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-nonoperational", "ne:power").IN_SEQUENCE(seq1);
 
     REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
     REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
     REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
+    REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:psu:child").IN_SEQUENCE(seq1);
 
     REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
     REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
     REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
+    REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:temperature-cpu").IN_SEQUENCE(seq1);
 
     REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                        {"/ietf-hardware:hardware", "(container)"},
@@ -413,6 +416,37 @@ TEST_CASE("IETF Hardware with sysrepo")
         .IN_SEQUENCE(seq1);
     REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "cleared", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
     powerValue = 14'000'000;
+    waitForCompletionAndBitMore(seq1);
 
+
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                       {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "1000000000"},
+                                       {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/oper-status", "nonoperational"},
+                                   }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "warning", "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
+    REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "critical", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+    powerValue = 2'999'999'999;
+    waitForCompletionAndBitMore(seq1);
+
+    powerValue = 1'999'999'999;
+    waitForCompletionAndBitMore(seq1);
+
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                       {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "-1000000000"},
+                                   }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
+    REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "cleared", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+    powerValue = -2'999'999'999;
+    waitForCompletionAndBitMore(seq1);
+
+    REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
+                                       {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "-999999999"},
+                                       {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/oper-status", "ok"},
+                                   }))
+        .IN_SEQUENCE(seq1);
+    REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "cleared", "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
+    powerValue = -999'999'999;
     waitForCompletionAndBitMore(seq1);
 }

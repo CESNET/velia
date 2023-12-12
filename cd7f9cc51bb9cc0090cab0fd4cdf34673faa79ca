@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0885c645_025ea880",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-12-12T12:53:14Z",
+      "side": 1,
+      "message": "And just to add some context, it\u0027s really the HW (or the pmbus hwmon driver) that\u0027s faulty:\n \nadd-drop-DQ000VOT ~ # while true; do date; cat /sys/class/hwmon/hwmon8/power*_input ; sleep 1; done\n...\nMon Dec 11 14:11:27 UTC 2023\n25250000\n21000000\nMon Dec 11 14:11:28 UTC 2023\n25500000\n21000000\nMon Dec 11 14:11:29 UTC 2023\n2316000000\n20000000\nMon Dec 11 14:11:30 UTC 2023\n25250000\n21000000\n...\nMon Dec 11 14:12:01 UTC 2023\n25250000\n20000000\nMon Dec 11 14:12:02 UTC 2023\n0\n20000000\nMon Dec 11 14:12:03 UTC 2023\n25000000\n20000000\n...\n\nHere\u0027s how it originally failed:\n \nDec 11 13:59:46 add-drop-DQ000VOT veliad-hardware[7997]: terminate called after throwing an instance of \u0027libyang::ErrorWithCode\u0027\nDec 11 13:59:46 add-drop-DQ000VOT veliad-hardware[7997]:   what():  Couldn\u0027t create a node with path \u0027/ietf-hardware:hardware/component[name\u003d\u0027ne:psu2:power-in\u0027]/sensor-data/value\u0027: LY_EVALID\n...\nDec 11 13:59:46 add-drop-DQ000VOT main[7997]: Processing node update /ietf-hardware:hardware/component[name\u003d\u0027ne:psu2:power-in\u0027]/sensor-data/value -\u003e 2316000000\nDec 11 13:59:47 add-drop-DQ000VOT systemd[1]: velia-hardware-g2.service: Main process exited, code\u003ddumped, status\u003d6/ABRT\nDec 11 13:59:47 add-drop-DQ000VOT systemd[1]: velia-hardware-g2.service: Failed with result \u0027core-dump\u0027.",
+      "revId": "cd7f9cc51bb9cc0090cab0fd4cdf34673faa79ca",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

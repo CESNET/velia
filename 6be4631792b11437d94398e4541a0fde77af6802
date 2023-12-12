@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fec6cec7_903733d3",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-12-12T11:58:09Z",
+      "side": 1,
+      "message": "This might need another name so it is not confused with prevValues.",
+      "range": {
+        "startLine": 129,
+        "startChar": 47,
+        "endLine": 129,
+        "endChar": 56
+      },
+      "revId": "6be4631792b11437d94398e4541a0fde77af6802",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "97458e01_3bd06095",
         "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
         "patchSetId": 1
@@ -14,6 +37,30 @@
       "writtenOn": "2023-12-12T11:42:56Z",
       "side": 1,
       "message": "this is not needed, and since there\u0027s no such check on line 135, I suggest to remove this one here",
+      "range": {
+        "startLine": 137,
+        "startChar": 45,
+        "endLine": 137,
+        "endChar": 57
+      },
+      "revId": "6be4631792b11437d94398e4541a0fde77af6802",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16ed0cb5_17dd982b",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2023-12-12T11:58:09Z",
+      "side": 1,
+      "message": "If I remove it then, in the case prevValue\u003d\u003dnullopt, it will make the condition true. Therefore the code tries to clear everything when the code starts and there are no prevValues.\nI have to update tests to expect an RPC call that clears alarms in the beginning.",
+      "parentUuid": "97458e01_3bd06095",
       "range": {
         "startLine": 137,
         "startChar": 45,

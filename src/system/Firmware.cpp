@@ -174,7 +174,7 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
                 xpathPrefix = CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot[name='" + std::get<std::string>(pit->second) + "']/";
                 m_bootNameToSlot[std::get<std::string>(pit->second)] = slotName;
             } else {
-                m_log->error("RAUC didn't provide 'bootname' property for slot '{}'. Skipping update for that slot.");
+                m_log->error("RAUC didn't provide 'bootname' property for slot '{}'. Skipping update for that slot.", slotName);
                 continue;
             }
 

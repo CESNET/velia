@@ -31,7 +31,7 @@ For building, one needs:
 
 - C++20 compiler (e.g., GCC 10.x+, clang 10+)
 - CMake 3.19+
-- [Boost](https://www.boost.org/) (we're testing with `1.75`)
+- [Boost](https://www.boost.org/) (we're testing with `1.78`)
 - [`pkg-config`](https://www.freedesktop.org/wiki/Software/pkg-config/)
 - [`libnl-route`](http://www.infradead.org/~tgr/libnl/) for talking to the Linux kernel
 - [`libsystemd`](https://www.freedesktop.org/software/systemd/man/libsystemd.html) and [`systemd`](https://www.freedesktop.org/wiki/Software/systemd/) at runtime

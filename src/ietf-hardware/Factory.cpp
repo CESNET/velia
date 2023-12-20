@@ -114,24 +114,28 @@ void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardwar
         {
         }
 
-        DataTree operator()()
+        SensorPollData operator()()
         {
             auto psu1Reader = std::async(std::launch::async, [&] { return psu1->readValues(); });
             auto psu2Reader = std::async(std::launch::async, [&] { return psu2->readValues(); });
             auto pduReader = std::async(std::launch::async, [&] { return pduGroup(); });
 
-            auto res = psu1Reader.get();
-            res.merge(psu2Reader.get());
-            res.merge(pduReader.get());
-            return res;
-        }
+            auto ret1 = psu1Reader.get();
+            auto ret2 = psu2Reader.get();
+            auto ret3 = pduReader.get();
 
-        ThresholdsBySensorPath thresholds() const
-        {
-            auto res = psu1->thresholds();
-            res.merge(psu2->thresholds());
-            res.merge(pduGroup.thresholds());
-            return res;
+            DataTree data;
+            ThresholdsBySensorPath thr;
+
+            data.merge(ret1.data);
+            data.merge(ret2.data);
+            data.merge(ret3.data);
+
+            thr.merge(ret1.thresholds);
+            thr.merge(ret2.thresholds);
+            thr.merge(ret3.thresholds);
+
+            return {data, thr};
         }
     };
 

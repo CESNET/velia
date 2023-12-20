@@ -80,7 +80,7 @@ void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const
             continue;
         }
 
-        if (change.operation == sysrepo::ChangeOperation::Deleted) {
+       if (change.operation == sysrepo::ChangeOperation::Deleted) {
             changes.emplace(change.node.path(), Deleted());
         } else {
             changes.emplace(change.node.path(), nodeAsString(change.node));
@@ -169,8 +169,9 @@ TEST_CASE("IETF Hardware with sysrepo")
         const std::atomic<bool>& active;
         const std::atomic<int64_t>& value;
 
-        velia::ietf_hardware::DataTree operator()()
+        velia::ietf_hardware::SensorPollData operator()()
         {
+            velia::ietf_hardware::ThresholdsBySensorPath thr;
             velia::ietf_hardware::DataTree res = {
                 {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
                 {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
@@ -187,19 +188,16 @@ TEST_CASE("IETF Hardware with sysrepo")
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision"] = "0";
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale"] = "milli";
                 res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type"] = "volts-DC";
+
+                thr["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value"] = Thresholds<int64_t>{
+                    .criticalLow = std::nullopt,
+                    .warningLow = OneThreshold<int64_t>{10000, 2000},
+                    .warningHigh = OneThreshold<int64_t>{15000, 2000},
+                    .criticalHigh = std::nullopt,
+                };
             }
 
-            return res;
-        }
-
-        velia::ietf_hardware::ThresholdsBySensorPath thresholds() const
-        {
-            return {{"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", Thresholds<int64_t>{
-                                                                                                     .criticalLow = std::nullopt,
-                                                                                                     .warningLow = OneThreshold<int64_t>{10000, 2000},
-                                                                                                     .warningHigh = OneThreshold<int64_t>{15000, 2000},
-                                                                                                     .criticalHigh = std::nullopt,
-                                                                                                 }}};
+            return {res, thr};
         }
     };
     ietfHardware->registerDataReader(PsuDataReader{psuActive, psuSensorValue});
@@ -342,7 +340,13 @@ TEST_CASE("IETF Hardware with sysrepo")
     std::this_thread::sleep_for(2000ms); // longer sleep here: last-change does not report milliseconds so this should increase last-change timestamp at least by one second
     REQUIRE(directLeafNodeQuery(modulePrefix + "/last-change") > lastChange); // check that last-change leaf has timestamp that is greater than the previous one
 
+    //waitForCompletionAndBitMore(seq1);
+//#if 0
     // third batch of changes, wild PSU appears with a warning
+    //REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
+    //REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
+    //REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
+    //REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:psu:child").IN_SEQUENCE(seq1);
     REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                        {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "enabled"},
                                        {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", "iana-hardware:sensor"},
@@ -449,4 +453,5 @@ TEST_CASE("IETF Hardware with sysrepo")
     REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "cleared", "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
     powerValue = -999'999'999;
     waitForCompletionAndBitMore(seq1);
+//#endif
 }

@@ -93,37 +93,35 @@ TEST_CASE("HardwareState")
     struct PsuDataReader {
         const bool& active;
 
-        velia::ietf_hardware::DataTree operator()()
+        velia::ietf_hardware::SensorPollData operator()()
         {
-            velia::ietf_hardware::DataTree res = {
+            velia::ietf_hardware::ThresholdsBySensorPath thr;
+            velia::ietf_hardware::DataTree data = {
                 {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
                 {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
                 {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"},
             };
 
             if (active) {
-                res["/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state"] = "enabled";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/class"] = "iana-hardware:sensor";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/parent"] = "ne:psu";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state"] = "enabled";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status"] = "ok";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value"] = "20000";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision"] = "0";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale"] = "milli";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type"] = "volts-DC";
+                data["/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state"] = "enabled";
+                data["/ietf-hardware:hardware/component[name='ne:psu:child']/class"] = "iana-hardware:sensor";
+                data["/ietf-hardware:hardware/component[name='ne:psu:child']/parent"] = "ne:psu";
+                data["/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state"] = "enabled";
+                data["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status"] = "ok";
+                data["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value"] = "20000";
+                data["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision"] = "0";
+                data["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale"] = "milli";
+                data["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type"] = "volts-DC";
+
+                thr["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value"] = Thresholds<int64_t>{
+                    .criticalLow = std::nullopt,
+                    .warningLow = OneThreshold<int64_t>{10000, 2000},
+                    .warningHigh = OneThreshold<int64_t>{15000, 2000},
+                    .criticalHigh = std::nullopt,
+                };
             }
 
-            return res;
-        }
-
-        velia::ietf_hardware::ThresholdsBySensorPath thresholds() const
-        {
-            return {{"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", Thresholds<int64_t>{
-                                                                                                     .criticalLow = std::nullopt,
-                                                                                                     .warningLow = OneThreshold<int64_t>{10000, 2000},
-                                                                                                     .warningHigh = OneThreshold<int64_t>{15000, 2000},
-                                                                                                     .criticalHigh = std::nullopt,
-                                                                                                 }}};
+            return {data, thr};
         }
     };
     bool psuActive = true;
@@ -259,22 +257,22 @@ TEST_CASE("HardwareState")
         {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", "volts-DC"},
     };
 
-    REQUIRE(ietfHardware->sensorsXPaths() == std::vector<std::string>{
-                "/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value",
-                "/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value",
-            });
+    //REQUIRE(ietfHardware->sensorsXPaths() == std::vector<std::string>{
+                //"/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value",
+                //"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value",
+            //});
 
     {
-        auto [data, alarms] = ietfHardware->process();
+        auto [data, alarms, activeSensors] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
@@ -290,16 +288,42 @@ TEST_CASE("HardwareState")
                     THRESHOLD_STATE("ne:fans:fan4:rpm", State::Normal),
                     THRESHOLD_STATE("ne:psu:child", State::WarningHigh),
                 });
+        REQUIRE(activeSensors == std::set<std::string>{
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value",
+                });
     }
 
     fanValues[1] = 500;
     expected["/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value"] = "500";
     {
-        auto [data, alarms] = ietfHardware->process();
+        auto [data, alarms, activeSensors] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
                     THRESHOLD_STATE("ne:fans:fan2:rpm", State::WarningLow),
+                });
+        REQUIRE(activeSensors == std::set<std::string>{
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value",
                 });
     }
 
@@ -320,13 +344,24 @@ TEST_CASE("HardwareState")
     expected["/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value"] = "5000";
 
     {
-        auto [data, alarms] = ietfHardware->process();
+        auto [data, alarms, activeSensors] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
                     THRESHOLD_STATE("ne:fans:fan2:rpm", State::CriticalLow),
-                    THRESHOLD_STATE("ne:psu:child", State::NoValue),
+                });
+        REQUIRE(activeSensors == std::set<std::string>{
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value",
                 });
     }
 
@@ -344,12 +379,25 @@ TEST_CASE("HardwareState")
     expected["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type"] = "volts-DC";
 
     {
-        auto [data, alarms] = ietfHardware->process();
+        auto [data, alarms, activeSensors] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
                     THRESHOLD_STATE("ne:psu:child", State::WarningHigh),
+                });
+        REQUIRE(activeSensors == std::set<std::string>{
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value",
                 });
     }
 
@@ -362,13 +410,26 @@ TEST_CASE("HardwareState")
     expected["/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/oper-status"] = "nonoperational";
 
     {
-        auto [data, alarms] = ietfHardware->process();
+        auto [data, alarms, activeSensors] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
                     THRESHOLD_STATE("ne:fans:fan1:rpm", State::CriticalLow),
                     THRESHOLD_STATE("ne:fans:fan2:rpm", State::Normal),
+                });
+        REQUIRE(activeSensors == std::set<std::string>{
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:current']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:power']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-in']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:ctrl:voltage-out']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']/sensor-data/value",
+                    "/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value",
                 });
     }
 }

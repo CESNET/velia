@@ -89,8 +89,9 @@ TEST_CASE("FspYhPsu")
     const velia::ietf_hardware::DataTree expectedDisabled = {
         {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
         {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
-        {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"}
-    };
+        {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"}};
+
+    std::set<std::string> expectedThresholdsKeys;
 
     for (auto i : {0, 1, 2, 3, 4}) {
         std::this_thread::sleep_for(std::chrono::seconds(4));
@@ -99,6 +100,7 @@ TEST_CASE("FspYhPsu")
         switch (i) {
         case 0:
             expected = expectedDisabled;
+            expectedThresholdsKeys.clear();
             break;
         case 1:
             expected = {
@@ -200,22 +202,45 @@ TEST_CASE("FspYhPsu")
                 {"/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/sensor-data/value-type", "volts-AC"},
                 {"/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/state/oper-state", "enabled"},
             };
+            expectedThresholdsKeys = {
+                "/ietf-hardware:hardware/component[name='ne:psu:current-12V']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:current-5Vsb']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:current-in']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:fan:fan1:rpm']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:power-in']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:power-out']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:temperature-1']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:temperature-2']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:voltage-12V']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:voltage-5Vsb']/sensor-data/value",
+                "/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/sensor-data/value",
+            };
             break;
         case 2:
             expected = expectedDisabled;
+            expectedThresholdsKeys.clear();
             break;
         case 3:
             // Here I simulate read failure by a file from the hwmon directory. This happens when the user wants data from
             // a PSU that's no longer there and the watcher thread didn't unbind it yet.
             fakeI2c->removeHwmonFile("temp1_input");
             expected = expectedDisabled;
+            expectedThresholdsKeys.clear();
             break;
         case 4:
             expected = expectedDisabled;
+            expectedThresholdsKeys.clear();
             break;
         }
 
-        REQUIRE(psu->readValues() == expected);
+        auto res = psu->readValues();
+
+        CAPTURE((int)counter);
+        REQUIRE(res.data == expected);
+
+        std::set<std::string> thresholdsKeys;
+        std::transform(res.thresholds.begin(), res.thresholds.end(), std::inserter(thresholdsKeys, thresholdsKeys.begin()), [](const auto& kv) { return kv.first; });
+        REQUIRE(thresholdsKeys == expectedThresholdsKeys);
 
         counter++;
     }

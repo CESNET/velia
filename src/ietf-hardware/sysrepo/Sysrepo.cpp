@@ -88,25 +88,36 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
     , m_hwState(std::move(hwState))
     , m_quit(false)
 {
-    for (const auto& sensorXPath : m_hwState->sensorsXPaths()) {
-        auto componentXPath = extractComponentPrefix(sensorXPath);
-        utils::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, componentXPath);
-        utils::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, componentXPath);
-        utils::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath);
-        utils::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, componentXPath);
-    }
-
     m_pollThread = std::thread([&]() {
         auto conn = m_session.getConnection();
 
         DataTree prevValues;
+        std::set<std::string> prevActiveSensors;
         std::map<std::string, State> thresholdsStates;
 
         while (!m_quit) {
             m_log->trace("IetfHardware poll");
 
-            auto [hwStateValues, thresholds] = m_hwState->process();
+            auto [hwStateValues, thresholds, activeSensors] = m_hwState->process();
             std::set<std::string> deletedComponents;
+
+            for (const auto& sensorXPath : prevActiveSensors) {
+                if (!activeSensors.contains(sensorXPath)) {
+                    auto componentXPath = extractComponentPrefix(sensorXPath);
+                    /* TODO remove resource from leaflist */
+                }
+            }
+
+            for (const auto& sensorXPath : activeSensors) {
+                if (!prevActiveSensors.contains(sensorXPath)) {
+                    auto componentXPath = extractComponentPrefix(sensorXPath);
+                    utils::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, componentXPath);
+                    utils::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, componentXPath);
+                    utils::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath);
+                    utils::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, componentXPath);
+                }
+            }
+            prevActiveSensors = activeSensors;
 
             /* Some data readers can stop returning data in some cases (e.g. ejected PSU).
              * Prune tree components that were removed before updating to avoid having not current data from previous invocations.

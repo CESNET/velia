@@ -9,6 +9,7 @@
 
 #include <doctest/doctest.h>
 #include <map>
+#include <set>
 #include <sstream>
 #include <trompeloeil.hpp>
 #include "ietf-hardware/thresholds.h"
@@ -18,6 +19,20 @@ namespace doctest {
 template <>
 struct StringMaker<std::vector<std::string>> {
     static String convert(const std::vector<std::string>& v)
+    {
+        std::ostringstream os;
+        os << "{" << std::endl;
+        for (const auto& value : v) {
+            os << "  \"" << value << "\"," << std::endl;
+        }
+        os << "}";
+        return os.str().c_str();
+    }
+};
+
+template <>
+struct StringMaker<std::set<std::string>> {
+    static String convert(const std::set<std::string>& v)
     {
         std::ostringstream os;
         os << "{" << std::endl;

@@ -31,8 +31,7 @@ struct FspYhPsu {
 public:
     FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psuName, std::shared_ptr<TransientI2C> i2c);
     ~FspYhPsu();
-    velia::ietf_hardware::DataTree readValues();
-    ThresholdsBySensorPath thresholds() const;
+    SensorPollData readValues();
 
 private:
     std::mutex m_mtx;
@@ -50,8 +49,7 @@ private:
     std::string m_namePrefix;
     velia::ietf_hardware::DataTree m_staticData;
 
-    std::vector<std::function<velia::ietf_hardware::DataTree()>> m_properties;
-    ThresholdsBySensorPath m_thresholds;
+    std::vector<std::function<SensorPollData()>> m_properties;
 
     void createPower();
 };

@@ -74,6 +74,12 @@ void addSensorValue(velia::Log, velia::ietf_hardware::DataTree& res, const std::
 
 namespace velia::ietf_hardware {
 
+void SensorPollData::merge(SensorPollData&& other)
+{
+    data.merge(other.data);
+    thresholds.merge(other.thresholds);
+}
+
 IETFHardware::IETFHardware()
     : m_log(spdlog::get("hardware"))
 {
@@ -89,17 +95,29 @@ IETFHardware::~IETFHardware() = default;
  **/
 HardwareInfo IETFHardware::process()
 {
-    DataTree dataTree;
+    SensorPollData pollData;
+    std::set<std::string> activeSensors;
     std::map<std::string, State> alarms;
 
     for (auto& dataReader : m_callbacks) {
-        dataTree.merge(dataReader());
+        pollData.merge(dataReader());
+    }
+
+    /* the thresholds watchers are created dynamically
+     *  - when a new sensor occurs then we add a new watcher
+     *  - when a sensor disappears we remove the corresponding watcher
+     */
+    for (const auto& [sensorXPath, sensorThresholds] : pollData.thresholds) {
+        if (!m_thresholdsWatchers.contains(sensorXPath)) {
+            m_thresholdsWatchers.emplace(sensorXPath, sensorThresholds);
+        }
+        activeSensors.emplace(sensorXPath);
     }
 
     for (auto& [sensorXPath, thresholdsWatcher] : m_thresholdsWatchers) {
         std::optional<int64_t> newValue;
 
-        if (auto it = dataTree.find(sensorXPath); it != dataTree.end()) {
+        if (auto it = pollData.data.find(sensorXPath); it != pollData.data.end()) {
             newValue = std::stoll(it->second);
         } else {
             newValue = std::nullopt;
@@ -111,20 +129,14 @@ HardwareInfo IETFHardware::process()
         }
     }
 
-    dataTree[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
+    pollData.data[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
 
-    return {dataTree, alarms};
+    return {pollData.data, alarms, activeSensors};
 }
 
-std::vector<std::string> IETFHardware::sensorsXPaths() const
+void IETFHardware::registerDataReader(const IETFHardware::DataReader& callable)
 {
-    std::vector<std::string> res;
-
-    for (const auto& [sensorXPath, thresholds] : m_thresholdsWatchers) {
-        res.emplace_back(sensorXPath);
-    }
-
-    return res;
+    m_callbacks.push_back(callable);
 }
 
 /** @brief A namespace containing predefined data readers for IETFHardware class.
@@ -153,8 +165,7 @@ StaticData::StaticData(std::string componentName, std::optional<std::string> par
                  dataTree);
 }
 
-DataTree StaticData::operator()() const { return m_staticData; }
-ThresholdsBySensorPath StaticData::thresholds() const { return {}; }
+SensorPollData StaticData::operator()() const { return {m_staticData, {}}; }
 
 Fans::Fans(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount, Thresholds<int64_t> thresholds)
     : DataReader(std::move(componentName), std::move(parent))
@@ -192,29 +203,22 @@ Fans::Fans(std::string componentName, std::optional<std::string> parent, std::sh
     }
 }
 
-DataTree Fans::operator()() const
+SensorPollData Fans::operator()() const
 {
-    DataTree res(m_staticData);
-
+    DataTree data(m_staticData);
     for (unsigned i = 1; i <= m_fanChannelsCount; i++) {
         const auto sensorComponentName = m_componentName + ":fan" + std::to_string(i) + ":rpm";
         const auto attribute = "fan"s + std::to_string(i) + "_input";
 
-        addSensorValue(m_log, res, sensorComponentName, m_hwmon->attribute(attribute));
+        addSensorValue(m_log, data, sensorComponentName, m_hwmon->attribute(attribute));
     }
 
-    return res;
-}
-
-ThresholdsBySensorPath Fans::thresholds() const
-{
-    ThresholdsBySensorPath res;
-
+    ThresholdsBySensorPath thr;
     for (unsigned i = 1; i <= m_fanChannelsCount; i++) {
-        res.emplace(xpathForComponent(m_componentName + ":fan" + std::to_string(i) + ":rpm") + "sensor-data/value", m_thresholds);
+        thr.emplace(xpathForComponent(m_componentName + ":fan" + std::to_string(i) + ":rpm") + "sensor-data/value", m_thresholds);
     }
 
-    return res;
+    return {data, thr};
 }
 
 std::string getSysfsFilename(const SensorType type, int sysfsChannelNr)
@@ -286,20 +290,14 @@ SysfsValue<TYPE>::SysfsValue(std::string componentName, std::optional<std::strin
 }
 
 template <SensorType TYPE>
-DataTree SysfsValue<TYPE>::operator()() const
+SensorPollData SysfsValue<TYPE>::operator()() const
 {
     DataTree res(m_staticData);
 
     int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
     addSensorValue(m_log, res, m_componentName, sensorValue);
 
-    return res;
-}
-
-template <SensorType TYPE>
-ThresholdsBySensorPath SysfsValue<TYPE>::thresholds() const
-{
-    return {{xpathForComponent(m_componentName) + "sensor-data/value", m_thresholds}};
+    return {res, ThresholdsBySensorPath{{xpathForComponent(m_componentName) + "sensor-data/value", m_thresholds}}};
 }
 
 template struct SysfsValue<SensorType::Current>;
@@ -345,33 +343,30 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
                  });
 }
 
-DataTree EMMC::operator()() const
+SensorPollData EMMC::operator()() const
 {
-    DataTree res(m_staticData);
+    DataTree data(m_staticData);
 
     auto emmcAttrs = m_emmc->attributes();
-    addSensorValue(m_log, res, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
+    addSensorValue(m_log, data, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
 
-    return res;
+    return {data, ThresholdsBySensorPath{{xpathForComponent(m_componentName + ":lifetime") + "sensor-data/value", m_thresholds}}};
 }
 
-ThresholdsBySensorPath EMMC::thresholds() const
+SensorPollData Group::operator()() const
 {
-    return {{xpathForComponent(m_componentName + ":lifetime") + "sensor-data/value", m_thresholds}};
-}
+    SensorPollData pollData;
 
-DataTree Group::operator()() const
-{
-    DataTree res;
     for (const auto& reader : m_readers) {
-        res.merge(reader());
+        pollData.merge(reader());
     }
-    return res;
+
+    return pollData;
 }
 
-ThresholdsBySensorPath Group::thresholds() const
+void Group::registerDataReader(const IETFHardware::DataReader& callable)
 {
-    return m_thresholds;
+    m_readers.push_back(callable);
 }
 }
 }

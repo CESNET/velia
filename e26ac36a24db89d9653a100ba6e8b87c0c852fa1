@@ -16,6 +16,24 @@
       "message": "How did this compile? I thought that spdlog/fmt always complain if the number of {}s does not match the number of args.",
       "revId": "e26ac36a24db89d9653a100ba6e8b87c0c852fa1",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5fbc1c8_1dc42b11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-02T10:08:15Z",
+      "side": 1,
+      "message": "https://github.com/fmtlib/fmt/issues/492 (and the issues linked there) has some story about this, apparently, they don\u0027t care that much, and would prefer clang-tidy to check for this :(",
+      "parentUuid": "3655966f_c7f4165b",
+      "revId": "e26ac36a24db89d9653a100ba6e8b87c0c852fa1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

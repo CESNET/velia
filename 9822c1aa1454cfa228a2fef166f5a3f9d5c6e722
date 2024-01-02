@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd35a79f_f04a1900",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-02T16:40:03Z",
+      "side": 1,
+      "message": "Changes of `running` should go into a tmpfs somewhere (/run ?), while changes of the startup DS should go here into /cfg; this will require changing of the unit file in br2-external so that two env files are read in sequence.\n\nOr maybe do it in a different way -- modify the Environment of the systemd unit directly via D-Bus, if that\u0027s possible, or through a dynamically created drop-in file in tmpfs. I guess that doing that via a pair of EnvironmentFile\u003d is going to be easier :).",
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e3152a8_550fa75c",
+        "filename": "src/system/Syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-02T16:40:03Z",
+      "side": 1,
+      "message": "this deserves a comment",
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88a430fc_a7d85ff5",
+        "filename": "src/system/Syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-02T16:40:03Z",
+      "side": 1,
+      "message": "If the change occurs in a time window between when lines 75 and line 82 execute, that change is still getting lost.\n\nIf I understand the problem correctly, you want to have an information whether the logging is configured or not configured at some time point X. In sysrepo, the SR_EV_ENABLED is used for this purpose, and this code correctly sets that flag when making the subscription. The problem is that we do not have an explicit value \"no logging is configured\", and that there\u0027s an impedance mismatch of how this application\u0027s \"idea about the state\" differs from how sysrepo callbacks work. Indeed, in sysrepo there\u0027s no way to tell that a value is \"not present\" when there was no \"previous state\" to use, such as when the callback is invoked for the first time.\n\nThere are several ways to fix this:\n\n- Ask for sysrepo SR_EV_ENABLED CBs to be always invoked, even when there are no changes to report. That way, the user CB will be notified about that \"time point X\" when you already know about the desired config state (uploading or not uploading).\n- Lock the DS before asking for data and registering the CB.\n- Change the YANG layout so that there\u0027s something explicit that the CB will get. For example, make the URL into a union of an enum `disabled` and a URL,, defaulting to `disabled`. This will have an ugly side-effect of confusing tab completion in netconf-cli.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 75
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c613a060_08764809",
+        "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-02T16:40:03Z",
+      "side": 1,
+      "message": "add an explicit comment that this is about creating a long-lived copy of the function",
+      "range": {
+        "startLine": 20,
+        "startChar": 90,
+        "endLine": 20,
+        "endChar": 119
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "944fd56d_49783702",
+        "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-02T16:40:03Z",
+      "side": 1,
+      "message": "nit: wrap this, please",
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d43fb3d_278d7768",
+        "filename": "tests/sysrepo_system-syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-02T16:40:03Z",
+      "side": 1,
+      "message": "I\u0027d prefer `sdMock`. It\u0027s not storing the expectations at all, it\u0027s a mock object.",
+      "range": {
+        "startLine": 23,
+        "startChar": 11,
+        "endLine": 23,
+        "endChar": 30
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f704c6fb_dc5922bb",
+        "filename": "tests/sysrepo_system-syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-02T16:40:03Z",
+      "side": 1,
+      "message": "nit: if you want to be fancy, https://datatracker.ietf.org/doc/html/rfc6761#section-6.5 and https://datatracker.ietf.org/doc/html/rfc5735#section-3 for some \"well-known\" example strings :)",
+      "range": {
+        "startLine": 44,
+        "startChar": 72,
+        "endLine": 44,
+        "endChar": 94
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "152f7d62_6942e0c8",
+        "filename": "tests/sysrepo_system-syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-02T16:40:03Z",
+      "side": 1,
+      "message": "there\u0027s a race in between these two, isn\u0027t it?",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 55
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

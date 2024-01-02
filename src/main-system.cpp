@@ -1,4 +1,5 @@
 #include <docopt.h>
+#include <sdbus-c++/IProxy.h>
 #include <spdlog/sinks/ansicolor_sink.h>
 #include <spdlog/spdlog.h>
 #include <sysrepo-cpp/Session.hpp>
@@ -10,6 +11,7 @@
 #include "system/IETFInterfaces.h"
 #include "system/IETFInterfacesConfig.h"
 #include "system/IETFSystem.h"
+#include "system/JournalUpload.h"
 #include "system/LED.h"
 #include "system/LLDP.h"
 #include "system/LLDPCallback.h"
@@ -18,6 +20,8 @@
 #include "utils/journal.h"
 #include "utils/log-init.h"
 #include "utils/sysrepo.h"
+
+using namespace std::literals;
 
 static const char usage[] =
     R"(Sysrepo-powered system management.
@@ -66,6 +70,13 @@ int main(int argc, char* argv[])
         auto srSess = srConn.sessionStart();
 
         DBUS_EVENTLOOP_START
+
+        auto journalUploadStartup = velia::system::JournalUpload(srConn.sessionStart(sysrepo::Datastore::Startup), "/cfg/journald-remote", [](auto) {});
+        auto journalUploadRunning = velia::system::JournalUpload(srConn.sessionStart(sysrepo::Datastore::Running), "/run/journald-remote", [dbusConn = g_dbusConnection.get()](auto log) {
+            log->debug("Restarting systemd-journal-upload.service");
+            auto sdManager = sdbus::createProxy(*dbusConn, "org.freedesktop.systemd1", "/org/freedesktop/systemd1/Manager");
+            sdManager->callMethod("RestartUnit").onInterface("org.freedesktop.systemd1.Manager").withArguments("systemd-journal-upload.service"s, "replace"s);
+        });
 
         // initialize ietf-system
         auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release", *g_dbusConnection, "org.freedesktop.resolve1");

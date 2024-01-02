@@ -265,6 +265,20 @@ module czechlight-system {
     }
   }
 
+  container syslog {
+    container journal-upload {
+      presence "Enable systemd-journal-upload service";
+
+      leaf url {
+        mandatory true;
+        type string;
+        description
+         "Sets the --url option of systemd-journal-upload
+          (see https://www.freedesktop.org/software/systemd/man/252/systemd-journal-upload.service.html)";
+      }
+    }
+  }
+
   deviation /sys:system-shutdown { deviate not-supported; }
   deviation /sys:system/sys:dns-resolver { deviate add { config false; } }
 }

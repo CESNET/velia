@@ -5,6 +5,10 @@ module czechlight-system {
 
   prefix "cla-sys";
 
+  import ietf-inet-types {
+    prefix inet;
+  }
+
   import ietf-yang-types {
     prefix yang;
   }
@@ -262,6 +266,36 @@ module czechlight-system {
           }
         }
       }
+    }
+  }
+
+  container journal-upload {
+    presence "Enable systemd-journal-upload service";
+    description "Configures systemd-journal-upload.service. If the container is present,
+                 then systemd-journal-upload service is set up with the URL composed of
+                 the leafs in this container. See --url in
+                 https://www.freedesktop.org/software/systemd/man/252/systemd-journal-upload.service.html";
+
+    leaf protocol {
+      type enumeration {
+        enum "http";
+        enum "https";
+      }
+
+      default "https";
+      description "Sets the URL protocol. See --url in https://www.freedesktop.org/software/systemd/man/252/systemd-journal-upload.service.html";
+    }
+
+    leaf host {
+      mandatory true;
+      type inet:host;
+      description "Sets the host. See --url in https://www.freedesktop.org/software/systemd/man/252/systemd-journal-upload.service.html";
+    }
+
+    leaf port {
+      type inet:port-number;
+      default "19532";
+      description "Sets the port. See --url in https://www.freedesktop.org/software/systemd/man/252/systemd-journal-upload.service.html";
     }
   }
 

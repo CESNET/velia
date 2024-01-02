@@ -73,7 +73,7 @@ TEST_CASE("systemd unit state monitoring (alarms)")
     clientConnection->enterEventLoopAsync();
     serverConnection->enterEventLoopAsync();
 
-    auto server = DbusSystemdServer(*serverConnection);
+    auto server = DbusSystemdServer(*serverConnection, [](auto, auto) {});
     FakeAlarmServerSysrepo fakeAlarmServer;
 
     EXPECT_ALARM_RPC("unit1.service", "cleared", "systemd unit state: (active, running)");

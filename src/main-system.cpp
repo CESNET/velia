@@ -10,6 +10,7 @@
 #include "system/IETFInterfaces.h"
 #include "system/IETFInterfacesConfig.h"
 #include "system/IETFSystem.h"
+#include "system/Syslog.h"
 #include "system/LED.h"
 #include "system/LLDP.h"
 #include "system/LLDPCallback.h"
@@ -66,6 +67,8 @@ int main(int argc, char* argv[])
         auto srSess = srConn.sessionStart();
 
         DBUS_EVENTLOOP_START
+
+        auto syslog = velia::system::Syslog(srConn, *g_dbusConnection, "/cfg/journal-remote");
 
         // initialize ietf-system
         auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release", *g_dbusConnection, "org.freedesktop.resolve1");

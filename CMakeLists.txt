@@ -237,6 +237,8 @@ add_library(velia-system STATIC
         src/system/LLDP.h
         src/system/LLDPCallback.cpp
         src/system/LLDPCallback.h
+        src/system/Syslog.cpp
+        src/system/Syslog.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -442,6 +444,7 @@ if(BUILD_TESTING)
     velia_test(NAME sysrepo_system-firmware LIBRARIES velia-system DbusTesting SysrepoTesting FIXTURE fixture_sysrepo-czechlight-system RESOURCE_LOCK dbus-rauc)
     velia_test(NAME sysrepo_authentication LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
     velia_test(NAME sysrepo_system-leds LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
+    velia_test(NAME sysrepo_system-syslog LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-czechlight-system)
 
     set(fixture_sysrepo-czechlight-network
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang

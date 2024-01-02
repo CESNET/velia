@@ -10,7 +10,7 @@ class DbusSystemdServer {
 public:
     using UnitStruct = sdbus::Struct<std::string, std::string, std::string, std::string, std::string, std::string, sdbus::ObjectPath, uint32_t, std::string, sdbus::ObjectPath>;
 
-    explicit DbusSystemdServer(sdbus::IConnection& connection);
+    explicit DbusSystemdServer(sdbus::IConnection& connection, const std::function<void(const std::string&, const std::string&)>& restartUnitCb);
 
     void createUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& objPath, const std::string& activeState, const std::string& subState);
     void changeUnitState(const sdbus::ObjectPath& objPath, const std::string& activeState, const std::string& subState);

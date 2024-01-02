@@ -11,12 +11,13 @@ static const std::string objectPathManager = "/org/freedesktop/systemd1";
 }
 
 /** @brief Create a dbus server on the connection */
-DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection)
+DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection, const std::function<void(const std::string&, const std::string&)>& restartUnitCb)
     : m_manager(sdbus::createObject(connection, objectPathManager))
 {
     // create manager object
     m_manager->registerMethod("Subscribe").onInterface(interfaceManager).implementedAs([] {}).withNoReply(); // no-op for us
     m_manager->registerMethod("ListUnits").onInterface(interfaceManager).implementedAs([this]() { return ListUnits(); });
+    m_manager->registerMethod("RestartUnit").onInterface(interfaceManager).implementedAs([restartUnitCb = restartUnitCb](const std::string& unitName, const std::string& mode) { restartUnitCb(unitName, mode); }).withNoReply(); // returns Job obj in reality
     m_manager->registerSignal("UnitNew").onInterface(interfaceManager).withParameters<std::string, sdbus::ObjectPath>();
     m_manager->finishRegistration();
 }

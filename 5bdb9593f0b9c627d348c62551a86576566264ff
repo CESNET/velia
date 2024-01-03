@@ -93,6 +93,30 @@
       },
       "revId": "5bdb9593f0b9c627d348c62551a86576566264ff",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b067f69_d91d9ace",
+        "filename": "yang/czechlight-system@2022-07-08.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-03T14:11:22Z",
+      "side": 1,
+      "message": "Yes please, let\u0027s go with a regex validation (and a FIXME note) for now. I somehow thought that `inet:uri` is a union, but now I see that that thing only applies to hostnames, not URIs. Good.",
+      "parentUuid": "68b50ca5_6cd433fb",
+      "range": {
+        "startLine": 274,
+        "startChar": 13,
+        "endLine": 274,
+        "endChar": 19
+      },
+      "revId": "5bdb9593f0b9c627d348c62551a86576566264ff",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

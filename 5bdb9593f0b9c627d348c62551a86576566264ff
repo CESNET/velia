@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "338bed81_e49499d5",
+        "filename": "src/system/JournalUpload.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T14:02:01Z",
+      "side": 1,
+      "message": "Yeah, that is actually a good idea.",
+      "parentUuid": "89821546_794bce66",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 60
+      },
+      "revId": "5bdb9593f0b9c627d348c62551a86576566264ff",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "327e1515_b2a78a36",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-01-03T13:06:25Z",
       "side": 1,
       "message": "This needs some constraining, otherwise people could inject newlines and other funny characters into this \"URL\", and clobber the env of the unit, which might be exploitable. There\u0027s `ietf-yang-types:uri`, but I see that a string with newlines passes validation even with that type :(. I asked on libyang slack about this.",
+      "range": {
+        "startLine": 274,
+        "startChar": 13,
+        "endLine": 274,
+        "endChar": 19
+      },
+      "revId": "5bdb9593f0b9c627d348c62551a86576566264ff",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68b50ca5_6cd433fb",
+        "filename": "yang/czechlight-system@2022-07-08.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T14:02:01Z",
+      "side": 1,
+      "message": "Well I can go hard and split the destination URL into multiple leafs according to https://www.freedesktop.org/software/systemd/man/latest/systemd-journal-upload.html (i.e., protocol, address, port) and validate each separately. \n\nBut I don!t want to do that so let\u0027s use ietf-yang-types:uri and wait for libyang to implement it? Maybe we can provide a simple regex validation meanwhile.",
+      "parentUuid": "327e1515_b2a78a36",
       "range": {
         "startLine": 274,
         "startChar": 13,

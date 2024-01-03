@@ -41,6 +41,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "058fb7dc_7cfb0677",
+        "filename": "src/system/JournalUpload.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T19:30:04Z",
+      "side": 1,
+      "message": "This should have not been commited. Thanks and done",
+      "parentUuid": "873e8f28_bfc31ec4",
+      "range": {
+        "startLine": 79,
+        "startChar": 80,
+        "endLine": 79,
+        "endChar": 116
+      },
+      "revId": "34c0eb5611a77bc12f216621a236568864016bdd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "70342b9d_e544bd96",
@@ -54,6 +78,24 @@
       "writtenOn": "2024-01-03T17:29:58Z",
       "side": 1,
       "message": "can you please test for some extra newlines as well, given that that\u0027s what prompted that whole regex/validation thingy?",
+      "revId": "34c0eb5611a77bc12f216621a236568864016bdd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4d15a97_45dba9e7",
+        "filename": "tests/sysrepo_system-journalupload.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T19:30:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70342b9d_e544bd96",
       "revId": "34c0eb5611a77bc12f216621a236568864016bdd",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

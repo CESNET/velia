@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "191691bb_813a7f2e",
+        "filename": "src/system/JournalUpload.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T19:30:53Z",
+      "side": 1,
+      "message": "I validated the address with a regexp in our C++ code. I don\u0027t know how to do better :(",
+      "parentUuid": "d5b0aa52_11be78d7",
+      "revId": "34c0eb5611a77bc12f216621a236568864016bdd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "873e8f28_bfc31ec4",

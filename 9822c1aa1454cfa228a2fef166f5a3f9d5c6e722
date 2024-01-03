@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3b7d8ee_14e1943e",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T12:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd35a79f_f04a1900",
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e3152a8_550fa75c",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-01-02T16:40:03Z",
       "side": 1,
       "message": "this deserves a comment",
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecd0f841_6cd97d7e",
+        "filename": "src/system/Syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T12:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e3152a8_550fa75c",
       "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -98,6 +134,48 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b8a3be2_87f293c5",
+        "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T12:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c613a060_08764809",
+      "range": {
+        "startLine": 20,
+        "startChar": 90,
+        "endLine": 20,
+        "endChar": 119
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be462188_9ae4159d",
+        "filename": "tests/dbus-helpers/dbus_systemd_server.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T12:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "944fd56d_49783702",
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1d43fb3d_278d7768",
@@ -111,6 +189,30 @@
       "writtenOn": "2024-01-02T16:40:03Z",
       "side": 1,
       "message": "I\u0027d prefer `sdMock`. It\u0027s not storing the expectations at all, it\u0027s a mock object.",
+      "range": {
+        "startLine": 23,
+        "startChar": 11,
+        "endLine": 23,
+        "endChar": 30
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07050953_f420a4c0",
+        "filename": "tests/sysrepo_system-syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T12:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d43fb3d_278d7768",
       "range": {
         "startLine": 23,
         "startChar": 11,
@@ -144,6 +246,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bed6606_e4542ccd",
+        "filename": "tests/sysrepo_system-syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T12:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f704c6fb_dc5922bb",
+      "range": {
+        "startLine": 44,
+        "startChar": 72,
+        "endLine": 44,
+        "endChar": 94
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "152f7d62_6942e0c8",
@@ -157,6 +283,30 @@
       "writtenOn": "2024-01-02T16:40:03Z",
       "side": 1,
       "message": "there\u0027s a race in between these two, isn\u0027t it?",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 55
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a9c6a51_790e081c",
+        "filename": "tests/sysrepo_system-syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T12:26:20Z",
+      "side": 1,
+      "message": "I see, the module change callback is running in different thread.",
+      "parentUuid": "152f7d62_6942e0c8",
       "range": {
         "startLine": 45,
         "startChar": 0,

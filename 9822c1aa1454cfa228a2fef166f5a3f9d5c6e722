@@ -94,6 +94,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c17c15d_f78edcc7",
+        "filename": "src/system/Syslog.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-03T12:26:35Z",
+      "side": 1,
+      "message": "We agreed on the call that it is enough just to swap the two calls. First register CB with ENABLED flag, then query once. If nothing changed, nothing happens because the file",
+      "parentUuid": "88a430fc_a7d85ff5",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 75
+      },
+      "revId": "9822c1aa1454cfa228a2fef166f5a3f9d5c6e722",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c613a060_08764809",

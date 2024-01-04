@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3941002_174bb57e",
+        "filename": "src/system/JournalUpload.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-04T14:12:56Z",
+      "side": 1,
+      "message": "how much do you like https://gerrit.cesnet.cz/c/CzechLight/libyang-cpp/+/6765 ?",
+      "revId": "93dabfcbc18b30e0db7e645cd47e2f420889ac54",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -42,7 +42,6 @@ private:
     std::shared_ptr<TransientI2C> m_i2c;
 
     std::filesystem::path m_hwmonDir;
-    std::string m_psuName;
 
     std::shared_ptr<velia::ietf_hardware::sysfs::HWMon> m_hwmon;
 

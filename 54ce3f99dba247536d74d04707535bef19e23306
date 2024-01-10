@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6164cacd_b06aa76f",
+        "filename": "src/system/JournalUpload.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-10T15:15:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbb9f3f8_2bbf5e61",
+      "revId": "54ce3f99dba247536d74d04707535bef19e23306",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6e15f7ba_255ff929",
@@ -31,6 +49,30 @@
       "writtenOn": "2024-01-10T15:05:00Z",
       "side": 1,
       "message": "nit: I\u0027d prefer trace here because the operator probably should not ever want that, IMHO (also also below)",
+      "range": {
+        "startLine": 69,
+        "startChar": 17,
+        "endLine": 69,
+        "endChar": 22
+      },
+      "revId": "54ce3f99dba247536d74d04707535bef19e23306",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b36b2dc_d9fe7e95",
+        "filename": "src/system/JournalUpload.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-10T15:15:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e15f7ba_255ff929",
       "range": {
         "startLine": 69,
         "startChar": 17,

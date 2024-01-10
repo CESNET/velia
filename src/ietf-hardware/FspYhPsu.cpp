@@ -101,13 +101,7 @@ FspYhPsu::FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psu
                 m_i2c->unbind();
             }
 
-            // There is a bug, where TSan falsely reports "double lock of a mutex", one here, in the watcher thread and
-            // another, in readValues(). These locks are in a different thread. The report can be fixed by using
-            // different mutexes for this condition variable and for the reading/binding/unbinding. Work around this by
-            // using different mutexes (instead of creating a suppression).
-            // FIXME: This false positive is fixed in LLVM 12, so remove this after it's available.
-            // // https://github.com/google/sanitizers/issues/1259
-            std::unique_lock lock(m_condMtx);
+            std::unique_lock lock(m_mtx);
             m_cond.wait_for(lock, std::chrono::seconds(3));
         }
     });

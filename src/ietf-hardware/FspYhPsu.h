@@ -35,7 +35,6 @@ public:
 
 private:
     std::mutex m_mtx;
-    std::mutex m_condMtx;
     std::condition_variable m_cond;
     std::thread m_psuWatcher;
     std::atomic<bool> m_exit;

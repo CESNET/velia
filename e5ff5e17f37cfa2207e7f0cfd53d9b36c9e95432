@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "711501b1_d7564bbd",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-10T16:35:23Z",
+      "side": 1,
+      "message": "this hides the `thresholds` from the outer scope, which I think is a bit confusing",
+      "range": {
+        "startLine": 107,
+        "startChar": 35,
+        "endLine": 107,
+        "endChar": 45
+      },
+      "revId": "e5ff5e17f37cfa2207e7f0cfd53d9b36c9e95432",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e0ff3c5_53652d3c",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-10T16:35:23Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 352,
+        "endChar": 120
+      },
+      "revId": "e5ff5e17f37cfa2207e7f0cfd53d9b36c9e95432",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71da4e9e_f823259e",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-10T16:35:23Z",
+      "side": 1,
+      "message": "It\u0027s not a leaf, it\u0027s a container; the tests print that as if they were leafs, though, which is why this commit was a bit confusing to me. Unfortunately the test cannot be trivially changed to adjust that printing :(. What about:\n \n// cannot use REQUIRE_ALARM_INVENTORY_ADD_ALARM here because the enclosing containers are reported \"created\" as well\n\n\n...and I see that it\u0027s already there in the other code, OK :), let\u0027s fix this later.",
+      "range": {
+        "startLine": 477,
+        "startChar": 32,
+        "endLine": 477,
+        "endChar": 171
+      },
+      "revId": "e5ff5e17f37cfa2207e7f0cfd53d9b36c9e95432",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

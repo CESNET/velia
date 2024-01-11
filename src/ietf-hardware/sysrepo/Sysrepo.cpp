@@ -17,7 +17,6 @@ namespace {
 
 const auto ALARM_CLEARED = "cleared";
 const auto ALARM_SENSOR_MISSING = "velia-alarms:sensor-missing-alarm";
-const auto ALARM_MISSING = "velia-alarms:sensor-missing-alarm";
 const auto ALARM_MISSING_SEVERITY = "warning";
 const auto ALARM_MISSING_DESCRIPTION = "Sensor value not reported. Maybe the sensor was unplugged?";
 const auto ALARM_THRESHOLD_CROSSING_LOW = "velia-alarms:sensor-low-value-alarm";
@@ -155,15 +154,15 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                 const auto componentXPath = extractComponentPrefix(sensorXPath);
 
                 if (state == State::NoValue) {
-                    logAlarm(m_log, componentXPath, ALARM_MISSING, ALARM_MISSING_SEVERITY);
-                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, componentXPath, ALARM_MISSING_SEVERITY, ALARM_MISSING_DESCRIPTION);
+                    logAlarm(m_log, componentXPath, ALARM_SENSOR_MISSING, ALARM_MISSING_SEVERITY);
+                    utils::createOrUpdateAlarm(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath, ALARM_MISSING_SEVERITY, ALARM_MISSING_DESCRIPTION);
                 } else if (prevState == State::NoValue) {
-                    logAlarm(m_log, componentXPath, ALARM_MISSING, ALARM_CLEARED);
+                    logAlarm(m_log, componentXPath, ALARM_SENSOR_MISSING, ALARM_CLEARED);
                     /* The alarm message is same for both setting and clearing the alarm. RFC8632 says that it is
                      * "The string used to inform operators about the alarm. This MUST contain enough information for an operator to be able to understand the problem and how to resolve it.",
                      * i.e., from my POV it does not make sense to say something like "cleared" when clearing the alarm as this would not be beneficial for the operator to understand what happened.
                      */
-                    utils::createOrUpdateAlarm(m_session, ALARM_MISSING, std::nullopt, componentXPath, ALARM_CLEARED, ALARM_MISSING_DESCRIPTION);
+                    utils::createOrUpdateAlarm(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath, ALARM_CLEARED, ALARM_MISSING_DESCRIPTION);
                 }
 
                 /*

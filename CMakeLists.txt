@@ -137,8 +137,8 @@ add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/sysfs/HWMon.h
     src/ietf-hardware/IETFHardware.cpp
     src/ietf-hardware/IETFHardware.h
-    src/ietf-hardware/FspYhPsu.cpp
-    src/ietf-hardware/FspYhPsu.h
+    src/ietf-hardware/FspYh.cpp
+    src/ietf-hardware/FspYh.h
     src/ietf-hardware/thresholds.h
     src/ietf-hardware/thresholds.cpp
     src/ietf-hardware/thresholds_fwd.h
@@ -429,7 +429,7 @@ if(BUILD_TESTING)
     velia_test(NAME hardware_thresholds LIBRARIES velia-ietf-hardware)
     velia_test(NAME hardware_emmc LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_hwmon LIBRARIES velia-ietf-hardware FsTestUtils)
-    velia_test(NAME hardware_fspyhpsu LIBRARIES velia-ietf-hardware FsTestUtils)
+    velia_test(NAME hardware_fspyh LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_ietf-hardware LIBRARIES velia-ietf-hardware)
 
     set(fixture_sysrepo-czechlight-lldp YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)

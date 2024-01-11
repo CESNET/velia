@@ -5,7 +5,7 @@
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
-#include "FspYhPsu.h"
+#include "FspYh.h"
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/thresholds.h"
 #include "utils/UniqueResource.h"

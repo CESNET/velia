@@ -1,6 +1,6 @@
 #include <future>
 #include "Factory.h"
-#include "FspYhPsu.h"
+#include "FspYh.h"
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/sysfs/EMMC.h"
 #include "ietf-hardware/sysfs/HWMon.h"

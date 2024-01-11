@@ -1,7 +1,7 @@
 #include "trompeloeil_doctest.h"
 #include <fstream>
 #include "fs-helpers/utils.h"
-#include "ietf-hardware/FspYhPsu.h"
+#include "ietf-hardware/FspYh.h"
 #include "ietf-hardware/IETFHardware.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"

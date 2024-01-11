@@ -16,6 +16,24 @@
       "message": "do you know why this was a template before, and why it doesn\u0027t have to be a template anymore after this commit?",
       "revId": "5a23d7d3d70a9cbb3e1a661fd95e4c52e89fa364",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e83f35ab_14f5f80e",
+        "filename": "src/ietf-hardware/IETFHardware.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-11T10:35:15Z",
+      "side": 0,
+      "message": "Originally we couldn\u0027t pass the object as DataReader because it is a std::function\u003c\u003e which does not have the thresholds() method called at line 65. Now, that problem is gone because we pass everything through the operator()().",
+      "parentUuid": "93716cbe_5c00e06c",
+      "revId": "5a23d7d3d70a9cbb3e1a661fd95e4c52e89fa364",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

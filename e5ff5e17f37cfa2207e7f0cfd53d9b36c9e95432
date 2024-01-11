@@ -47,6 +47,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8de35642_4b26b680",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-11T10:35:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0313f1d0_069fc345",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 218,
+        "endChar": 44
+      },
+      "revId": "e5ff5e17f37cfa2207e7f0cfd53d9b36c9e95432",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "711501b1_d7564bbd",
@@ -70,6 +94,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "efb638ae_b2c8cf64",
+        "filename": "src/ietf-hardware/IETFHardware.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-11T10:35:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "711501b1_d7564bbd",
+      "range": {
+        "startLine": 107,
+        "startChar": 35,
+        "endLine": 107,
+        "endChar": 45
+      },
+      "revId": "e5ff5e17f37cfa2207e7f0cfd53d9b36c9e95432",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3e0ff3c5_53652d3c",
@@ -83,6 +131,30 @@
       "writtenOn": "2024-01-10T16:35:23Z",
       "side": 1,
       "message": "?",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 352,
+        "endChar": 120
+      },
+      "revId": "e5ff5e17f37cfa2207e7f0cfd53d9b36c9e95432",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92164ac6_6ba67710",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-11T10:35:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e0ff3c5_53652d3c",
       "range": {
         "startLine": 349,
         "startChar": 0,

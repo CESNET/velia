@@ -352,21 +352,5 @@ SensorPollData EMMC::operator()() const
 
     return {data, ThresholdsBySensorPath{{xpathForComponent(m_componentName + ":lifetime") + "sensor-data/value", m_thresholds}}};
 }
-
-SensorPollData Group::operator()() const
-{
-    SensorPollData pollData;
-
-    for (const auto& reader : m_readers) {
-        pollData.merge(reader());
-    }
-
-    return pollData;
-}
-
-void Group::registerDataReader(const IETFHardware::DataReader& callable)
-{
-    m_readers.push_back(callable);
-}
 }
 }

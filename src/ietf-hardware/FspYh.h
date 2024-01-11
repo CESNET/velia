@@ -27,9 +27,10 @@ private:
  * 1) dynamic loading/unloading of the driver for the PDU/PSUs
  * 2) reading of hwmon values for the PDU/PSUs
  *
- * This is only a common part of drivers for PDU (not yet added) and PSUs.
+ * This is only a common part of drivers for PDU and PSUs.
  *
  * @see FspYhPsu
+ * @see FspYhPdu
  */
 struct FspYh {
 public:
@@ -57,6 +58,11 @@ protected:
 };
 
 struct FspYhPsu : public FspYh {
+    using FspYh::FspYh;
+    void createPower() override;
+};
+
+struct FspYhPdu : public FspYh {
     using FspYh::FspYh;
     void createPower() override;
 };

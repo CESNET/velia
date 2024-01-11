@@ -231,6 +231,8 @@ add_library(velia-system STATIC
         src/system/IETFInterfaces.h
         src/system/IETFInterfacesConfig.cpp
         src/system/IETFInterfacesConfig.h
+        src/system/JournalUpload.cpp
+        src/system/JournalUpload.h
         src/system/LED.cpp
         src/system/LED.h
         src/system/LLDP.cpp
@@ -442,6 +444,7 @@ if(BUILD_TESTING)
     velia_test(NAME sysrepo_system-firmware LIBRARIES velia-system DbusTesting SysrepoTesting FIXTURE fixture_sysrepo-czechlight-system RESOURCE_LOCK dbus-rauc)
     velia_test(NAME sysrepo_authentication LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
     velia_test(NAME sysrepo_system-leds LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
+    velia_test(NAME sysrepo_system-journalupload LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-system)
 
     set(fixture_sysrepo-czechlight-network
             YANG ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang

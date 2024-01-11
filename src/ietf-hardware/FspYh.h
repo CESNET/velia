@@ -24,16 +24,22 @@ private:
 
 /**
  * This class manages two things:
- * 1) dynamic loading/unloading of the driver for the PSUs
- * 2) reading of hwmon values for the PSUs
+ * 1) dynamic loading/unloading of the driver for the PDU/PSUs
+ * 2) reading of hwmon values for the PDU/PSUs
+ *
+ * This is only a common part of drivers for PDU and PSUs.
+ * The concrete classes are FspYhPdu FspYhPsu
+ *
+ * @see FspYhPsu
+ * @see FspYhPdu
  */
-struct FspYhPsu {
+struct FspYh {
 public:
-    FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psuName, std::shared_ptr<TransientI2C> i2c);
-    ~FspYhPsu();
+    FspYh(const std::filesystem::path& hwmonDir, const std::string& psu, std::shared_ptr<TransientI2C> i2c);
+    virtual ~FspYh();
     SensorPollData readValues();
 
-private:
+protected:
     std::mutex m_mtx;
     std::condition_variable m_cond;
     std::thread m_psuWatcher;
@@ -49,6 +55,12 @@ private:
 
     std::vector<std::function<SensorPollData()>> m_properties;
 
+    virtual void createPower() = 0;
+};
+
+struct FspYhPsu : public FspYh {
+    using FspYh::FspYh;
     void createPower();
 };
+
 }

@@ -71,10 +71,10 @@ void TransientI2C::unbind() const
     }
 }
 
-FspYhPsu::FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psuName, std::shared_ptr<TransientI2C> i2c)
+FspYh::FspYh(const std::filesystem::path& hwmonDir, const std::string& name, std::shared_ptr<TransientI2C> i2c)
     : m_i2c(i2c)
     , m_hwmonDir(hwmonDir)
-    , m_namePrefix("ne:"s + psuName)
+    , m_namePrefix("ne:"s + name)
     , m_staticData(velia::ietf_hardware::data_reader::StaticData(m_namePrefix, "ne", {{"class", "iana-hardware:power-supply"}})().data)
 {
     m_exit = false;
@@ -107,10 +107,45 @@ FspYhPsu::FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psu
     });
 }
 
-FspYhPsu::~FspYhPsu()
+FspYh::~FspYh()
 {
     m_exit = true;
     m_psuWatcher.join();
+}
+
+SensorPollData FspYh::readValues()
+{
+    std::unique_lock lock(m_mtx);
+
+    SensorPollData res;
+    res.data = m_staticData;
+
+    if (m_properties.empty()) {
+        res.data["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
+        return res;
+    }
+
+    for (auto& reader : m_properties) {
+        try {
+            res.merge(reader());
+        } catch (std::logic_error& ex) {
+            // The PSU might get disconnected before the watcher thread is able to react. Because of this, the sysfs
+            // read can fail. We must react to this and catch the exception from readFileInt64. If we cannot get all
+            // data, we'll consider the data we got as invalid, so we'll return an empty map.
+            spdlog::get("hardware")->warn("Couldn't read PSU sysfs data (maybe the PSU was just ejected?): "s + ex.what());
+
+            res.data = m_staticData;
+            res.data["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
+            res.thresholds.clear();
+
+            lock.unlock();
+            m_cond.notify_all();
+
+            return res;
+        }
+    }
+
+    return res;
 }
 
 void FspYhPsu::createPower()
@@ -193,38 +228,4 @@ void FspYhPsu::createPower()
                                                      }));
 }
 
-SensorPollData FspYhPsu::readValues()
-{
-    std::unique_lock lock(m_mtx);
-
-    SensorPollData res;
-    res.data = m_staticData;
-
-    if (m_properties.empty()) {
-        res.data["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
-        return res;
-    }
-
-    for (auto& reader : m_properties) {
-        try {
-            res.merge(reader());
-        } catch (std::logic_error& ex) {
-            // The PSU might get disconnected before the watcher thread is able to react. Because of this, the sysfs
-            // read can fail. We must react to this and catch the exception from readFileInt64. If we cannot get all
-            // data, we'll consider the data we got as invalid, so we'll return an empty map.
-            spdlog::get("hardware")->warn("Couldn't read PSU sysfs data (maybe the PSU was just ejected?): "s + ex.what());
-
-            res.data = m_staticData;
-            res.data["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
-            res.thresholds.clear();
-
-            lock.unlock();
-            m_cond.notify_all();
-
-            return res;
-        }
-    }
-
-    return res;
-}
 }

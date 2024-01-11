@@ -8,93 +8,15 @@
 namespace velia::ietf_hardware {
 using velia::ietf_hardware::data_reader::EMMC;
 using velia::ietf_hardware::data_reader::Fans;
-using velia::ietf_hardware::data_reader::Group;
 using velia::ietf_hardware::data_reader::SensorType;
 using velia::ietf_hardware::data_reader::StaticData;
 using velia::ietf_hardware::data_reader::SysfsValue;
 
 void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware)
 {
-    /*
-     * The order of reading hwmon files of the PDU is important.
-     * Reading properties from hwmon can trigger page change in the device which can take more than 20ms.
-     * We have therefore grouped the properties based on their page location to minimize the page changes.
-     * See linux/drivers/hwmon/pmbus/fsp-3y.c
-     */
-    auto pduHwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/bus/i2c/devices/2-0025/hwmon");
-
-    Group pduGroup;
-    pduGroup.registerDataReader(StaticData("ne:pdu", "ne", {{"class", "iana-hardware:power-supply"}}));
-
-    pduGroup.registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:pdu:voltage-12V",
-                                                                  "ne:pdu",
-                                                                  pduHwmon,
-                                                                  1,
-                                                                  Thresholds<int64_t>{
-                                                                      .criticalLow = OneThreshold<int64_t>{11300, 50},
-                                                                      .warningLow = OneThreshold<int64_t>{11500, 50},
-                                                                      .warningHigh = OneThreshold<int64_t>{12500, 50},
-                                                                      .criticalHigh = OneThreshold<int64_t>{12700, 50},
-                                                                  }));
-    pduGroup.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-12V", "ne:pdu", pduHwmon, 1));
-    pduGroup.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-12V", "ne:pdu", pduHwmon, 1));
-    pduGroup.registerDataReader(SysfsValue<SensorType::Temperature>("ne:pdu:temperature-1",
-                                                                    "ne:pdu",
-                                                                    pduHwmon,
-                                                                    1,
-                                                                    Thresholds<int64_t>{
-                                                                        .criticalLow = std::nullopt,
-                                                                        .warningLow = std::nullopt,
-                                                                        .warningHigh = OneThreshold<int64_t>{40000, 1000},
-                                                                        .criticalHigh = OneThreshold<int64_t>{45000, 1000},
-                                                                    }));
-    pduGroup.registerDataReader(SysfsValue<SensorType::Temperature>("ne:pdu:temperature-2",
-                                                                    "ne:pdu",
-                                                                    pduHwmon,
-                                                                    2,
-                                                                    Thresholds<int64_t>{
-                                                                        .criticalLow = std::nullopt,
-                                                                        .warningLow = std::nullopt,
-                                                                        .warningHigh = OneThreshold<int64_t>{40000, 1000},
-                                                                        .criticalHigh = OneThreshold<int64_t>{45000, 1000},
-                                                                    }));
-    pduGroup.registerDataReader(SysfsValue<SensorType::Temperature>("ne:pdu:temperature-3",
-                                                                    "ne:pdu",
-                                                                    pduHwmon,
-                                                                    3,
-                                                                    Thresholds<int64_t>{
-                                                                        .criticalLow = std::nullopt,
-                                                                        .warningLow = std::nullopt,
-                                                                        .warningHigh = OneThreshold<int64_t>{40000, 1000},
-                                                                        .criticalHigh = OneThreshold<int64_t>{45000, 1000},
-                                                                    }));
-
-    pduGroup.registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:pdu:voltage-5V",
-                                                                  "ne:pdu",
-                                                                  pduHwmon,
-                                                                  2,
-                                                                  Thresholds<int64_t>{
-                                                                      .criticalLow = OneThreshold<int64_t>{4600, 50},
-                                                                      .warningLow = OneThreshold<int64_t>{4700, 50},
-                                                                      .warningHigh = OneThreshold<int64_t>{5300, 50},
-                                                                      .criticalHigh = OneThreshold<int64_t>{5400, 50},
-                                                                  }));
-    pduGroup.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-5V", "ne:pdu", pduHwmon, 2));
-    pduGroup.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-5V", "ne:pdu", pduHwmon, 2));
-
-    pduGroup.registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:pdu:voltage-3V3",
-                                                                  "ne:pdu",
-                                                                  pduHwmon,
-                                                                  3,
-                                                                  Thresholds<int64_t>{
-                                                                      .criticalLow = OneThreshold<int64_t>{3100, 25},
-                                                                      .warningLow = OneThreshold<int64_t>{3200, 25},
-                                                                      .warningHigh = OneThreshold<int64_t>{3400, 25},
-                                                                      .criticalHigh = OneThreshold<int64_t>{3500, 25},
-                                                                  }));
-    pduGroup.registerDataReader(SysfsValue<SensorType::Current>("ne:pdu:current-3V3", "ne:pdu", pduHwmon, 3));
-    pduGroup.registerDataReader(SysfsValue<SensorType::Power>("ne:pdu:power-3V3", "ne:pdu", pduHwmon, 3));
-
+    auto pdu = std::make_shared<velia::ietf_hardware::FspYhPdu>("/sys/bus/i2c/devices/2-0025/hwmon",
+                                                                "pdu",
+                                                                std::make_shared<TransientI2C>(2, 0x25, "ym2151e"));
     auto psu1 = std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0058/hwmon",
                                                                  "psu1",
                                                                  std::make_shared<TransientI2C>(2, 0x58, "ym2151e"));
@@ -103,12 +25,12 @@ void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardwar
                                                                  std::make_shared<TransientI2C>(2, 0x59, "ym2151e"));
 
     struct ParallelPDUReader {
-        Group pduGroup;
+        std::shared_ptr<velia::ietf_hardware::FspYhPdu> pdu;
         std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu1;
         std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu2;
 
-        ParallelPDUReader(Group&& pduGroup, std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu1, std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu2)
-            : pduGroup(std::move(pduGroup))
+        ParallelPDUReader(std::shared_ptr<velia::ietf_hardware::FspYhPdu> pdu, std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu1, std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu2)
+            : pdu(std::move(pdu))
             , psu1(std::move(psu1))
             , psu2(std::move(psu2))
         {
@@ -118,7 +40,7 @@ void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardwar
         {
             auto psu1Reader = std::async(std::launch::async, [&] { return psu1->readValues(); });
             auto psu2Reader = std::async(std::launch::async, [&] { return psu2->readValues(); });
-            auto pduReader = std::async(std::launch::async, [&] { return pduGroup(); });
+            auto pduReader = std::async(std::launch::async, [&] { return pdu->readValues(); });
 
             SensorPollData pollData;
             pollData.merge(psu1Reader.get());
@@ -129,7 +51,7 @@ void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardwar
         }
     };
 
-    ietfHardware->registerDataReader(ParallelPDUReader(std::move(pduGroup), psu1, psu2));
+    ietfHardware->registerDataReader(ParallelPDUReader(pdu, psu1, psu2));
 }
 
 std::shared_ptr<IETFHardware> create(const std::string& applianceName)

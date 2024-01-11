@@ -63,4 +63,9 @@ struct FspYhPsu : public FspYh {
     void createPower();
 };
 
+struct FspYhPdu : public FspYh {
+    using FspYh::FspYh;
+    void createPower();
+};
+
 }

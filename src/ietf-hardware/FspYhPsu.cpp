@@ -212,7 +212,7 @@ SensorPollData FspYhPsu::readValues()
             // The PSU might get disconnected before the watcher thread is able to react. Because of this, the sysfs
             // read can fail. We must react to this and catch the exception from readFileInt64. If we cannot get all
             // data, we'll consider the data we got as invalid, so we'll return an empty map.
-            spdlog::get("hardware")->warn("Couldn't read PSU sysfs data (maybe the PSU was just ejected?): "s + ex.what());
+            spdlog::get("hardware")->warn("Couldn't read PSU sysfs data (maybe the PSU was just ejected?): {}", ex.what());
 
             res.data = m_staticData;
             res.data["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";

@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ab4f4133_c145f160",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-11T09:33:52Z",
+      "side": 1,
+      "message": "nit: It\u0027s not a big deal, but this was a bit hard to read for me; I would prefer if the \"real cause\" is clearly explained first. Here, the real cause is not in the PSU reader at all (right?), it\u0027s about wrong assumptions in the code that manages the alarm inventory.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 43
+      },
+      "revId": "e5ff5e17f37cfa2207e7f0cfd53d9b36c9e95432",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0313f1d0_069fc345",
+        "filename": "src/ietf-hardware/FspYhPsu.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-11T09:33:52Z",
+      "side": 1,
+      "message": "consider adding a merge() method to SensorPollDataand use it here (and in other places)",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 218,
+        "endChar": 44
+      },
+      "revId": "e5ff5e17f37cfa2207e7f0cfd53d9b36c9e95432",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "711501b1_d7564bbd",
         "filename": "src/ietf-hardware/IETFHardware.cpp",
         "patchSetId": 3

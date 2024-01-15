@@ -58,17 +58,19 @@ struct AlarmEvent {
     MAKE_CONST_MOCK1(event, void(const std::map<std::string, std::string>&));
 };
 
+#define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
+
 #define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                                                                 \
     REQUIRE_CALL(dsChangeAlarmInventory, change(std::map<std::string, std::variant<std::string, Deleted>>{                                                                                                                                    \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']", "(list instance)"},                                                                  \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                                                           \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                                                            \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='" IETF_HARDWARE_RESOURCE "']"}, \
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
                                          }))
 
 #define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                                                              \
     REQUIRE_CALL(dsChangeAlarmInventory, change(std::map<std::string, std::variant<std::string, Deleted>>{                                                                                                                                    \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='" IETF_HARDWARE_RESOURCE "']"}, \
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
                                          }))
 
 void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const std::set<std::string>& ignoredPaths)
@@ -96,7 +98,7 @@ void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT},                                                                     \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", ALARM_TYPE_ID},                                                         \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},                                                             \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", "/ietf-hardware:hardware/component[name='" IETF_HARDWARE_RESOURCE_KEY "']"}, \
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", COMPONENT(IETF_HARDWARE_RESOURCE_KEY)}, \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY},                                                                   \
                               }))
 
@@ -176,23 +178,23 @@ TEST_CASE("IETF Hardware with sysrepo")
         {
             velia::ietf_hardware::ThresholdsBySensorPath thr;
             velia::ietf_hardware::DataTree res = {
-                {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
-                {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
-                {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"},
+                {COMPONENT("ne:psu") "/class", "iana-hardware:power-supply"},
+                {COMPONENT("ne:psu") "/parent", "ne"},
+                {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
             };
 
             if (active) {
-                res["/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state"] = "enabled";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/class"] = "iana-hardware:sensor";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/parent"] = "ne:psu";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state"] = "enabled";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status"] = "ok";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value"] = std::to_string(value);
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision"] = "0";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale"] = "milli";
-                res["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type"] = "volts-DC";
+                res[COMPONENT("ne:psu") "/state/oper-state"] = "enabled";
+                res[COMPONENT("ne:psu:child") "/class"] = "iana-hardware:sensor";
+                res[COMPONENT("ne:psu:child") "/parent"] = "ne:psu";
+                res[COMPONENT("ne:psu:child") "/state/oper-state"] = "enabled";
+                res[COMPONENT("ne:psu:child") "/sensor-data/oper-status"] = "ok";
+                res[COMPONENT("ne:psu:child") "/sensor-data/value"] = std::to_string(value);
+                res[COMPONENT("ne:psu:child") "/sensor-data/value-precision"] = "0";
+                res[COMPONENT("ne:psu:child") "/sensor-data/value-scale"] = "milli";
+                res[COMPONENT("ne:psu:child") "/sensor-data/value-type"] = "volts-DC";
 
-                thr["/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value"] = Thresholds<int64_t>{
+                thr[COMPONENT("ne:psu:child") "/sensor-data/value"] = Thresholds<int64_t>{
                     .criticalLow = std::nullopt,
                     .warningLow = OneThreshold<int64_t>{10000, 2000},
                     .warningHigh = OneThreshold<int64_t>{15000, 2000},
@@ -241,7 +243,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                                  {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']", "(list instance)"},
                                                  {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/alarm-type-id", "velia-alarms:sensor-low-value-alarm"},
                                                  {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/alarm-type-qualifier", ""},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='ne:power']"},
+                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/resource[1]", COMPONENT("ne:power")},
                                              }))
             .IN_SEQUENCE(seq1); // the first alarm-inventory change also adds the two container leafs therefore I have not used the REQUIRE_ALARM_INVENTORY_ADD_ALARM macro
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
@@ -260,54 +262,54 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                            {"/ietf-hardware:hardware", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/class", "iana-hardware:chassis"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/mfg-name", "CESNET"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/name", "ne"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/state/oper-state", "enabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/class", "iana-hardware:sensor"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/name", "ne:power"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/parent", "ne"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/oper-status", "ok"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "0"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value-precision", "0"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value-scale", "micro"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value-type", "watts"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/state/oper-state", "enabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/name", "ne:psu"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "enabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", "iana-hardware:sensor"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/name", "ne:psu:child"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", "ne:psu"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", "ok"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", "12000"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", "0"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", "milli"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", "volts-DC"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", "enabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/class", "iana-hardware:sensor"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/name", "ne:temperature-cpu"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/parent", "ne"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/oper-status", "ok"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value", "41800"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value-precision", "0"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value-scale", "milli"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value-type", "celsius"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/state/oper-state", "enabled"},
+                                           {COMPONENT("ne"), "(list instance)"},
+                                           {COMPONENT("ne") "/class", "iana-hardware:chassis"},
+                                           {COMPONENT("ne") "/mfg-name", "CESNET"},
+                                           {COMPONENT("ne") "/name", "ne"},
+                                           {COMPONENT("ne") "/state", "(container)"},
+                                           {COMPONENT("ne") "/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:power"), "(list instance)"},
+                                           {COMPONENT("ne:power") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:power") "/name", "ne:power"},
+                                           {COMPONENT("ne:power") "/parent", "ne"},
+                                           {COMPONENT("ne:power") "/sensor-data", "(container)"},
+                                           {COMPONENT("ne:power") "/sensor-data/oper-status", "ok"},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "0"},
+                                           {COMPONENT("ne:power") "/sensor-data/value-precision", "0"},
+                                           {COMPONENT("ne:power") "/sensor-data/value-scale", "micro"},
+                                           {COMPONENT("ne:power") "/sensor-data/value-type", "watts"},
+                                           {COMPONENT("ne:power") "/state", "(container)"},
+                                           {COMPONENT("ne:power") "/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:psu"), "(list instance)"},
+                                           {COMPONENT("ne:psu") "/class", "iana-hardware:power-supply"},
+                                           {COMPONENT("ne:psu") "/name", "ne:psu"},
+                                           {COMPONENT("ne:psu") "/parent", "ne"},
+                                           {COMPONENT("ne:psu") "/state", "(container)"},
+                                           {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:psu:child"), "(list instance)"},
+                                           {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:psu:child") "/name", "ne:psu:child"},
+                                           {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data", "(container)"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value", "12000"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-precision", "0"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-scale", "milli"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-type", "volts-DC"},
+                                           {COMPONENT("ne:psu:child") "/state", "(container)"},
+                                           {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:temperature-cpu"), "(list instance)"},
+                                           {COMPONENT("ne:temperature-cpu") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:temperature-cpu") "/name", "ne:temperature-cpu"},
+                                           {COMPONENT("ne:temperature-cpu") "/parent", "ne"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data", "(container)"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/oper-status", "ok"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/value", "41800"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/value-precision", "0"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/value-scale", "milli"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/value-type", "celsius"},
+                                           {COMPONENT("ne:temperature-cpu") "/state", "(container)"},
+                                           {COMPONENT("ne:temperature-cpu") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
@@ -319,19 +321,19 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         // second batch of values, sensor data changed, PSU ejected
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "11222333"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value", "222"},
+                                           {COMPONENT("ne:psu:child") "/class", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/parent", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-precision", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-scale", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-type", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/state", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/state/oper-state", Deleted{}},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "11222333"},
+                                           {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/value", "222"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "cleared", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
@@ -347,17 +349,17 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         // third batch of changes, wild PSU appears with a warning
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "enabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", "iana-hardware:sensor"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", "ne:psu"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", "ok"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", "50000"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", "0"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", "milli"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", "volts-DC"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data", "(container)"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value", "50000"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-precision", "0"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-scale", "milli"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-type", "volts-DC"},
+                                           {COMPONENT("ne:psu:child") "/state", "(container)"},
+                                           {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "cleared", "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
@@ -369,17 +371,17 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         // fourth round. We unplug with a warning
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", Deleted{}},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"},
+                                           {COMPONENT("ne:psu:child") "/class", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/parent", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-precision", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-scale", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-type", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/state", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/state/oper-state", Deleted{}},
+                                           {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "warning", "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
@@ -389,7 +391,7 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         // 5+th round: test threshold crossings
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "21000000"},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "21000000"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "warning", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
@@ -397,7 +399,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         waitForCompletionAndBitMore(seq1);
 
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "24000000"},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "24000000"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "critical", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
@@ -405,7 +407,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         waitForCompletionAndBitMore(seq1);
 
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "1"},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "1"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
@@ -414,7 +416,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         waitForCompletionAndBitMore(seq1);
 
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "14000000"},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "14000000"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "cleared", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
@@ -423,8 +425,8 @@ TEST_CASE("IETF Hardware with sysrepo")
 
 
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "1000000000"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/oper-status", "nonoperational"},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "1000000000"},
+                                           {COMPONENT("ne:power") "/sensor-data/oper-status", "nonoperational"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "warning", "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
@@ -436,7 +438,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         waitForCompletionAndBitMore(seq1);
 
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "-1000000000"},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "-1000000000"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
@@ -445,8 +447,8 @@ TEST_CASE("IETF Hardware with sysrepo")
         waitForCompletionAndBitMore(seq1);
 
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "-999999999"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/oper-status", "ok"},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "-999999999"},
+                                           {COMPONENT("ne:power") "/sensor-data/oper-status", "ok"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "cleared", "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
@@ -468,7 +470,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                                  {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']", "(list instance)"},
                                                  {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/alarm-type-id", "velia-alarms:sensor-low-value-alarm"},
                                                  {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/alarm-type-qualifier", ""},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/resource[1]", "/ietf-hardware:hardware/component[name='ne:power']"},
+                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/resource[1]", COMPONENT("ne:power")},
                                              }))
             .IN_SEQUENCE(seq1); // the first alarm-inventory change also adds the two container leafs therefore I have not used the REQUIRE_ALARM_INVENTORY_ADD_ALARM macro
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
@@ -482,42 +484,42 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
                                            {"/ietf-hardware:hardware", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/class", "iana-hardware:chassis"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/mfg-name", "CESNET"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/name", "ne"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne']/state/oper-state", "enabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/class", "iana-hardware:sensor"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/name", "ne:power"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/parent", "ne"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/oper-status", "ok"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value", "0"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value-precision", "0"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value-scale", "micro"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/sensor-data/value-type", "watts"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:power']/state/oper-state", "enabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/name", "ne:psu"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/class", "iana-hardware:sensor"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/name", "ne:temperature-cpu"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/parent", "ne"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/oper-status", "ok"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value", "41800"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value-precision", "0"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value-scale", "milli"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/sensor-data/value-type", "celsius"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:temperature-cpu']/state/oper-state", "enabled"},
+                                           {COMPONENT("ne"), "(list instance)"},
+                                           {COMPONENT("ne") "/class", "iana-hardware:chassis"},
+                                           {COMPONENT("ne") "/mfg-name", "CESNET"},
+                                           {COMPONENT("ne") "/name", "ne"},
+                                           {COMPONENT("ne") "/state", "(container)"},
+                                           {COMPONENT("ne") "/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:power"), "(list instance)"},
+                                           {COMPONENT("ne:power") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:power") "/name", "ne:power"},
+                                           {COMPONENT("ne:power") "/parent", "ne"},
+                                           {COMPONENT("ne:power") "/sensor-data", "(container)"},
+                                           {COMPONENT("ne:power") "/sensor-data/oper-status", "ok"},
+                                           {COMPONENT("ne:power") "/sensor-data/value", "0"},
+                                           {COMPONENT("ne:power") "/sensor-data/value-precision", "0"},
+                                           {COMPONENT("ne:power") "/sensor-data/value-scale", "micro"},
+                                           {COMPONENT("ne:power") "/sensor-data/value-type", "watts"},
+                                           {COMPONENT("ne:power") "/state", "(container)"},
+                                           {COMPONENT("ne:power") "/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:psu"), "(list instance)"},
+                                           {COMPONENT("ne:psu") "/class", "iana-hardware:power-supply"},
+                                           {COMPONENT("ne:psu") "/name", "ne:psu"},
+                                           {COMPONENT("ne:psu") "/parent", "ne"},
+                                           {COMPONENT("ne:psu") "/state", "(container)"},
+                                           {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
+                                           {COMPONENT("ne:temperature-cpu"), "(list instance)"},
+                                           {COMPONENT("ne:temperature-cpu") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:temperature-cpu") "/name", "ne:temperature-cpu"},
+                                           {COMPONENT("ne:temperature-cpu") "/parent", "ne"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data", "(container)"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/oper-status", "ok"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/value", "41800"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/value-precision", "0"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/value-scale", "milli"},
+                                           {COMPONENT("ne:temperature-cpu") "/sensor-data/value-type", "celsius"},
+                                           {COMPONENT("ne:temperature-cpu") "/state", "(container)"},
+                                           {COMPONENT("ne:temperature-cpu") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
@@ -534,19 +536,19 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:psu:child").IN_SEQUENCE(seq1);
         REQUIRE_CALL(dsChangeHardware, change(std::map<std::string, std::variant<std::string, Deleted>>{
-                                           {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "enabled"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']", "(list instance)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/class", "iana-hardware:sensor"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/name", "ne:psu:child"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/parent", "ne:psu"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/oper-status", "ok"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value", "12000"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-precision", "0"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-scale", "milli"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/sensor-data/value-type", "volts-DC"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state", "(container)"},
-                                           {"/ietf-hardware:hardware/component[name='ne:psu:child']/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:psu:child"), "(list instance)"},
+                                           {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:psu:child") "/name", "ne:psu:child"},
+                                           {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data", "(container)"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value", "12000"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-precision", "0"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-scale", "milli"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-type", "volts-DC"},
+                                           {COMPONENT("ne:psu:child") "/state", "(container)"},
+                                           {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
         psuActive = true;

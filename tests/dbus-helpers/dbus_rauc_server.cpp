@@ -10,15 +10,15 @@ const std::string interfaceManager = "de.pengutronix.rauc.Installer";
 const std::string objectPathManager = "/";
 }
 
-#define PROGRESS(perc, msg, depth)                                      \
+#define PROGRESS(perc, msg, depth) \
     m_propProgress = sdbus::make_struct(perc, std::string(msg), depth); \
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"Progress"});
 
-#define OPERATION(op)     \
+#define OPERATION(op) \
     m_propOperation = op; \
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"Operation"});
 
-#define LAST_ERROR(msg)    \
+#define LAST_ERROR(msg) \
     m_propLastError = msg; \
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"LastError"});
 
@@ -72,7 +72,8 @@ DBusRAUCServer::DBusRAUCServer(sdbus::IConnection& connection, std::string prima
             throw sdbus::Error("org.gtk.GDBus.UnmappedGError.Quark._g_2dio_2derror_2dquark.Code30", "Already processing a different method");
         }
     });
-    m_manager->registerMethod("InstallBundle").onInterface(interfaceManager).implementedAs([this]([[maybe_unused]] const std::string& source, [[maybe_unused]] const std::map<std::string, sdbus::Variant>& args) {
+    m_manager->registerMethod("InstallBundle").onInterface(interfaceManager).implementedAs(
+            [this]([[maybe_unused]] const std::string& source, [[maybe_unused]] const std::map<std::string, sdbus::Variant>& args) {
         std::lock_guard<std::mutex> lock(m_mtx);
         if (!m_operationInProgress) {
             m_operationInProgress = true;

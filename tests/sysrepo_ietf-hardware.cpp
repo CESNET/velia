@@ -14,9 +14,16 @@
 using namespace std::literals;
 
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
-#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, RESOURCE) REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmWatcher, ALARM_TYPE, "", (std::set<std::string>{COMPONENT(RESOURCE)}), (std::set<std::string>{}), std::nullopt, std::nullopt)
-#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, RESOURCE) REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(alarmWatcher, ALARM_TYPE, "", COMPONENT(RESOURCE))
-#define REQUIRE_ALARM_RPC(ALARM_TYPE, RESOURCE, SEVERITY, TEXT) REQUIRE_NEW_ALARM(alarmWatcher, ALARM_TYPE, "", COMPONENT(RESOURCE), SEVERITY, TEXT)
+
+#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, RESOURCE) \
+    REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmWatcher, ALARM_TYPE, "", (std::set<std::string>{COMPONENT(RESOURCE)}), \
+            (std::set<std::string>{}), std::nullopt, std::nullopt)
+
+#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, RESOURCE) \
+    REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(alarmWatcher, ALARM_TYPE, "", COMPONENT(RESOURCE))
+
+#define REQUIRE_ALARM_RPC(ALARM_TYPE, RESOURCE, SEVERITY, TEXT) \
+    REQUIRE_NEW_ALARM(alarmWatcher, ALARM_TYPE, "", COMPONENT(RESOURCE), SEVERITY, TEXT)
 
 TEST_CASE("IETF Hardware with sysrepo")
 {
@@ -58,12 +65,17 @@ TEST_CASE("IETF Hardware with sysrepo")
     auto ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
     ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:temperature-cpu", "ne", sysfsTempCpu, 1));
-    ietfHardware->registerDataReader(SysfsValue<SensorType::Power>("ne:power", "ne", sysfsPower, 1, Thresholds<int64_t>{
-                                                                                                        .criticalLow = OneThreshold<int64_t>{8'000'000, 500'000},
-                                                                                                        .warningLow = OneThreshold<int64_t>{10'000'000, 500'000},
-                                                                                                        .warningHigh = OneThreshold<int64_t>{20'000'000, 500'000},
-                                                                                                        .criticalHigh = OneThreshold<int64_t>{22'000'000, 500'000},
-                                                                                                    }));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Power>(
+        "ne:power",
+        "ne",
+        sysfsPower,
+        1,
+        Thresholds<int64_t>{
+            .criticalLow = OneThreshold<int64_t>{8'000'000, 500'000},
+            .warningLow = OneThreshold<int64_t>{10'000'000, 500'000},
+            .warningHigh = OneThreshold<int64_t>{20'000'000, 500'000},
+            .criticalHigh = OneThreshold<int64_t>{22'000'000, 500'000},
+        }));
 
     /* Some data readers (like our PSU reader, see the FspYhPsu test) may set oper-state to enabled/disabled depending on whether the device is present and Some
      * data might not even be pushed (e.g. the child sensors).
@@ -203,7 +215,8 @@ TEST_CASE("IETF Hardware with sysrepo")
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "critical", "PSU missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "cleared", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "warning", "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "warning",
+                "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
         REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
         REQUIRE_CALL(*sysfsPower, attribute("power1_input")).LR_RETURN(powerValue).TIMES(AT_LEAST(1));
         cpuTempValue = 222;
@@ -293,8 +306,10 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:power") "/sensor-data/oper-status", "nonoperational"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "warning", "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "critical", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "warning",
+                "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "critical",
+                "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
         powerValue = 2'999'999'999;
         waitForCompletionAndBitMore(seq1);
 
@@ -315,7 +330,8 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:power") "/sensor-data/oper-status", "ok"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "cleared", "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "cleared",
+                "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
         powerValue = -999'999'999;
         waitForCompletionAndBitMore(seq1);
     }

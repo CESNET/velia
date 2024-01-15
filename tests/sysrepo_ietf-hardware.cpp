@@ -64,7 +64,6 @@ struct AlarmEvent {
 
 #define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                                                                 \
     REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                    \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']", "(list instance)"},                                                                  \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                                                           \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                                                            \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
@@ -81,6 +80,15 @@ void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const
 
     for (const auto& change : session.getChanges()) {
         if (ignoredPaths.contains(change.node.schema().path())) {
+            continue;
+        }
+
+        if (change.node.schema().nodeType() == libyang::NodeType::List) {
+            // any list will surely have some "nodes below", so let's not waste time printing the list entry itself
+            continue;
+        }
+        if (change.node.schema().nodeType() == libyang::NodeType::Container && !change.node.schema().asContainer().isPresence()) {
+            // non-presence containers are "always there", let's not clutter up the output
             continue;
         }
 
@@ -239,15 +247,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         psuSensorValue = 12000;
         REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
         REQUIRE_CALL(*sysfsPower, attribute("power1_input")).LR_RETURN(powerValue).TIMES(AT_LEAST(1));
-        REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{
-                                                 {"/ietf-alarms:alarms", "(container)"},
-                                                 {"/ietf-alarms:alarms/alarm-inventory", "(container)"},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']", "(list instance)"},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/alarm-type-id", "velia-alarms:sensor-low-value-alarm"},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/alarm-type-qualifier", ""},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/resource[1]", COMPONENT("ne:power")},
-                                             }))
-            .IN_SEQUENCE(seq1); // the first alarm-inventory change also adds the two container leafs therefore I have not used the REQUIRE_ALARM_INVENTORY_ADD_ALARM macro
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-low-value-alarm", "ne:power").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-missing-alarm", "ne:power").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-nonoperational", "ne:power").IN_SEQUENCE(seq1);
@@ -263,54 +263,40 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:temperature-cpu").IN_SEQUENCE(seq1);
 
         REQUIRE_CALL(dsChangeHardware, change(ValueMap{
-                                           {"/ietf-hardware:hardware", "(container)"},
-                                           {COMPONENT("ne"), "(list instance)"},
                                            {COMPONENT("ne") "/class", "iana-hardware:chassis"},
                                            {COMPONENT("ne") "/mfg-name", "CESNET"},
                                            {COMPONENT("ne") "/name", "ne"},
-                                           {COMPONENT("ne") "/state", "(container)"},
                                            {COMPONENT("ne") "/state/oper-state", "enabled"},
-                                           {COMPONENT("ne:power"), "(list instance)"},
                                            {COMPONENT("ne:power") "/class", "iana-hardware:sensor"},
                                            {COMPONENT("ne:power") "/name", "ne:power"},
                                            {COMPONENT("ne:power") "/parent", "ne"},
-                                           {COMPONENT("ne:power") "/sensor-data", "(container)"},
                                            {COMPONENT("ne:power") "/sensor-data/oper-status", "ok"},
                                            {COMPONENT("ne:power") "/sensor-data/value", "0"},
                                            {COMPONENT("ne:power") "/sensor-data/value-precision", "0"},
                                            {COMPONENT("ne:power") "/sensor-data/value-scale", "micro"},
                                            {COMPONENT("ne:power") "/sensor-data/value-type", "watts"},
-                                           {COMPONENT("ne:power") "/state", "(container)"},
                                            {COMPONENT("ne:power") "/state/oper-state", "enabled"},
-                                           {COMPONENT("ne:psu"), "(list instance)"},
                                            {COMPONENT("ne:psu") "/class", "iana-hardware:power-supply"},
                                            {COMPONENT("ne:psu") "/name", "ne:psu"},
                                            {COMPONENT("ne:psu") "/parent", "ne"},
-                                           {COMPONENT("ne:psu") "/state", "(container)"},
                                            {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
-                                           {COMPONENT("ne:psu:child"), "(list instance)"},
                                            {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
                                            {COMPONENT("ne:psu:child") "/name", "ne:psu:child"},
                                            {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
-                                           {COMPONENT("ne:psu:child") "/sensor-data", "(container)"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value", "12000"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-precision", "0"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-scale", "milli"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-type", "volts-DC"},
-                                           {COMPONENT("ne:psu:child") "/state", "(container)"},
                                            {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
-                                           {COMPONENT("ne:temperature-cpu"), "(list instance)"},
                                            {COMPONENT("ne:temperature-cpu") "/class", "iana-hardware:sensor"},
                                            {COMPONENT("ne:temperature-cpu") "/name", "ne:temperature-cpu"},
                                            {COMPONENT("ne:temperature-cpu") "/parent", "ne"},
-                                           {COMPONENT("ne:temperature-cpu") "/sensor-data", "(container)"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/oper-status", "ok"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/value", "41800"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/value-precision", "0"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/value-scale", "milli"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/value-type", "celsius"},
-                                           {COMPONENT("ne:temperature-cpu") "/state", "(container)"},
                                            {COMPONENT("ne:temperature-cpu") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
@@ -325,13 +311,11 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_CALL(dsChangeHardware, change(ValueMap{
                                            {COMPONENT("ne:psu:child") "/class", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/parent", Deleted{}},
-                                           {COMPONENT("ne:psu:child") "/sensor-data", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-precision", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-scale", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-type", Deleted{}},
-                                           {COMPONENT("ne:psu:child") "/state", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/state/oper-state", Deleted{}},
                                            {COMPONENT("ne:power") "/sensor-data/value", "11222333"},
                                            {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
@@ -354,13 +338,11 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
                                            {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
                                            {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
-                                           {COMPONENT("ne:psu:child") "/sensor-data", "(container)"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value", "50000"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-precision", "0"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-scale", "milli"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-type", "volts-DC"},
-                                           {COMPONENT("ne:psu:child") "/state", "(container)"},
                                            {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
@@ -375,13 +357,11 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_CALL(dsChangeHardware, change(ValueMap{
                                            {COMPONENT("ne:psu:child") "/class", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/parent", Deleted{}},
-                                           {COMPONENT("ne:psu:child") "/sensor-data", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-precision", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-scale", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-type", Deleted{}},
-                                           {COMPONENT("ne:psu:child") "/state", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/state/oper-state", Deleted{}},
                                            {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
                                        }))
@@ -466,15 +446,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         psuSensorValue = 12000;
         REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
         REQUIRE_CALL(*sysfsPower, attribute("power1_input")).LR_RETURN(powerValue).TIMES(AT_LEAST(1));
-        REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{
-                                                 {"/ietf-alarms:alarms", "(container)"},
-                                                 {"/ietf-alarms:alarms/alarm-inventory", "(container)"},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']", "(list instance)"},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/alarm-type-id", "velia-alarms:sensor-low-value-alarm"},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/alarm-type-qualifier", ""},
-                                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='velia-alarms:sensor-low-value-alarm'][alarm-type-qualifier='']/resource[1]", COMPONENT("ne:power")},
-                                             }))
-            .IN_SEQUENCE(seq1); // the first alarm-inventory change also adds the two container leafs therefore I have not used the REQUIRE_ALARM_INVENTORY_ADD_ALARM macro
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-low-value-alarm", "ne:power").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-missing-alarm", "ne:power").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-nonoperational", "ne:power").IN_SEQUENCE(seq1);
@@ -485,42 +457,31 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:temperature-cpu").IN_SEQUENCE(seq1);
 
         REQUIRE_CALL(dsChangeHardware, change(ValueMap{
-                                           {"/ietf-hardware:hardware", "(container)"},
-                                           {COMPONENT("ne"), "(list instance)"},
                                            {COMPONENT("ne") "/class", "iana-hardware:chassis"},
                                            {COMPONENT("ne") "/mfg-name", "CESNET"},
                                            {COMPONENT("ne") "/name", "ne"},
-                                           {COMPONENT("ne") "/state", "(container)"},
                                            {COMPONENT("ne") "/state/oper-state", "enabled"},
-                                           {COMPONENT("ne:power"), "(list instance)"},
                                            {COMPONENT("ne:power") "/class", "iana-hardware:sensor"},
                                            {COMPONENT("ne:power") "/name", "ne:power"},
                                            {COMPONENT("ne:power") "/parent", "ne"},
-                                           {COMPONENT("ne:power") "/sensor-data", "(container)"},
                                            {COMPONENT("ne:power") "/sensor-data/oper-status", "ok"},
                                            {COMPONENT("ne:power") "/sensor-data/value", "0"},
                                            {COMPONENT("ne:power") "/sensor-data/value-precision", "0"},
                                            {COMPONENT("ne:power") "/sensor-data/value-scale", "micro"},
                                            {COMPONENT("ne:power") "/sensor-data/value-type", "watts"},
-                                           {COMPONENT("ne:power") "/state", "(container)"},
                                            {COMPONENT("ne:power") "/state/oper-state", "enabled"},
-                                           {COMPONENT("ne:psu"), "(list instance)"},
                                            {COMPONENT("ne:psu") "/class", "iana-hardware:power-supply"},
                                            {COMPONENT("ne:psu") "/name", "ne:psu"},
                                            {COMPONENT("ne:psu") "/parent", "ne"},
-                                           {COMPONENT("ne:psu") "/state", "(container)"},
                                            {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
-                                           {COMPONENT("ne:temperature-cpu"), "(list instance)"},
                                            {COMPONENT("ne:temperature-cpu") "/class", "iana-hardware:sensor"},
                                            {COMPONENT("ne:temperature-cpu") "/name", "ne:temperature-cpu"},
                                            {COMPONENT("ne:temperature-cpu") "/parent", "ne"},
-                                           {COMPONENT("ne:temperature-cpu") "/sensor-data", "(container)"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/oper-status", "ok"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/value", "41800"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/value-precision", "0"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/value-scale", "milli"},
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/value-type", "celsius"},
-                                           {COMPONENT("ne:temperature-cpu") "/state", "(container)"},
                                            {COMPONENT("ne:temperature-cpu") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
@@ -539,17 +500,14 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:psu:child").IN_SEQUENCE(seq1);
         REQUIRE_CALL(dsChangeHardware, change(ValueMap{
                                            {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
-                                           {COMPONENT("ne:psu:child"), "(list instance)"},
                                            {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
                                            {COMPONENT("ne:psu:child") "/name", "ne:psu:child"},
                                            {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
-                                           {COMPONENT("ne:psu:child") "/sensor-data", "(container)"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value", "12000"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-precision", "0"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-scale", "milli"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value-type", "volts-DC"},
-                                           {COMPONENT("ne:psu:child") "/state", "(container)"},
                                            {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);

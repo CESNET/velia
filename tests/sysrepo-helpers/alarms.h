@@ -77,19 +77,24 @@ struct AlarmWatcher {
 };
 
 // checks if the alarm is contained in AlarmInventory
-#define WITH_ALARM_IN_INVENTORY(INV, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITY) LR_WITH(INV.contains(ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITY))
+#define WITH_ALARM_IN_INVENTORY(INV, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITY) \
+    LR_WITH(INV.contains(ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITY))
 
 // inserts the alarm in AlarmInventory as a side effect
-#define INSERT_INTO_INVENTORY(INV, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITIES) LR_SIDE_EFFECT(INV.add(ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITIES))
+#define INSERT_INTO_INVENTORY(INV, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITIES) \
+    LR_SIDE_EFFECT(INV.add(ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITIES))
 
 #define REQUIRE_NEW_ALARM_INVENTORY_ENTRY(WATCHER, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION) \
-    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, constructAlarmInventoryChange(ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION)) \
+    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, \
+            constructAlarmInventoryChange(ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION)) \
         .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES)
 
 #define REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(WATCHER, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE) \
     REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, \
                              (ValueChanges{ \
-                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='" ALARM_QUALIFIER "']/resource[1]", RESOURCE}, \
+                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type" \
+                                 "[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='" ALARM_QUALIFIER "']/resource[1]", \
+                                 RESOURCE}, \
                              })) \
         .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, ALARM_QUALIFIER, (std::set<std::string>{RESOURCE}), (std::set<std::string>{}))
 

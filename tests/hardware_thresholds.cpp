@@ -17,22 +17,22 @@ public:
     MAKE_MOCK1(record, void(State));
 };
 
-#define EVENTS_INIT            \
+#define EVENTS_INIT \
     trompeloeil::sequence seq; \
-    Transitions eventLog;      \
+    Transitions eventLog; \
     Watcher w(thr);
 
 
-#define EXPECT_EVENT(E, STATE)          \
-    {                                   \
-        auto statusChange = E;          \
-        REQUIRE(statusChange);          \
+#define EXPECT_EVENT(E, STATE) \
+    { \
+        auto statusChange = E; \
+        REQUIRE(statusChange); \
         REQUIRE(statusChange == STATE); \
     }
 
-#define EXPECT_NONE(E)          \
-    {                           \
-        auto statusChange = E;  \
+#define EXPECT_NONE(E) \
+    { \
+        auto statusChange = E; \
         REQUIRE(!statusChange); \
     }
 

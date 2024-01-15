@@ -22,11 +22,11 @@ using namespace std::chrono_literals;
 
 // clang-format off
 #define EXPECT_ALARM_RPC(RESOURCE, SEVERITY, TEXT) REQUIRE_CALL(fakeAlarmServer, rpcCalled(alarmRPC, std::map<std::string, std::string>{ \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT},                                                            \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:systemd-unit-failure"},                          \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},                                                    \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", RESOURCE},                                                          \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY}                                                           \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT}, \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:systemd-unit-failure"}, \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""}, \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", RESOURCE}, \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY} \
         })).IN_SEQUENCE(seq1);
 // clang-format on
 

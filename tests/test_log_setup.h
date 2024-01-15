@@ -13,22 +13,22 @@
 #include "utils/sysrepo.h"
 #include "utils/log.h"
 
-#define IMPL_TEST_INIT_LOGS_1                                                       \
-    spdlog::drop_all();                                                             \
+#define IMPL_TEST_INIT_LOGS_1 \
+    spdlog::drop_all(); \
     auto test_logger = std::make_shared<spdlog::sinks::ansicolor_stderr_sink_mt>(); \
     velia::utils::initLogs(test_logger);
 
-#define IMPL_TEST_INIT_LOGS_2                   \
+#define IMPL_TEST_INIT_LOGS_2 \
     spdlog::set_pattern("%S.%e [%t %n %L] %v"); \
-    spdlog::set_level(spdlog::level::trace);    \
+    spdlog::set_level(spdlog::level::trace); \
     spdlog::get("sysrepo")->set_level(spdlog::level::info); \
-    trompeloeil::stream_tracer tracer {std::cout};
+    trompeloeil::stream_tracer tracer{std::cout};
 
-#define TEST_INIT_LOGS    \
+#define TEST_INIT_LOGS \
     IMPL_TEST_INIT_LOGS_1 \
     IMPL_TEST_INIT_LOGS_2
 
-#define TEST_SYSREPO_INIT_LOGS       \
-    IMPL_TEST_INIT_LOGS_1            \
+#define TEST_SYSREPO_INIT_LOGS \
+    IMPL_TEST_INIT_LOGS_1 \
     velia::utils::initLogsSysrepo(); \
     IMPL_TEST_INIT_LOGS_2

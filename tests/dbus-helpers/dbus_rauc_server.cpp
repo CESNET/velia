@@ -10,15 +10,15 @@ const std::string interfaceManager = "de.pengutronix.rauc.Installer";
 const std::string objectPathManager = "/";
 }
 
-#define PROGRESS(perc, msg, depth)                                      \
+#define PROGRESS(perc, msg, depth) \
     m_propProgress = sdbus::make_struct(perc, std::string(msg), depth); \
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"Progress"});
 
-#define OPERATION(op)     \
+#define OPERATION(op) \
     m_propOperation = op; \
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"Operation"});
 
-#define LAST_ERROR(msg)    \
+#define LAST_ERROR(msg) \
     m_propLastError = msg; \
     m_manager->emitPropertiesChangedSignal(interfaceManager, {"LastError"});
 

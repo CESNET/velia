@@ -69,10 +69,10 @@ auto dataFromSysrepo(sysrepo::Session session, const std::string& xpath, sysrepo
     return res;
 }
 
-#define TEST_SYSREPO_INIT                      \
-    auto srConn = sysrepo::Connection{};       \
+#define TEST_SYSREPO_INIT \
+    auto srConn = sysrepo::Connection{}; \
     auto srSess = srConn.sessionStart();
 
-#define TEST_SYSREPO_INIT_CLIENT                     \
-    auto clientConn = sysrepo::Connection{};         \
+#define TEST_SYSREPO_INIT_CLIENT \
+    auto clientConn = sysrepo::Connection{}; \
     auto client = clientConn.sessionStart();

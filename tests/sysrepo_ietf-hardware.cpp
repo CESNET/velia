@@ -62,17 +62,21 @@ struct AlarmEvent {
 
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
 
-#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                                                                 \
-    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                    \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                                                           \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                                                            \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
-                                         }))
+#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, IETF_HARDWARE_RESOURCE) \
+    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{ \
+        {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" \
+            ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE}, \
+        {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" \
+            ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""}, \
+        {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" \
+            ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
+    }))
 
-#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                                                              \
-    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                    \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
-                                         }))
+#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE) \
+    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{ \
+        {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" \
+            ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
+    }))
 
 void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const std::set<std::string>& ignoredPaths)
 {
@@ -102,15 +106,15 @@ void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const
     dsChange.change(changes);
 }
 
-#define REQUIRE_ALARM_RPC(ALARM_TYPE_ID, IETF_HARDWARE_RESOURCE_KEY, SEVERITY, TEXT)                                                                                    \
-    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{                                                                                                 \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},                                                                     \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT},                                                                     \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", ALARM_TYPE_ID},                                                         \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},                                                             \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", COMPONENT(IETF_HARDWARE_RESOURCE_KEY)}, \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY},                                                                   \
-                              }))
+#define REQUIRE_ALARM_RPC(ALARM_TYPE_ID, IETF_HARDWARE_RESOURCE_KEY, SEVERITY, TEXT) \
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{ \
+        {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"}, \
+        {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT}, \
+        {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", ALARM_TYPE_ID}, \
+        {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""}, \
+        {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", COMPONENT(IETF_HARDWARE_RESOURCE_KEY)}, \
+        {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY}, \
+    }))
 
 TEST_CASE("IETF Hardware with sysrepo")
 {
@@ -168,12 +172,17 @@ TEST_CASE("IETF Hardware with sysrepo")
     auto ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
     ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:temperature-cpu", "ne", sysfsTempCpu, 1));
-    ietfHardware->registerDataReader(SysfsValue<SensorType::Power>("ne:power", "ne", sysfsPower, 1, Thresholds<int64_t>{
-                                                                                                        .criticalLow = OneThreshold<int64_t>{8'000'000, 500'000},
-                                                                                                        .warningLow = OneThreshold<int64_t>{10'000'000, 500'000},
-                                                                                                        .warningHigh = OneThreshold<int64_t>{20'000'000, 500'000},
-                                                                                                        .criticalHigh = OneThreshold<int64_t>{22'000'000, 500'000},
-                                                                                                    }));
+    ietfHardware->registerDataReader(SysfsValue<SensorType::Power>(
+        "ne:power",
+        "ne",
+        sysfsPower,
+        1,
+        Thresholds<int64_t>{
+            .criticalLow = OneThreshold<int64_t>{8'000'000, 500'000},
+            .warningLow = OneThreshold<int64_t>{10'000'000, 500'000},
+            .warningHigh = OneThreshold<int64_t>{20'000'000, 500'000},
+            .criticalHigh = OneThreshold<int64_t>{22'000'000, 500'000},
+        }));
 
     /* Some data readers (like our PSU reader, see the FspYhPsu test) may set oper-state to enabled/disabled depending on whether the device is present and Some
      * data might not even be pushed (e.g. the child sensors).

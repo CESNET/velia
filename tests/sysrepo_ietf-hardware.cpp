@@ -62,15 +62,15 @@ struct AlarmEvent {
 
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
 
-#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                                                                 \
-    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                    \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                                                           \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                                                            \
+#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                            \
+    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                                \
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                      \
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                       \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
                                          }))
 
-#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                                                              \
-    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                    \
+#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                         \
+    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                                \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
                                          }))
 
@@ -102,14 +102,14 @@ void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const
     dsChange.change(changes);
 }
 
-#define REQUIRE_ALARM_RPC(ALARM_TYPE_ID, IETF_HARDWARE_RESOURCE_KEY, SEVERITY, TEXT)                                                                                    \
-    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{                                                                                                 \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},                                                                     \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT},                                                                     \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", ALARM_TYPE_ID},                                                         \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},                                                             \
+#define REQUIRE_ALARM_RPC(ALARM_TYPE_ID, IETF_HARDWARE_RESOURCE_KEY, SEVERITY, TEXT)                                               \
+    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{                                                            \
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},                                \
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT},                                \
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", ALARM_TYPE_ID},                    \
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},                        \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", COMPONENT(IETF_HARDWARE_RESOURCE_KEY)}, \
-                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY},                                                                   \
+                                  {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY},                              \
                               }))
 
 TEST_CASE("IETF Hardware with sysrepo")

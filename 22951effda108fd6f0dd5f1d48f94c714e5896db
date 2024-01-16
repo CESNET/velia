@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c319ae47_c42eca04",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-16T15:40:13Z",
+      "side": 1,
+      "message": "I still dislike this format; I feel like I\u0027m forced by a tool to hand-maintain my right alignment. Not great at all.",
+      "revId": "22951effda108fd6f0dd5f1d48f94c714e5896db",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

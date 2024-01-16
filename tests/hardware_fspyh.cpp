@@ -91,16 +91,21 @@ TEST_CASE("FspYhPsu")
         {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
         {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "disabled"}};
 
+    const velia::ietf_hardware::SideLoadedAlarm alarmUnplugged = {"velia-alarms:sensor-missing-alarm", "/ietf-hardware:hardware/component[name='ne:psu']", "warning", "PSU is unplugged."};
+    const velia::ietf_hardware::SideLoadedAlarm alarmPlugged = {"velia-alarms:sensor-missing-alarm", "/ietf-hardware:hardware/component[name='ne:psu']", "cleared", "PSU is unplugged."};
+
     std::set<std::string> expectedThresholdsKeys;
 
     for (auto i : {0, 1, 2, 3, 4}) {
         std::this_thread::sleep_for(std::chrono::seconds(4));
         velia::ietf_hardware::DataTree expected;
+        std::set<velia::ietf_hardware::SideLoadedAlarm> expectedAlarms;
 
         switch (i) {
         case 0:
             expected = expectedDisabled;
             expectedThresholdsKeys.clear();
+            expectedAlarms = {alarmUnplugged};
             break;
         case 1:
             expected = {
@@ -215,10 +220,12 @@ TEST_CASE("FspYhPsu")
                 "/ietf-hardware:hardware/component[name='ne:psu:voltage-5Vsb']/sensor-data/value",
                 "/ietf-hardware:hardware/component[name='ne:psu:voltage-in']/sensor-data/value",
             };
+            expectedAlarms = {alarmPlugged};
             break;
         case 2:
             expected = expectedDisabled;
             expectedThresholdsKeys.clear();
+            expectedAlarms = {alarmUnplugged};
             break;
         case 3:
             // Here I simulate read failure by a file from the hwmon directory. This happens when the user wants data from
@@ -226,21 +233,25 @@ TEST_CASE("FspYhPsu")
             fakeI2c->removeHwmonFile("temp1_input");
             expected = expectedDisabled;
             expectedThresholdsKeys.clear();
+            expectedAlarms = {alarmUnplugged};
             break;
         case 4:
             expected = expectedDisabled;
             expectedThresholdsKeys.clear();
+            expectedAlarms = {alarmUnplugged};
             break;
         }
 
-        auto res = psu->readValues();
+        auto [data, thresholds, sideLoadedAlarms] = psu->readValues();
 
         CAPTURE((int)counter);
-        REQUIRE(res.data == expected);
+        REQUIRE(data == expected);
 
         std::set<std::string> thresholdsKeys;
-        std::transform(res.thresholds.begin(), res.thresholds.end(), std::inserter(thresholdsKeys, thresholdsKeys.begin()), [](const auto& kv) { return kv.first; });
+        std::transform(thresholds.begin(), thresholds.end(), std::inserter(thresholdsKeys, thresholdsKeys.begin()), [](const auto& kv) { return kv.first; });
         REQUIRE(thresholdsKeys == expectedThresholdsKeys);
+
+        REQUIRE(sideLoadedAlarms == expectedAlarms);
 
         counter++;
     }

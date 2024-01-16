@@ -186,6 +186,7 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         velia::ietf_hardware::SensorPollData operator()()
         {
+            velia::ietf_hardware::SideLoadedAlarm alarm;
             velia::ietf_hardware::ThresholdsBySensorPath thr;
             velia::ietf_hardware::DataTree res = {
                 {COMPONENT("ne:psu") "/class", "iana-hardware:power-supply"},
@@ -210,9 +211,13 @@ TEST_CASE("IETF Hardware with sysrepo")
                     .warningHigh = OneThreshold<int64_t>{15000, 2000},
                     .criticalHigh = std::nullopt,
                 };
+
+                alarm = {"velia-alarms:sensor-missing-alarm", COMPONENT("ne:psu"), "cleared", "PSU missing."};
+            } else {
+                alarm = {"velia-alarms:sensor-missing-alarm", COMPONENT("ne:psu"), "warning", "PSU missing."};
             }
 
-            return {res, thr};
+            return {res, thr, {alarm}};
         }
     };
     ietfHardware->registerDataReader(PsuDataReader{psuActive, psuSensorValue});
@@ -322,6 +327,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:temperature-cpu") "/sensor-data/value", "222"},
                                        }))
             .IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "warning", "PSU missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "cleared", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "warning", "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
         REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
@@ -346,6 +352,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "cleared", "PSU missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "cleared", "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:psu:child", "warning", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
         psuSensorValue = 50000;
@@ -366,6 +373,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
                                        }))
             .IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "warning", "PSU missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "warning", "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:psu:child", "cleared", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
         psuActive = false;
@@ -485,6 +493,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:temperature-cpu") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "warning", "PSU missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
 
         auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSess, ietfHardware, 150ms);
@@ -511,6 +520,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "cleared", "PSU missing.").IN_SEQUENCE(seq1);
         psuActive = true;
         waitForCompletionAndBitMore(seq1);
 

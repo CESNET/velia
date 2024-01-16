@@ -93,11 +93,12 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         DataTree prevValues;
         std::set<std::string> seenSensors;
         std::map<std::string, State> thresholdsStates;
+        std::set<std::pair<std::string, std::string>> activeSideLoadedAlarms;
 
         while (!m_quit) {
             m_log->trace("IetfHardware poll");
 
-            auto [hwStateValues, thresholds, activeSensors] = m_hwState->process();
+            auto [hwStateValues, thresholds, activeSensors, sideLoadedAlarms] = m_hwState->process();
             std::set<std::string> deletedComponents;
 
             for (const auto& sensorXPath : activeSensors) {
@@ -125,6 +126,18 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             std::copy(deletedComponents.begin(), deletedComponents.end(), std::back_inserter(discards));
 
             utils::valuesPush(hwStateValues, {}, discards, m_session, ::sysrepo::Datastore::Operational);
+
+            /* Publish sideloaded alarms */
+            for (const auto& [alarm, resource, severity, text] : sideLoadedAlarms) {
+                bool isActive = activeSideLoadedAlarms.contains({alarm, resource});
+                if (isActive && severity == "cleared") {
+                    utils::createOrUpdateAlarm(m_session, alarm, std::nullopt, resource, "cleared", text);
+                    activeSideLoadedAlarms.erase({alarm, resource});
+                } else if (!isActive && severity != "cleared") {
+                    utils::createOrUpdateAlarm(m_session, alarm, std::nullopt, resource, severity, text);
+                    activeSideLoadedAlarms.insert({alarm, resource});
+                }
+            }
 
             /* Look for nonoperational sensors to set alarms */
             for (const auto& [leaf, value] : hwStateValues) {

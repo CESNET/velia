@@ -55,16 +55,19 @@ protected:
     std::vector<std::function<SensorPollData()>> m_properties;
 
     virtual void createPower() = 0;
+    virtual std::string missingAlarmDescription() const = 0;
 };
 
 struct FspYhPsu : public FspYh {
     using FspYh::FspYh;
     void createPower() override;
+    std::string missingAlarmDescription() const override;
 };
 
 struct FspYhPdu : public FspYh {
     using FspYh::FspYh;
     void createPower() override;
+    std::string missingAlarmDescription() const override;
 };
 
 }

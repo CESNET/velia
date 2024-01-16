@@ -186,6 +186,7 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         velia::ietf_hardware::SensorPollData operator()()
         {
+            std::tuple<std::string, std::string, std::string, std::string> alarm;
             velia::ietf_hardware::ThresholdsBySensorPath thr;
             velia::ietf_hardware::DataTree res = {
                 {COMPONENT("ne:psu") "/class", "iana-hardware:power-supply"},
@@ -210,9 +211,12 @@ TEST_CASE("IETF Hardware with sysrepo")
                     .warningHigh = OneThreshold<int64_t>{15000, 2000},
                     .criticalHigh = std::nullopt,
                 };
+                alarm = std::make_tuple("velia-alarms:sensor-missingxsdsd", COMPONENT("ne:psu"), "cleared", "PSU missing.");
+            } else {
+                alarm = std::make_tuple("velia-alarms:sensor-missing-alarm", COMPONENT("ne:psu"), "warning", "PSU missing.");
             }
 
-            return {res, thr};
+            return {res, thr, {alarm}};
         }
     };
     ietfHardware->registerDataReader(PsuDataReader{psuActive, psuSensorValue});

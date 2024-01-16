@@ -28,11 +28,13 @@ struct HardwareInfo {
     DataTree dataTree;
     std::map<std::string, State> updatedTresholdCrossing;
     std::set<std::string> activeSensors;
+    std::set<std::tuple<std::string, std::string, std::string, std::string>> sideLoadedAlarms;
 };
 
 struct SensorPollData {
     DataTree data;
     ThresholdsBySensorPath thresholds;
+    std::set<std::tuple<std::string, std::string, std::string, std::string>> sideLoadedAlarms;
     void merge(SensorPollData&& other);
 };
 

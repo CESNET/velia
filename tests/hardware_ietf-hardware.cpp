@@ -12,7 +12,11 @@ using namespace std::literals;
 
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
 
-#define THRESHOLD_STATE(RESOURCE, STATE) {COMPONENT(RESOURCE) "/sensor-data/value", STATE}
+#define THRESHOLD_STATE(RESOURCE, STATE) \
+    {                                    \
+        COMPONENT(RESOURCE)              \
+        "/sensor-data/value", STATE      \
+    }
 
 using velia::ietf_hardware::State;
 
@@ -74,7 +78,7 @@ TEST_CASE("HardwareState")
                                                                         .criticalLow = OneThreshold<int64_t>{300, 200},
                                                                         .warningLow = OneThreshold<int64_t>{600, 200},
                                                                         .warningHigh = std::nullopt,
-                                                                        .criticalHigh =std::nullopt,
+                                                                        .criticalHigh = std::nullopt,
                                                                     }));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageAC>("ne:ctrl:voltage-in", "ne:ctrl", sysfsVoltageAc, 1));
@@ -97,6 +101,7 @@ TEST_CASE("HardwareState")
 
         velia::ietf_hardware::SensorPollData operator()()
         {
+            std::tuple<std::string, std::string, std::string, std::string> alarm;
             velia::ietf_hardware::ThresholdsBySensorPath thr;
             velia::ietf_hardware::DataTree res = {
                 {COMPONENT("ne:psu") "/class", "iana-hardware:power-supply"},
@@ -121,9 +126,13 @@ TEST_CASE("HardwareState")
                     .warningHigh = OneThreshold<int64_t>{15000, 2000},
                     .criticalHigh = std::nullopt,
                 };
+
+                alarm = std::make_tuple("velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing.");
+            } else {
+                alarm = std::make_tuple("velia-alarms:sensor-missing", COMPONENT("ne:psu"), "warning", "PSU missing.");
             }
 
-            return {res, thr};
+            return {res, thr, {alarm}};
         }
     };
     bool psuActive = true;
@@ -260,7 +269,7 @@ TEST_CASE("HardwareState")
     };
 
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
@@ -289,12 +298,13 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                     COMPONENT("ne:psu:child") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<std::tuple<std::string, std::string, std::string, std::string>>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."}});
     }
 
     fanValues[1] = 500;
     expected[COMPONENT("ne:fans:fan2:rpm") "/sensor-data/value"] = "500";
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
@@ -313,6 +323,7 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                     COMPONENT("ne:psu:child") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<std::tuple<std::string, std::string, std::string, std::string>>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."}});
     }
 
     psuActive = false;
@@ -332,7 +343,7 @@ TEST_CASE("HardwareState")
     expected[COMPONENT("ne:fans:fan3:rpm") "/sensor-data/value"] = "5000";
 
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
@@ -352,6 +363,7 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan3:rpm") "/sensor-data/value",
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<std::tuple<std::string, std::string, std::string, std::string>>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "warning", "PSU missing."}});
     }
 
     psuActive = true;
@@ -368,7 +380,7 @@ TEST_CASE("HardwareState")
     expected[COMPONENT("ne:psu:child") "/sensor-data/value-type"] = "volts-DC";
 
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
@@ -388,6 +400,7 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                     COMPONENT("ne:psu:child") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<std::tuple<std::string, std::string, std::string, std::string>>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."}});
     }
 
 
@@ -399,7 +412,7 @@ TEST_CASE("HardwareState")
     expected[COMPONENT("ne:fans:fan2:rpm") "/sensor-data/oper-status"] = "nonoperational";
 
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
@@ -420,5 +433,6 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                     COMPONENT("ne:psu:child") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<std::tuple<std::string, std::string, std::string, std::string>>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."}});
     }
 }

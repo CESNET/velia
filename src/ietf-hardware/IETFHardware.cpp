@@ -78,6 +78,7 @@ void SensorPollData::merge(SensorPollData&& other)
 {
     data.merge(other.data);
     thresholds.merge(other.thresholds);
+    sideLoadedAlarms.merge(other.sideLoadedAlarms);
 }
 
 IETFHardware::IETFHardware()
@@ -131,7 +132,7 @@ HardwareInfo IETFHardware::process()
 
     pollData.data[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
 
-    return {pollData.data, alarms, activeSensors};
+    return {pollData.data, alarms, activeSensors, pollData.sideLoadedAlarms};
 }
 
 void IETFHardware::registerDataReader(const IETFHardware::DataReader& callable)
@@ -165,7 +166,7 @@ StaticData::StaticData(std::string componentName, std::optional<std::string> par
                  dataTree);
 }
 
-SensorPollData StaticData::operator()() const { return {m_staticData, {}}; }
+SensorPollData StaticData::operator()() const { return {m_staticData, {}, {}}; }
 
 Fans::Fans(std::string componentName, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount, Thresholds<int64_t> thresholds)
     : DataReader(std::move(componentName), std::move(parent))
@@ -218,7 +219,7 @@ SensorPollData Fans::operator()() const
         thr.emplace(xpathForComponent(m_componentName + ":fan" + std::to_string(i) + ":rpm") + "sensor-data/value", m_thresholds);
     }
 
-    return {data, thr};
+    return {data, thr, {}};
 }
 
 std::string getSysfsFilename(const SensorType type, int sysfsChannelNr)
@@ -297,7 +298,7 @@ SensorPollData SysfsValue<TYPE>::operator()() const
     int64_t sensorValue = m_hwmon->attribute(m_sysfsFile);
     addSensorValue(m_log, res, m_componentName, sensorValue);
 
-    return {res, ThresholdsBySensorPath{{xpathForComponent(m_componentName) + "sensor-data/value", m_thresholds}}};
+    return {res, ThresholdsBySensorPath{{xpathForComponent(m_componentName) + "sensor-data/value", m_thresholds}}, {}};
 }
 
 template struct SysfsValue<SensorType::Current>;
@@ -350,7 +351,7 @@ SensorPollData EMMC::operator()() const
     auto emmcAttrs = m_emmc->attributes();
     addSensorValue(m_log, data, m_componentName + ":lifetime", emmcAttrs.at("life_time"));
 
-    return {data, ThresholdsBySensorPath{{xpathForComponent(m_componentName + ":lifetime") + "sensor-data/value", m_thresholds}}};
+    return {data, ThresholdsBySensorPath{{xpathForComponent(m_componentName + ":lifetime") + "sensor-data/value", m_thresholds}}, {}};
 }
 }
 }

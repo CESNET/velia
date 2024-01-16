@@ -97,6 +97,7 @@ TEST_CASE("HardwareState")
 
         velia::ietf_hardware::SensorPollData operator()()
         {
+            velia::ietf_hardware::SideLoadedAlarm alarm;
             velia::ietf_hardware::ThresholdsBySensorPath thr;
             velia::ietf_hardware::DataTree res = {
                 {COMPONENT("ne:psu") "/class", "iana-hardware:power-supply"},
@@ -121,9 +122,13 @@ TEST_CASE("HardwareState")
                     .warningHigh = OneThreshold<int64_t>{15000, 2000},
                     .criticalHigh = std::nullopt,
                 };
+
+                alarm = {"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."};
+            } else {
+                alarm = {"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "critical", "PSU missing."};
             }
 
-            return {res, thr};
+            return {res, thr, {alarm}};
         }
     };
     bool psuActive = true;
@@ -260,7 +265,7 @@ TEST_CASE("HardwareState")
     };
 
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
@@ -289,12 +294,13 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                     COMPONENT("ne:psu:child") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<velia::ietf_hardware::SideLoadedAlarm>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."}});
     }
 
     fanValues[1] = 500;
     expected[COMPONENT("ne:fans:fan2:rpm") "/sensor-data/value"] = "500";
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
         REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
@@ -313,6 +319,7 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                     COMPONENT("ne:psu:child") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<velia::ietf_hardware::SideLoadedAlarm>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."}});
     }
 
     psuActive = false;
@@ -332,7 +339,7 @@ TEST_CASE("HardwareState")
     expected[COMPONENT("ne:fans:fan3:rpm") "/sensor-data/value"] = "5000";
 
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
@@ -352,6 +359,7 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan3:rpm") "/sensor-data/value",
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<velia::ietf_hardware::SideLoadedAlarm>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "critical", "PSU missing."}});
     }
 
     psuActive = true;
@@ -368,7 +376,7 @@ TEST_CASE("HardwareState")
     expected[COMPONENT("ne:psu:child") "/sensor-data/value-type"] = "volts-DC";
 
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
@@ -388,6 +396,7 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                     COMPONENT("ne:psu:child") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<velia::ietf_hardware::SideLoadedAlarm>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."}});
     }
 
 
@@ -399,7 +408,7 @@ TEST_CASE("HardwareState")
     expected[COMPONENT("ne:fans:fan2:rpm") "/sensor-data/oper-status"] = "nonoperational";
 
     {
-        auto [data, alarms, activeSensors] = ietfHardware->process();
+        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
@@ -420,5 +429,6 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value",
                     COMPONENT("ne:psu:child") "/sensor-data/value",
                 });
+        REQUIRE(sideLoadedAlarms == std::set<velia::ietf_hardware::SideLoadedAlarm>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."}});
     }
 }

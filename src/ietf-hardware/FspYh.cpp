@@ -11,6 +11,11 @@
 #include "utils/UniqueResource.h"
 #include "utils/log.h"
 
+namespace {
+const auto ALARM_SENSOR_MISSING = "velia-alarms:sensor-missing-alarm";
+const auto ALARM_SENSOR_MISSING_SEVERITY = "critical";
+}
+
 namespace velia::ietf_hardware {
 
 TransientI2C::TransientI2C(const uint8_t bus, const uint8_t address, const std::string& driverName)
@@ -115,13 +120,16 @@ FspYh::~FspYh()
 
 SensorPollData FspYh::readValues()
 {
+    auto componentXPath = "/ietf-hardware:hardware/component[name='"s + m_namePrefix + "']";
+
     std::unique_lock lock(m_mtx);
 
     SensorPollData res;
     res.data = m_staticData;
 
     if (m_properties.empty()) {
-        res.data["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
+        res.data[componentXPath + "/state/oper-state"] = "disabled";
+        res.sideLoadedAlarms.insert({ALARM_SENSOR_MISSING, componentXPath, ALARM_SENSOR_MISSING_SEVERITY, missingAlarmDescription()});
         return res;
     }
 
@@ -137,6 +145,7 @@ SensorPollData FspYh::readValues()
             res.data = m_staticData;
             res.data["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
             res.thresholds.clear();
+            res.sideLoadedAlarms.insert({ALARM_SENSOR_MISSING, componentXPath, ALARM_SENSOR_MISSING_SEVERITY, missingAlarmDescription()});
 
             lock.unlock();
             m_cond.notify_all();
@@ -145,6 +154,7 @@ SensorPollData FspYh::readValues()
         }
     }
 
+    res.sideLoadedAlarms.insert({ALARM_SENSOR_MISSING, componentXPath, "cleared", missingAlarmDescription()});
     return res;
 }
 
@@ -226,6 +236,11 @@ void FspYhPsu::createPower()
                                                          .warningHigh = OneThreshold<int64_t>{5300, 50},
                                                          .criticalHigh = OneThreshold<int64_t>{5400, 50},
                                                      }));
+}
+
+std::string FspYhPsu::missingAlarmDescription() const
+{
+    return "PSU is unplugged.";
 }
 
 void FspYhPdu::createPower()
@@ -316,5 +331,10 @@ void FspYhPdu::createPower()
                                                      }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-3V3", m_namePrefix, m_hwmon, 3));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-3V3", m_namePrefix, m_hwmon, 3));
+}
+
+std::string FspYhPdu::missingAlarmDescription() const
+{
+    return "I2C read failure for PDU. Could not get hardware sensor details.";
 }
 }

@@ -24,15 +24,26 @@ namespace velia::ietf_hardware {
 using DataTree = std::map<std::string, std::string>;
 using ThresholdsBySensorPath = std::map<std::string, Thresholds<int64_t>>;
 
+struct SideLoadedAlarm {
+    std::string alarmTypeId;
+    std::string resource;
+    std::string severity;
+    std::string text;
+
+    auto operator<=>(const SideLoadedAlarm&) const = default;
+};
+
 struct HardwareInfo {
     DataTree dataTree;
     std::map<std::string, State> updatedTresholdCrossing;
     std::set<std::string> activeSensors;
+    std::set<SideLoadedAlarm> sideLoadedAlarms;
 };
 
 struct SensorPollData {
     DataTree data;
     ThresholdsBySensorPath thresholds;
+    std::set<SideLoadedAlarm> sideLoadedAlarms;
     void merge(SensorPollData&& other);
 };
 

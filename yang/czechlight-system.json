@@ -1,0 +1,21 @@
+{
+  "ietf-netconf-acm:nacm": {
+    "rule-list": [
+      {
+        "name": "Authentication details of current user",
+        "group": [
+          "*"
+        ],
+        "rule": [
+          {
+            "name": "Allow executing actions of current user",
+            "access-operations": "exec",
+            "module-name": "czechlight-system",
+            "action": "permit",
+            "path": "/czechlight-system:authentication/users[name=$USER]"
+          }
+        ]
+      }
+    ]
+  }
+}

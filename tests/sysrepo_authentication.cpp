@@ -6,6 +6,7 @@
 */
 
 #include "trompeloeil_doctest.h"
+#include <sysrepo-cpp/utils/exception.hpp>
 #include "fs-helpers/FileInjector.h"
 #include "fs-helpers/utils.h"
 #include "mock/system.h"
@@ -23,6 +24,7 @@ using namespace std::string_literals;
 TEST_CASE("Authentication")
 {
     FakeAuthentication mock;
+    trompeloeil::sequence seq1;
     TEST_INIT_LOGS;
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
@@ -212,4 +214,69 @@ TEST_CASE("Authentication")
         REQUIRE(velia::utils::readFileToString(fileToCheck) == expectedContents);
     }
 
+    SECTION("NACM")
+    {
+        std::map<std::string, std::string> input;
+        const std::string prefix = "/czechlight-system:authentication/users[name='ci']";
+
+        auto sub = srSess.initNacm();
+
+        srSess.switchDatastore(sysrepo::Datastore::Running);
+        srSess.setItem("/ietf-netconf-acm:nacm/groups/group[name='users']/user-name[.='ci']", std::nullopt);
+        srSess.setItem("/ietf-netconf-acm:nacm/groups/group[name='tests']/user-name[.='test']", std::nullopt);
+        srSess.applyChanges();
+
+        FileInjector ciKeys(testDir / "authorized_keys/ci", std::filesystem::perms::owner_read | std::filesystem::perms::owner_write, "ssh-rsa ci1 comment\n"
+                                                                                                                                      "ssh-rsa ci2 comment\n");
+
+        SECTION("current users auth")
+        {
+            std::map<std::string, std::string> result;
+            client.setNacmUser("ci");
+
+            SECTION("change password")
+            {
+                input = {{"password-cleartext", "blah"}};
+                REQUIRE_CALL(mock, changePassword("ci", "blah", etc_shadow)).IN_SEQUENCE(seq1);
+                result = rpcFromSysrepo(client, prefix + "/change-password", input);
+                waitForCompletionAndBitMore(seq1);
+            }
+
+            SECTION("add key")
+            {
+                input = {{"key", "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdKwJwhSfuBeve5UfVHm0cx/3Jk81Z5a/iNZadjymwl cement"}};
+                result = rpcFromSysrepo(client, prefix + "/add-authorized-key", input);
+            }
+
+            SECTION("remove key")
+            {
+                result = rpcFromSysrepo(client, prefix + "/authorized-keys[index='0']/remove", {});
+            }
+
+            std::map<std::string, std::string> expected = {{"/result", "success"}};
+            REQUIRE(result == expected);
+        }
+
+        SECTION("different user's auth")
+        {
+            client.setNacmUser("test");
+
+            SECTION("change password")
+            {
+                input = {{"password-cleartext", "blah"}};
+                REQUIRE_THROWS_WITH_AS(rpcFromSysrepo(client, prefix + "/change-password", input), "Couldn't send RPC: SR_ERR_UNAUTHORIZED\n NACM access denied by \"change-password\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/change-password: Executing the operation is denied because \"test\" NACM authorization failed.", sysrepo::ErrorWithCode);
+            }
+
+            SECTION("add key")
+            {
+                input = {{"key", "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdKwJwhSfuBeve5UfVHm0cx/3Jk81Z5a/iNZadjymwl cement"}};
+                REQUIRE_THROWS_WITH_AS(rpcFromSysrepo(client, prefix + "/add-authorized-key", input), "Couldn't send RPC: SR_ERR_UNAUTHORIZED\n NACM access denied by \"add-authorized-key\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/add-authorized-key: Executing the operation is denied because \"test\" NACM authorization failed.", sysrepo::ErrorWithCode);
+            }
+
+            SECTION("remove key")
+            {
+                REQUIRE_THROWS_WITH_AS(rpcFromSysrepo(client, prefix + "/authorized-keys[index='0']/remove", {}), "Couldn't send RPC: SR_ERR_UNAUTHORIZED\n NACM access denied by \"remove\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/authorized-keys[index='0']/remove: Executing the operation is denied because \"test\" NACM authorization failed.", sysrepo::ErrorWithCode);
+            }
+        }
+    }
 }

@@ -69,39 +69,36 @@ TEST_CASE("Authentication")
         REQUIRE(data == expected);
     }
 
-    SECTION("RPCs/actions")
+    SECTION("Password changes")
     {
         std::string rpcPath;
         std::map<std::string, std::string> input;
         std::map<std::string, std::string> expected;
         std::unique_ptr<trompeloeil::expectation> expectation;
 
-        SECTION("change password")
+        SECTION("changePassword is successful")
         {
-            SECTION("changePassword is successful")
-            {
-                rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
-                expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow));
-                expected = {
-                    {"/result", "success"}
-                };
-                input = {
-                    {"password-cleartext", "new-password"}
-                };
-            }
+            rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
+            expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow));
+            expected = {
+                {"/result", "success"}
+            };
+            input = {
+                {"password-cleartext", "new-password"}
+            };
+        }
 
-            SECTION("changePassword throws")
-            {
-                rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
-                expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow)).THROW(std::runtime_error("Task failed succesfully."));
-                expected = {
-                    {"/result", "failure"},
-                    {"/message", "Task failed succesfully."}
-                };
-                input = {
-                    {"password-cleartext", "new-password"}
-                };
-            }
+        SECTION("changePassword throws")
+        {
+            rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
+            expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow)).THROW(std::runtime_error("Task failed succesfully."));
+            expected = {
+                {"/result", "failure"},
+                {"/message", "Task failed succesfully."}
+            };
+            input = {
+                {"password-cleartext", "new-password"}
+            };
         }
 
         auto output = rpcFromSysrepo(client, rpcPath, input);

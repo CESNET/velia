@@ -234,27 +234,46 @@ TEST_CASE("Authentication")
             std::map<std::string, std::string> result;
             client.setNacmUser("ci");
 
-            SECTION("change password")
+            SECTION("actions")
             {
-                input = {{"password-cleartext", "blah"}};
-                REQUIRE_CALL(mock, changePassword("ci", "blah", etc_shadow)).IN_SEQUENCE(seq1);
-                result = rpcFromSysrepo(client, prefix + "/change-password", input);
-                waitForCompletionAndBitMore(seq1);
+                SECTION("change password")
+                {
+                    input = {{"password-cleartext", "blah"}};
+                    REQUIRE_CALL(mock, changePassword("ci", "blah", etc_shadow)).IN_SEQUENCE(seq1);
+                    result = rpcFromSysrepo(client, prefix + "/change-password", input);
+                    waitForCompletionAndBitMore(seq1);
+                }
+
+                SECTION("add key")
+                {
+                    input = {{"key", "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdKwJwhSfuBeve5UfVHm0cx/3Jk81Z5a/iNZadjymwl cement"}};
+                    result = rpcFromSysrepo(client, prefix + "/add-authorized-key", input);
+                }
+
+                SECTION("remove key")
+                {
+                    result = rpcFromSysrepo(client, prefix + "/authorized-keys[index='0']/remove", {});
+                }
+
+                std::map<std::string, std::string> expected = {{"/result", "success"}};
+                REQUIRE(result == expected);
             }
 
-            SECTION("add key")
+            SECTION("data")
             {
-                input = {{"key", "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdKwJwhSfuBeve5UfVHm0cx/3Jk81Z5a/iNZadjymwl cement"}};
-                result = rpcFromSysrepo(client, prefix + "/add-authorized-key", input);
+                auto data = dataFromSysrepo(client, prefix);
+                REQUIRE(data.contains("/password-last-change"));
+                data.erase("/password-last-change");
+                REQUIRE(data == std::map<std::string, std::string>{
+                            {"/authorized-keys[index='0']", ""},
+                            {"/authorized-keys[index='0']/index", "0"},
+                            {"/authorized-keys[index='0']/public-key", "ssh-rsa ci1 comment"},
+                            {"/authorized-keys[index='1']", ""},
+                            {"/authorized-keys[index='1']/index", "1"},
+                            {"/authorized-keys[index='1']/public-key", "ssh-rsa ci2 comment"},
+                            {"/name", "ci"},
+                        });
             }
-
-            SECTION("remove key")
-            {
-                result = rpcFromSysrepo(client, prefix + "/authorized-keys[index='0']/remove", {});
-            }
-
-            std::map<std::string, std::string> expected = {{"/result", "success"}};
-            REQUIRE(result == expected);
         }
 
         SECTION("different user's auth")
@@ -288,6 +307,11 @@ TEST_CASE("Authentication")
                                        " NACM access denied by \"remove\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n"
                                        " NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/authorized-keys[index='0']/remove: Executing the operation is denied because \"test\" NACM authorization failed.",
                                        sysrepo::ErrorWithCode);
+            }
+
+            SECTION("data")
+            {
+                REQUIRE(dataFromSysrepo(client, prefix) == std::map<std::string, std::string>{{"/name", "ci"}});
             }
         }
     }

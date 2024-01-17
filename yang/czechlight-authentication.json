@@ -8,8 +8,8 @@
         ],
         "rule": [
           {
-            "name": "Allow executing actions of current user",
-            "access-operations": "exec",
+            "name": "Allow reading and executing actions in the context of the current user",
+            "access-operations": "exec read",
             "module-name": "czechlight-system",
             "action": "permit",
             "path": "/czechlight-system:authentication/users[name=$USER]"

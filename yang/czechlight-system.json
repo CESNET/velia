@@ -1,0 +1,35 @@
+{
+  "ietf-netconf-acm:nacm": {
+    "rule-list": [
+      {
+        "name": "Authentication details of current user",
+        "group": [
+          "*"
+        ],
+        "rule": [
+          {
+            "name": "Change password",
+            "access-operations": "exec",
+            "module-name": "czechlight-system",
+            "action": "permit",
+            "path": "/czechlight-system:authentication/users[name=$USER]/change-password"
+          },
+          {
+            "name": "Add a pubkey",
+            "access-operations": "exec",
+            "module-name": "czechlight-system",
+            "action": "permit",
+            "path": "/czechlight-system:authentication/users[name=$USER]/add-authorized-key"
+          },
+          {
+            "name": "Remove a pubkey",
+            "access-operations": "exec",
+            "module-name": "czechlight-system",
+            "action": "permit",
+            "path": "/czechlight-system:authentication/users[name=$USER]/authorized-keys/remove"
+          }
+        ]
+      }
+    ]
+  }
+}

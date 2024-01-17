@@ -24,19 +24,18 @@ TEST_CASE("Authentication")
 {
     FakeAuthentication mock;
     TEST_INIT_LOGS;
-    auto srConn = sysrepo::Connection{};
+    TEST_SYSREPO_INIT;
+    TEST_SYSREPO_INIT_CLIENT;
     std::filesystem::path testDir = CMAKE_CURRENT_BINARY_DIR "/tests/authentication"s;
     removeDirectoryTreeIfExists(testDir);
     std::filesystem::create_directory(testDir);
     std::filesystem::create_directory(testDir / "authorized_keys");
-    auto srSess = srConn.sessionStart();
     std::string authorized_keys_format = testDir / "authorized_keys/{USER}";
     std::string etc_passwd = testDir / "etc_passwd";
     std::string etc_shadow = testDir / "etc_shadow";
     velia::system::Authentication auth(srSess, etc_passwd, etc_shadow, authorized_keys_format, [&mock] (const auto& user, const auto& password, const auto& etc_shadow) { mock.changePassword(user, password, etc_shadow); });
 
-    auto test_srConn = sysrepo::Connection{};
-    auto test_srSess = test_srConn.sessionStart(sysrepo::Datastore::Operational);
+    client.switchDatastore(sysrepo::Datastore::Operational);
 
     FileInjector passwd(etc_passwd, std::filesystem::perms::owner_read,
         "root:x:0:0::/root:/bin/bash\n"
@@ -54,7 +53,7 @@ TEST_CASE("Authentication")
         FileInjector rootKeys(testDir / "authorized_keys/root", std::filesystem::perms::owner_read,
             "ssh-rsa SOME_KEY comment"
         );
-        auto data = dataFromSysrepo(test_srSess, "/czechlight-system:authentication/users");
+        auto data = dataFromSysrepo(client, "/czechlight-system:authentication/users");
         decltype(data) expected = {
             {"[name='ci']", ""},
             {"[name='ci']/name", "ci"},
@@ -105,7 +104,7 @@ TEST_CASE("Authentication")
             }
         }
 
-        auto output = rpcFromSysrepo(test_srSess, rpcPath, input);
+        auto output = rpcFromSysrepo(client, rpcPath, input);
         REQUIRE(output == expected);
     }
 
@@ -154,7 +153,7 @@ TEST_CASE("Authentication")
 
             fileToCheck = testDir / "authorized_keys/root";
 
-            auto result = rpcFromSysrepo(test_srSess, rpcPath, input);
+            auto result = rpcFromSysrepo(client, rpcPath, input);
             REQUIRE(result == expected);
         }
 
@@ -174,7 +173,7 @@ TEST_CASE("Authentication")
 
             fileToCheck = testDir / "authorized_keys/root";
 
-            auto result = rpcFromSysrepo(test_srSess, rpcPath, input);
+            auto result = rpcFromSysrepo(client, rpcPath, input);
             REQUIRE(result == expected);
         }
 
@@ -190,7 +189,7 @@ TEST_CASE("Authentication")
 
             fileToCheck = testDir / "authorized_keys/ci";
 
-            auto result = rpcFromSysrepo(test_srSess, rpcPath, input);
+            auto result = rpcFromSysrepo(client, rpcPath, input);
             REQUIRE(result == expected);
 
         }
@@ -208,7 +207,7 @@ TEST_CASE("Authentication")
 
             fileToCheck = testDir / "authorized_keys/root";
 
-            auto result = rpcFromSysrepo(test_srSess, rpcPath, input);
+            auto result = rpcFromSysrepo(client, rpcPath, input);
             REQUIRE(result == expected);
         }
 

@@ -178,10 +178,12 @@ module czechlight-system {
       }
 
       leaf password-last-change {
+        nacm:default-deny-all;
         type string;
       }
 
       list authorized-keys {
+        nacm:default-deny-all;
         key 'index';
         description "List of SSH keys which are recognized for this user";
 
@@ -195,7 +197,6 @@ module czechlight-system {
         }
 
         action remove {
-          nacm:default-deny-all;
           description "Remove the selected SSH authentication key of the selected user";
           output {
             uses authentication-rpc-result;

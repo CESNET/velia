@@ -60,20 +60,6 @@ struct AlarmEvent {
     MAKE_CONST_MOCK1(event, void(const std::map<std::string, std::string>&));
 };
 
-#define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
-
-#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                            \
-    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                                \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                      \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                       \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
-                                         }))
-
-#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                         \
-    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                                \
-                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
-                                         }))
-
 void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const std::set<std::string>& ignoredPaths)
 {
     ValueMap changes;
@@ -101,6 +87,21 @@ void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const
 
     dsChange.change(changes);
 }
+
+
+#define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
+
+#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                            \
+    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                                \
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                      \
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                       \
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
+                                         }))
+
+#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                         \
+    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                                \
+                                             {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
+                                         }))
 
 #define REQUIRE_ALARM_RPC(ALARM_TYPE_ID, IETF_HARDWARE_RESOURCE_KEY, SEVERITY, TEXT)                                               \
     REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{                                                            \

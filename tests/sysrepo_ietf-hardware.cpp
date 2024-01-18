@@ -88,6 +88,21 @@ void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const
     dsChange.change(changes);
 }
 
+struct AlarmInventory {
+    std::map<std::pair<std::string, std::string>, std::vector<std::string>> inventory;
+
+    void add(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::string& resource)
+    {
+        inventory[{alarmTypeId, alarmTypeQualifier}].push_back(resource);
+    }
+    bool contains(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::string& resource) const
+    {
+        if (auto it = inventory.find({alarmTypeId, alarmTypeQualifier}); it != inventory.end()) {
+            return std::find(it->second.begin(), it->second.end(), resource) != it->second.end();
+        }
+        return false;
+    }
+};
 
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
 
@@ -96,12 +111,13 @@ void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                      \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                       \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
-                                         }))
+                                         })).LR_SIDE_EFFECT(alarmInventory.add(ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE)))
 
 #define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                         \
     REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                                \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
-                                         }))
+                                         }))                                                                                                                                                             \
+        .LR_SIDE_EFFECT(alarmInventory.add(ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE)))
 
 #define REQUIRE_ALARM_RPC(ALARM_TYPE_ID, IETF_HARDWARE_RESOURCE_KEY, SEVERITY, TEXT)                                               \
     REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{                                                            \
@@ -111,7 +127,8 @@ void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},                        \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", COMPONENT(IETF_HARDWARE_RESOURCE_KEY)}, \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY},                              \
-                              }))
+                              }))                                                                                                  \
+        .LR_WITH(alarmInventory.contains(ALARM_TYPE_ID, "", COMPONENT(IETF_HARDWARE_RESOURCE_KEY)))
 
 TEST_CASE("IETF Hardware with sysrepo")
 {
@@ -130,6 +147,7 @@ TEST_CASE("IETF Hardware with sysrepo")
     DatastoreChange dsChangeHardware;
     DatastoreChange dsChangeAlarmInventory;
     AlarmEvent alarmEvents;
+    AlarmInventory alarmInventory;
 
     trompeloeil::sequence seq1;
 

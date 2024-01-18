@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27be34b7_7900fd09",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-18T10:02:03Z",
+      "side": 1,
+      "message": "I love it that no actual code changes were needed. YANG and NACM FTW, I guess :)",
+      "revId": "24c570a514627fc2f0e706107d863430acd5b010",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b057f503_3d8e8201",
+        "filename": "tests/sysrepo_authentication.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-18T10:02:03Z",
+      "side": 1,
+      "message": "❤️",
+      "range": {
+        "startLine": 247,
+        "startChar": 115,
+        "endLine": 247,
+        "endChar": 121
+      },
+      "revId": "24c570a514627fc2f0e706107d863430acd5b010",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ab09c2d_c09b47d0",
+        "filename": "tests/sysrepo_authentication.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-18T10:02:03Z",
+      "side": 1,
+      "message": "please wrap these (see sysrepo-cpp testsuite for a sample)",
+      "range": {
+        "startLine": 267,
+        "startChar": 138,
+        "endLine": 267,
+        "endChar": 141
+      },
+      "revId": "24c570a514627fc2f0e706107d863430acd5b010",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3e23b19_f3689937",
+        "filename": "yang/czechlight-system.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-18T10:02:03Z",
+      "side": 1,
+      "message": "nit: please rename this to `czechlight-system-authentication` (it might make our life easier in future when some changes are needed and future migrations in br2-external are added)",
+      "revId": "24c570a514627fc2f0e706107d863430acd5b010",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

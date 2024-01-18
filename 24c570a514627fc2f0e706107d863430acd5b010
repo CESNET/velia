@@ -64,6 +64,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9800c39_a5d08c94",
+        "filename": "tests/sysrepo_authentication.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-18T11:19:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ab09c2d_c09b47d0",
+      "range": {
+        "startLine": 267,
+        "startChar": 138,
+        "endLine": 267,
+        "endChar": 141
+      },
+      "revId": "24c570a514627fc2f0e706107d863430acd5b010",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d3e23b19_f3689937",
@@ -77,6 +101,24 @@
       "writtenOn": "2024-01-18T10:02:03Z",
       "side": 1,
       "message": "nit: please rename this to `czechlight-system-authentication` (it might make our life easier in future when some changes are needed and future migrations in br2-external are added)",
+      "revId": "24c570a514627fc2f0e706107d863430acd5b010",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4648d8ee_ad0ee7a8",
+        "filename": "yang/czechlight-system.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-18T11:19:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3e23b19_f3689937",
       "revId": "24c570a514627fc2f0e706107d863430acd5b010",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88b83bb5_7d2e19b2",
+        "filename": "src/ietf-hardware/FspYh.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-18T09:51:00Z",
+      "side": 1,
+      "message": "definitely a critical one; it\u0027s essentially a situation where the device cannot report anything about the power at all, so it\u0027s worth yelling as hard as one could",
+      "range": {
+        "startLine": 16,
+        "startChar": 44,
+        "endLine": 16,
+        "endChar": 51
+      },
+      "revId": "d5d3b2c6ed0c360ab40b5ea2bc4b347bbfc5a074",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

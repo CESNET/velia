@@ -121,6 +121,24 @@
       "parentUuid": "d3e23b19_f3689937",
       "revId": "24c570a514627fc2f0e706107d863430acd5b010",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a02b3ef_0c36faf0",
+        "filename": "yang/czechlight-system.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-18T11:36:26Z",
+      "side": 1,
+      "message": "ok, \"czechlight-authentication\" is also a great name :)",
+      "parentUuid": "4648d8ee_ad0ee7a8",
+      "revId": "24c570a514627fc2f0e706107d863430acd5b010",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

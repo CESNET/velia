@@ -6,6 +6,7 @@
 */
 
 #include "trompeloeil_doctest.h"
+#include <sysrepo-cpp/utils/exception.hpp>
 #include "fs-helpers/FileInjector.h"
 #include "fs-helpers/utils.h"
 #include "mock/system.h"
@@ -23,20 +24,20 @@ using namespace std::string_literals;
 TEST_CASE("Authentication")
 {
     FakeAuthentication mock;
+    trompeloeil::sequence seq1;
     TEST_INIT_LOGS;
-    auto srConn = sysrepo::Connection{};
+    TEST_SYSREPO_INIT;
+    TEST_SYSREPO_INIT_CLIENT;
     std::filesystem::path testDir = CMAKE_CURRENT_BINARY_DIR "/tests/authentication"s;
     removeDirectoryTreeIfExists(testDir);
     std::filesystem::create_directory(testDir);
     std::filesystem::create_directory(testDir / "authorized_keys");
-    auto srSess = srConn.sessionStart();
     std::string authorized_keys_format = testDir / "authorized_keys/{USER}";
     std::string etc_passwd = testDir / "etc_passwd";
     std::string etc_shadow = testDir / "etc_shadow";
     velia::system::Authentication auth(srSess, etc_passwd, etc_shadow, authorized_keys_format, [&mock] (const auto& user, const auto& password, const auto& etc_shadow) { mock.changePassword(user, password, etc_shadow); });
 
-    auto test_srConn = sysrepo::Connection{};
-    auto test_srSess = test_srConn.sessionStart(sysrepo::Datastore::Operational);
+    client.switchDatastore(sysrepo::Datastore::Operational);
 
     FileInjector passwd(etc_passwd, std::filesystem::perms::owner_read,
         "root:x:0:0::/root:/bin/bash\n"
@@ -54,7 +55,7 @@ TEST_CASE("Authentication")
         FileInjector rootKeys(testDir / "authorized_keys/root", std::filesystem::perms::owner_read,
             "ssh-rsa SOME_KEY comment"
         );
-        auto data = dataFromSysrepo(test_srSess, "/czechlight-system:authentication/users");
+        auto data = dataFromSysrepo(client, "/czechlight-system:authentication/users");
         decltype(data) expected = {
             {"[name='ci']", ""},
             {"[name='ci']/name", "ci"},
@@ -70,42 +71,39 @@ TEST_CASE("Authentication")
         REQUIRE(data == expected);
     }
 
-    SECTION("RPCs/actions")
+    SECTION("Password changes")
     {
         std::string rpcPath;
         std::map<std::string, std::string> input;
         std::map<std::string, std::string> expected;
         std::unique_ptr<trompeloeil::expectation> expectation;
 
-        SECTION("change password")
+        SECTION("changePassword is successful")
         {
-            SECTION("changePassword is successful")
-            {
-                rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
-                expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow));
-                expected = {
-                    {"/result", "success"}
-                };
-                input = {
-                    {"password-cleartext", "new-password"}
-                };
-            }
-
-            SECTION("changePassword throws")
-            {
-                rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
-                expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow)).THROW(std::runtime_error("Task failed succesfully."));
-                expected = {
-                    {"/result", "failure"},
-                    {"/message", "Task failed succesfully."}
-                };
-                input = {
-                    {"password-cleartext", "new-password"}
-                };
-            }
+            rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
+            expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow));
+            expected = {
+                {"/result", "success"}
+            };
+            input = {
+                {"password-cleartext", "new-password"}
+            };
         }
 
-        auto output = rpcFromSysrepo(test_srSess, rpcPath, input);
+        SECTION("changePassword throws")
+        {
+            rpcPath = "/czechlight-system:authentication/users[name='root']/change-password";
+            expectation = NAMED_REQUIRE_CALL(mock, changePassword("root", "new-password", etc_shadow)).THROW(std::runtime_error("Task failed succesfully."));
+            expected = {
+                {"/result", "failure"},
+                {"/message", "Task failed succesfully."}
+            };
+            input = {
+                {"password-cleartext", "new-password"}
+            };
+        }
+
+        auto output = rpcFromSysrepo(client, rpcPath, input);
         REQUIRE(output == expected);
     }
 
@@ -154,7 +152,7 @@ TEST_CASE("Authentication")
 
             fileToCheck = testDir / "authorized_keys/root";
 
-            auto result = rpcFromSysrepo(test_srSess, rpcPath, input);
+            auto result = rpcFromSysrepo(client, rpcPath, input);
             REQUIRE(result == expected);
         }
 
@@ -174,7 +172,7 @@ TEST_CASE("Authentication")
 
             fileToCheck = testDir / "authorized_keys/root";
 
-            auto result = rpcFromSysrepo(test_srSess, rpcPath, input);
+            auto result = rpcFromSysrepo(client, rpcPath, input);
             REQUIRE(result == expected);
         }
 
@@ -190,7 +188,7 @@ TEST_CASE("Authentication")
 
             fileToCheck = testDir / "authorized_keys/ci";
 
-            auto result = rpcFromSysrepo(test_srSess, rpcPath, input);
+            auto result = rpcFromSysrepo(client, rpcPath, input);
             REQUIRE(result == expected);
 
         }
@@ -208,7 +206,7 @@ TEST_CASE("Authentication")
 
             fileToCheck = testDir / "authorized_keys/root";
 
-            auto result = rpcFromSysrepo(test_srSess, rpcPath, input);
+            auto result = rpcFromSysrepo(client, rpcPath, input);
             REQUIRE(result == expected);
         }
 
@@ -216,4 +214,105 @@ TEST_CASE("Authentication")
         REQUIRE(velia::utils::readFileToString(fileToCheck) == expectedContents);
     }
 
+    SECTION("NACM")
+    {
+        std::map<std::string, std::string> input;
+        const std::string prefix = "/czechlight-system:authentication/users[name='ci']";
+
+        auto sub = srSess.initNacm();
+
+        srSess.switchDatastore(sysrepo::Datastore::Running);
+        srSess.setItem("/ietf-netconf-acm:nacm/groups/group[name='users']/user-name[.='ci']", std::nullopt);
+        srSess.setItem("/ietf-netconf-acm:nacm/groups/group[name='tests']/user-name[.='test']", std::nullopt);
+        srSess.applyChanges();
+
+        FileInjector ciKeys(testDir / "authorized_keys/ci", std::filesystem::perms::owner_read | std::filesystem::perms::owner_write, "ssh-rsa ci1 comment\n"
+                                                                                                                                      "ssh-rsa ci2 comment\n");
+
+        SECTION("current users auth")
+        {
+            std::map<std::string, std::string> result;
+            client.setNacmUser("ci");
+
+            SECTION("actions")
+            {
+                SECTION("change password")
+                {
+                    input = {{"password-cleartext", "blah"}};
+                    REQUIRE_CALL(mock, changePassword("ci", "blah", etc_shadow)).IN_SEQUENCE(seq1);
+                    result = rpcFromSysrepo(client, prefix + "/change-password", input);
+                    waitForCompletionAndBitMore(seq1);
+                }
+
+                SECTION("add key")
+                {
+                    input = {{"key", "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdKwJwhSfuBeve5UfVHm0cx/3Jk81Z5a/iNZadjymwl cement"}};
+                    result = rpcFromSysrepo(client, prefix + "/add-authorized-key", input);
+                }
+
+                SECTION("remove key")
+                {
+                    result = rpcFromSysrepo(client, prefix + "/authorized-keys[index='0']/remove", {});
+                }
+
+                std::map<std::string, std::string> expected = {{"/result", "success"}};
+                REQUIRE(result == expected);
+            }
+
+            SECTION("data")
+            {
+                auto data = dataFromSysrepo(client, prefix);
+                REQUIRE(data.contains("/password-last-change"));
+                data.erase("/password-last-change");
+                REQUIRE(data == std::map<std::string, std::string>{
+                            {"/authorized-keys[index='0']", ""},
+                            {"/authorized-keys[index='0']/index", "0"},
+                            {"/authorized-keys[index='0']/public-key", "ssh-rsa ci1 comment"},
+                            {"/authorized-keys[index='1']", ""},
+                            {"/authorized-keys[index='1']/index", "1"},
+                            {"/authorized-keys[index='1']/public-key", "ssh-rsa ci2 comment"},
+                            {"/name", "ci"},
+                        });
+            }
+        }
+
+        SECTION("different user's auth")
+        {
+            client.setNacmUser("test");
+
+            SECTION("change password")
+            {
+                input = {{"password-cleartext", "blah"}};
+                REQUIRE_THROWS_WITH_AS(rpcFromSysrepo(client, prefix + "/change-password", input),
+                                       "Couldn't send RPC: SR_ERR_UNAUTHORIZED\n"
+                                       " NACM access denied by \"change-password\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n"
+                                       " NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/change-password: Executing the operation is denied because \"test\" NACM authorization failed.",
+                                       sysrepo::ErrorWithCode);
+            }
+
+            SECTION("add key")
+            {
+                input = {{"key", "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdKwJwhSfuBeve5UfVHm0cx/3Jk81Z5a/iNZadjymwl cement"}};
+                REQUIRE_THROWS_WITH_AS(rpcFromSysrepo(client, prefix + "/add-authorized-key", input),
+                                       "Couldn't send RPC: SR_ERR_UNAUTHORIZED\n"
+                                       " NACM access denied by \"add-authorized-key\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n"
+                                       " NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/add-authorized-key: Executing the operation is denied because \"test\" NACM authorization failed.",
+                                       sysrepo::ErrorWithCode);
+            }
+
+            SECTION("remove key")
+            {
+                REQUIRE_THROWS_WITH_AS(rpcFromSysrepo(client, prefix + "/authorized-keys[index='0']/remove", {}),
+                                       "Couldn't send RPC: SR_ERR_UNAUTHORIZED\n"
+                                       " NACM access denied by \"remove\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n"
+                                       " NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/authorized-keys[index='0']/remove: Executing the operation is denied because \"test\" NACM authorization failed.",
+                                       sysrepo::ErrorWithCode);
+            }
+
+            SECTION("data")
+            {
+                REQUIRE(dataFromSysrepo(client, prefix) == std::map<std::string, std::string>{{"/name", "ci"}});
+            }
+        }
+    }
 }

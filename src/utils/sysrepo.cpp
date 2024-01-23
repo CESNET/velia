@@ -7,6 +7,7 @@
  */
 
 #include "sysrepo.h"
+#include "utils/UniqueResource.h"
 #include "utils/log.h"
 
 extern "C" {
@@ -117,12 +118,17 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
 /** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
 void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, sysrepo::Datastore datastore)
 {
-    auto oldDatastore = session.activeDatastore();
-    session.switchDatastore(datastore);
+    sysrepo::Datastore originalDS;
+    auto restoreDatastore = velia::utils::make_unique_resource(
+        [&]() {
+            originalDS = session.activeDatastore();
+            session.switchDatastore(datastore);
+        },
+        [&]() {
+            session.switchDatastore(originalDS);
+        });
 
     valuesPush(values, removePaths, discardPaths, session);
-
-    session.switchDatastore(oldDatastore);
 }
 
 /** @brief Set or remove paths in Sysrepo's current datastore. */
@@ -142,12 +148,17 @@ void valuesPush(const std::map<std::string, std::string>& values, const std::vec
 /** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
 void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, sysrepo::Session session, sysrepo::Datastore datastore)
 {
-    auto oldDatastore = session.activeDatastore();
-    session.switchDatastore(datastore);
+    sysrepo::Datastore originalDS;
+    auto restoreDatastore = velia::utils::make_unique_resource(
+        [&]() {
+            originalDS = session.activeDatastore();
+            session.switchDatastore(datastore);
+        },
+        [&]() {
+            session.switchDatastore(originalDS);
+        });
 
     valuesPush(values, removePaths, discardPaths, session);
-
-    session.switchDatastore(oldDatastore);
 }
 
 /** @brief Set or remove paths in Sysrepo's current datastore. */

@@ -10,6 +10,7 @@
 #include <map>
 #include <sysrepo-cpp/Connection.hpp>
 #include "test_log_setup.h"
+#include "utils/UniqueResource.h"
 #include "utils/sysrepo.h"
 
 /** @short Return a subtree from sysrepo, compacting the XPath */
@@ -60,12 +61,17 @@ auto rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, std::m
 /** @short Return a subtree from specified sysrepo's datastore, compacting the XPath*/
 auto dataFromSysrepo(sysrepo::Session session, const std::string& xpath, sysrepo::Datastore datastore)
 {
-    auto oldDatastore = session.activeDatastore();
-    session.switchDatastore(datastore);
+    sysrepo::Datastore originalDS;
+    auto restoreDatastore = velia::utils::make_unique_resource(
+        [&]() {
+            originalDS = session.activeDatastore();
+            session.switchDatastore(datastore);
+        },
+        [&]() {
+            session.switchDatastore(originalDS);
+        });
 
     auto res = dataFromSysrepo(session, xpath);
-
-    session.switchDatastore(oldDatastore);
     return res;
 }
 

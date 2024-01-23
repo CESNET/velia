@@ -6,8 +6,8 @@
  */
 #include <sysrepo-cpp/Enum.hpp>
 #include "alarms.h"
-#include "utils/UniqueResource.h"
 #include "utils/libyang.h"
+#include "utils/sysrepo.h"
 
 using namespace std::string_literals;
 
@@ -34,15 +34,7 @@ void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::stri
 {
     const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='" + alarmTypeQualifier.value_or("") + "']";
 
-    sysrepo::Datastore originalDS;
-    auto restoreDatastore = utils::make_unique_resource(
-        [&]() {
-            originalDS = session.activeDatastore();
-            session.switchDatastore(sysrepo::Datastore::Operational);
-        },
-        [&]() {
-            session.switchDatastore(originalDS);
-        });
+    ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
 
     session.setItem(prefix + "/will-clear", willClear ? "true" : "false");
     session.setItem(prefix + "/description", description);
@@ -58,15 +50,7 @@ void addResourceToAlarmInventoryEntry(sysrepo::Session session, const std::strin
 {
     const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='" + alarmTypeQualifier.value_or("") + "']";
 
-    sysrepo::Datastore originalDS;
-    auto restoreDatastore = utils::make_unique_resource(
-        [&]() {
-            originalDS = session.activeDatastore();
-            session.switchDatastore(sysrepo::Datastore::Operational);
-        },
-        [&]() {
-            session.switchDatastore(originalDS);
-        });
+    ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
 
     session.setItem(prefix + "/resource", resource);
     session.applyChanges();

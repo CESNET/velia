@@ -60,13 +60,8 @@ auto rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, std::m
 /** @short Return a subtree from specified sysrepo's datastore, compacting the XPath*/
 auto dataFromSysrepo(sysrepo::Session session, const std::string& xpath, sysrepo::Datastore datastore)
 {
-    auto oldDatastore = session.activeDatastore();
-    session.switchDatastore(datastore);
-
-    auto res = dataFromSysrepo(session, xpath);
-
-    session.switchDatastore(oldDatastore);
-    return res;
+    velia::utils::ScopedDatastoreSwitch s(session, datastore);
+    return dataFromSysrepo(session, xpath);
 }
 
 #define TEST_SYSREPO_INIT                      \

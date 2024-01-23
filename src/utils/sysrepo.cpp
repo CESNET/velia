@@ -117,12 +117,8 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
 /** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
 void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, sysrepo::Datastore datastore)
 {
-    auto oldDatastore = session.activeDatastore();
-    session.switchDatastore(datastore);
-
+    ScopedDatastoreSwitch s(session, datastore);
     valuesPush(values, removePaths, discardPaths, session);
-
-    session.switchDatastore(oldDatastore);
 }
 
 /** @brief Set or remove paths in Sysrepo's current datastore. */
@@ -142,12 +138,8 @@ void valuesPush(const std::map<std::string, std::string>& values, const std::vec
 /** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
 void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, sysrepo::Session session, sysrepo::Datastore datastore)
 {
-    auto oldDatastore = session.activeDatastore();
-    session.switchDatastore(datastore);
-
+    ScopedDatastoreSwitch s(session, datastore);
     valuesPush(values, removePaths, discardPaths, session);
-
-    session.switchDatastore(oldDatastore);
 }
 
 /** @brief Set or remove paths in Sysrepo's current datastore. */
@@ -189,5 +181,17 @@ void setErrors(::sysrepo::Session session, const std::string& msg)
         .infoElements = {},
     });
     session.setErrorMessage(msg);
+}
+
+ScopedDatastoreSwitch::ScopedDatastoreSwitch(sysrepo::Session session, sysrepo::Datastore ds)
+    : m_session(std::move(session))
+    , m_oldDatastore(m_session.activeDatastore())
+{
+    m_session.switchDatastore(ds);
+}
+
+ScopedDatastoreSwitch::~ScopedDatastoreSwitch()
+{
+    m_session.switchDatastore(m_oldDatastore);
 }
 }

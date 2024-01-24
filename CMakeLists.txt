@@ -337,6 +337,8 @@ if(BUILD_TESTING)
         tests/mock/sysrepo/events.h
         tests/mock/ietf_hardware.h
         tests/mock/system.h
+        tests/sysrepo-helpers/common.cpp
+        tests/sysrepo-helpers/common.h
         )
     target_link_libraries(SysrepoTesting DoctestIntegration PkgConfig::SYSREPO)
 
@@ -373,7 +375,7 @@ if(BUILD_TESTING)
     function(velia_test)
         cmake_parse_arguments(TEST "" "NAME" "" ${ARGN})
         sysrepo_test(NAME ${TEST_NAME} ${TEST_UNPARSED_ARGUMENTS})
-        target_link_libraries(test-${TEST_NAME} DoctestIntegration)
+        target_link_libraries(test-${TEST_NAME} DoctestIntegration SysrepoTesting)
     endfunction()
 
     find_program(YANGLINT_PATH yanglint)
@@ -400,7 +402,7 @@ if(BUILD_TESTING)
     velia_test(NAME sysrepo_system-ietfsystem LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-ietf-system)
 
     set(fixture_sysrepo-czechlight-system --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2022-07-08.yang --init-data ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-authentication.json)
-    velia_test(NAME sysrepo_system-firmware LIBRARIES velia-system DbusTesting SysrepoTesting FIXTURE fixture_sysrepo-czechlight-system RESOURCE_LOCK dbus-rauc)
+    velia_test(NAME sysrepo_system-firmware LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-czechlight-system RESOURCE_LOCK dbus-rauc)
     velia_test(NAME sysrepo_authentication LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
     velia_test(NAME sysrepo_system-leds LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
     velia_test(NAME sysrepo_system-journalupload LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-system)

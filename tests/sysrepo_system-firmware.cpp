@@ -4,9 +4,9 @@
 #include "pretty_printers.h"
 #include "system/Firmware.h"
 #include "test_log_setup.h"
-#include "test_sysrepo_helpers.h"
 #include "tests/configure.cmake.h"
 #include "tests/mock/sysrepo/events.h"
+#include "tests/sysrepo-helpers/common.h"
 
 using namespace std::literals;
 

@@ -3,8 +3,8 @@
 #include <sysrepo-cpp/utils/exception.hpp>
 #include "system/JournalUpload.h"
 #include "test_log_setup.h"
-#include "test_sysrepo_helpers.h"
 #include "tests/configure.cmake.h"
+#include "tests/sysrepo-helpers/common.h"
 #include "utils/io.h"
 
 #define EXPECT_RESTART_UNIT expectations.emplace_back(NAMED_REQUIRE_CALL(restartMock, restartCalled()).IN_SEQUENCE(seq1));

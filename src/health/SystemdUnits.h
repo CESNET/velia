@@ -46,7 +46,7 @@ private:
     /** Current unit state. */
     std::map<std::string, UnitState> m_unitState;
 
-    void registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath);
+    void registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath, const std::optional<UnitState>& unitState);
     void onUnitStateChange(const std::string& name, const UnitState& unitState);
 };
 

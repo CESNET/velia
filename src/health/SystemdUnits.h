@@ -30,6 +30,11 @@ private:
         bool operator==(const UnitState&) const = default;
     };
 
+    enum class RegisterAlarmInventory {
+        Yes,
+        No,
+    };
+
     velia::Log m_log;
 
     sysrepo::Session m_srSession;
@@ -46,7 +51,7 @@ private:
     /** Current unit state. */
     std::map<std::string, UnitState> m_unitState;
 
-    void registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath, const std::optional<UnitState>& unitState);
+    void registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath, const std::optional<UnitState>& unitState, const RegisterAlarmInventory registerAlarmInventory);
     void onUnitStateChange(const std::string& name, const UnitState& unitState);
 };
 

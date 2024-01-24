@@ -28,17 +28,6 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
     utils::ensureModuleImplemented(m_srSession, "sysrepo-ietf-alarms", "2022-02-17");
     utils::ensureModuleImplemented(m_srSession, "velia-alarms", "2022-07-12");
 
-    utils::createOrUpdateAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, {ALARM_SEVERITY}, true, ALARM_INVENTORY_DESCRIPTION);
-
-    // Subscribe to systemd events. Systemd may not generate signals unless explicitly called
-    m_proxyManager->callMethod("Subscribe").onInterface(managerIface).withArguments().dontExpectReply();
-
-    // Register to a signal introducing new unit
-    m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
-        registerSystemdUnit(connection, unitName, unitObjectPath, std::nullopt);
-    });
-    m_proxyManager->finishRegistration();
-
     /* Track all current units. Method ListUnits() -> a(ssssssouso) returns a DBus struct type with information
      * about the unit (see https://www.freedesktop.org/wiki/Software/systemd/dbus/#Manager-ListUnits).
      * In our code we need the fields:
@@ -48,12 +37,31 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
      *  - 4: unit subState
      */
     std::vector<sdbus::Struct<std::string, std::string, std::string, std::string, std::string, std::string, sdbus::ObjectPath, uint32_t, std::string, sdbus::ObjectPath>> units;
+    std::vector<std::string> unitNames;
+
+    // First, fetch all currently loaded units, register to their PropertiesChanged signal and create the alarm-inventory entries in a *single* edit
+    m_proxyManager->callMethod("ListUnits").onInterface(managerIface).storeResultsTo(units);
+    std::transform(units.begin(), units.end(), std::back_inserter(unitNames), [](const auto& unit) { return unit.template get<0>(); });
+    utils::createOrUpdateAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, {ALARM_SEVERITY}, true, ALARM_INVENTORY_DESCRIPTION, unitNames);
+
+    for (const auto& unit : units) {
+        registerSystemdUnit(connection, unit.get<0>(), unit.get<6>(), UnitState{unit.get<3>(), unit.get<4>()}, RegisterAlarmInventory::No);
+    }
+
+    // Subscribe to systemd events. Systemd may not generate signals unless explicitly called
+    m_proxyManager->callMethod("Subscribe").onInterface(managerIface).withArguments().dontExpectReply();
+
+    // Register to a signal introducing new unit. Newly loaded units into systemd can now start coming. The corresponding alarm MUST be registered because it was not yet.
+    m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
+        registerSystemdUnit(connection, unitName, unitObjectPath, std::nullopt, RegisterAlarmInventory::Yes);
+    });
+    m_proxyManager->finishRegistration();
+
+    // Ask for all the units once again. There could have been some that were created between the first ListUnits call and the UnitNew subscription
+    units.clear();
     m_proxyManager->callMethod("ListUnits").onInterface(managerIface).storeResultsTo(units);
     for (const auto& unit : units) {
-        const auto& unitName = unit.get<0>();
-        const auto& unitObjectPath = unit.get<6>();
-
-        registerSystemdUnit(connection, unitName, unitObjectPath, UnitState{unit.get<3>(), unit.get<4>()});
+        registerSystemdUnit(connection, unit.get<0>(), unit.get<6>(), UnitState{unit.get<3>(), unit.get<4>()}, RegisterAlarmInventory::Yes);
     }
 }
 
@@ -64,7 +72,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
 }
 
 /** @brief Registers a systemd unit by its unit name and unit dbus objectpath. */
-void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath, const std::optional<UnitState>& unitState)
+void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath, const std::optional<UnitState>& unitState, const RegisterAlarmInventory registerAlarmInventory)
 {
     sdbus::IProxy* proxyUnit;
 
@@ -74,8 +82,11 @@ void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std
             return;
         }
 
+        if (registerAlarmInventory == RegisterAlarmInventory::Yes) {
+            utils::addResourceToAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, unitName);
+        }
+
         proxyUnit = m_proxyUnits.emplace(unitObjectPath, sdbus::createProxy(connection, m_busName, unitObjectPath)).first->second.get();
-        utils::addResourceToAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, unitName);
     }
 
     proxyUnit->uponSignal("PropertiesChanged").onInterface("org.freedesktop.DBus.Properties").call([&, unitName](const std::string& iface, const std::map<std::string, sdbus::Variant>& changed, [[maybe_unused]] const std::vector<std::string>& invalidated) {

@@ -43,17 +43,20 @@ TEST_CASE("systemd unit state monitoring (alarms)")
     client.switchDatastore(sysrepo::Datastore::Operational);
     AlarmWatcher alarmsWatcher(client);
 
-    REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmsWatcher, "velia-alarms:systemd-unit-failure", "", (std::set<std::string>{}), (std::set<std::string>{"critical"}), true, "The systemd service is considered in failed state.");
+    REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmsWatcher,
+                                      "velia-alarms:systemd-unit-failure",
+                                      "",
+                                      (std::set<std::string>{"unit1.service", "unit2.service", "unit3.service"}),
+                                      (std::set<std::string>{"critical"}),
+                                      true,
+                                      "The systemd service is considered in failed state.");
 
-    REQUIRE_NEW_ALARM_INVENTORY_UNIT("unit1.service");
     REQUIRE_ALARM_RPC("unit1.service", "cleared", "systemd unit state: (active, running)");
     server.createUnit(*serverConnection, "unit1.service", "/org/freedesktop/systemd1/unit/unit1", "active", "running");
 
-    REQUIRE_NEW_ALARM_INVENTORY_UNIT("unit2.service");
     REQUIRE_ALARM_RPC("unit2.service", "critical", "systemd unit state: (activating, auto-restart)");
     server.createUnit(*serverConnection, "unit2.service", "/org/freedesktop/systemd1/unit/unit2", "activating", "auto-restart");
 
-    REQUIRE_NEW_ALARM_INVENTORY_UNIT("unit3.service");
     REQUIRE_ALARM_RPC("unit3.service", "critical", "systemd unit state: (failed, failed)");
     server.createUnit(*serverConnection, "unit3.service", "/org/freedesktop/systemd1/unit/unit3", "failed", "failed");
 

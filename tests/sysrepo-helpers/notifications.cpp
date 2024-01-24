@@ -14,7 +14,7 @@ NotificationWatcher::NotificationWatcher(sysrepo::Session& session, const std::s
                     if (type != sysrepo::NotificationType::Realtime) {
                         return;
                     }
-                    data_t data;
+                    Values data;
                     for (const auto& it : tree->findPath(xpath)->childrenDfs()) {
                         if (!it.isTerm()) {
                             continue;

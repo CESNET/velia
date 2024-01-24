@@ -15,7 +15,7 @@ std::vector<std::unique_ptr<trompeloeil::expectation>> expectationFactory(const 
     std::vector<std::unique_ptr<trompeloeil::expectation>> expectations;
 
     auto progressData = [](int progress, std::string message) {
-        return NotificationWatcher::data_t{
+        return Values{
             {"progress", std::to_string(progress)},
             {"message", message},
         };

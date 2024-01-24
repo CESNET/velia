@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "a9475b166f3ce135ad303ad27857aab19754a618",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7fac4dc_d70e355f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-24T22:33:56Z",
+      "side": 1,
+      "message": "add Depends-on: https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/6885 , so that the ARM build passes",
+      "revId": "a9475b166f3ce135ad303ad27857aab19754a618",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

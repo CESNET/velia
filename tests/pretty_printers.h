@@ -13,6 +13,7 @@
 #include <sstream>
 #include <trompeloeil.hpp>
 #include "ietf-hardware/thresholds.h"
+#include "tests/sysrepo-helpers/common.h"
 
 namespace doctest {
 
@@ -83,6 +84,27 @@ struct StringMaker<std::map<std::string, velia::ietf_hardware::State>> {
         }
         os << "}";
         return os.str().c_str();
+    }
+};
+}
+
+namespace trompeloeil {
+template <>
+struct printer<ValueChanges> {
+    static void print(std::ostream& os, const ValueChanges& map)
+    {
+        os << "{" << std::endl;
+        for (const auto& [key, value] : map) {
+            os << "  \"" << key << "\": \""
+               << std::visit([](auto&& arg) -> std::string {
+                using T = std::decay_t<decltype(arg)>;
+                if constexpr (std::is_same_v<T, Deleted>)
+                    return "Deleted()";
+                if constexpr (std::is_same_v<T, std::string>)
+                    return arg; }, value)
+               << "\"," << std::endl;
+        }
+        os << "}";
     }
 };
 }

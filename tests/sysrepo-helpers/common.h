@@ -12,7 +12,13 @@
 #include <sysrepo-cpp/Connection.hpp>
 #include "test_log_setup.h"
 
+struct Deleted { };
+bool operator==(const Deleted&, const Deleted&);
+
 using Values = std::map<std::string, std::string>;
+using ValueChanges = std::map<std::string, std::variant<std::string, Deleted>>;
+
+std::string nodeAsString(const libyang::DataNode& node);
 
 Values dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath);
 Values rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, std::map<std::string, std::string> input);

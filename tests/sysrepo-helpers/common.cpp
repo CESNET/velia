@@ -14,6 +14,23 @@
 #include "utils/UniqueResource.h"
 #include "utils/sysrepo.h"
 
+bool operator==(const Deleted&, const Deleted&) { return true; }
+
+std::string nodeAsString(const libyang::DataNode& node)
+{
+    switch (node.schema().nodeType()) {
+    case libyang::NodeType::Container:
+        return "(container)";
+    case libyang::NodeType::List:
+        return "(list instance)";
+    case libyang::NodeType::Leaf:
+    case libyang::NodeType::Leaflist:
+        return std::string(node.asTerm().valueStr());
+    default:
+        return "(unprintable)";
+    }
+}
+
 /** @short Return a subtree from sysrepo, compacting the XPath */
 Values dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath)
 {

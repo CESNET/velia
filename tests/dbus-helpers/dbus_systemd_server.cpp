@@ -51,7 +51,7 @@ std::vector<DbusSystemdServer::UnitStruct> DbusSystemdServer::ListUnits()
     std::vector<UnitStruct> res;
 
     for (const auto& [objPath, unit] : m_units) {
-        res.emplace_back(unit.m_unitName, ""s, ""s, ""s, ""s, ""s, unit.m_object->getObjectPath(), 0, ""s, "/dummy"s);
+        res.emplace_back(unit.m_unitName, ""s, ""s, unit.m_activeState, unit.m_subState, ""s, unit.m_object->getObjectPath(), 0, ""s, "/dummy"s);
     }
 
     return res;

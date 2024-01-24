@@ -35,13 +35,17 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
 
     // Register to a signal introducing new unit
     m_proxyManager->uponSignal("UnitNew").onInterface(managerIface).call([&](const std::string& unitName, const sdbus::ObjectPath& unitObjectPath) {
-        registerSystemdUnit(connection, unitName, unitObjectPath);
+        registerSystemdUnit(connection, unitName, unitObjectPath, std::nullopt);
     });
     m_proxyManager->finishRegistration();
 
     /* Track all current units. Method ListUnits() -> a(ssssssouso) returns a DBus struct type with information
      * about the unit (see https://www.freedesktop.org/wiki/Software/systemd/dbus/#Manager-ListUnits).
-     * In our code we need only the first (index 0, the unit name) field and seventh (index 6, unit object path) field.
+     * In our code we need the fields:
+     *  - 0: the unit name
+     *  - 6: unit object path
+     *  - 3: unit activeState
+     *  - 4: unit subState
      */
     std::vector<sdbus::Struct<std::string, std::string, std::string, std::string, std::string, std::string, sdbus::ObjectPath, uint32_t, std::string, sdbus::ObjectPath>> units;
     m_proxyManager->callMethod("ListUnits").onInterface(managerIface).storeResultsTo(units);
@@ -49,7 +53,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
         const auto& unitName = unit.get<0>();
         const auto& unitObjectPath = unit.get<6>();
 
-        registerSystemdUnit(connection, unitName, unitObjectPath);
+        registerSystemdUnit(connection, unitName, unitObjectPath, UnitState{unit.get<3>(), unit.get<4>()});
     }
 }
 
@@ -60,7 +64,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
 }
 
 /** @brief Registers a systemd unit by its unit name and unit dbus objectpath. */
-void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath)
+void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath, const std::optional<UnitState>& unitState)
 {
     sdbus::IProxy* proxyUnit;
 
@@ -92,10 +96,15 @@ void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std
     proxyUnit->finishRegistration();
     m_log->trace("Registered systemd unit watcher for '{}'", unitName);
 
-    // Query the current state of this unit
-    std::string newActiveState = proxyUnit->getProperty("ActiveState").onInterface(m_unitIface);
-    std::string newSubState = proxyUnit->getProperty("SubState").onInterface(m_unitIface);
-    onUnitStateChange(unitName, UnitState{std::move(newActiveState), std::move(newSubState)});
+    // Query the current state of this unit if not provided
+    if (!unitState) {
+        std::string newActiveState = proxyUnit->getProperty("ActiveState").onInterface(m_unitIface);
+        std::string newSubState = proxyUnit->getProperty("SubState").onInterface(m_unitIface);
+        onUnitStateChange(unitName, UnitState{std::move(newActiveState), std::move(newSubState)});
+    } else {
+        onUnitStateChange(unitName, *unitState);
+    }
+
 }
 
 /** @brief Callback for unit state change */

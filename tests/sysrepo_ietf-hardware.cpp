@@ -7,14 +7,11 @@
 #include "mock/ietf_hardware.h"
 #include "pretty_printers.h"
 #include "sysrepo-helpers/datastore.h"
+#include "sysrepo-helpers/rpc.h"
 #include "test_log_setup.h"
 #include "tests/sysrepo-helpers/common.h"
 
 using namespace std::literals;
-
-struct AlarmEvent {
-    MAKE_CONST_MOCK1(event, void(const std::map<std::string, std::string>&));
-};
 
 struct AlarmInventory {
     std::map<std::pair<std::string, std::string>, std::vector<std::string>> inventory;
@@ -48,7 +45,7 @@ struct AlarmInventory {
         .LR_SIDE_EFFECT(alarmInventory.add(ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE)))
 
 #define REQUIRE_ALARM_RPC(ALARM_TYPE_ID, IETF_HARDWARE_RESOURCE_KEY, SEVERITY, TEXT)                                               \
-    REQUIRE_CALL(alarmEvents, event(std::map<std::string, std::string>{                                                            \
+    REQUIRE_RPC_CALL(alarmEvents, (Values{                                                                                         \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},                                \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT},                                \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", ALARM_TYPE_ID},                    \
@@ -72,22 +69,10 @@ TEST_CASE("IETF Hardware with sysrepo")
 
     client.switchDatastore(sysrepo::Datastore::Operational);
 
-    AlarmEvent alarmEvents;
-    AlarmInventory alarmInventory;
-
     trompeloeil::sequence seq1;
 
-    auto alarmsRPC = alarmsClient.onRPCAction("/sysrepo-ietf-alarms:create-or-update-alarm", [&](auto, auto, auto, const libyang::DataNode input, auto, auto, auto) {
-        std::map<std::string, std::string> inputData;
-
-        for (const auto& node : input.childrenDfs()) {
-            inputData.emplace(node.path(), nodeAsString(node));
-        }
-
-        alarmEvents.event(inputData);
-
-        return sysrepo::ErrorCode::Ok;
-    });
+    AlarmInventory alarmInventory;
+    RPCWatcher alarmEvents(alarmsClient, "/sysrepo-ietf-alarms:create-or-update-alarm");
 
     auto directLeafNodeQuery = [&](const std::string& xpath) {
         auto val = client.getData(xpath);

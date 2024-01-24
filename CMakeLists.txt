@@ -341,6 +341,8 @@ if(BUILD_TESTING)
         tests/sysrepo-helpers/datastore.h
         tests/sysrepo-helpers/notifications.cpp
         tests/sysrepo-helpers/notifications.h
+        tests/sysrepo-helpers/rpc.cpp
+        tests/sysrepo-helpers/rpc.h
         )
     target_link_libraries(SysrepoTesting DoctestIntegration PkgConfig::SYSREPO)
 

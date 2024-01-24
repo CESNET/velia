@@ -333,12 +333,12 @@ if(BUILD_TESTING)
     target_compile_definitions(DoctestIntegration PUBLIC DOCTEST_CONFIG_SUPER_FAST_ASSERTS)
 
     add_library(SysrepoTesting STATIC
-        tests/mock/sysrepo/events.cpp
-        tests/mock/sysrepo/events.h
         tests/mock/ietf_hardware.h
         tests/mock/system.h
         tests/sysrepo-helpers/common.cpp
         tests/sysrepo-helpers/common.h
+        tests/sysrepo-helpers/notifications.cpp
+        tests/sysrepo-helpers/notifications.h
         )
     target_link_libraries(SysrepoTesting DoctestIntegration PkgConfig::SYSREPO)
 

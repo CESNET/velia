@@ -68,17 +68,19 @@ TEST_CASE("systemd unit state monitoring (alarms)")
                                  {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/description", "The systemd service is considered in failed state."},
                                  {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/severity-level[1]", "critical"},
                                  {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/will-clear", "true"},
-                             })).IN_SEQUENCE(seq1).ALARM_INVENTORY_INSERT(alarmInventory, "velia-alarms:systemd-unit-failure", "", std::set<std::string>{}, std::set<std::string>{"critical"});
+                                 {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/resource[1]", "unit1.service"},
+                                 {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/resource[2]", "unit2.service"},
+                                 {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/resource[3]", "unit3.service"},
+                             }))
+        .IN_SEQUENCE(seq1)
+        .ALARM_INVENTORY_INSERT(alarmInventory, "velia-alarms:systemd-unit-failure", "", (std::set<std::string>{"unit1.service", "unit2.service", "unit3.service"}), (std::set<std::string>{"critical"}));
 
-    REQUIRE_ALARM_INVENTORY_UNIT("unit1.service");
     REQUIRE_ALARM_RPC("unit1.service", "cleared", "systemd unit state: (active, running)");
     server.createUnit(*serverConnection, "unit1.service", "/org/freedesktop/systemd1/unit/unit1", "active", "running");
 
-    REQUIRE_ALARM_INVENTORY_UNIT("unit2.service");
     REQUIRE_ALARM_RPC("unit2.service", "critical", "systemd unit state: (activating, auto-restart)");
     server.createUnit(*serverConnection, "unit2.service", "/org/freedesktop/systemd1/unit/unit2", "activating", "auto-restart");
 
-    REQUIRE_ALARM_INVENTORY_UNIT("unit3.service");
     REQUIRE_ALARM_RPC("unit3.service", "critical", "systemd unit state: (failed, failed)");
     server.createUnit(*serverConnection, "unit3.service", "/org/freedesktop/systemd1/unit/unit3", "failed", "failed");
 

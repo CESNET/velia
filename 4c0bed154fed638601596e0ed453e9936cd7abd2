@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a2892e4_9d34644e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-24T15:45:46Z",
+      "side": 1,
+      "message": "I would prefer if the commit message clearly said that this switches the test from a \"state based\" approach, where we check how stuff looks at the beginning, then we make some changes, and then we ask for the state again and check that it once again matches the updated expectations. This patch changes that to an even-based approach which is (by definition) more tightly coupled with the code that\u0027s being tested. That\u0027s not about \"consistency\" as the commit message says; it\u0027s a fundamental difference in how testing is handled.\n\nI think that doing that makes sense, especially when it\u0027s a change of behavior that was requested by some performance measurements. Another option would be to set up a mock for capturing calls to the data modification CBs. In these CBs, the code could have ignored the argument, and the test might have only checked the number of calls. That\u0027s just me offering some random suggestions, it\u0027s OK to switch to a fully event-driven test if that\u0027s what you prefer.",
+      "revId": "4c0bed154fed638601596e0ed453e9936cd7abd2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53d1747a_1afa8905",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-24T15:45:46Z",
+      "side": 1,
+      "message": "When I\u0027m reading the test without reviewing the macros first, the use of word \"REQUIRE\" is a bit confusing. What the code is actually doing is setting up an expectation (which is required to be consumed) that allows some other part of the code to send an RPC to your mocked sysrepo.\n\nWhat about REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(id, qualifier, resource), and because it makes sense to have a macro for alarms to DRY, what about REQUIRE_NEW_ALARM_INVENTORY_UNIT?",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 32
+      },
+      "revId": "4c0bed154fed638601596e0ed453e9936cd7abd2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

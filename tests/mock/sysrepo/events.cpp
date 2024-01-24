@@ -6,20 +6,10 @@
 */
 
 #include "events.h"
-
-namespace {
-std::string module_from_xpath(const std::string& xpath)
-{
-    auto pos = xpath.find(":");
-    if (pos == 0 || pos == std::string::npos || xpath[0] != '/') {
-        throw std::logic_error{"NotificationWatcher: Malformed XPath " + xpath};
-    }
-    return xpath.substr(1, pos - 1);
-}
-}
+#include "sysrepo-helpers/common.h"
 
 NotificationWatcher::NotificationWatcher(sysrepo::Session& session, const std::string& xpath)
-    : m_sub{session.onNotification(module_from_xpath(xpath),
+    : m_sub{session.onNotification(moduleFromXpath(xpath),
                 [this, xpath](sysrepo::Session, uint32_t, const sysrepo::NotificationType type, const std::optional<libyang::DataNode> tree, const sysrepo::NotificationTimeStamp) {
                     if (type != sysrepo::NotificationType::Realtime) {
                         return;

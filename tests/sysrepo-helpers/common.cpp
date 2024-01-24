@@ -64,3 +64,12 @@ Values dataFromSysrepo(sysrepo::Session session, const std::string& xpath, sysre
     velia::utils::ScopedDatastoreSwitch s(session, datastore);
     return dataFromSysrepo(session, xpath);
 }
+
+std::string moduleFromXpath(const std::string& xpath)
+{
+    auto pos = xpath.find(":");
+    if (pos == 0 || pos == std::string::npos || xpath[0] != '/') {
+        throw std::logic_error{"module_from_xpath: malformed XPath " + xpath};
+    }
+    return xpath.substr(1, pos - 1);
+}

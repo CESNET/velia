@@ -7,7 +7,7 @@
 #include "mock/ietf_hardware.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
-#include "test_sysrepo_helpers.h"
+#include "tests/sysrepo-helpers/common.h"
 
 using namespace std::literals;
 

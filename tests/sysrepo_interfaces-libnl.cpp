@@ -17,8 +17,8 @@
 #include "pretty_printers.h"
 #include "system/IETFInterfaces.h"
 #include "test_log_setup.h"
-#include "test_sysrepo_helpers.h"
 #include "test_vars.h"
+#include "tests/sysrepo-helpers/common.h"
 #include "utils/exec.h"
 
 using namespace std::chrono_literals;

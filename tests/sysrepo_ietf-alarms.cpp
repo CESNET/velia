@@ -7,8 +7,8 @@
 #include "health/outputs/AlarmsOutputs.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
-#include "test_sysrepo_helpers.h"
 #include "tests/dbus-helpers/dbus_systemd_server.h"
+#include "tests/sysrepo-helpers/common.h"
 #include "utils/io.h"
 
 using namespace std::literals;

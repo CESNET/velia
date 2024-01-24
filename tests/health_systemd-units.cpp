@@ -14,7 +14,7 @@
 #include "health/SystemdUnits.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
-#include "test_sysrepo_helpers.h"
+#include "tests/sysrepo-helpers/common.h"
 #include "utils/log-init.h"
 #include "utils/log.h"
 

@@ -12,9 +12,9 @@
 #include "system/IETFInterfaces.h"
 #include "system/IETFInterfacesConfig.h"
 #include "test_log_setup.h"
-#include "test_sysrepo_helpers.h"
 #include "tests/configure.cmake.h"
 #include "tests/mock/system.h"
+#include "tests/sysrepo-helpers/common.h"
 #include "utils/io.h"
 
 using namespace std::string_literals;

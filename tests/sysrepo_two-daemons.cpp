@@ -1,7 +1,7 @@
 #include "trompeloeil_doctest.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
-#include "test_sysrepo_helpers.h"
+#include "tests/sysrepo-helpers/common.h"
 
 /* This is a generic test for the following use-case in the ietf-hardware model
  *  - Process #1 starts and uses sr_set_item to set some data in the "/ietf-hardware:hardware/component" subtree

@@ -3,20 +3,21 @@
  *
  * Written by Jan Kundrát <jan.kundrat@cesnet.cz>
  *
-*/
+ */
 
 #include "trompeloeil_doctest.h"
 #include <boost/algorithm/string/predicate.hpp>
 #include <map>
 #include <sysrepo-cpp/Connection.hpp>
+#include "common.h"
 #include "test_log_setup.h"
 #include "utils/sysrepo.h"
 
 /** @short Return a subtree from sysrepo, compacting the XPath */
-auto dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath)
+Values dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath)
 {
     spdlog::get("main")->error("dataFrom {}", xpath);
-    std::map<std::string, std::string> res;
+    Values res;
     auto data = session.getData(xpath + "/*");
     REQUIRE(data.has_value());
     for (const auto& sibling : data->findXPath(xpath)) { // Use findXPath here in case the xpath is list without keys.
@@ -34,7 +35,7 @@ auto dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath)
 }
 
 /** @short Execute an RPC or action, return result, compacting the XPath. The rpcPath and input gets concatenated. */
-auto rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, std::map<std::string, std::string> input)
+Values rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, Values input)
 {
     spdlog::get("main")->info("rpcFromSysrepo {}", rpcPath);
     auto inputNode = session.getContext().newPath(rpcPath, std::nullopt);
@@ -44,7 +45,7 @@ auto rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, std::m
 
     auto output = session.sendRPC(inputNode);
 
-    std::map<std::string, std::string> res;
+    Values res;
     for (const auto& node : output.childrenDfs()) {
         const auto briefXPath = std::string{node.path()}.substr(rpcPath.size());
 
@@ -58,16 +59,8 @@ auto rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, std::m
 }
 
 /** @short Return a subtree from specified sysrepo's datastore, compacting the XPath*/
-auto dataFromSysrepo(sysrepo::Session session, const std::string& xpath, sysrepo::Datastore datastore)
+Values dataFromSysrepo(sysrepo::Session session, const std::string& xpath, sysrepo::Datastore datastore)
 {
     velia::utils::ScopedDatastoreSwitch s(session, datastore);
     return dataFromSysrepo(session, xpath);
 }
-
-#define TEST_SYSREPO_INIT                      \
-    auto srConn = sysrepo::Connection{};       \
-    auto srSess = srConn.sessionStart();
-
-#define TEST_SYSREPO_INIT_CLIENT                     \
-    auto clientConn = sysrepo::Connection{};         \
-    auto client = clientConn.sessionStart();

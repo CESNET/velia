@@ -5,7 +5,7 @@
  *
 */
 
-#include "events.h"
+#include "notifications.h"
 #include "sysrepo-helpers/common.h"
 
 NotificationWatcher::NotificationWatcher(sysrepo::Session& session, const std::string& xpath)

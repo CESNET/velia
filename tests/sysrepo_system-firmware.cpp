@@ -5,8 +5,8 @@
 #include "system/Firmware.h"
 #include "test_log_setup.h"
 #include "tests/configure.cmake.h"
-#include "tests/mock/sysrepo/events.h"
 #include "tests/sysrepo-helpers/common.h"
+#include "tests/sysrepo-helpers/notifications.h"
 
 using namespace std::literals;
 

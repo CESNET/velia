@@ -337,6 +337,8 @@ if(BUILD_TESTING)
         tests/mock/system.h
         tests/sysrepo-helpers/common.cpp
         tests/sysrepo-helpers/common.h
+        tests/sysrepo-helpers/datastore.cpp
+        tests/sysrepo-helpers/datastore.h
         tests/sysrepo-helpers/notifications.cpp
         tests/sysrepo-helpers/notifications.h
         )

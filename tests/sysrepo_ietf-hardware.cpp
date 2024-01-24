@@ -6,87 +6,15 @@
 #include "ietf-hardware/sysrepo/Sysrepo.h"
 #include "mock/ietf_hardware.h"
 #include "pretty_printers.h"
+#include "sysrepo-helpers/datastore.h"
 #include "test_log_setup.h"
 #include "tests/sysrepo-helpers/common.h"
 
 using namespace std::literals;
 
-std::string nodeAsString(const libyang::DataNode& node)
-{
-    switch (node.schema().nodeType()) {
-    case libyang::NodeType::Container:
-        return "(container)";
-    case libyang::NodeType::List:
-        return "(list instance)";
-    case libyang::NodeType::Leaf:
-    case libyang::NodeType::Leaflist:
-        return std::string(node.asTerm().valueStr());
-    default:
-        return "(unprintable)";
-    }
-};
-
-struct Deleted { };
-bool operator==(const Deleted&, const Deleted&) { return true; }
-
-using ValueMap = std::map<std::string, std::variant<std::string, Deleted>>;
-
-namespace trompeloeil {
-template <>
-struct printer<ValueMap> {
-    static void print(std::ostream& os, const ValueMap& map)
-    {
-        os << "{" << std::endl;
-        for (const auto& [key, value] : map) {
-            os << "  \"" << key << "\": \""
-               << std::visit([](auto&& arg) -> std::string {
-                using T = std::decay_t<decltype(arg)>;
-                if constexpr (std::is_same_v<T, Deleted>)
-                    return "Deleted()";
-                if constexpr (std::is_same_v<T, std::string>)
-                    return arg; }, value)
-               << "\"," << std::endl;
-        }
-        os << "}";
-    }
-};
-}
-
-struct DatastoreChange {
-    MAKE_CONST_MOCK1(change, void(const ValueMap&));
-};
-
 struct AlarmEvent {
     MAKE_CONST_MOCK1(event, void(const std::map<std::string, std::string>&));
 };
-
-void processDsChanges(sysrepo::Session session, DatastoreChange& dsChange, const std::set<std::string>& ignoredPaths)
-{
-    ValueMap changes;
-
-    for (const auto& change : session.getChanges()) {
-        if (ignoredPaths.contains(change.node.schema().path())) {
-            continue;
-        }
-
-        if (change.node.schema().nodeType() == libyang::NodeType::List) {
-            // any list will surely have some "nodes below", so let's not waste time printing the list entry itself
-            continue;
-        }
-        if (change.node.schema().nodeType() == libyang::NodeType::Container && !change.node.schema().asContainer().isPresence()) {
-            // non-presence containers are "always there", let's not clutter up the output
-            continue;
-        }
-
-        if (change.operation == sysrepo::ChangeOperation::Deleted) {
-            changes.emplace(change.node.path(), Deleted());
-        } else {
-            changes.emplace(change.node.path(), nodeAsString(change.node));
-        }
-    }
-
-    dsChange.change(changes);
-}
 
 struct AlarmInventory {
     std::map<std::pair<std::string, std::string>, std::vector<std::string>> inventory;
@@ -107,14 +35,14 @@ struct AlarmInventory {
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
 
 #define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                            \
-    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                                \
+    REQUIRE_DATASTORE_CHANGE(dsChangeAlarmInventory, (ValueChanges{                                                                                                                                      \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                      \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                       \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
                                          })).LR_SIDE_EFFECT(alarmInventory.add(ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE)))
 
 #define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                         \
-    REQUIRE_CALL(dsChangeAlarmInventory, change(ValueMap{                                                                                                                                                \
+    REQUIRE_DATASTORE_CHANGE(dsChangeAlarmInventory, (ValueChanges{                                                                                                                                      \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
                                          }))                                                                                                                                                             \
         .LR_SIDE_EFFECT(alarmInventory.add(ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE)))
@@ -144,8 +72,6 @@ TEST_CASE("IETF Hardware with sysrepo")
 
     client.switchDatastore(sysrepo::Datastore::Operational);
 
-    DatastoreChange dsChangeHardware;
-    DatastoreChange dsChangeAlarmInventory;
     AlarmEvent alarmEvents;
     AlarmInventory alarmInventory;
 
@@ -242,25 +168,8 @@ TEST_CASE("IETF Hardware with sysrepo")
     ietfHardware->registerDataReader(PsuDataReader{psuActive, psuSensorValue});
 
     /* Ensure that there are sane data after each sysrepo change callback (all the component subtrees are expected). */
-    auto changeSub = client.onModuleChange(
-        "ietf-hardware",
-        [&](sysrepo::Session session, auto, auto, auto, auto, auto) {
-            processDsChanges(session, dsChangeHardware, {"/ietf-hardware:hardware/last-change"});
-            return sysrepo::ErrorCode::Ok;
-        },
-        "/ietf-hardware:hardware/component",
-        0,
-        sysrepo::SubscribeOptions::DoneOnly);
-
-    auto alarmsInvSub = alarmsClient.onModuleChange(
-        "ietf-alarms",
-        [&](sysrepo::Session session, auto, auto, auto, auto, auto) {
-            processDsChanges(session, dsChangeAlarmInventory, {});
-            return sysrepo::ErrorCode::Ok;
-        },
-        "/ietf-alarms:alarms/alarm-inventory",
-        0,
-        sysrepo::SubscribeOptions::DoneOnly);
+    DatastoreWatcher dsChangeHardware(client, "/ietf-hardware:hardware/component", {"/ietf-hardware:hardware/last-change"});
+    DatastoreWatcher dsChangeAlarmInventory(client, "/ietf-alarms:alarms/alarm-inventory", {"/ietf-hardware:hardware/last-change"});
 
     SECTION("Disappearing sensor plugged from the beginning")
     {
@@ -286,7 +195,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:temperature-cpu").IN_SEQUENCE(seq1);
 
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne") "/class", "iana-hardware:chassis"},
                                            {COMPONENT("ne") "/mfg-name", "CESNET"},
                                            {COMPONENT("ne") "/name", "ne"},
@@ -333,7 +242,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         std::string lastChange = directLeafNodeQuery(modulePrefix + "/last-change");
 
         // second batch of values, sensor data changed, PSU ejected
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:psu:child") "/class", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/parent", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
@@ -360,7 +269,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE(directLeafNodeQuery(modulePrefix + "/last-change") > lastChange); // check that last-change leaf has timestamp that is greater than the previous one
 
         // third batch of changes, wild PSU appears with a warning
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
                                            {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
                                            {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
@@ -381,7 +290,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         waitForCompletionAndBitMore(seq1);
 
         // fourth round. We unplug with a warning
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:psu:child") "/class", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/parent", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
@@ -400,7 +309,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         waitForCompletionAndBitMore(seq1);
 
         // 5+th round: test threshold crossings
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:power") "/sensor-data/value", "21000000"},
                                        }))
             .IN_SEQUENCE(seq1);
@@ -408,7 +317,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         powerValue = 21'000'000;
         waitForCompletionAndBitMore(seq1);
 
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:power") "/sensor-data/value", "24000000"},
                                        }))
             .IN_SEQUENCE(seq1);
@@ -416,7 +325,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         powerValue = 24'000'000;
         waitForCompletionAndBitMore(seq1);
 
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:power") "/sensor-data/value", "1"},
                                        }))
             .IN_SEQUENCE(seq1);
@@ -425,7 +334,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         powerValue = 1;
         waitForCompletionAndBitMore(seq1);
 
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:power") "/sensor-data/value", "14000000"},
                                        }))
             .IN_SEQUENCE(seq1);
@@ -434,7 +343,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         waitForCompletionAndBitMore(seq1);
 
 
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:power") "/sensor-data/value", "1000000000"},
                                            {COMPONENT("ne:power") "/sensor-data/oper-status", "nonoperational"},
                                        }))
@@ -447,7 +356,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         powerValue = 1'999'999'999;
         waitForCompletionAndBitMore(seq1);
 
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:power") "/sensor-data/value", "-1000000000"},
                                        }))
             .IN_SEQUENCE(seq1);
@@ -456,7 +365,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         powerValue = -2'999'999'999;
         waitForCompletionAndBitMore(seq1);
 
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:power") "/sensor-data/value", "-999999999"},
                                            {COMPONENT("ne:power") "/sensor-data/oper-status", "ok"},
                                        }))
@@ -484,7 +393,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:temperature-cpu").IN_SEQUENCE(seq1);
 
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne") "/class", "iana-hardware:chassis"},
                                            {COMPONENT("ne") "/mfg-name", "CESNET"},
                                            {COMPONENT("ne") "/name", "ne"},
@@ -528,7 +437,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:psu:child").IN_SEQUENCE(seq1);
-        REQUIRE_CALL(dsChangeHardware, change(ValueMap{
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
                                            {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
                                            {COMPONENT("ne:psu:child") "/name", "ne:psu:child"},

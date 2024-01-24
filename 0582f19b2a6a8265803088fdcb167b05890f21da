@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f235a2f3_34bd9b96",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-24T14:56:21Z",
+      "side": 1,
+      "message": "It\u0027s used on three places already, so consider using ScopedDatastoreSwitch from CzechLight/sysrepo-ietf-alarms. Altenratively, maybe it\u0027s something which should be put into sysrepo-cpp proper?",
+      "revId": "0582f19b2a6a8265803088fdcb167b05890f21da",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

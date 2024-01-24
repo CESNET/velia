@@ -1,14 +1,28 @@
 #include "alarms.h"
 
-void AlarmInventory::add(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::string& resource)
+void AlarmInventory::add(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::optional<std::string>& resource, const std::optional<std::string>& severity)
 {
-    inventory[{alarmTypeId, alarmTypeQualifier}].push_back(resource);
+    auto& alarm = inventory[{alarmTypeId, alarmTypeQualifier}];
+    if (resource) {
+        alarm.resources.insert(*resource);
+    }
+    if (severity) {
+        alarm.severities.insert(*severity);
+    }
 }
 
-bool AlarmInventory::contains(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::string& resource) const
+bool AlarmInventory::contains(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::optional<std::string>& resource, const std::optional<std::string>& severity) const
 {
     if (auto it = inventory.find({alarmTypeId, alarmTypeQualifier}); it != inventory.end()) {
-        return std::find(it->second.begin(), it->second.end(), resource) != it->second.end();
+        const auto& alarm = it->second;
+
+        if (resource && !alarm.resources.empty() && !alarm.resources.contains(*resource)) {
+            return false;
+        }
+
+        if (severity && *severity != "cleared" && !alarm.severities.empty() && !alarm.severities.contains(*severity)) {
+            return false;
+        }
     }
-    return false;
+    return true;
 }

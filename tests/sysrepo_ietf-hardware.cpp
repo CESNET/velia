@@ -21,13 +21,13 @@ using namespace std::literals;
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                      \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                       \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
-                                         })).ALARM_INVENTORY_INSERT(alarmInventory, ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE))
+                                         })).ALARM_INVENTORY_INSERT(alarmInventory, ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE), std::nullopt)
 
 #define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                         \
     REQUIRE_DATASTORE_CHANGE(dsChangeAlarmInventory, (ValueChanges{                                                                                                                                      \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
                                          }))                                                                                                                                                             \
-        .ALARM_INVENTORY_INSERT(alarmInventory, ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE))
+        .ALARM_INVENTORY_INSERT(alarmInventory, ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE), std::nullopt)
 
 #define REQUIRE_ALARM_RPC(ALARM_TYPE_ID, IETF_HARDWARE_RESOURCE_KEY, SEVERITY, TEXT)                                               \
     REQUIRE_RPC_CALL(alarmEvents, (Values{                                                                                         \
@@ -38,7 +38,7 @@ using namespace std::literals;
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", COMPONENT(IETF_HARDWARE_RESOURCE_KEY)}, \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY},                              \
                               }))                                                                                                  \
-        .ALARM_INVENTORY_CONTAINS(alarmInventory, ALARM_TYPE_ID, "", COMPONENT(IETF_HARDWARE_RESOURCE_KEY))
+        .ALARM_INVENTORY_CONTAINS(alarmInventory, ALARM_TYPE_ID, "", COMPONENT(IETF_HARDWARE_RESOURCE_KEY), std::nullopt)
 
 TEST_CASE("IETF Hardware with sysrepo")
 {

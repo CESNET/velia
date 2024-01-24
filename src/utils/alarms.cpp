@@ -30,7 +30,7 @@ void createOrUpdateAlarm(sysrepo::Session session, const std::string& alarmId, c
     session.sendRPC(inputNode);
 }
 
-void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::vector<std::string>& severities, bool willClear, const std::string& description)
+void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::vector<std::string>& severities, bool willClear, const std::string& description, const std::vector<std::string>& resources)
 {
     const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='" + alarmTypeQualifier.value_or("") + "']";
 
@@ -41,6 +41,10 @@ void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::stri
 
     for (const auto& severity : severities) {
         session.setItem(prefix + "/severity-level", severity);
+    }
+
+    for (const auto& resource : resources) {
+        session.setItem(prefix + "/resource", resource);
     }
 
     session.applyChanges();

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "870177f9_0fc8670b",
+        "filename": "tests/hardware_fspyh.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-24T15:13:10Z",
+      "side": 1,
+      "message": "I wonder what was wrong with just `sysrepo_helpers.h`, but it doesn\u0027t matter I suppose :)",
+      "revId": "4fd74c80892ae5e121c29149352950ea9c254db3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

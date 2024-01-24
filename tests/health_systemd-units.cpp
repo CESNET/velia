@@ -15,55 +15,28 @@
 #include "pretty_printers.h"
 #include "test_log_setup.h"
 #include "tests/sysrepo-helpers/common.h"
+#include "tests/sysrepo-helpers/rpc.h"
 #include "utils/log-init.h"
 #include "utils/log.h"
 
 using namespace std::chrono_literals;
 
 // clang-format off
-#define EXPECT_ALARM_RPC(RESOURCE, SEVERITY, TEXT) REQUIRE_CALL(fakeAlarmServer, rpcCalled(alarmRPC, std::map<std::string, std::string>{ \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT},                                                            \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:systemd-unit-failure"},                          \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},                                                    \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", RESOURCE},                                                          \
-            {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY}                                                           \
+#define REQUIRE_ALARM_RPC(RESOURCE, SEVERITY, TEXT) REQUIRE_RPC_CALL(alarmRPC, (Values{                          \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"},                                   \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT},                                   \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", "velia-alarms:systemd-unit-failure"}, \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},                           \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", RESOURCE},                                 \
+            {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY}                                  \
         })).IN_SEQUENCE(seq1);
 // clang-format on
-
-const auto alarmRPC = "/sysrepo-ietf-alarms:create-or-update-alarm";
-
-class FakeAlarmServerSysrepo {
-public:
-    FakeAlarmServerSysrepo();
-    MAKE_CONST_MOCK2(rpcCalled, void(std::string_view, const std::map<std::string, std::string>&));
-
-private:
-    sysrepo::Session m_srSess;
-    std::optional<sysrepo::Subscription> m_srSub;
-};
-
-
-FakeAlarmServerSysrepo::FakeAlarmServerSysrepo()
-    : m_srSess(sysrepo::Connection{}.sessionStart())
-{
-    m_srSub = m_srSess.onRPCAction(alarmRPC, [&](auto, auto, std::string_view path, const libyang::DataNode input, auto, auto, auto) {
-        std::map<std::string, std::string> in;
-
-        for (auto n : input.childrenDfs()) {
-            if (n.isTerm()) {
-                in[n.path()] = n.asTerm().valueStr();
-            }
-        }
-
-        rpcCalled(path, in);
-        return sysrepo::ErrorCode::Ok;
-    });
-}
 
 TEST_CASE("systemd unit state monitoring (alarms)")
 {
     TEST_INIT_LOGS;
     TEST_SYSREPO_INIT;
+    TEST_SYSREPO_INIT_CLIENT;
     trompeloeil::sequence seq1;
 
     // Create and setup separate connections for both client and server to simulate real-world server-client architecture.
@@ -74,19 +47,18 @@ TEST_CASE("systemd unit state monitoring (alarms)")
     serverConnection->enterEventLoopAsync();
 
     auto server = DbusSystemdServer(*serverConnection);
-    FakeAlarmServerSysrepo fakeAlarmServer;
+    RPCWatcher alarmRPC(client, "/sysrepo-ietf-alarms:create-or-update-alarm");
+    DatastoreWatcher alarmInventory(client, "/ietf-alarms:alarms/alarm-inventory");
 
-    EXPECT_ALARM_RPC("unit1.service", "cleared", "systemd unit state: (active, running)");
+    REQUIRE_ALARM_RPC("unit1.service", "cleared", "systemd unit state: (active, running)");
     server.createUnit(*serverConnection, "unit1.service", "/org/freedesktop/systemd1/unit/unit1", "active", "running");
-    EXPECT_ALARM_RPC("unit2.service", "critical", "systemd unit state: (activating, auto-restart)");
+    REQUIRE_ALARM_RPC("unit2.service", "critical", "systemd unit state: (activating, auto-restart)");
     server.createUnit(*serverConnection, "unit2.service", "/org/freedesktop/systemd1/unit/unit2", "activating", "auto-restart");
-    EXPECT_ALARM_RPC("unit3.service", "critical", "systemd unit state: (failed, failed)");
+    REQUIRE_ALARM_RPC("unit3.service", "critical", "systemd unit state: (failed, failed)");
     server.createUnit(*serverConnection, "unit3.service", "/org/freedesktop/systemd1/unit/unit3", "failed", "failed");
 
     auto systemdAlarms = std::make_shared<velia::health::SystemdUnits>(srSess, *clientConnection, serverConnection->getUniqueName(), "/org/freedesktop/systemd1", "org.freedesktop.systemd1.Manager", "org.freedesktop.systemd1.Unit");
 
-    waitForCompletionAndBitMore(seq1);
-    // clang-format off
     REQUIRE(dataFromSysrepo(srSess, "/ietf-alarms:alarms/alarm-inventory", sysrepo::Datastore::Operational) == std::map<std::string, std::string>{
             {"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']", ""},
             {"/alarm-type[alarm-type-id='velia-alarms:systemd-unit-failure'][alarm-type-qualifier='']/alarm-type-id", "velia-alarms:systemd-unit-failure"},
@@ -100,15 +72,15 @@ TEST_CASE("systemd unit state monitoring (alarms)")
             });
     // clang-format on
 
-    EXPECT_ALARM_RPC("unit2.service", "cleared", "systemd unit state: (active, running)");
-    EXPECT_ALARM_RPC("unit3.service", "cleared", "systemd unit state: (active, running)");
-    EXPECT_ALARM_RPC("unit4.service", "critical", "systemd unit state: (failed, failed)");
-    EXPECT_ALARM_RPC("unit3.service", "critical", "systemd unit state: (activating, auto-restart)");
-    EXPECT_ALARM_RPC("unit3.service", "cleared", "systemd unit state: (active, running)");
-    EXPECT_ALARM_RPC("unit3.service", "critical", "systemd unit state: (failed, failed)");
-    EXPECT_ALARM_RPC("unit3.service", "critical", "systemd unit state: (activating, auto-restart)");
-    EXPECT_ALARM_RPC("unit3.service", "cleared", "systemd unit state: (active, running)");
-    EXPECT_ALARM_RPC("unit4.service", "cleared", "systemd unit state: (active, running)");
+    REQUIRE_ALARM_RPC("unit2.service", "cleared", "systemd unit state: (active, running)");
+    REQUIRE_ALARM_RPC("unit3.service", "cleared", "systemd unit state: (active, running)");
+    REQUIRE_ALARM_RPC("unit4.service", "critical", "systemd unit state: (failed, failed)");
+    REQUIRE_ALARM_RPC("unit3.service", "critical", "systemd unit state: (activating, auto-restart)");
+    REQUIRE_ALARM_RPC("unit3.service", "cleared", "systemd unit state: (active, running)");
+    REQUIRE_ALARM_RPC("unit3.service", "critical", "systemd unit state: (failed, failed)");
+    REQUIRE_ALARM_RPC("unit3.service", "critical", "systemd unit state: (activating, auto-restart)");
+    REQUIRE_ALARM_RPC("unit3.service", "cleared", "systemd unit state: (active, running)");
+    REQUIRE_ALARM_RPC("unit4.service", "cleared", "systemd unit state: (active, running)");
 
     std::thread systemdSimulator([&] {
         server.changeUnitState("/org/freedesktop/systemd1/unit/unit2", "active", "running");

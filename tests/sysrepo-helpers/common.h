@@ -18,6 +18,8 @@ Values dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath
 Values rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, std::map<std::string, std::string> input);
 Values dataFromSysrepo(sysrepo::Session session, const std::string& xpath, sysrepo::Datastore datastore);
 
+std::string moduleFromXpath(const std::string& xpath);
+
 #define TEST_SYSREPO_INIT                \
     auto srConn = sysrepo::Connection{}; \
     auto srSess = srConn.sessionStart();

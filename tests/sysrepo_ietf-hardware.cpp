@@ -6,28 +6,13 @@
 #include "ietf-hardware/sysrepo/Sysrepo.h"
 #include "mock/ietf_hardware.h"
 #include "pretty_printers.h"
+#include "sysrepo-helpers/alarms.h"
 #include "sysrepo-helpers/datastore.h"
 #include "sysrepo-helpers/rpc.h"
 #include "test_log_setup.h"
 #include "tests/sysrepo-helpers/common.h"
 
 using namespace std::literals;
-
-struct AlarmInventory {
-    std::map<std::pair<std::string, std::string>, std::vector<std::string>> inventory;
-
-    void add(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::string& resource)
-    {
-        inventory[{alarmTypeId, alarmTypeQualifier}].push_back(resource);
-    }
-    bool contains(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::string& resource) const
-    {
-        if (auto it = inventory.find({alarmTypeId, alarmTypeQualifier}); it != inventory.end()) {
-            return std::find(it->second.begin(), it->second.end(), resource) != it->second.end();
-        }
-        return false;
-    }
-};
 
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
 
@@ -36,13 +21,13 @@ struct AlarmInventory {
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-id", ALARM_TYPE},                      \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/alarm-type-qualifier", ""},                       \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
-                                         })).LR_SIDE_EFFECT(alarmInventory.add(ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE)))
+                                         })).ALARM_INVENTORY_INSERT(alarmInventory, ALARM_TYPE, "", std::set<std::string>{COMPONENT(IETF_HARDWARE_RESOURCE)})
 
 #define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, IETF_HARDWARE_RESOURCE)                                                                                                                         \
     REQUIRE_DATASTORE_CHANGE(dsChangeAlarmInventory, (ValueChanges{                                                                                                                                      \
                                              {"/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='']/resource[1]", COMPONENT(IETF_HARDWARE_RESOURCE)}, \
                                          }))                                                                                                                                                             \
-        .LR_SIDE_EFFECT(alarmInventory.add(ALARM_TYPE, "", COMPONENT(IETF_HARDWARE_RESOURCE)))
+        .ALARM_INVENTORY_INSERT(alarmInventory, ALARM_TYPE, "", std::set<std::string>{COMPONENT(IETF_HARDWARE_RESOURCE)})
 
 #define REQUIRE_ALARM_RPC(ALARM_TYPE_ID, IETF_HARDWARE_RESOURCE_KEY, SEVERITY, TEXT)                                               \
     REQUIRE_RPC_CALL(alarmEvents, (Values{                                                                                         \
@@ -53,7 +38,7 @@ struct AlarmInventory {
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", COMPONENT(IETF_HARDWARE_RESOURCE_KEY)}, \
                                   {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY},                              \
                               }))                                                                                                  \
-        .LR_WITH(alarmInventory.contains(ALARM_TYPE_ID, "", COMPONENT(IETF_HARDWARE_RESOURCE_KEY)))
+        .ALARM_INVENTORY_CONTAINS(alarmInventory, ALARM_TYPE_ID, "", COMPONENT(IETF_HARDWARE_RESOURCE_KEY))
 
 TEST_CASE("IETF Hardware with sysrepo")
 {

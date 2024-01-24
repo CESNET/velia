@@ -14,6 +14,7 @@
 #include "health/SystemdUnits.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
+#include "tests/sysrepo-helpers/alarms.h"
 #include "tests/sysrepo-helpers/common.h"
 #include "tests/sysrepo-helpers/datastore.h"
 #include "tests/sysrepo-helpers/rpc.h"
@@ -30,11 +31,13 @@ using namespace std::chrono_literals;
             {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""},                           \
             {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", RESOURCE},                                 \
             {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY}                                  \
-        })).IN_SEQUENCE(seq1);
+        })).IN_SEQUENCE(seq1).ALARM_INVENTORY_CONTAINS(alarmInventory, "velia-alarms:systemd-unit-failure", "", RESOURCE, SEVERITY)
 // clang-format on
 
 #define ALARM_INVENTORY_PATH(TYPE, QUAL) "/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" TYPE "'][alarm-type-qualifier='" QUAL "']"
-#define REQUIRE_ALARM_INVENTORY_UNIT(UNIT) REQUIRE_DATASTORE_CHANGE(alarmInventory, (ValueChanges{{ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/resource[1]", UNIT}})).IN_SEQUENCE(seq1)
+#define REQUIRE_ALARM_INVENTORY_UNIT(UNIT) REQUIRE_DATASTORE_CHANGE(alarmInventoryChanges, (ValueChanges{ \
+            {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/resource[1]", UNIT}   \
+        })).IN_SEQUENCE(seq1).ALARM_INVENTORY_INSERT(alarmInventory, "velia-alarms:systemd-unit-failure", "", std::set<std::string>{UNIT}, std::set<std::string>{})
 
 TEST_CASE("systemd unit state monitoring (alarms)")
 {
@@ -42,6 +45,8 @@ TEST_CASE("systemd unit state monitoring (alarms)")
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
     trompeloeil::sequence seq1;
+
+    AlarmInventory alarmInventory;
 
     // Create and setup separate connections for both client and server to simulate real-world server-client architecture.
     // Also this doesn't work one a single dbus connection.
@@ -53,17 +58,17 @@ TEST_CASE("systemd unit state monitoring (alarms)")
     auto server = DbusSystemdServer(*serverConnection);
 
     client.switchDatastore(sysrepo::Datastore::Operational);
-    DatastoreWatcher alarmInventory(client, "/ietf-alarms:alarms/alarm-inventory");
+    DatastoreWatcher alarmInventoryChanges(client, "/ietf-alarms:alarms/alarm-inventory");
     RPCWatcher alarmRPC(client, "/sysrepo-ietf-alarms:create-or-update-alarm");
 
-    REQUIRE_DATASTORE_CHANGE(alarmInventory,
+    REQUIRE_DATASTORE_CHANGE(alarmInventoryChanges,
                              (ValueChanges{
                                  {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/alarm-type-id", "velia-alarms:systemd-unit-failure"},
                                  {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/alarm-type-qualifier", ""},
                                  {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/description", "The systemd service is considered in failed state."},
                                  {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/severity-level[1]", "critical"},
                                  {ALARM_INVENTORY_PATH("velia-alarms:systemd-unit-failure", "") "/will-clear", "true"},
-                             })).IN_SEQUENCE(seq1);
+                             })).IN_SEQUENCE(seq1).ALARM_INVENTORY_INSERT(alarmInventory, "velia-alarms:systemd-unit-failure", "", std::set<std::string>{}, std::set<std::string>{"critical"});
 
     REQUIRE_ALARM_INVENTORY_UNIT("unit1.service");
     REQUIRE_ALARM_RPC("unit1.service", "cleared", "systemd unit state: (active, running)");

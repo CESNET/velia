@@ -87,7 +87,7 @@ void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std
             newSubState = it->second.get<std::string>();
         }
 
-        onUnitStateChange(unitName, newActiveState, newSubState);
+        onUnitStateChange(unitName, UnitState{std::move(newActiveState), std::move(newSubState)});
     });
     proxyUnit->finishRegistration();
     m_log->trace("Registered systemd unit watcher for '{}'", unitName);
@@ -95,22 +95,21 @@ void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std
     // Query the current state of this unit
     std::string newActiveState = proxyUnit->getProperty("ActiveState").onInterface(m_unitIface);
     std::string newSubState = proxyUnit->getProperty("SubState").onInterface(m_unitIface);
-    onUnitStateChange(unitName, newActiveState, newSubState);
+    onUnitStateChange(unitName, UnitState{std::move(newActiveState), std::move(newSubState)});
 }
 
 /** @brief Callback for unit state change */
-void SystemdUnits::onUnitStateChange(const std::string& name, const std::string& activeState, const std::string& subState)
+void SystemdUnits::onUnitStateChange(const std::string& name, const UnitState& state)
 {
     std::lock_guard lck(m_mtx);
-
-    auto systemdState = std::make_pair(activeState, subState);
+    const auto& [activeState, subState] = state;
 
     auto lastState = m_unitState.find(name);
     if (lastState == m_unitState.end()) {
-        lastState = m_unitState.insert(std::make_pair(name, systemdState)).first;
-    } else if (lastState->second == systemdState) {
+        lastState = m_unitState.insert(std::make_pair(name, state)).first;
+    } else if (lastState->second == state) {
         // We were notified about a state change into the same state. No need to fire any events, everything is still the same.
-        m_log->trace("Systemd unit '{}' changed state but it is the same state as before ({}, {})", name, systemdState.first, systemdState.second);
+        m_log->trace("Systemd unit '{}' changed state but it is the same state as before ({}, {})", name, activeState, subState);
         return;
     }
 
@@ -122,7 +121,7 @@ void SystemdUnits::onUnitStateChange(const std::string& name, const std::string&
     }
 
     m_log->debug("Systemd unit '{}' changed state ({} {})", name, activeState, subState);
-    lastState->second = systemdState;
+    lastState->second = state;
 
     utils::createOrUpdateAlarm(m_srSession, ALARM_ID, std::nullopt, name, alarmSeverity, "systemd unit state: (" + activeState + ", " + subState + ")");
 }

@@ -343,6 +343,8 @@ if(BUILD_TESTING)
         tests/sysrepo-helpers/notifications.h
         tests/sysrepo-helpers/rpc.cpp
         tests/sysrepo-helpers/rpc.h
+        tests/sysrepo-helpers/alarms.cpp
+        tests/sysrepo-helpers/alarms.h
         )
     target_link_libraries(SysrepoTesting DoctestIntegration PkgConfig::SYSREPO)
 

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea13e62c_c933649d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-24T15:23:15Z",
+      "side": 1,
+      "message": "So, now we have a class for watching data modifications, another one for mocking RPCs, and another one for notifications. So far, this is \"only\" moving some code around. Would it make more sense to have a single class which mocks any such events, and to simply active different subscriptions within that when a particular feature is required?",
+      "revId": "703e3a04aed38054264eeb75fc9e1b845bb39613",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

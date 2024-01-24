@@ -23,6 +23,13 @@ public:
     ~SystemdUnits();
 
 private:
+    struct UnitState {
+        std::string activeState;
+        std::string subState;
+
+        bool operator==(const UnitState&) const = default;
+    };
+
     velia::Log m_log;
 
     sysrepo::Session m_srSession;
@@ -37,10 +44,10 @@ private:
     std::map<sdbus::ObjectPath, std::unique_ptr<sdbus::IProxy>> m_proxyUnits;
 
     /** Current unit state. */
-    std::map<std::string, std::pair<std::string, std::string>> m_unitState;
+    std::map<std::string, UnitState> m_unitState;
 
     void registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath);
-    void onUnitStateChange(const std::string& name, const std::string& activeState, const std::string& nSubState);
+    void onUnitStateChange(const std::string& name, const UnitState& unitState);
 };
 
 }

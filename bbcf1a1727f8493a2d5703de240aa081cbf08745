@@ -48,6 +48,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2bca838f_7af3c41d",
+        "filename": "src/health/SystemdUnits.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-25T14:24:39Z",
+      "side": 1,
+      "message": "I have not realized that there are no \"global\" signals for units which change their states, and that this requires a subscription per each unit. In that case what I was requesting apparently cannot be done, sorry.",
+      "parentUuid": "d110c244_b855dffc",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 92
+      },
+      "revId": "bbcf1a1727f8493a2d5703de240aa081cbf08745",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "112a3d8d_dc31ae78",

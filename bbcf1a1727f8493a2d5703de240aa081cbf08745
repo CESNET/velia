@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d110c244_b855dffc",
+        "filename": "src/health/SystemdUnits.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-25T13:27:49Z",
+      "side": 1,
+      "message": "Is this doable?\n\nI can 1) subscribe, then 2) attach to UnitNew and every new unit will be registered. Then 3) I can call ListUnits and 4) attach to PropertiesChanged for each unit listed here (that was not yet added by UnitNew).\n\nHowever, there is still a small window between 3) and 4) for some property changes to appear without me knowing it. Isn\u0027t it?",
+      "parentUuid": "adf24a8e_56487b96",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 92
+      },
+      "revId": "bbcf1a1727f8493a2d5703de240aa081cbf08745",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "112a3d8d_dc31ae78",
         "filename": "src/utils/alarms.h",
         "patchSetId": 1

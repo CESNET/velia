@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "492b4422_33466185",
+        "filename": "tests/sysrepo-helpers/alarms.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-25T21:19:28Z",
+      "side": 1,
+      "message": "I think it is a good name. Done. Thanks.",
+      "parentUuid": "b85a9dbb_b14a0a9c",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 16
+      },
+      "revId": "473d0a841a9add8070a8a4f5dcaf6419e766203d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2d37b1a9_01965804",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-01-25T14:38:06Z",
       "side": 1,
       "message": "nit: just \"INSERT_INTO_INVENTORY\", please; on all caller sites it should be obvious that it\u0027s about alarm handling, and shorter identifiers are easier to read",
+      "range": {
+        "startLine": 38,
+        "startChar": 8,
+        "endLine": 38,
+        "endChar": 35
+      },
+      "revId": "473d0a841a9add8070a8a4f5dcaf6419e766203d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a50ff99_11f55818",
+        "filename": "tests/sysrepo-helpers/alarms.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-25T21:19:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d37b1a9_01965804",
       "range": {
         "startLine": 38,
         "startChar": 8,

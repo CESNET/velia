@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53943bfa_26b35d1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-25T13:10:45Z",
+      "side": 1,
+      "message": "Indeed it is possible, I can figure something out later. Now I need to use these classes.",
+      "parentUuid": "ea13e62c_c933649d",
+      "revId": "703e3a04aed38054264eeb75fc9e1b845bb39613",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "af1b1d91_a9c0997c",
@@ -31,6 +49,30 @@
       "writtenOn": "2024-01-24T15:26:48Z",
       "side": 1,
       "message": "This looks like an unrelated change that\u0027s not used, and it\u0027s changed in the next commit, isn\u0027t it?",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 83
+      },
+      "revId": "703e3a04aed38054264eeb75fc9e1b845bb39613",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8500d41_0aa783b5",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-25T13:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af1b1d91_a9c0997c",
       "range": {
         "startLine": 51,
         "startChar": 4,

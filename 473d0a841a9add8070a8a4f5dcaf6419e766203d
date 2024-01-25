@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b85a9dbb_b14a0a9c",
+        "filename": "tests/sysrepo-helpers/alarms.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-25T14:38:06Z",
+      "side": 1,
+      "message": "it\u0027s a modifier that cannot be used standalone, so I\u0027d prefer not to use the word \"REQUIRE\" here. Since it\u0027s about a variant of the \"WITH\" modifier, what about \"WITH_ALARM_IN_INVENTORY\"? It\u0027s a bit silly, but my naming generator is overloaded today.",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 16
+      },
+      "revId": "473d0a841a9add8070a8a4f5dcaf6419e766203d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d37b1a9_01965804",
+        "filename": "tests/sysrepo-helpers/alarms.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-25T14:38:06Z",
+      "side": 1,
+      "message": "nit: just \"INSERT_INTO_INVENTORY\", please; on all caller sites it should be obvious that it\u0027s about alarm handling, and shorter identifiers are easier to read",
+      "range": {
+        "startLine": 38,
+        "startChar": 8,
+        "endLine": 38,
+        "endChar": 35
+      },
+      "revId": "473d0a841a9add8070a8a4f5dcaf6419e766203d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "195872e8_3f513cbe",
+        "filename": "tests/sysrepo-helpers/alarms.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-25T14:38:06Z",
+      "side": 1,
+      "message": "please remove that whitespace before the trailing backslash",
+      "revId": "473d0a841a9add8070a8a4f5dcaf6419e766203d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

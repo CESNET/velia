@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adf24a8e_56487b96",
+        "filename": "src/health/SystemdUnits.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-25T09:14:24Z",
+      "side": 1,
+      "message": "Why does it call ListUnits twice? Why not:\n\n1) start listening for new units\n2) start listening for changes of states of existing units\n3) call Subscribe\n4) fetch info of all units and overwrite the info that might have been already stored from the 1) and 2) by the just-read stuff\n5) propagate that to sysrepo",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 92
+      },
+      "revId": "bbcf1a1727f8493a2d5703de240aa081cbf08745",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "112a3d8d_dc31ae78",
+        "filename": "src/utils/alarms.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-25T09:14:24Z",
+      "side": 1,
+      "message": "for a future refactoring: consider moving this to the very last argument, with a default value, and make an enum for this",
+      "range": {
+        "startLine": 13,
+        "startChar": 191,
+        "endLine": 13,
+        "endChar": 205
+      },
+      "revId": "bbcf1a1727f8493a2d5703de240aa081cbf08745",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8279126b_d4cd6b45",
+        "filename": "src/utils/alarms.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-25T09:14:24Z",
+      "side": 1,
+      "message": "for a future refactoring: please remove this, it\u0027s not used anywhere and it only makes the code less readable",
+      "range": {
+        "startLine": 13,
+        "startChar": 93,
+        "endLine": 13,
+        "endChar": 145
+      },
+      "revId": "bbcf1a1727f8493a2d5703de240aa081cbf08745",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

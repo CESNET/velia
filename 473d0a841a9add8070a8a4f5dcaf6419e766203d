@@ -110,6 +110,24 @@
       "message": "please remove that whitespace before the trailing backslash",
       "revId": "473d0a841a9add8070a8a4f5dcaf6419e766203d",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcb35101_bcf8da2f",
+        "filename": "tests/sysrepo-helpers/alarms.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-25T21:22:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "195872e8_3f513cbe",
+      "revId": "473d0a841a9add8070a8a4f5dcaf6419e766203d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

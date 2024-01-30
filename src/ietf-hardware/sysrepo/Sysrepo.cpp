@@ -104,10 +104,10 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             for (const auto& sensorXPath : activeSensors) {
                 if (!seenSensors.contains(sensorXPath)) {
                     auto componentXPath = extractComponentPrefix(sensorXPath);
-                    utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_LOW, componentXPath);
-                    utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_HIGH, componentXPath);
-                    utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, componentXPath);
-                    utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_NONOPERATIONAL, componentXPath);
+                    utils::alarms::addResourcesToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_LOW, {componentXPath});
+                    utils::alarms::addResourcesToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_HIGH, {componentXPath});
+                    utils::alarms::addResourcesToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, {componentXPath});
+                    utils::alarms::addResourcesToAlarmInventoryEntry(m_session, ALARM_SENSOR_NONOPERATIONAL, {componentXPath});
                 }
             }
             seenSensors.merge(activeSensors);
@@ -130,7 +130,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             /* Publish sideloaded alarms */
             for (const auto& [alarm, resource, severity, text] : sideLoadedAlarms) {
                 // Sideloaded alarms are not registered using the code above, let's register those too
-                utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, resource);
+                utils::alarms::addResourcesToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, {resource});
 
                 bool isActive = activeSideLoadedAlarms.contains({alarm, resource});
                 if (isActive && severity == "cleared") {

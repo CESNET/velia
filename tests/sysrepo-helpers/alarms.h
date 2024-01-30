@@ -15,7 +15,13 @@
 #include "sysrepo-helpers/rpc.h"
 #include "test_log_setup.h"
 
-inline ValueChanges constructAlarmInventoryChange(const std::string& alarmType,
+enum class EntryAction {
+    Create,
+    Update,
+};
+
+inline ValueChanges constructAlarmInventoryChange(EntryAction action,
+                                                  const std::string& alarmType,
                                                   const std::string& alarmQualifier,
                                                   const std::set<std::string>& resources,
                                                   const std::set<std::string>& severities,
@@ -24,10 +30,12 @@ inline ValueChanges constructAlarmInventoryChange(const std::string& alarmType,
 {
     const std::string prefix = "/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" + alarmType + "'][alarm-type-qualifier='" + alarmQualifier + "']";
 
-    ValueChanges ret{
-        {prefix + "/alarm-type-id", alarmType},
-        {prefix + "/alarm-type-qualifier", alarmQualifier},
-    };
+    ValueChanges ret;
+
+    if (action == EntryAction::Create) {
+        ret.emplace(prefix + "/alarm-type-id", alarmType);
+        ret.emplace(prefix + "/alarm-type-qualifier", alarmQualifier);
+    }
 
     if (willClear) {
         ret.emplace(prefix + "/will-clear", *willClear ? "true" : "false");
@@ -85,18 +93,12 @@ struct AlarmWatcher {
     LR_SIDE_EFFECT(INV.add(ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITIES))
 
 #define REQUIRE_NEW_ALARM_INVENTORY_ENTRY(WATCHER, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION) \
-    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, \
-            constructAlarmInventoryChange(ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION)) \
+    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, constructAlarmInventoryChange(EntryAction::Create, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION)) \
         .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES)
 
-#define REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(WATCHER, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE) \
-    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, \
-                             (ValueChanges{ \
-                                 {"/ietf-alarms:alarms/alarm-inventory/alarm-type" \
-                                 "[alarm-type-id='" ALARM_TYPE "'][alarm-type-qualifier='" ALARM_QUALIFIER "']/resource[1]", \
-                                 RESOURCE}, \
-                             })) \
-        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, ALARM_QUALIFIER, (std::set<std::string>{RESOURCE}), (std::set<std::string>{}))
+#define REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(WATCHER, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES) \
+    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, constructAlarmInventoryChange(EntryAction::Update, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, {}, std::nullopt, std::nullopt)) \
+        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, (std::set<std::string>{}))
 
 #define REQUIRE_NEW_ALARM(WATCHER, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITY, TEXT) \
     REQUIRE_RPC_CALL(WATCHER.rpcWatcher, (Values{ \

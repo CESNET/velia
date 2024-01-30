@@ -105,17 +105,21 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
 
             auto [hwStateValues, thresholds, activeSensors, sideLoadedAlarms] = m_hwState->process();
             std::set<std::string> deletedComponents;
+            std::vector<std::string> newSensors;
 
             for (const auto& sensorXPath : activeSensors) {
                 if (!seenSensors.contains(sensorXPath)) {
-                    auto componentXPath = extractComponentPrefix(sensorXPath);
-                    alarms::addResourceToInventory(m_session, ALARM_THRESHOLD_CROSSING_LOW, {componentXPath});
-                    alarms::addResourceToInventory(m_session, ALARM_THRESHOLD_CROSSING_HIGH, {componentXPath});
-                    alarms::addResourceToInventory(m_session, ALARM_SENSOR_MISSING, {componentXPath});
-                    alarms::addResourceToInventory(m_session, ALARM_SENSOR_NONOPERATIONAL, {componentXPath});
+                    newSensors.emplace_back(extractComponentPrefix(sensorXPath));
                 }
             }
             seenSensors.merge(activeSensors);
+
+            if (!newSensors.empty()) {
+                alarms::addResourceToInventory(m_session, ALARM_THRESHOLD_CROSSING_LOW, newSensors);
+                alarms::addResourceToInventory(m_session, ALARM_THRESHOLD_CROSSING_HIGH, newSensors);
+                alarms::addResourceToInventory(m_session, ALARM_SENSOR_MISSING, newSensors);
+                alarms::addResourceToInventory(m_session, ALARM_SENSOR_NONOPERATIONAL, newSensors);
+            }
 
             /* Some data readers can stop returning data in some cases (e.g. ejected PSU).
              * Prune tree components that were removed before updating to avoid having not current data from previous invocations.

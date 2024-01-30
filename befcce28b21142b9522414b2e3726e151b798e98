@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d449676_44cbe9e8",
+        "filename": "src/health/SystemdUnits.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-30T13:05:33Z",
+      "side": 1,
+      "message": "this can be removed",
+      "range": {
+        "startLine": 45,
+        "startChar": 132,
+        "endLine": 45,
+        "endChar": 163
+      },
+      "revId": "befcce28b21142b9522414b2e3726e151b798e98",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

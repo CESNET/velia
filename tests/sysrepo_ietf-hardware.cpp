@@ -15,9 +15,9 @@ using namespace std::literals;
 
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
 
-#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, RESOURCE) \
-    REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmWatcher, ALARM_TYPE, "", (std::set<std::string>{COMPONENT(RESOURCE)}), \
-            (std::set<std::string>{}), std::nullopt, std::nullopt)
+#define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, DESCRIPTION) \
+    REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmWatcher, ALARM_TYPE, "", (std::set<std::string>{}), \
+            (std::set<std::string>{}), true, DESCRIPTION)
 
 #define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, RESOURCE) \
     REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(alarmWatcher, ALARM_TYPE, "", COMPONENT(RESOURCE))
@@ -137,10 +137,16 @@ TEST_CASE("IETF Hardware with sysrepo")
         psuSensorValue = 12000;
         REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
         REQUIRE_CALL(*sysfsPower, attribute("power1_input")).LR_RETURN(powerValue).TIMES(AT_LEAST(1));
-        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-low-value-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-missing-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-nonoperational", "ne:power").IN_SEQUENCE(seq1);
+
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-low-value-alarm", "Sensor value is below the low threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-high-value-alarm", "Sensor value is above the high threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-missing-alarm", "Sensor is missing.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-nonoperational", "Sensor is flagged as nonoperational.").IN_SEQUENCE(seq1);
+
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:power").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:power").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:power").IN_SEQUENCE(seq1);
 
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
@@ -344,10 +350,15 @@ TEST_CASE("IETF Hardware with sysrepo")
         psuSensorValue = 12000;
         REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
         REQUIRE_CALL(*sysfsPower, attribute("power1_input")).LR_RETURN(powerValue).TIMES(AT_LEAST(1));
-        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-low-value-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-missing-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-nonoperational", "ne:power").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-low-value-alarm", "Sensor value is below the low threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-high-value-alarm", "Sensor value is above the high threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-missing-alarm", "Sensor is missing.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-nonoperational", "Sensor is flagged as nonoperational.").IN_SEQUENCE(seq1);
+
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:power").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:power").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:power").IN_SEQUENCE(seq1);
 
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);

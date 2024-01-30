@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "7a74d566_b677d6fc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-30T14:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54594551_10fa2192",
+      "range": {
+        "startLine": 16,
+        "startChar": 70,
+        "endLine": 17,
+        "endChar": 1
+      },
+      "revId": "689de2c5440c862103c7201ab83fcd8932410d12",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "af34aa15_4cc8990b",
         "filename": "tests/sysrepo_ietf-hardware.cpp",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2024-01-30T13:09:00Z",
       "side": 1,
       "message": "wow, and I thought it\u0027s only the systemd-handling code that needs batched updates",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 123
+      },
+      "revId": "689de2c5440c862103c7201ab83fcd8932410d12",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6f88455_cd101a57",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-30T14:24:14Z",
+      "side": 1,
+      "message": "I think these calls are not than expensive. There are only a few sensors and alarms, the number of calls is small, I guess",
+      "parentUuid": "af34aa15_4cc8990b",
       "range": {
         "startLine": 129,
         "startChar": 0,

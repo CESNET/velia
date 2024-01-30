@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdcd8bea_1efc2db6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-30T13:31:02Z",
+      "side": 1,
+      "message": "I would prefer to have this improved. It is not a \"hot path\" in this project (it only executes once during startup), but it still requires loading data from the operational DS. On a real box, I suspect (\u003d\"I don\u0027t have numbers\") that this will be \"costly\", and the costs are spread over multiple projects which are all (re)loading the same data. It\u0027s definitely a low-hanging fruit to optimize.\n\nIn theory, this might be \"just\" a matter of changing `addResourcesTo...` to accept a libyang::DataNode\u0026 for the \"edit op that\u0027s just being built\", and call applyChanges later. Maybe :), it\u0027s just a thought.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 6
+      },
+      "revId": "182288a25a3a80e80131a4b9274c69dbfa1461bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67e979bd_827adb98",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-30T13:31:02Z",
+      "side": 1,
+      "message": "that\u0027s nasty :)",
+      "range": {
+        "startLine": 26,
+        "startChar": 9,
+        "endLine": 27,
+        "endChar": 11
+      },
+      "revId": "182288a25a3a80e80131a4b9274c69dbfa1461bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be6d9770_5a137f6a",
+        "filename": "tests/sysrepo-helpers/alarms.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-30T13:31:02Z",
+      "side": 1,
+      "message": "nit: I would prefer to call this something like \"changed entry\"; the fact that the implementation of the helper pushes key leafs into the tree is IMHO not the most important part. What about:\n \nenum class Entry { Update, New }\n\n?",
+      "range": {
+        "startLine": 23,
+        "startChar": 50,
+        "endLine": 23,
+        "endChar": 57
+      },
+      "revId": "182288a25a3a80e80131a4b9274c69dbfa1461bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

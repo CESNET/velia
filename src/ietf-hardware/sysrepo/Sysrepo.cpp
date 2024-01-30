@@ -95,6 +95,11 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         std::map<std::string, State> thresholdsStates;
         std::set<std::pair<std::string, std::string>> activeSideLoadedAlarms;
 
+        utils::alarms::createOrUpdateAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_LOW, "Sensor value is below the low threshold.", {}, {}, utils::alarms::WillClear::Yes);
+        utils::alarms::createOrUpdateAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_HIGH, "Sensor value is above the high threshold.", {}, {}, utils::alarms::WillClear::Yes);
+        utils::alarms::createOrUpdateAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, "Sensor is missing.", {}, {}, utils::alarms::WillClear::Yes);
+        utils::alarms::createOrUpdateAlarmInventoryEntry(m_session, ALARM_SENSOR_NONOPERATIONAL, "Sensor is flagged as nonoperational.", {}, {}, utils::alarms::WillClear::Yes);
+
         while (!m_quit) {
             m_log->trace("IetfHardware poll");
 

@@ -41,6 +41,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "999c40f2_fa85159c",
+        "filename": "src/utils/alarms.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-30T14:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f12512c6_ac1a24eb",
+      "range": {
+        "startLine": 11,
+        "startChar": 10,
+        "endLine": 11,
+        "endChar": 30
+      },
+      "revId": "f9ed9bd6cce8e9c8a0867751173ed751cc791c43",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5499f1fc_b11cfafa",
@@ -54,6 +78,30 @@
       "writtenOn": "2024-01-30T13:03:39Z",
       "side": 1,
       "message": "...now that the name \"alarm\" is already in the namespace, let\u0027s call it just `raise`. If you dislike that name (maybe it conveys an unintended message that it isn\u0027t really for any updates if it\u0027s called just \"raise\"), then maybe `push`?",
+      "range": {
+        "startLine": 12,
+        "startChar": 5,
+        "endLine": 12,
+        "endChar": 24
+      },
+      "revId": "f9ed9bd6cce8e9c8a0867751173ed751cc791c43",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f78f0727_26bab4a2",
+        "filename": "src/utils/alarms.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-30T14:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5499f1fc_b11cfafa",
       "range": {
         "startLine": 12,
         "startChar": 5,
@@ -87,6 +135,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcb52080_80e889a2",
+        "filename": "src/utils/alarms.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-30T14:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "704b7162_aa7c6829",
+      "range": {
+        "startLine": 13,
+        "startChar": 5,
+        "endLine": 13,
+        "endChar": 38
+      },
+      "revId": "f9ed9bd6cce8e9c8a0867751173ed751cc791c43",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce83f23e_98e54030",
@@ -100,6 +172,30 @@
       "writtenOn": "2024-01-30T13:03:39Z",
       "side": 1,
       "message": "`addResourceToInventory` or just `addResource`, please",
+      "range": {
+        "startLine": 14,
+        "startChar": 5,
+        "endLine": 14,
+        "endChar": 37
+      },
+      "revId": "f9ed9bd6cce8e9c8a0867751173ed751cc791c43",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e162774_bca3c761",
+        "filename": "src/utils/alarms.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-30T14:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce83f23e_98e54030",
       "range": {
         "startLine": 14,
         "startChar": 5,

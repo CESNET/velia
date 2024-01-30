@@ -17,22 +17,22 @@ const auto alarmRpc = "/sysrepo-ietf-alarms:create-or-update-alarm";
 }
 
 namespace velia::utils::alarms {
-void createOrUpdateAlarm(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::string& resource, const std::string& severity, const std::string& text)
+void createOrUpdateAlarm(sysrepo::Session session, const std::string& alarmId, const std::string& resource, const std::string& severity, const std::string& text)
 {
     auto inputNode = session.getContext().newPath(alarmRpc, std::nullopt);
 
     inputNode.newPath(alarmRpc + "/resource"s, resource);
     inputNode.newPath(alarmRpc + "/alarm-type-id"s, alarmId);
-    inputNode.newPath(alarmRpc + "/alarm-type-qualifier"s, alarmTypeQualifier.value_or(""));
+    inputNode.newPath(alarmRpc + "/alarm-type-qualifier"s, "");
     inputNode.newPath(alarmRpc + "/severity"s, severity);
     inputNode.newPath(alarmRpc + "/alarm-text"s, text);
 
     session.sendRPC(inputNode);
 }
 
-void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::vector<std::string>& severities, const std::string& description, const std::vector<std::string>& resources, WillClear willClear)
+void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::vector<std::string>& severities, const std::string& description, const std::vector<std::string>& resources, WillClear willClear)
 {
-    const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='" + alarmTypeQualifier.value_or("") + "']";
+    const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='']";
 
     ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
 
@@ -50,9 +50,9 @@ void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::stri
     session.applyChanges();
 }
 
-void addResourceToAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::string& resource)
+void addResourceToAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::string& resource)
 {
-    const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='" + alarmTypeQualifier.value_or("") + "']";
+    const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='']";
 
     ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
 

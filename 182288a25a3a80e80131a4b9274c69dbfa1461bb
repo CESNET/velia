@@ -68,6 +68,30 @@
       },
       "revId": "182288a25a3a80e80131a4b9274c69dbfa1461bb",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afdd015e_fac49c9d",
+        "filename": "tests/sysrepo-helpers/alarms.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-01-30T14:24:14Z",
+      "side": 1,
+      "message": "Done. Sorry, I forgot about changing the name.\nHow about EntryAction::Create and EntryAction::Update?",
+      "parentUuid": "be6d9770_5a137f6a",
+      "range": {
+        "startLine": 23,
+        "startChar": 50,
+        "endLine": 23,
+        "endChar": 57
+      },
+      "revId": "182288a25a3a80e80131a4b9274c69dbfa1461bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

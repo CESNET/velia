@@ -92,6 +92,30 @@
       },
       "revId": "182288a25a3a80e80131a4b9274c69dbfa1461bb",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9347c22_dbfd7dc3",
+        "filename": "tests/sysrepo-helpers/alarms.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-30T15:52:33Z",
+      "side": 1,
+      "message": "It\u0027s your call :). In general, I tend to name types like this one with an emphasis on \"how nice\" it looks at a place where they are used, like this:\n\n constructAlarmInventoryChange(Entry::Create, ...);\n\nIn my opinion, it\u0027s a little easier to read compared to:\n\n constructAlarmInventoryChange(EntryAction::Create, ...);\n\nThe drawback of \"my style\" is that the type name on its own is not accurate. This enum class is certainly not an \"Entry\". The pattern that you like is more accurate in this context -- it\u0027s about \"what to do with this entry\", hence, `EntryAction` it is.\n\nI\u0027m fine with either, so let\u0027s pick what you have.",
+      "parentUuid": "afdd015e_fac49c9d",
+      "range": {
+        "startLine": 23,
+        "startChar": 50,
+        "endLine": 23,
+        "endChar": 57
+      },
+      "revId": "182288a25a3a80e80131a4b9274c69dbfa1461bb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

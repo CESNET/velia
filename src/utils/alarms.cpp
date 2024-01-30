@@ -30,7 +30,7 @@ void push(sysrepo::Session session, const std::string& alarmId, const std::strin
     session.sendRPC(inputNode);
 }
 
-void pushInventory(sysrepo::Session session, const std::string& alarmId, const std::vector<std::string>& severities, const std::string& description, const std::vector<std::string>& resources, WillClear willClear)
+void pushInventory(sysrepo::Session session, const std::string& alarmId, const std::string& description, const std::vector<std::string>& resources, const std::vector<std::string>& severities, WillClear willClear)
 {
     const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='']";
 

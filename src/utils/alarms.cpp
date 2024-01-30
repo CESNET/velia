@@ -50,13 +50,15 @@ void pushInventory(sysrepo::Session session, const std::string& alarmId, const s
     session.applyChanges();
 }
 
-void addResourceToInventory(sysrepo::Session session, const std::string& alarmId, const std::string& resource)
+void addResourceToInventory(sysrepo::Session session, const std::string& alarmId, const std::vector<std::string>& resources)
 {
     const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='']";
 
     utils::ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
 
-    session.setItem(prefix + "/resource", resource);
+    for (const auto& resource : resources) {
+        session.setItem(prefix + "/resource", resource);
+    }
     session.applyChanges();
 }
 }

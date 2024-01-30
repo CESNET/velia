@@ -104,10 +104,10 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             for (const auto& sensorXPath : activeSensors) {
                 if (!seenSensors.contains(sensorXPath)) {
                     auto componentXPath = extractComponentPrefix(sensorXPath);
-                    alarms::addResourceToInventory(m_session, ALARM_THRESHOLD_CROSSING_LOW, componentXPath);
-                    alarms::addResourceToInventory(m_session, ALARM_THRESHOLD_CROSSING_HIGH, componentXPath);
-                    alarms::addResourceToInventory(m_session, ALARM_SENSOR_MISSING, componentXPath);
-                    alarms::addResourceToInventory(m_session, ALARM_SENSOR_NONOPERATIONAL, componentXPath);
+                    alarms::addResourceToInventory(m_session, ALARM_THRESHOLD_CROSSING_LOW, {componentXPath});
+                    alarms::addResourceToInventory(m_session, ALARM_THRESHOLD_CROSSING_HIGH, {componentXPath});
+                    alarms::addResourceToInventory(m_session, ALARM_SENSOR_MISSING, {componentXPath});
+                    alarms::addResourceToInventory(m_session, ALARM_SENSOR_NONOPERATIONAL, {componentXPath});
                 }
             }
             seenSensors.merge(activeSensors);
@@ -130,7 +130,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             /* Publish sideloaded alarms */
             for (const auto& [alarm, resource, severity, text] : sideLoadedAlarms) {
                 // Sideloaded alarms are not registered using the code above, let's register those too
-                alarms::addResourceToInventory(m_session, ALARM_SENSOR_MISSING, resource);
+                alarms::addResourceToInventory(m_session, ALARM_SENSOR_MISSING, {resource});
 
                 bool isActive = activeSideLoadedAlarms.contains({alarm, resource});
                 if (isActive && severity == "cleared") {

@@ -19,8 +19,8 @@ using namespace std::literals;
     REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmWatcher, ALARM_TYPE, "", (std::set<std::string>{}), \
             (std::set<std::string>{}), true, DESCRIPTION)
 
-#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCE(ALARM_TYPE, RESOURCE) \
-    REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(alarmWatcher, ALARM_TYPE, "", COMPONENT(RESOURCE))
+#define REQUIRE_ALARM_INVENTORY_ADD_RESOURCES(ALARM_TYPE, ...) \
+    REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(alarmWatcher, ALARM_TYPE, "", (std::set<std::string>{__VA_ARGS__}))
 
 #define REQUIRE_ALARM_RPC(ALARM_TYPE, RESOURCE, SEVERITY, TEXT) \
     REQUIRE_NEW_ALARM(alarmWatcher, ALARM_TYPE, "", COMPONENT(RESOURCE), SEVERITY, TEXT)
@@ -143,20 +143,10 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-missing-alarm", "Sensor is missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-nonoperational", "Sensor is flagged as nonoperational.").IN_SEQUENCE(seq1);
 
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:power").IN_SEQUENCE(seq1);
-
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:psu:child").IN_SEQUENCE(seq1);
-
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:temperature-cpu").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-low-value-alarm", COMPONENT("ne:power"), COMPONENT("ne:psu:child"), COMPONENT("ne:temperature-cpu")).IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-high-value-alarm", COMPONENT("ne:power"), COMPONENT("ne:psu:child"), COMPONENT("ne:temperature-cpu")).IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-missing-alarm", COMPONENT("ne:power"), COMPONENT("ne:psu:child"), COMPONENT("ne:temperature-cpu")).IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-nonoperational", COMPONENT("ne:power"), COMPONENT("ne:psu:child"), COMPONENT("ne:temperature-cpu")).IN_SEQUENCE(seq1);
 
         REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne") "/class", "iana-hardware:chassis"},
@@ -196,7 +186,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:temperature-cpu") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:psu").TIMES(AT_LEAST(1));
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-missing-alarm", COMPONENT("ne:psu")).TIMES(AT_LEAST(1));
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
 
         auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSess, ietfHardware, 150ms);
@@ -355,15 +345,10 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-missing-alarm", "Sensor is missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_ALARM("velia-alarms:sensor-nonoperational", "Sensor is flagged as nonoperational.").IN_SEQUENCE(seq1);
 
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:power").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:power").IN_SEQUENCE(seq1);
-
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:temperature-cpu").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:temperature-cpu").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-low-value-alarm", COMPONENT("ne:power"), COMPONENT("ne:temperature-cpu")).IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-high-value-alarm", COMPONENT("ne:power"), COMPONENT("ne:temperature-cpu")).IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-missing-alarm", COMPONENT("ne:power"), COMPONENT("ne:temperature-cpu")).IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-nonoperational", COMPONENT("ne:power"), COMPONENT("ne:temperature-cpu")).IN_SEQUENCE(seq1);
 
         REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne") "/class", "iana-hardware:chassis"},
@@ -394,7 +379,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:temperature-cpu") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:psu").TIMES(AT_LEAST(1));
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-missing-alarm", COMPONENT("ne:psu")).TIMES(AT_LEAST(1));
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "critical", "PSU missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
 
@@ -405,10 +390,10 @@ TEST_CASE("IETF Hardware with sysrepo")
         std::string lastChange = directLeafNodeQuery(modulePrefix + "/last-change");
 
         // PSU inserted
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-low-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-high-value-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-missing-alarm", "ne:psu:child").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCE("velia-alarms:sensor-nonoperational", "ne:psu:child").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-low-value-alarm", COMPONENT("ne:psu:child")).IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-high-value-alarm", COMPONENT("ne:psu:child")).IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-missing-alarm", COMPONENT("ne:psu:child")).IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES("velia-alarms:sensor-nonoperational", COMPONENT("ne:psu:child")).IN_SEQUENCE(seq1);
         REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
                                            {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},

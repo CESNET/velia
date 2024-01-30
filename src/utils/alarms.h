@@ -15,6 +15,6 @@ enum WillClear {
 };
 
 void createOrUpdateAlarm(sysrepo::Session session, const std::string& alarmId, const std::string& alarmResource, const std::string& severity, const std::string& alarmText);
-void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::vector<std::string>& severities, const std::string& description, const std::vector<std::string>& resources, WillClear willClear = WillClear::Yes);
+void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::string& description, const std::vector<std::string>& resources, const std::vector<std::string>& severities = {}, WillClear willClear = WillClear::Yes);
 void addResourceToAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::string& resource);
 }

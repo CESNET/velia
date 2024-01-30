@@ -9,7 +9,12 @@
 #include <sysrepo-cpp/Session.hpp>
 
 namespace velia::utils::alarms {
+enum WillClear {
+    No,
+    Yes,
+};
+
 void createOrUpdateAlarm(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmQualifierType, const std::string& alarmResource, const std::string& severity, const std::string& alarmText);
-void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::vector<std::string>& severities, bool willClear, const std::string& description, const std::vector<std::string>& resources);
+void createOrUpdateAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::vector<std::string>& severities, const std::string& description, const std::vector<std::string>& resources, WillClear willClear = WillClear::No);
 void addResourceToAlarmInventoryEntry(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::string& resource);
 }

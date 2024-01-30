@@ -30,13 +30,13 @@ void push(sysrepo::Session session, const std::string& alarmId, const std::optio
     session.sendRPC(inputNode);
 }
 
-void pushInventory(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::vector<std::string>& severities, bool willClear, const std::string& description, const std::vector<std::string>& resources)
+void pushInventory(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::vector<std::string>& severities, const std::string& description, const std::vector<std::string>& resources, WillClear willClear)
 {
     const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='" + alarmTypeQualifier.value_or("") + "']";
 
     utils::ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
 
-    session.setItem(prefix + "/will-clear", willClear ? "true" : "false");
+    session.setItem(prefix + "/will-clear", willClear == WillClear::Yes ? "true" : "false");
     session.setItem(prefix + "/description", description);
 
     for (const auto& severity : severities) {

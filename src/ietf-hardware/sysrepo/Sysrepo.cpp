@@ -104,10 +104,10 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             for (const auto& sensorXPath : activeSensors) {
                 if (!seenSensors.contains(sensorXPath)) {
                     auto componentXPath = extractComponentPrefix(sensorXPath);
-                    utils::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, componentXPath);
-                    utils::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, componentXPath);
-                    utils::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath);
-                    utils::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, componentXPath);
+                    utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, componentXPath);
+                    utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, componentXPath);
+                    utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath);
+                    utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, componentXPath);
                 }
             }
             seenSensors.merge(activeSensors);
@@ -130,14 +130,14 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             /* Publish sideloaded alarms */
             for (const auto& [alarm, resource, severity, text] : sideLoadedAlarms) {
                 // Sideloaded alarms are not registered using the code above, let's register those too
-                utils::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, std::nullopt, resource);
+                utils::alarms::addResourceToAlarmInventoryEntry(m_session, ALARM_SENSOR_MISSING, std::nullopt, resource);
 
                 bool isActive = activeSideLoadedAlarms.contains({alarm, resource});
                 if (isActive && severity == "cleared") {
-                    utils::createOrUpdateAlarm(m_session, alarm, std::nullopt, resource, "cleared", text);
+                    utils::alarms::createOrUpdateAlarm(m_session, alarm, std::nullopt, resource, "cleared", text);
                     activeSideLoadedAlarms.erase({alarm, resource});
                 } else if (!isActive && severity != "cleared") {
-                    utils::createOrUpdateAlarm(m_session, alarm, std::nullopt, resource, severity, text);
+                    utils::alarms::createOrUpdateAlarm(m_session, alarm, std::nullopt, resource, severity, text);
                     activeSideLoadedAlarms.insert({alarm, resource});
                 }
             }
@@ -152,9 +152,9 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                     }
 
                     if (value == "nonoperational" && oldValue != "nonoperational") {
-                        utils::createOrUpdateAlarm(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, extractComponentPrefix(leaf), ALARM_SENSOR_NONOPERATIONAL_SEVERITY, ALARM_SENSOR_NONOPERATIONAL_DESCRIPTION);
+                        utils::alarms::createOrUpdateAlarm(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, extractComponentPrefix(leaf), ALARM_SENSOR_NONOPERATIONAL_SEVERITY, ALARM_SENSOR_NONOPERATIONAL_DESCRIPTION);
                     } else if (value == "ok" && oldValue && oldValue != "ok" /* don't call clear-alarm if we see this node for the first time, i.e., oldvalue is nullopt */) {
-                        utils::createOrUpdateAlarm(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, extractComponentPrefix(leaf), ALARM_CLEARED, ALARM_SENSOR_NONOPERATIONAL_DESCRIPTION);
+                        utils::alarms::createOrUpdateAlarm(m_session, ALARM_SENSOR_NONOPERATIONAL, std::nullopt, extractComponentPrefix(leaf), ALARM_CLEARED, ALARM_SENSOR_NONOPERATIONAL_DESCRIPTION);
                     }
                 }
             }
@@ -171,14 +171,14 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
 
                 if (state == State::NoValue) {
                     logAlarm(m_log, componentXPath, ALARM_SENSOR_MISSING, ALARM_MISSING_SEVERITY);
-                    utils::createOrUpdateAlarm(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath, ALARM_MISSING_SEVERITY, ALARM_MISSING_DESCRIPTION);
+                    utils::alarms::createOrUpdateAlarm(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath, ALARM_MISSING_SEVERITY, ALARM_MISSING_DESCRIPTION);
                 } else if (prevState == State::NoValue) {
                     logAlarm(m_log, componentXPath, ALARM_SENSOR_MISSING, ALARM_CLEARED);
                     /* The alarm message is same for both setting and clearing the alarm. RFC8632 says that it is
                      * "The string used to inform operators about the alarm. This MUST contain enough information for an operator to be able to understand the problem and how to resolve it.",
                      * i.e., from my POV it does not make sense to say something like "cleared" when clearing the alarm as this would not be beneficial for the operator to understand what happened.
                      */
-                    utils::createOrUpdateAlarm(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath, ALARM_CLEARED, ALARM_MISSING_DESCRIPTION);
+                    utils::alarms::createOrUpdateAlarm(m_session, ALARM_SENSOR_MISSING, std::nullopt, componentXPath, ALARM_CLEARED, ALARM_MISSING_DESCRIPTION);
                 }
 
                 /*
@@ -192,19 +192,19 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                  */
                 if (isThresholdCrossingLow(state)) {
                     logAlarm(m_log, componentXPath, ALARM_THRESHOLD_CROSSING_LOW, toYangAlarmSeverity(state));
-                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, componentXPath, toYangAlarmSeverity(state), ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION);
+                    utils::alarms::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, componentXPath, toYangAlarmSeverity(state), ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION);
                 } else if (isThresholdCrossingHigh(state)) {
                     logAlarm(m_log, componentXPath, ALARM_THRESHOLD_CROSSING_HIGH, toYangAlarmSeverity(state));
-                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, componentXPath, toYangAlarmSeverity(state), ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION);
+                    utils::alarms::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, componentXPath, toYangAlarmSeverity(state), ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION);
                 }
 
                 /* Now we can clear the old threshold alarms that are no longer active, i.e., we transition away from the CriticalLow/WarningLow or CriticalHigh/WarningHigh. */
                 if (!isThresholdCrossingLow(state) && isThresholdCrossingLow(prevState)) {
                     logAlarm(m_log, componentXPath, ALARM_THRESHOLD_CROSSING_LOW, ALARM_CLEARED);
-                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, componentXPath, ALARM_CLEARED, ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION);
+                    utils::alarms::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_LOW, std::nullopt, componentXPath, ALARM_CLEARED, ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION);
                 } else if (!isThresholdCrossingHigh(state) && isThresholdCrossingHigh(prevState)) {
                     logAlarm(m_log, componentXPath, ALARM_THRESHOLD_CROSSING_HIGH, ALARM_CLEARED);
-                    utils::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, componentXPath, ALARM_CLEARED, ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION);
+                    utils::alarms::createOrUpdateAlarm(m_session, ALARM_THRESHOLD_CROSSING_HIGH, std::nullopt, componentXPath, ALARM_CLEARED, ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION);
                 }
 
                 thresholdsStates[sensorXPath] = state;

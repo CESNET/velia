@@ -42,7 +42,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
     // First, fetch all currently loaded units, register to their PropertiesChanged signal and create the alarm-inventory entries in a *single* edit
     m_proxyManager->callMethod("ListUnits").onInterface(managerIface).storeResultsTo(units);
     std::transform(units.begin(), units.end(), std::back_inserter(unitNames), [](const auto& unit) { return unit.template get<0>(); });
-    utils::createOrUpdateAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, {ALARM_SEVERITY}, true, ALARM_INVENTORY_DESCRIPTION, unitNames);
+    utils::alarms::createOrUpdateAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, {ALARM_SEVERITY}, true, ALARM_INVENTORY_DESCRIPTION, unitNames);
 
     for (const auto& unit : units) {
         registerSystemdUnit(connection, unit.get<0>(), unit.get<6>(), UnitState{unit.get<3>(), unit.get<4>()}, RegisterAlarmInventory::No);
@@ -83,7 +83,7 @@ void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std
         }
 
         if (registerAlarmInventory == RegisterAlarmInventory::Yes) {
-            utils::addResourceToAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, unitName);
+            utils::alarms::addResourceToAlarmInventoryEntry(m_srSession, ALARM_ID, std::nullopt, unitName);
         }
 
         proxyUnit = m_proxyUnits.emplace(unitObjectPath, sdbus::createProxy(connection, m_busName, unitObjectPath)).first->second.get();
@@ -143,7 +143,7 @@ void SystemdUnits::onUnitStateChange(const std::string& name, const UnitState& s
     m_log->debug("Systemd unit '{}' changed state ({} {})", name, activeState, subState);
     lastState->second = state;
 
-    utils::createOrUpdateAlarm(m_srSession, ALARM_ID, std::nullopt, name, alarmSeverity, "systemd unit state: (" + activeState + ", " + subState + ")");
+    utils::alarms::createOrUpdateAlarm(m_srSession, ALARM_ID, std::nullopt, name, alarmSeverity, "systemd unit state: (" + activeState + ", " + subState + ")");
 }
 
 SystemdUnits::~SystemdUnits() = default;

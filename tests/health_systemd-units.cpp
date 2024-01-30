@@ -21,7 +21,7 @@
 
 using namespace std::chrono_literals;
 
-#define REQUIRE_NEW_ALARM_INVENTORY_UNIT(UNIT) REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(alarmsWatcher, "velia-alarms:systemd-unit-failure", "", UNIT)
+#define REQUIRE_NEW_ALARM_INVENTORY_UNIT(UNIT) REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(alarmsWatcher, "velia-alarms:systemd-unit-failure", "", std::set<std::string>{UNIT})
 #define REQUIRE_ALARM_RPC(UNIT, SEVERITY, TEXT) REQUIRE_NEW_ALARM(alarmsWatcher, "velia-alarms:systemd-unit-failure", "", UNIT, SEVERITY, TEXT)
 
 TEST_CASE("systemd unit state monitoring (alarms)")

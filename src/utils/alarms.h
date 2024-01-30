@@ -14,7 +14,7 @@ enum WillClear {
     Yes,
 };
 
-void push(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmQualifierType, const std::string& alarmResource, const std::string& severity, const std::string& alarmText);
-void pushInventory(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::vector<std::string>& severities, const std::string& description, const std::vector<std::string>& resources, WillClear willClear = WillClear::Yes);
-void addResourceToInventory(sysrepo::Session session, const std::string& alarmId, const std::optional<std::string>& alarmTypeQualifier, const std::string& resource);
+void push(sysrepo::Session session, const std::string& alarmId, const std::string& alarmResource, const std::string& severity, const std::string& alarmText);
+void pushInventory(sysrepo::Session session, const std::string& alarmId, const std::vector<std::string>& severities, const std::string& description, const std::vector<std::string>& resources, WillClear willClear = WillClear::Yes);
+void addResourceToInventory(sysrepo::Session session, const std::string& alarmId, const std::string& resource);
 }

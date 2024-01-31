@@ -83,7 +83,7 @@ void SystemdUnits::registerSystemdUnit(sdbus::IConnection& connection, const std
         }
 
         if (registerAlarmInventory == RegisterAlarmInventory::Yes) {
-            alarms::addResourcesToInventory(m_srSession, ALARM_ID, {unitName});
+            alarms::addResourcesToInventory(m_srSession, {{ALARM_ID, {unitName}}});
         }
 
         proxyUnit = m_proxyUnits.emplace(unitObjectPath, sdbus::createProxy(connection, m_busName, unitObjectPath)).first->second.get();

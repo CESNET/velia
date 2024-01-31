@@ -16,8 +16,8 @@
 #include "test_log_setup.h"
 
 inline ValueChanges constructAlarmInventoryChange(const std::string& alarmType,
-                                                  const std::set<std::string>& resources,
-                                                  const std::set<std::string>& severities,
+                                                  const std::vector<std::string>& resources,
+                                                  const std::vector<std::string>& severities,
                                                   const std::optional<bool>& willClear,
                                                   const std::optional<std::string>& description)
 {
@@ -48,7 +48,7 @@ inline ValueChanges constructAlarmInventoryChange(const std::string& alarmType,
     return ret;
 }
 
-inline ValueChanges constructAlarmInventoryResourceChange(const std::set<std::string>& alarmTypeIds, const std::set<std::string>& resources) {
+inline ValueChanges constructAlarmInventoryResourceChange(const std::vector<std::string>& alarmTypeIds, const std::vector<std::string>& resources) {
     ValueChanges ret;
 
     for (const auto& alarmType : alarmTypeIds) {
@@ -76,7 +76,7 @@ struct AlarmWatcher {
 
         std::map<AlarmType, AllowedResourcesAndSeverities> inventory;
 
-        void add(const std::set<std::string>& alarmTypeIds, const std::set<std::string>& resources, const std::set<std::string>& severities);
+        void add(const std::vector<std::string>& alarmTypeIds, const std::vector<std::string>& resources, const std::vector<std::string>& severities);
         bool contains(const std::string& alarmTypeId, const std::optional<std::string>& resource, const std::optional<std::string>& severity) const;
     };
 
@@ -97,11 +97,11 @@ struct AlarmWatcher {
 
 #define REQUIRE_NEW_ALARM_INVENTORY_ENTRY(WATCHER, ALARM_TYPE, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION) \
     REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, constructAlarmInventoryChange(ALARM_TYPE, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION)) \
-        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, (std::set<std::string>{ALARM_TYPE}), RESOURCES, SEVERITIES)
+        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, (std::vector<std::string>{ALARM_TYPE}), RESOURCES, SEVERITIES)
 
 #define REQUIRE_NEW_ALARM_INVENTORY_RESOURCES(WATCHER, ALARM_TYPES, RESOURCES) \
     REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, constructAlarmInventoryResourceChange(ALARM_TYPES, RESOURCES)) \
-        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPES, RESOURCES, (std::set<std::string>{}))
+        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPES, RESOURCES, (std::vector<std::string>{}))
 
 #define REQUIRE_NEW_ALARM(WATCHER, ALARM_TYPE, RESOURCE, SEVERITY, TEXT) \
     REQUIRE_RPC_CALL(WATCHER.rpcWatcher, (Values{ \

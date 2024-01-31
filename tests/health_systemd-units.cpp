@@ -22,7 +22,7 @@
 using namespace std::chrono_literals;
 
 #define REQUIRE_NEW_ALARM_INVENTORY_UNIT(UNIT) \
-    REQUIRE_NEW_ALARM_INVENTORY_RESOURCES(alarmsWatcher, (std::set<std::string>{"velia-alarms:systemd-unit-failure"}), std::set<std::string>{UNIT})
+    REQUIRE_NEW_ALARM_INVENTORY_RESOURCES(alarmsWatcher, (std::vector<std::string>{"velia-alarms:systemd-unit-failure"}), std::vector<std::string>{UNIT})
 
 #define REQUIRE_ALARM_RPC(UNIT, SEVERITY, TEXT) \
     REQUIRE_NEW_ALARM(alarmsWatcher, "velia-alarms:systemd-unit-failure", UNIT, SEVERITY, TEXT)
@@ -48,8 +48,8 @@ TEST_CASE("systemd unit state monitoring (alarms)")
 
     REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmsWatcher,
                                       "velia-alarms:systemd-unit-failure",
-                                      (std::set<std::string>{"unit1.service", "unit2.service", "unit3.service"}),
-                                      (std::set<std::string>{"critical"}),
+                                      (std::vector<std::string>{"unit1.service", "unit2.service", "unit3.service"}),
+                                      (std::vector<std::string>{"critical"}),
                                       true,
                                       "The systemd service is considered in failed state.");
 

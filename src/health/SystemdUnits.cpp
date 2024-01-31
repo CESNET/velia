@@ -42,7 +42,7 @@ SystemdUnits::SystemdUnits(sysrepo::Session session, sdbus::IConnection& connect
     // First, fetch all currently loaded units, register to their PropertiesChanged signal and create the alarm-inventory entries in a *single* edit
     m_proxyManager->callMethod("ListUnits").onInterface(managerIface).storeResultsTo(units);
     std::transform(units.begin(), units.end(), std::back_inserter(unitNames), [](const auto& unit) { return unit.template get<0>(); });
-    alarms::pushInventory(m_srSession, ALARM_ID, ALARM_INVENTORY_DESCRIPTION, unitNames, {ALARM_SEVERITY});
+    alarms::pushInventory(m_srSession, {{ALARM_ID, ALARM_INVENTORY_DESCRIPTION, unitNames, {ALARM_SEVERITY}}});
 
     for (const auto& unit : units) {
         registerSystemdUnit(connection, unit.get<0>(), unit.get<6>(), UnitState{unit.get<3>(), unit.get<4>()}, RegisterAlarmInventory::No);

@@ -21,6 +21,12 @@ void AlarmWatcher::AlarmInventory::add(const std::vector<std::string>& alarmType
         alarm.severities.insert(severities.begin(), severities.end());
     }
 }
+void AlarmWatcher::AlarmInventory::add(const std::vector<velia::alarms::AlarmInventoryEntry>& entries)
+{
+    for (const auto& e : entries) {
+        add({e.alarmType}, e.resources, e.severities);
+    }
+}
 
 bool AlarmWatcher::AlarmInventory::contains(const std::string& alarmTypeId, const std::optional<std::string>& resource, const std::optional<std::string>& severity) const
 {

@@ -16,11 +16,11 @@ using namespace std::literals;
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
 
 #define REQUIRE_ALARM_INVENTORY_ADD_ALARM(ALARM_TYPE, DESCRIPTION) \
-    REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmWatcher, ALARM_TYPE, (std::set<std::string>{}), \
-            (std::set<std::string>{}), true, DESCRIPTION)
+    REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmWatcher, ALARM_TYPE, (std::vector<std::string>{}), \
+            (std::vector<std::string>{}), true, DESCRIPTION)
 
 #define REQUIRE_ALARM_INVENTORY_ADD_RESOURCES(ALARM_TYPE, ...) \
-    REQUIRE_NEW_ALARM_INVENTORY_RESOURCES(alarmWatcher, (std::set<std::string>{ALARM_TYPE}), (std::set<std::string>{__VA_ARGS__}))
+    REQUIRE_NEW_ALARM_INVENTORY_RESOURCES(alarmWatcher, (std::vector<std::string>{ALARM_TYPE}), (std::vector<std::string>{__VA_ARGS__}))
 
 #define REQUIRE_ALARM_RPC(ALARM_TYPE, RESOURCE, SEVERITY, TEXT) \
     REQUIRE_NEW_ALARM(alarmWatcher, ALARM_TYPE, COMPONENT(RESOURCE), SEVERITY, TEXT)

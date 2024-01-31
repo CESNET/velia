@@ -13,7 +13,7 @@ AlarmWatcher::AlarmWatcher(sysrepo::Session& session)
 {
 }
 
-void AlarmWatcher::AlarmInventory::add(const std::set<std::string>& alarmTypeIds, const std::set<std::string>& resources, const std::set<std::string>& severities)
+void AlarmWatcher::AlarmInventory::add(const std::vector<std::string>& alarmTypeIds, const std::vector<std::string>& resources, const std::vector<std::string>& severities)
 {
     for (const auto& type : alarmTypeIds) {
         auto& alarm = inventory[type];

@@ -115,10 +115,12 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             seenSensors.merge(activeSensors);
 
             if (!newSensors.empty()) {
-                alarms::addResourcesToInventory(m_session, ALARM_THRESHOLD_CROSSING_LOW, newSensors);
-                alarms::addResourcesToInventory(m_session, ALARM_THRESHOLD_CROSSING_HIGH, newSensors);
-                alarms::addResourcesToInventory(m_session, ALARM_SENSOR_MISSING, newSensors);
-                alarms::addResourcesToInventory(m_session, ALARM_SENSOR_NONOPERATIONAL, newSensors);
+                alarms::addResourcesToInventory(m_session, {
+                                   {ALARM_THRESHOLD_CROSSING_LOW, newSensors},
+                                   {ALARM_THRESHOLD_CROSSING_HIGH, newSensors},
+                                   {ALARM_SENSOR_MISSING, newSensors},
+                                   {ALARM_SENSOR_NONOPERATIONAL, newSensors},
+                               });
             }
 
             /* Some data readers can stop returning data in some cases (e.g. ejected PSU).
@@ -139,7 +141,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             /* Publish sideloaded alarms */
             for (const auto& [alarm, resource, severity, text] : sideLoadedAlarms) {
                 // Sideloaded alarms are not registered using the code above, let's register those too
-                alarms::addResourcesToInventory(m_session, ALARM_SENSOR_MISSING, {resource});
+                alarms::addResourcesToInventory(m_session, {{ALARM_SENSOR_MISSING, {resource}}});
 
                 bool isActive = activeSideLoadedAlarms.contains({alarm, resource});
                 if (isActive && severity == "cleared") {
@@ -221,7 +223,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
 
             prevValues = std::move(hwStateValues);
             std::this_thread::sleep_for(m_pollInterval);
-        }
+            }
     });
 }
 

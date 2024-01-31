@@ -20,7 +20,7 @@ using namespace std::literals;
             (std::set<std::string>{}), true, DESCRIPTION)
 
 #define REQUIRE_ALARM_INVENTORY_ADD_RESOURCES(ALARM_TYPE, ...) \
-    REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(alarmWatcher, ALARM_TYPE, (std::set<std::string>{__VA_ARGS__}))
+    REQUIRE_NEW_ALARM_INVENTORY_RESOURCES(alarmWatcher, (std::set<std::string>{ALARM_TYPE}), (std::set<std::string>{__VA_ARGS__}))
 
 #define REQUIRE_ALARM_RPC(ALARM_TYPE, RESOURCE, SEVERITY, TEXT) \
     REQUIRE_NEW_ALARM(alarmWatcher, ALARM_TYPE, COMPONENT(RESOURCE), SEVERITY, TEXT)

@@ -13,11 +13,13 @@ AlarmWatcher::AlarmWatcher(sysrepo::Session& session)
 {
 }
 
-void AlarmWatcher::AlarmInventory::add(const std::string& alarmTypeId, const std::set<std::string>& resources, const std::set<std::string>& severities)
+void AlarmWatcher::AlarmInventory::add(const std::set<std::string>& alarmTypeIds, const std::set<std::string>& resources, const std::set<std::string>& severities)
 {
-    auto& alarm = inventory[alarmTypeId];
-    alarm.resources.insert(resources.begin(), resources.end());
-    alarm.severities.insert(severities.begin(), severities.end());
+    for (const auto& type : alarmTypeIds) {
+        auto& alarm = inventory[type];
+        alarm.resources.insert(resources.begin(), resources.end());
+        alarm.severities.insert(severities.begin(), severities.end());
+    }
 }
 
 bool AlarmWatcher::AlarmInventory::contains(const std::string& alarmTypeId, const std::optional<std::string>& resource, const std::optional<std::string>& severity) const

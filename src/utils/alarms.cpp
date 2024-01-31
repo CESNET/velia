@@ -30,21 +30,23 @@ void push(sysrepo::Session session, const std::string& alarmId, const std::strin
     session.sendRPC(inputNode);
 }
 
-void pushInventory(sysrepo::Session session, const std::string& alarmId, const std::string& description, const std::vector<std::string>& resources, const std::vector<std::string>& severities, WillClear willClear)
+void pushInventory(sysrepo::Session session, const std::vector<AlarmInventoryEntry>& entries)
 {
-    const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + alarmId + "'][alarm-type-qualifier='']";
-
     utils::ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
 
-    session.setItem(prefix + "/will-clear", willClear == WillClear::Yes ? "true" : "false");
-    session.setItem(prefix + "/description", description);
+    for (const auto& entry: entries) {
+        const auto prefix = alarmInventory + "/alarm-type[alarm-type-id='" + entry.alarmType + "'][alarm-type-qualifier='']";
 
-    for (const auto& severity : severities) {
-        session.setItem(prefix + "/severity-level", severity);
-    }
+        session.setItem(prefix + "/will-clear", entry.willClear == WillClear::Yes ? "true" : "false");
+        session.setItem(prefix + "/description", entry.description);
 
-    for (const auto& resource : resources) {
-        session.setItem(prefix + "/resource", resource);
+        for (const auto& severity : entry.severities) {
+            session.setItem(prefix + "/severity-level", severity);
+        }
+
+        for (const auto& resource : entry.resources) {
+            session.setItem(prefix + "/resource", resource);
+        }
     }
 
     session.applyChanges();
@@ -62,5 +64,14 @@ void addResourcesToInventory(sysrepo::Session session, const std::map<std::strin
         }
     }
     session.applyChanges();
+}
+
+AlarmInventoryEntry::AlarmInventoryEntry(const std::string& alarmType, const std::string& description, const std::vector<std::string>& resources, const std::vector<std::string>& severities, WillClear willClear)
+    : alarmType(alarmType)
+    , description(description)
+    , resources(resources)
+    , severities(severities)
+    , willClear(willClear)
+{
 }
 }

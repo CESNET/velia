@@ -46,12 +46,13 @@ TEST_CASE("systemd unit state monitoring (alarms)")
     client.switchDatastore(sysrepo::Datastore::Operational);
     AlarmWatcher alarmsWatcher(client);
 
-    REQUIRE_NEW_ALARM_INVENTORY_ENTRY(alarmsWatcher,
-                                      "velia-alarms:systemd-unit-failure",
-                                      (std::vector<std::string>{"unit1.service", "unit2.service", "unit3.service"}),
-                                      (std::vector<std::string>{"critical"}),
-                                      true,
-                                      "The systemd service is considered in failed state.");
+    REQUIRE_NEW_ALARM_INVENTORY_ENTRIES(alarmsWatcher,
+                                        (std::vector<velia::alarms::AlarmInventoryEntry>{{
+                                            "velia-alarms:systemd-unit-failure",
+                                            "The systemd service is considered in failed state.",
+                                            (std::vector<std::string>{"unit1.service", "unit2.service", "unit3.service"}),
+                                            (std::vector<std::string>{"critical"}),
+                                        }}));
 
     REQUIRE_ALARM_RPC("unit1.service", "cleared", "systemd unit state: (active, running)");
     server.createUnit(*serverConnection, "unit1.service", "/org/freedesktop/systemd1/unit/unit1", "active", "running");

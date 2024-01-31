@@ -22,19 +22,18 @@ enum class EntryAction {
 
 inline ValueChanges constructAlarmInventoryChange(EntryAction action,
                                                   const std::string& alarmType,
-                                                  const std::string& alarmQualifier,
                                                   const std::set<std::string>& resources,
                                                   const std::set<std::string>& severities,
                                                   const std::optional<bool>& willClear,
                                                   const std::optional<std::string>& description)
 {
-    const std::string prefix = "/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" + alarmType + "'][alarm-type-qualifier='" + alarmQualifier + "']";
+    const std::string prefix = "/ietf-alarms:alarms/alarm-inventory/alarm-type[alarm-type-id='" + alarmType + "'][alarm-type-qualifier='']";
 
     ValueChanges ret;
 
     if (action == EntryAction::Create) {
         ret.emplace(prefix + "/alarm-type-id", alarmType);
-        ret.emplace(prefix + "/alarm-type-qualifier", alarmQualifier);
+        ret.emplace(prefix + "/alarm-type-qualifier", "");
     }
 
     if (willClear) {
@@ -62,19 +61,17 @@ inline ValueChanges constructAlarmInventoryChange(EntryAction action,
 struct AlarmWatcher {
     /** @brief Poor man's /ietf-alarms:alarms/alarm-inventory implementation in C++. */
     struct AlarmInventory {
-        struct AlarmKey {
-            std::string type;
-            std::string qualifier;
-            auto operator<=>(const AlarmKey&) const = default;
-        };
+        using AlarmType = std::string;
+
         struct AllowedResourcesAndSeverities {
             std::set<std::string> resources;
             std::set<std::string> severities;
         };
-        std::map<AlarmKey, AllowedResourcesAndSeverities> inventory;
 
-        void add(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::set<std::string>& resources, const std::set<std::string>& severities);
-        bool contains(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::optional<std::string>& resource, const std::optional<std::string>& severity) const;
+        std::map<AlarmType, AllowedResourcesAndSeverities> inventory;
+
+        void add(const std::string& alarmTypeId, const std::set<std::string>& resources, const std::set<std::string>& severities);
+        bool contains(const std::string& alarmTypeId, const std::optional<std::string>& resource, const std::optional<std::string>& severity) const;
     };
 
     AlarmInventory alarmInventory;
@@ -85,28 +82,28 @@ struct AlarmWatcher {
 };
 
 // checks if the alarm is contained in AlarmInventory
-#define WITH_ALARM_IN_INVENTORY(INV, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITY) \
-    LR_WITH(INV.contains(ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITY))
+#define WITH_ALARM_IN_INVENTORY(INV, ALARM_TYPE, RESOURCE, SEVERITY) \
+    LR_WITH(INV.contains(ALARM_TYPE, RESOURCE, SEVERITY))
 
 // inserts the alarm in AlarmInventory as a side effect
-#define INSERT_INTO_INVENTORY(INV, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITIES) \
-    LR_SIDE_EFFECT(INV.add(ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITIES))
+#define INSERT_INTO_INVENTORY(INV, ALARM_TYPE, RESOURCE, SEVERITIES) \
+    LR_SIDE_EFFECT(INV.add(ALARM_TYPE, RESOURCE, SEVERITIES))
 
-#define REQUIRE_NEW_ALARM_INVENTORY_ENTRY(WATCHER, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION) \
-    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, constructAlarmInventoryChange(EntryAction::Create, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION)) \
-        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, SEVERITIES)
+#define REQUIRE_NEW_ALARM_INVENTORY_ENTRY(WATCHER, ALARM_TYPE, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION) \
+    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, constructAlarmInventoryChange(EntryAction::Create, ALARM_TYPE, RESOURCES, SEVERITIES, WILL_CLEAR, DESCRIPTION)) \
+        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, RESOURCES, SEVERITIES)
 
-#define REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(WATCHER, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES) \
-    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, constructAlarmInventoryChange(EntryAction::Update, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, {}, std::nullopt, std::nullopt)) \
-        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, ALARM_QUALIFIER, RESOURCES, (std::set<std::string>{}))
+#define REQUIRE_NEW_ALARM_INVENTORY_RESOURCE(WATCHER, ALARM_TYPE, RESOURCES) \
+    REQUIRE_DATASTORE_CHANGE(WATCHER.datastoreWatcher, constructAlarmInventoryChange(EntryAction::Update, ALARM_TYPE, RESOURCES, {}, std::nullopt, std::nullopt)) \
+        .INSERT_INTO_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, RESOURCES, (std::set<std::string>{}))
 
-#define REQUIRE_NEW_ALARM(WATCHER, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITY, TEXT) \
+#define REQUIRE_NEW_ALARM(WATCHER, ALARM_TYPE, RESOURCE, SEVERITY, TEXT) \
     REQUIRE_RPC_CALL(WATCHER.rpcWatcher, (Values{ \
                                              {"/sysrepo-ietf-alarms:create-or-update-alarm", "(unprintable)"}, \
                                              {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-text", TEXT}, \
                                              {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-id", ALARM_TYPE}, \
-                                             {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ALARM_QUALIFIER}, \
+                                             {"/sysrepo-ietf-alarms:create-or-update-alarm/alarm-type-qualifier", ""}, \
                                              {"/sysrepo-ietf-alarms:create-or-update-alarm/resource", RESOURCE}, \
                                              {"/sysrepo-ietf-alarms:create-or-update-alarm/severity", SEVERITY}, \
                                          })) \
-        .WITH_ALARM_IN_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, ALARM_QUALIFIER, RESOURCE, SEVERITY)
+        .WITH_ALARM_IN_INVENTORY(WATCHER.alarmInventory, ALARM_TYPE, RESOURCE, SEVERITY)

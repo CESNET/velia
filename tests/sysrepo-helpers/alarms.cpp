@@ -13,16 +13,16 @@ AlarmWatcher::AlarmWatcher(sysrepo::Session& session)
 {
 }
 
-void AlarmWatcher::AlarmInventory::add(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::set<std::string>& resources, const std::set<std::string>& severities)
+void AlarmWatcher::AlarmInventory::add(const std::string& alarmTypeId, const std::set<std::string>& resources, const std::set<std::string>& severities)
 {
-    auto& alarm = inventory[{alarmTypeId, alarmTypeQualifier}];
+    auto& alarm = inventory[alarmTypeId];
     alarm.resources.insert(resources.begin(), resources.end());
     alarm.severities.insert(severities.begin(), severities.end());
 }
 
-bool AlarmWatcher::AlarmInventory::contains(const std::string& alarmTypeId, const std::string& alarmTypeQualifier, const std::optional<std::string>& resource, const std::optional<std::string>& severity) const
+bool AlarmWatcher::AlarmInventory::contains(const std::string& alarmTypeId, const std::optional<std::string>& resource, const std::optional<std::string>& severity) const
 {
-    if (auto it = inventory.find({alarmTypeId, alarmTypeQualifier}); it != inventory.end()) {
+    if (auto it = inventory.find(alarmTypeId); it != inventory.end()) {
         const auto& alarm = it->second;
 
         if (resource && !alarm.resources.empty() && !alarm.resources.contains(*resource)) {

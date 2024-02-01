@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d413ca6_615a9d37",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-02-01T09:59:18Z",
+      "side": 1,
+      "message": "I\u0027m not sure I see a big point of having these macros. If this was C++, I would have thought that it\u0027s about some type correctness where, for example, swapping the order like:\n\n FOO(ALARMS(a, b), COMPONENTS(c, d))\n\nvs:\n\n FOO(COMPONENTS(a, b), ALARMS(c, d))\n\n...would either do the right thing, or at least fail to compile. But since this is in a macro context, if you swap ALARMS and COMPONENTS, you\u0027ll get a test failure at runtime, so this is effectively just some fancy syntax sugar, right? If I was writing this, I would have probably stopped with the `VEC` macro.",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 157,
+        "endChar": 49
+      },
+      "revId": "c3e8d1daf13e91505461335ea950146d50bb0086",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

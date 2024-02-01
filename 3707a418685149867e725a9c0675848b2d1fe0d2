@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21d7738b_0790d77d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-02-01T10:04:06Z",
+      "side": 1,
+      "message": "I understand that it was PITA to write, but it\u0027s actually pretty nice to read. Good job!",
+      "revId": "3707a418685149867e725a9c0675848b2d1fe0d2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bbd4f42_d8efdf78",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-02-01T10:04:06Z",
+      "side": 1,
+      "message": "that VEC macro from the other commit might be useful here",
+      "range": {
+        "startLine": 53,
+        "startChar": 44,
+        "endLine": 53,
+        "endChar": 70
+      },
+      "revId": "3707a418685149867e725a9c0675848b2d1fe0d2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

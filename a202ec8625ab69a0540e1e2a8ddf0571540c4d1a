@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dff2984d_b31b3879",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-02-01T09:43:33Z",
+      "side": 1,
+      "message": "please explain why (I guess you want to preserve the order?)",
+      "revId": "a202ec8625ab69a0540e1e2a8ddf0571540c4d1a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

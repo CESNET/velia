@@ -39,6 +39,30 @@
       },
       "revId": "3707a418685149867e725a9c0675848b2d1fe0d2",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2165491f_3a680f2c",
+        "filename": "tests/health_systemd-units.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-02-13T14:05:07Z",
+      "side": 1,
+      "message": "Not sure if it was worth it (it is used only in these two lines) but it certainly looks better.",
+      "parentUuid": "3bbd4f42_d8efdf78",
+      "range": {
+        "startLine": 53,
+        "startChar": 44,
+        "endLine": 53,
+        "endChar": 70
+      },
+      "revId": "3707a418685149867e725a9c0675848b2d1fe0d2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

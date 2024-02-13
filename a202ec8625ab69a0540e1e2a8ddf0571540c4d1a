@@ -16,6 +16,24 @@
       "message": "please explain why (I guess you want to preserve the order?)",
       "revId": "a202ec8625ab69a0540e1e2a8ddf0571540c4d1a",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f42b041a_0f8fe45a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-02-13T14:17:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dff2984d_b31b3879",
+      "revId": "a202ec8625ab69a0540e1e2a8ddf0571540c4d1a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

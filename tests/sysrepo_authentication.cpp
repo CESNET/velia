@@ -285,7 +285,7 @@ TEST_CASE("Authentication")
                 input = {{"password-cleartext", "blah"}};
                 REQUIRE_THROWS_WITH_AS(rpcFromSysrepo(client, prefix + "/change-password", input),
                                        "Couldn't send RPC: SR_ERR_UNAUTHORIZED\n"
-                                       " NACM access denied by \"change-password\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n"
+                                       " Executing the operation is denied because \"test\" NACM authorization failed. (SR_ERR_UNAUTHORIZED)\n"
                                        " NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/change-password: Executing the operation is denied because \"test\" NACM authorization failed.",
                                        sysrepo::ErrorWithCode);
             }
@@ -295,7 +295,7 @@ TEST_CASE("Authentication")
                 input = {{"key", "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdKwJwhSfuBeve5UfVHm0cx/3Jk81Z5a/iNZadjymwl cement"}};
                 REQUIRE_THROWS_WITH_AS(rpcFromSysrepo(client, prefix + "/add-authorized-key", input),
                                        "Couldn't send RPC: SR_ERR_UNAUTHORIZED\n"
-                                       " NACM access denied by \"add-authorized-key\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n"
+                                       " Executing the operation is denied because \"test\" NACM authorization failed. (SR_ERR_UNAUTHORIZED)\n"
                                        " NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/add-authorized-key: Executing the operation is denied because \"test\" NACM authorization failed.",
                                        sysrepo::ErrorWithCode);
             }
@@ -304,7 +304,7 @@ TEST_CASE("Authentication")
             {
                 REQUIRE_THROWS_WITH_AS(rpcFromSysrepo(client, prefix + "/authorized-keys[index='0']/remove", {}),
                                        "Couldn't send RPC: SR_ERR_UNAUTHORIZED\n"
-                                       " NACM access denied by \"remove\" node extension \"default-deny-all\". (SR_ERR_UNAUTHORIZED)\n"
+                                       " Executing the operation is denied because \"test\" NACM authorization failed. (SR_ERR_UNAUTHORIZED)\n"
                                        " NETCONF: protocol: access-denied: /czechlight-system:authentication/users[name='ci']/authorized-keys[index='0']/remove: Executing the operation is denied because \"test\" NACM authorization failed.",
                                        sysrepo::ErrorWithCode);
             }

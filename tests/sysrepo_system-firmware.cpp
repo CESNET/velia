@@ -250,6 +250,8 @@ TEST_CASE("Firmware in czechlight-system, RPC")
             {
                 REQUIRE_THROWS_WITH_AS(client.sendRPC(rpcInput),
                         "Couldn't send RPC: SR_ERR_CALLBACK_FAILED\n"
+                        // FIXME: why is this present twice? Looks like a libyang-v2.2/sysrepo change that I do not understand
+                        " Already processing a different method (SR_ERR_OPERATION_FAILED)\n"
                         " Already processing a different method (SR_ERR_OPERATION_FAILED)\n"
                         " User callback failed. (SR_ERR_CALLBACK_FAILED)\n"
                         " NETCONF: application: operation-failed: Already processing a different method",

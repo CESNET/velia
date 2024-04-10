@@ -5,13 +5,13 @@
 
 namespace velia::utils {
 
-const char* getValueAsString(const libyang::DataNode& node)
+std::string getValueAsString(const libyang::DataNode& node)
 {
     if (node.schema().nodeType() != libyang::NodeType::Leaf) {
         throw std::logic_error("retrieveString: invalid node");
     }
 
-    return node.asTerm().valueStr().data();
+    return node.asTerm().valueStr();
 }
 
 std::optional<libyang::DataNode> getUniqueSubtree(const libyang::DataNode& start, const std::string& path)

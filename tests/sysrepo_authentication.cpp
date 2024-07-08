@@ -6,6 +6,8 @@
 */
 
 #include "trompeloeil_doctest.h"
+#include <chrono>
+#include <libyang-cpp/Time.hpp>
 #include <sysrepo-cpp/utils/exception.hpp>
 #include "fs-helpers/FileInjector.h"
 #include "fs-helpers/utils.h"
@@ -55,14 +57,16 @@ TEST_CASE("Authentication")
         FileInjector rootKeys(testDir / "authorized_keys/root", std::filesystem::perms::owner_read,
             "ssh-rsa SOME_KEY comment"
         );
+
+        using namespace std::chrono;
         auto data = dataFromSysrepo(client, "/czechlight-system:authentication/users");
         decltype(data) expected = {
             {"[name='ci']", ""},
             {"[name='ci']/name", "ci"},
-            {"[name='ci']/password-last-change", "2024-10-04T00:00:00-00:00"},
+            {"[name='ci']/password-last-change", libyang::yangTimeFormat(sys_days(2024y/October/4), libyang::TimezoneInterpretation::Local)},
             {"[name='root']", ""},
             {"[name='root']/name", "root"},
-            {"[name='root']/password-last-change", "2020-09-09T00:00:00-00:00"},
+            {"[name='root']/password-last-change", libyang::yangTimeFormat(sys_days(2020y/September/9), libyang::TimezoneInterpretation::Local)},
             {"[name='root']/authorized-keys[index='0']", ""},
             {"[name='root']/authorized-keys[index='0']/index", "0"},
             {"[name='root']/authorized-keys[index='0']/public-key", "ssh-rsa SOME_KEY comment"}

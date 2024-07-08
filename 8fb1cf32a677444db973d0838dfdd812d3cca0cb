@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8815656c_07635ddb",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-08T14:25:14Z",
+      "side": 1,
+      "message": "PRIVATE should be enough here",
+      "revId": "8fb1cf32a677444db973d0838dfdd812d3cca0cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c553b23e_6d752c25",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-08T14:25:14Z",
+      "side": 1,
+      "message": "Local",
+      "range": {
+        "startLine": 135,
+        "startChar": 127,
+        "endLine": 135,
+        "endChar": 138
+      },
+      "revId": "8fb1cf32a677444db973d0838dfdd812d3cca0cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7da434ab_f9e44a31",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-08T14:25:14Z",
+      "side": 1,
+      "message": "Local",
+      "range": {
+        "startLine": 206,
+        "startChar": 168,
+        "endLine": 206,
+        "endChar": 179
+      },
+      "revId": "8fb1cf32a677444db973d0838dfdd812d3cca0cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

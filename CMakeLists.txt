@@ -29,6 +29,7 @@ prepare_git_version(VELIA_VERSION "0.0")
 find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
+find_package(date REQUIRED) # FIXME: Remove when we have STL with __cpp_lib_chrono >= 201907 (gcc 14)
 find_package(Boost REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ "1.0.0" REQUIRED)
@@ -102,8 +103,6 @@ add_library(velia-utils STATIC
     src/utils/log-init.h
     src/utils/sysrepo.cpp
     src/utils/sysrepo.h
-    src/utils/time.cpp
-    src/utils/time.h
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )
@@ -148,6 +147,8 @@ target_link_libraries(velia-ietf-hardware
         velia-utils
         ${STD_FILESYSTEM_LIBRARY}
         Boost::boost
+    PRIVATE
+        PkgConfig::LIBYANG
     )
 
 add_library(velia-ietf-hardware-sysrepo STATIC

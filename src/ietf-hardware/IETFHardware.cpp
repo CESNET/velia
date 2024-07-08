@@ -6,10 +6,10 @@
  */
 
 #include <chrono>
+#include <libyang-cpp/Time.hpp>
 #include <utility>
 #include "IETFHardware.h"
 #include "utils/log.h"
-#include "utils/time.h"
 
 using namespace std::literals;
 
@@ -130,7 +130,7 @@ HardwareInfo IETFHardware::process()
         }
     }
 
-    pollData.data[ietfHardwareStatePrefix + "/last-change"] = velia::utils::yangTimeFormat(std::chrono::system_clock::now());
+    pollData.data[ietfHardwareStatePrefix + "/last-change"] = libyang::yangTimeFormat(std::chrono::system_clock::now(), libyang::TimezoneInterpretation::Unspecified);
 
     return {pollData.data, alarms, activeSensors, pollData.sideLoadedAlarms};
 }
@@ -320,7 +320,7 @@ EMMC::EMMC(std::string componentName, std::optional<std::string> parent, std::sh
         std::chrono::year(std::stoi(mfgDate.substr(3, 4))),
         std::chrono::month(std::stoi(mfgDate.substr(0, 2))),
         std::chrono::day(1));
-    mfgDate = velia::utils::yangTimeFormat(std::chrono::sys_days{calendarDate});
+    mfgDate = libyang::yangTimeFormat(std::chrono::sys_days{calendarDate}, libyang::TimezoneInterpretation::Unspecified);
 
     addComponent(m_staticData,
                  m_componentName,

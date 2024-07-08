@@ -7,6 +7,7 @@
 
 #include <fmt/core.h>
 #include <fstream>
+#include <libyang-cpp/Time.hpp>
 #include <pwd.h>
 #include <shadow.h>
 #include <spdlog/spdlog.h>
@@ -17,7 +18,6 @@
 #include "utils/io.h"
 #include "utils/libyang.h"
 #include "utils/sysrepo.h"
-#include "utils/time.h"
 
 using namespace std::string_literals;
 namespace {
@@ -131,8 +131,8 @@ std::map<std::string, std::optional<std::string>> Authentication::lastPasswordCh
         assert(entry);
 
         using namespace std::chrono_literals;
-        using TimeType = std::chrono::time_point<std::chrono::system_clock>;
-        res.emplace(entry->sp_namp, velia::utils::yangTimeFormat(TimeType(24h * entry->sp_lstchg)));
+        using TimeType = std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds>;
+        res.emplace(entry->sp_namp, libyang::yangTimeFormat(TimeType(24h * entry->sp_lstchg), libyang::TimezoneInterpretation::Unspecified));
     }
 
     return res;

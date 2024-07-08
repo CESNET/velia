@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
+#include <libyang-cpp/Time.hpp>
 #include <optional>
 #include "IETFSystem.h"
 #include "system_vars.h"
@@ -15,7 +16,6 @@
 #include "utils/io.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
-#include "utils/time.h"
 
 using namespace std::literals;
 
@@ -203,7 +203,7 @@ void IETFSystem::initDummies()
 void IETFSystem::initClock()
 {
     sysrepo::OperGetCb cb = [] (auto, auto, auto, auto, auto, auto, auto& parent) {
-        parent->newPath(IETF_SYSTEM_STATE_CLOCK_PATH + "/current-datetime"s, utils::yangTimeFormat(std::chrono::system_clock::now()));
+        parent->newPath(IETF_SYSTEM_STATE_CLOCK_PATH + "/current-datetime"s, libyang::yangTimeFormat(std::chrono::system_clock::now(), libyang::TimezoneInterpretation::Unspecified));
         return sysrepo::ErrorCode::Ok;
     };
 

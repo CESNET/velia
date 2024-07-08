@@ -29,6 +29,7 @@ prepare_git_version(VELIA_VERSION "0.0")
 find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
+find_package(date REQUIRED) # FIXME: Remove when we have STL with __cpp_lib_chrono >= 201907 (gcc 14)
 find_package(Boost REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ "1.0.0" REQUIRED)
@@ -102,8 +103,6 @@ add_library(velia-utils STATIC
     src/utils/log-init.h
     src/utils/sysrepo.cpp
     src/utils/sysrepo.h
-    src/utils/time.cpp
-    src/utils/time.h
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )
@@ -148,6 +147,9 @@ target_link_libraries(velia-ietf-hardware
         velia-utils
         ${STD_FILESYSTEM_LIBRARY}
         Boost::boost
+    PRIVATE
+        PkgConfig::LIBYANG
+        date::date
     )
 
 add_library(velia-ietf-hardware-sysrepo STATIC
@@ -248,6 +250,8 @@ target_link_libraries(velia-system
         PkgConfig::LIBNL
         SDBusCpp::sdbus-c++
         nlohmann_json::nlohmann_json
+    PRIVATE
+        date::date-tz
     )
 
 # - firewall
@@ -409,7 +413,7 @@ if(BUILD_TESTING)
 
     set(fixture_sysrepo-czechlight-system --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2022-07-08.yang --init-data ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-authentication.json)
     velia_test(NAME sysrepo_system-firmware LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-czechlight-system RESOURCE_LOCK dbus-rauc)
-    velia_test(NAME sysrepo_authentication LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
+    velia_test(NAME sysrepo_authentication LIBRARIES velia-system FsTestUtils date::date-tz FIXTURE fixture_sysrepo-czechlight-system)
     velia_test(NAME sysrepo_system-leds LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
     velia_test(NAME sysrepo_system-journalupload LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-system)
 

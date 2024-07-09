@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9570b20_fdabe8f8",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-07-09T11:45:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8815656c_07635ddb",
+      "revId": "8fb1cf32a677444db973d0838dfdd812d3cca0cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c553b23e_6d752c25",
@@ -41,6 +59,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16f66ba1_fc9fbbdc",
+        "filename": "src/system/Authentication.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-07-09T11:45:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c553b23e_6d752c25",
+      "range": {
+        "startLine": 135,
+        "startChar": 127,
+        "endLine": 135,
+        "endChar": 138
+      },
+      "revId": "8fb1cf32a677444db973d0838dfdd812d3cca0cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7da434ab_f9e44a31",
@@ -54,6 +96,30 @@
       "writtenOn": "2024-07-08T14:25:14Z",
       "side": 1,
       "message": "Local",
+      "range": {
+        "startLine": 206,
+        "startChar": 168,
+        "endLine": 206,
+        "endChar": 179
+      },
+      "revId": "8fb1cf32a677444db973d0838dfdd812d3cca0cb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3527bc2f_be15690f",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-07-09T11:45:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7da434ab_f9e44a31",
       "range": {
         "startLine": 206,
         "startChar": 168,

@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b448a76_1e467db5",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-09T13:30:00Z",
+      "side": 1,
+      "message": "also link with date::date because that\u0027s what the libyang-cpp header requires",
+      "revId": "ebc02689aa5f5b20afe73e218e00c0e704b246fb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a6475f0_247fe75b",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-09T13:30:00Z",
+      "side": 1,
+      "message": "also with:\n \nPRIVATE date::date",
+      "revId": "ebc02689aa5f5b20afe73e218e00c0e704b246fb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f330e36_122fe53d",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-09T13:30:00Z",
+      "side": 1,
+      "message": "sine it isn\u0027t used directly from the test, this one should not be needed",
+      "range": {
+        "startLine": 409,
+        "startChar": 81,
+        "endLine": 409,
+        "endChar": 94
+      },
+      "revId": "ebc02689aa5f5b20afe73e218e00c0e704b246fb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

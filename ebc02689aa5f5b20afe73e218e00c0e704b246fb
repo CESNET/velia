@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3dbf519_88a515f0",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-07-11T08:01:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b448a76_1e467db5",
+      "revId": "ebc02689aa5f5b20afe73e218e00c0e704b246fb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a6475f0_247fe75b",
@@ -35,6 +53,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16ce20a3_e90cc46b",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-07-11T08:01:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a6475f0_247fe75b",
+      "revId": "ebc02689aa5f5b20afe73e218e00c0e704b246fb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f330e36_122fe53d",
@@ -48,6 +84,30 @@
       "writtenOn": "2024-07-09T13:30:00Z",
       "side": 1,
       "message": "sine it isn\u0027t used directly from the test, this one should not be needed",
+      "range": {
+        "startLine": 409,
+        "startChar": 81,
+        "endLine": 409,
+        "endChar": 94
+      },
+      "revId": "ebc02689aa5f5b20afe73e218e00c0e704b246fb",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "decd63ee_97515831",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-07-11T08:01:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f330e36_122fe53d",
       "range": {
         "startLine": 409,
         "startChar": 81,

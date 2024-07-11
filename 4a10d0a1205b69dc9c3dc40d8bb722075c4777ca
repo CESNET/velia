@@ -16,6 +16,23 @@
       "message": "Let\u0027s not forget about the change in the CI",
       "revId": "4a10d0a1205b69dc9c3dc40d8bb722075c4777ca",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "465e8e3b_d61618f8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-07-11T10:51:24Z",
+      "side": 1,
+      "message": "Sorry about the previous comment, I misunderstood the purpose of the change in zuul.yaml.",
+      "revId": "4a10d0a1205b69dc9c3dc40d8bb722075c4777ca",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

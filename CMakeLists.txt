@@ -78,6 +78,10 @@ set(YANG_SRCS
     yang/velia-alarms@2022-07-12.yang
     )
 
+set(YANG_SUBMODULES
+    yang/ietf-ipv6-router-advertisements@2018-03-13.yang
+    )
+
 # temporary until our CI switches to fmt>=9
 add_compile_definitions(FMT_DEPRECATED_OSTREAM)
 
@@ -525,9 +529,8 @@ if(WITH_DOCS)
 endif()
 
 set(YANG_DIR ${CMAKE_INSTALL_PREFIX}/share/velia/yang)
-install(FILES ${YANG_SRCS} DESTINATION ${YANG_DIR})
+install(FILES ${YANG_SRCS} ${YANG_SUBMODULES} DESTINATION ${YANG_DIR})
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-authentication.json DESTINATION ${YANG_DIR})
-install(FILES ${CMAKE_SOURCE_DIR}/yang/ietf-ipv6-router-advertisements@2018-03-13.yang DESTINATION ${YANG_DIR})
 install(TARGETS veliad-health RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)
 install(TARGETS veliad-system RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)
 install(TARGETS veliad-hardware RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/)

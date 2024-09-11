@@ -19,6 +19,7 @@ namespace velia::system {
 struct NeighborEntry {
     std::string m_portId;
     std::map<std::string, std::string> m_properties;
+    bool operator==(const NeighborEntry& other) const = default;
 };
 std::ostream& operator<<(std::ostream& os, const NeighborEntry& entry);
 

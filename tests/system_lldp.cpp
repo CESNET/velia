@@ -8,13 +8,6 @@
 
 using namespace std::literals;
 
-namespace velia::system {
-bool operator==(const NeighborEntry& a, const NeighborEntry& b)
-{
-    return std::tie(a.m_portId, a.m_properties) == std::tie(b.m_portId, b.m_properties);
-}
-}
-
 TEST_CASE("Parsing with the mock")
 {
     TEST_INIT_LOGS;

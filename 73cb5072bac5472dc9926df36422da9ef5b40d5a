@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3406a8ee_a901719b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-11T21:51:13Z",
+      "side": 1,
+      "message": "I think that we\u0027re rather inconsistent in this, and there\u0027s still this explicit include dir manipulation:\n\nhttps://gerrit.cesnet.cz/plugins/gitiles/CzechLight/velia/+/refs/heads/master/CMakeLists.txt#340\n\n...but I don\u0027t really care.",
+      "range": {
+        "startLine": 9,
+        "startChar": 32,
+        "endLine": 10,
+        "endChar": 32
+      },
+      "revId": "73cb5072bac5472dc9926df36422da9ef5b40d5a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

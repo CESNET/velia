@@ -1,10 +1,8 @@
 #include "trompeloeil_doctest.h"
-#include "pretty_printers.h"
 #include "system/LLDP.h"
 #include "system_vars.h"
-#include "test_log_setup.h"
-#include "tests/configure.cmake.h"
-#include "utils/exec.h"
+#include "tests/pretty_printers.h"
+#include "tests/test_log_setup.h"
 
 using namespace std::literals;
 

@@ -1,11 +1,9 @@
 #include "trompeloeil_doctest.h"
-#include <sysrepo-cpp/Connection.hpp>
-#include "pretty_printers.h"
 #include "system/LLDP.h"
 #include "system/LLDPCallback.h"
-#include "test_log_setup.h"
-#include "tests/configure.cmake.h"
+#include "tests/pretty_printers.h"
 #include "tests/sysrepo-helpers/common.h"
+#include "tests/test_log_setup.h"
 
 TEST_CASE("Sysrepo opsdata callback")
 {

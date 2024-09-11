@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2957e59b_4675bb55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-11T21:43:21Z",
+      "side": 1,
+      "message": "(neither of the CI failures appear relevant to this change)",
+      "revId": "01470c7fe89d2bf7858877d9cbd2af356a7cf114",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

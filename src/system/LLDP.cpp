@@ -4,6 +4,7 @@
  * Written by Tomáš Pecka <tomas.pecka@fit.cvut.cz>
  *
  */
+#include <boost/algorithm/string/join.hpp>
 #include <netinet/ether.h>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
@@ -17,45 +18,41 @@ namespace velia::system {
 namespace {
 
 /** @brief LLDP capabilities identifiers ordered by their appearence in YANG schema 'czechlight-lldp' */
-std::map<char, std::string> SYSTEM_CAPABILITIES = {
-    {'o', "other"},
-    {'p', "repeater"},
-    {'b', "bridge"},
-    {'w', "wlan-access-point"},
-    {'r', "router"},
-    {'t', "telephone"},
-    {'d', "docsis-cable-device"},
-    {'a', "station-only"},
-    {'c', "cvlan-component"},
-    {'s', "svlan-component"},
-    {'m', "two-port-mac-relay"},
+std::vector<std::string> SYSTEM_CAPABILITIES = {
+    "other",
+    "repeater",
+    "bridge",
+    "wlan-access-point",
+    "router",
+    "telephone",
+    "docsis-cable-device",
+    "station-only",
+    "cvlan-component",
+    "svlan-component",
+    "two-port-mac-relay",
 };
 
-/** @brief Converts systemd's capabilities bitset to YANG's (named) bits.
+/** @brief Converts capabilities bits to YANG's (named) bits.
  *
  * Apparently, libyang's parser requires the bits to be specified as string of names separated by whitespace.
  * See libyang's src/parser.c (function lyp_parse_value, switch-case LY_TYPE_BITS) and tests/test_sec9_7.c
  *
  * The names of individual bits should appear in the order they are defined in the YANG schema. At least that is how
  * I understand libyang's comment 'identifiers appear ordered by their position' in src/parser.c.
- * Systemd and our YANG model czechlight-lldp define the bits in the same order so this function does not have to care
+ * LLDP and our YANG model czechlight-lldp define the bits in the same order so this function does not have to care
  * about it.
  */
-std::string toBitsYANG(const std::string& caps)
+std::string toBitsYANG(const int caps)
 {
-    std::string res;
+    std::vector<std::string> res;
 
-    for (const auto& [bit, capability] : SYSTEM_CAPABILITIES) {
-        if (std::find(caps.begin(), caps.end(), bit) != caps.end()) {
-            if (!res.empty()) {
-                res += " ";
-            }
-
-            res += capability;
+    for (size_t i = 0; i < SYSTEM_CAPABILITIES.size(); i++) {
+        if (caps & (1U << i)) {
+            res.push_back(SYSTEM_CAPABILITIES[i]);
         }
     }
 
-    return res;
+    return boost::algorithm::join(res, " ");
 }
 }
 
@@ -71,22 +68,23 @@ std::vector<NeighborEntry> LLDPDataProvider::getNeighbors() const
 
     auto json = nlohmann::json::parse(m_dataCallback());
 
-    for (const auto& [linkName, neighbors] : json.items()) {
-        for (const auto& n_ : neighbors) {
-            [[maybe_unused]] const auto& parameters = n_["neighbor"];
+    for (const auto& interface: json["Neighbors"]) {
+        auto linkName = interface["InterfaceName"].get<std::string>();
+
+        for (const auto& neighbor : interface["Neighbors"]) {
             NeighborEntry ne;
             ne.m_portId = linkName;
 
-            if (auto it = parameters.find("chassisId"); it != parameters.end()) {
+            if (auto it = neighbor.find("ChassisID"); it != neighbor.end()) {
                 ne.m_properties["remoteChassisId"] = *it;
             }
-            if (auto it = parameters.find("portId"); it != parameters.end()) {
+            if (auto it = neighbor.find("PortID"); it != neighbor.end()) {
                 ne.m_properties["remotePortId"] = *it;
             }
-            if (auto it = parameters.find("systemName"); it != parameters.end()) {
+            if (auto it = neighbor.find("SystemName"); it != neighbor.end()) {
                 ne.m_properties["remoteSysName"] = *it;
             }
-            if (auto it = parameters.find("enabledCapabilities"); it != parameters.end()) {
+            if (auto it = neighbor.find("EnabledCapabilities"); it != neighbor.end()) {
                 ne.m_properties["systemCapabilitiesEnabled"] = toBitsYANG(*it);
             }
 

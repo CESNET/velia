@@ -15,7 +15,7 @@ TEST_CASE("Parsing with the mock")
 
     SECTION("LLDP active on a single link")
     {
-        json = R"({"ve-image": [{"neighbor": {"systemName": "image", "portId": "host0", "chassisId": "7062a9e41c924ac6942da39c56e6b820", "enabledCapabilities": "a"}}]})";
+        json = R"({"Neighbors": [{"InterfaceIndex": 2, "InterfaceName": "ve-image", "Neighbors": [{"SystemName": "image", "PortID": "host0", "ChassisID": "7062a9e41c924ac6942da39c56e6b820", "EnabledCapabilities": 128}]}]})";
         expected = {
             {"ve-image", {
                              {"remoteSysName", "image"},
@@ -27,16 +27,19 @@ TEST_CASE("Parsing with the mock")
 
     SECTION("No LLDP enabled")
     {
-        json = "{}";
+        json = R"({"Neighbors": []})";
         expected = {};
     }
 
     SECTION("Two LLDP links")
     {
         json = R"({
-"enp0s31f6": [{"neighbor": {"systemName": "sw-a1128-01.fit.cvut.cz", "portId": "Gi3/0/7", "chassisId": "00:b8:b3:e6:17:80", "enabledCapabilities": "b"}}],
-"ve-image":  [{"neighbor": {"systemName": "image", "portId": "host0", "chassisId": "8b90f96f448140fb9b5d9d68e86d052e", "enabledCapabilities": "a"}}]
-})";
+  "Neighbors": [
+    {"InterfaceName": "enp0s31f6", "InterfaceIndex": 42, "Neighbors": [{"SystemName": "sw-a1128-01.fit.cvut.cz", "PortID": "Gi3/0/7", "ChassisID": "00:b8:b3:e6:17:80", "EnabledCapabilities": 4}]},
+    {"InterfaceName": "ve-image", "InterfaceIndex": 666, "Neighbors": [{"SystemName": "image", "PortID": "host0", "ChassisID": "8b90f96f448140fb9b5d9d68e86d052e", "EnabledCapabilities": 128}]}
+  ]
+}
+)";
         expected = {
             {"enp0s31f6", {
                               {"remoteSysName", "sw-a1128-01.fit.cvut.cz"},
@@ -55,10 +58,16 @@ TEST_CASE("Parsing with the mock")
 
     SECTION("Multiple neighbors on one interface")
     {
-        json = R"({"host0": [
-{"neighbor": {"systemName": "image", "portId": "host0", "chassisId": "1631331c24bb499bb644fcdf7c9fd467", "enabledCapabilities": "a"}},
-{"neighbor": {"systemName": "enterprise", "portId": "vb-image2", "chassisId": "1efe5cecbfc248a09065ad6177a98b41", "enabledCapabilities": "a"}}
-]})";
+        json = R"({
+  "Neighbors": [{
+    "InterfaceName": "host0", "InterfaceIndex": 42, "Neighbors": [{
+        "SystemName": "image", "PortID": "host0", "ChassisID": "1631331c24bb499bb644fcdf7c9fd467", "EnabledCapabilities": 128
+    }, {
+        "SystemName": "enterprise", "PortID": "vb-image2", "ChassisID": "1efe5cecbfc248a09065ad6177a98b41", "EnabledCapabilities": 128
+    }]
+  }]
+}
+)";
 
         expected = {
             {"host0", {

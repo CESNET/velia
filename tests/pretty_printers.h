@@ -17,9 +17,9 @@
 
 namespace doctest {
 
-template <>
-struct StringMaker<std::vector<std::string>> {
-    static String convert(const std::vector<std::string>& v)
+template <class T>
+struct StringMaker<std::vector<T>> {
+    static String convert(const std::vector<T>& v)
     {
         std::ostringstream os;
         os << "{" << std::endl;

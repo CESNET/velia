@@ -39,10 +39,9 @@ find_package(nlohmann_json REQUIRED)
 pkg_check_modules(DOCOPT REQUIRED IMPORTED_TARGET docopt)
 
 pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
-if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
-    message(FATAL_ERROR "Systemd 245 has a bug affecting DBus method calls using sdbus-c++. Please see https://github.com/Kistler-Group/sdbus-cpp/issues/106.")
+if(${SYSTEMD_VERSION} VERSION_LESS 256)
+    message(WARNING "LLDP neighbor listing support in systemd <= 255 is not supported and will break at runtime. Upgrade to systemd 256.")
 endif()
-#TODO: Check patch 20333 active
 
 pkg_check_modules(SYSREPO REQUIRED IMPORTED_TARGET sysrepo sysrepo-cpp>=3)
 pkg_check_modules(LIBYANG REQUIRED IMPORTED_TARGET libyang libyang-cpp>=3)

@@ -49,3 +49,5 @@ For building, one needs:
 
 The build process uses [CMake](https://cmake.org/runningcmake/).
 A quick-and-dirty build with no fancy options can be as simple as `mkdir build && cd build && cmake .. && make && make install`.
+
+For the LLDP neighbours listing feature of `velia-system` to work, you need systemd (networkctl) 256+.

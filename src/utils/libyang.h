@@ -22,7 +22,7 @@ namespace velia::utils {
  * @param node A libyang data node. Mustn't be nullptr. Must be a leaf.
  *
  */
-std::string getValueAsString(const libyang::DataNode& node);
+std::string asString(const libyang::DataNode& node);
 
 /** @brief Gets exactly one node based on `path` starting from `start`. Uses findXPath, so it works even with lists with
  * missing predicates.

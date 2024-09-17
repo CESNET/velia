@@ -52,7 +52,7 @@ bool protocolEnabled(const libyang::DataNode& linkEntry, const std::string& prot
     const auto xpath = "ietf-ip:" + proto + "/enabled";
 
     if (auto node = velia::utils::getUniqueSubtree(linkEntry, xpath)) {
-        return velia::utils::getValueAsString(node.value()) == "true"s;
+        return velia::utils::asString(node.value()) == "true"s;
     }
 
     return false;
@@ -93,10 +93,10 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
         for (const auto& linkEntry : linkEntries) {
             std::map<std::string, std::vector<std::string>> configValues;
 
-            auto linkName = utils::getValueAsString(utils::getUniqueSubtree(linkEntry, "name").value());
+            auto linkName = utils::asString(utils::getUniqueSubtree(linkEntry, "name").value());
 
             if (auto node = utils::getUniqueSubtree(linkEntry, "description")) {
-                configValues["Network"].push_back("Description="s + utils::getValueAsString(node.value()));
+                configValues["Network"].push_back("Description="s + utils::asString(node.value()));
             }
 
             // if addresses present, generate them...
@@ -110,8 +110,8 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
                 const auto addresses = linkEntry.findXPath(IPAddressListXPath);
 
                 for (const auto& ipEntry : addresses) {
-                    auto ipAddress = utils::getValueAsString(utils::getUniqueSubtree(ipEntry, "ip").value());
-                    auto prefixLen = utils::getValueAsString(utils::getUniqueSubtree(ipEntry, "prefix-length").value());
+                    auto ipAddress = utils::asString(utils::getUniqueSubtree(ipEntry, "ip").value());
+                    auto prefixLen = utils::asString(utils::getUniqueSubtree(ipEntry, "prefix-length").value());
 
                     spdlog::get("system")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
                     configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
@@ -123,7 +123,7 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
             bool isSlave = false;
 
             if (auto node = utils::getUniqueSubtree(linkEntry, "czechlight-network:bridge")) {
-                configValues["Network"].push_back("Bridge="s + utils::getValueAsString(node.value()));
+                configValues["Network"].push_back("Bridge="s + utils::asString(node.value()));
                 isSlave = true;
             }
 
@@ -132,13 +132,13 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
             }
 
             // network autoconfiguration
-            if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses"); protocolEnabled(linkEntry, "ipv6") && utils::getValueAsString(node.value()) == "true"s) {
+            if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses"); protocolEnabled(linkEntry, "ipv6") && utils::asString(node.value()) == "true"s) {
                 configValues["Network"].push_back("IPv6AcceptRA=true");
             } else {
                 configValues["Network"].push_back("IPv6AcceptRA=false");
             }
 
-            if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client"); protocolEnabled(linkEntry, "ipv4") && utils::getValueAsString(node.value()) == "true"s) {
+            if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client"); protocolEnabled(linkEntry, "ipv4") && utils::asString(node.value()) == "true"s) {
                 configValues["Network"].push_back("DHCP=ipv4");
             } else {
                 configValues["Network"].push_back("DHCP=no");

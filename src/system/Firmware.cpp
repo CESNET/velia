@@ -82,7 +82,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
         auto lock = updateSlotStatus();
 
         try {
-            auto source = utils::getValueAsString(*input.findPath("url"));
+            auto source = utils::asString(*input.findPath("url"));
             m_rauc->install(source);
         } catch (sdbus::Error& e) {
             m_log->warn("RAUC install error: '{}'", e.what());
@@ -95,7 +95,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
     m_srSubscribeRPC = m_srSessionRPC.onRPCAction(CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/install", cbRPC);
 
     ::sysrepo::RpcActionCb markSlotAs = [this](auto, auto, auto path, auto input, auto, auto, auto) {
-        auto bootName = utils::getValueAsString(*input.parent()->findPath("name"));
+        auto bootName = utils::asString(*input.parent()->findPath("name"));
         std::string action;
         if (path == CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot/set-active-after-reboot") {
             action = "active";

@@ -5,7 +5,7 @@
 
 namespace velia::utils {
 
-std::string getValueAsString(const libyang::DataNode& node)
+std::string asString(const libyang::DataNode& node)
 {
     if (node.schema().nodeType() != libyang::NodeType::Leaf) {
         throw std::logic_error("retrieveString: invalid node");

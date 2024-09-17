@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "158f4718_01fa9bea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-17T08:56:04Z",
+      "side": 1,
+      "message": "(I also set the topic so that we don\u0027t merge this accidentally before the br2-external stuff is done)",
+      "revId": "53c64ec9284c01773cdf9351bbb616fc53838a06",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -56,7 +56,7 @@ AlarmsOutputs::AlarmsOutputs(sysrepo::Session session, const std::vector<std::fu
 
             if (auto data = session.getData(alarmSummary)) {
                 for (const auto& [severity, errorState] : severityToHealthStateMapping) {
-                    const auto activeAlarms = std::stoi(std::string(data->findPath(alarmSummary + "/alarm-summary[severity='"s + severity + "']/not-cleared")->asTerm().valueStr()));
+                    const auto activeAlarms = std::stoi(data->findPath(alarmSummary + "/alarm-summary[severity='"s + severity + "']/not-cleared")->asTerm().valueStr());
 
                     if (activeAlarms > 0) {
                         state = errorState;

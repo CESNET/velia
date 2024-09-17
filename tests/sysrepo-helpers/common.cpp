@@ -64,7 +64,7 @@ Values rpcFromSysrepo(sysrepo::Session session, const std::string& rpcPath, Valu
 
     Values res;
     for (const auto& node : output.childrenDfs()) {
-        const auto briefXPath = std::string{node.path()}.substr(rpcPath.size());
+        const auto briefXPath = node.path().substr(rpcPath.size());
 
         // We ignore the thing that's exactly the xpath we're retrieving to avoid having {"": ""} entries.
         if (briefXPath.empty()) {

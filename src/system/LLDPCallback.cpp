@@ -17,7 +17,7 @@ LLDPCallback::LLDPCallback(std::shared_ptr<LLDPDataProvider> lldp)
 {
 }
 
-sysrepo::ErrorCode LLDPCallback::operator()(sysrepo::Session session, uint32_t, std::string_view, std::optional<std::string_view> subXPath, std::optional<std::string_view> requestXPath, uint32_t, std::optional<libyang::DataNode>& output)
+sysrepo::ErrorCode LLDPCallback::operator()(sysrepo::Session session, uint32_t, const std::string&, const std::optional<std::string>& subXPath, const std::optional<std::string>& requestXPath, uint32_t, std::optional<libyang::DataNode>& output)
 {
     m_log->trace("operational data callback: subXPath {} request-XPath {}",
             subXPath ? *subXPath : "(none)", requestXPath ? *requestXPath : "(none)");

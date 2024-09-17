@@ -10,6 +10,7 @@
 #include <sysrepo-cpp/Enum.hpp>
 #include "JournalUpload.h"
 #include "utils/io.h"
+#include "utils/libyang.h"
 #include "utils/log.h"
 
 using namespace std::string_literals;
@@ -28,7 +29,7 @@ std::optional<std::string> extractURL(sysrepo::Session session)
     std::string url;
 
     auto hostNode = data->findPath(UPLOAD_URL_CONTAINER + "/host"s);
-    auto hostValue = std::string{hostNode->asTerm().valueStr()};
+    auto hostValue = velia::utils::getValueAsString(*hostNode);
     auto isIpv6 = hostNode->asTerm().valueType().internalPluginId().find("ipv6") != std::string::npos;
 
     url += data->findPath(UPLOAD_URL_CONTAINER + "/protocol"s)->asTerm().valueStr();
@@ -41,7 +42,7 @@ std::optional<std::string> extractURL(sysrepo::Session session)
     }
 
     url += ":";
-    url += std::string(data->findPath(UPLOAD_URL_CONTAINER + "/port"s)->asTerm().valueStr());
+    url += data->findPath(UPLOAD_URL_CONTAINER + "/port"s)->asTerm().valueStr();
 
     return url;
 }

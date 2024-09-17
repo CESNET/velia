@@ -10,6 +10,7 @@
 #include "sysrepo-helpers/datastore.h"
 #include "test_log_setup.h"
 #include "tests/sysrepo-helpers/common.h"
+#include "utils/libyang.h"
 
 using namespace std::literals;
 
@@ -45,7 +46,7 @@ TEST_CASE("IETF Hardware with sysrepo")
     auto directLeafNodeQuery = [&](const std::string& xpath) {
         auto val = client.getData(xpath);
         REQUIRE(val);
-        return std::string{val->findPath(xpath)->asTerm().valueStr()};
+        return velia::utils::getValueAsString(*val->findPath(xpath));
     };
 
     auto sysfsTempCpu = std::make_shared<FakeHWMon>();

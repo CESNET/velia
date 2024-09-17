@@ -25,7 +25,6 @@ const auto action = "/ietf-access-control-list:acls/acl/aces/ace/actions/forward
 
 std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree, const std::vector<std::filesystem::path>& nftIncludes)
 {
-    using namespace std::string_view_literals;
     std::ostringstream ss;
     ss << "flush ruleset" << "\n";
     ss << "add table inet filter" << "\n";
@@ -35,22 +34,22 @@ std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree, 
 
     constexpr std::array skippedNodes{
         // Top-level container - don't care
-        "/ietf-access-control-list:acls"sv,
+        "/ietf-access-control-list:acls",
         // ACL container
-        "/ietf-access-control-list:acls/acl"sv,
+        "/ietf-access-control-list:acls/acl",
         // ACL name - don't care, we always only have one ACL
-        "/ietf-access-control-list:acls/acl/name"sv,
+        "/ietf-access-control-list:acls/acl/name",
         // ACEs container - don't care
-        "/ietf-access-control-list:acls/acl/aces"sv,
+        "/ietf-access-control-list:acls/acl/aces",
         // The type is either ipv4, ipv6, eth (which is disabled by a deviation) or a mix of these. The type is there
         // only for YANG validation and doesn't matter to us, because we check for "ipv4" and "ipv6" container.
-        "/ietf-access-control-list:acls/acl/type"sv,
+        "/ietf-access-control-list:acls/acl/type",
         // These are ignored, because they do not give any meaningful information. They are mostly containers.
-        "/ietf-access-control-list:acls/acl/aces/ace"sv,
-        "/ietf-access-control-list:acls/acl/aces/ace/matches"sv,
-        "/ietf-access-control-list:acls/acl/aces/ace/matches/ipv4"sv,
-        "/ietf-access-control-list:acls/acl/aces/ace/matches/ipv6"sv,
-        "/ietf-access-control-list:acls/acl/aces/ace/actions"sv,
+        "/ietf-access-control-list:acls/acl/aces/ace",
+        "/ietf-access-control-list:acls/acl/aces/ace/matches",
+        "/ietf-access-control-list:acls/acl/aces/ace/matches/ipv4",
+        "/ietf-access-control-list:acls/acl/aces/ace/matches/ipv6",
+        "/ietf-access-control-list:acls/acl/aces/ace/actions",
     };
 
     logger->trace("traversing the tree");
@@ -79,11 +78,11 @@ std::string generateNftConfig(velia::Log logger, const libyang::DataNode& tree, 
             // Action is the last statement we get, so this is where we create the actual rule.
             ss << "add rule inet filter acls" << match;
             auto action = velia::utils::getValueAsString(node);
-            if (action ==  "ietf-access-control-list:accept"sv) {
+            if (action == "ietf-access-control-list:accept") {
                 ss << " accept";
-            } else if (action ==  "ietf-access-control-list:drop"sv) {
+            } else if (action == "ietf-access-control-list:drop") {
                 ss << " drop";
-            } else if (action ==  "ietf-access-control-list:reject"sv) {
+            } else if (action == "ietf-access-control-list:reject") {
                 ss << " reject";
             } else {
                 // This should theoretically never happen.

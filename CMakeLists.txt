@@ -44,8 +44,8 @@ if(${SYSTEMD_VERSION} VERSION_EQUAL 245)
 endif()
 #TODO: Check patch 20333 active
 
-pkg_check_modules(SYSREPO REQUIRED IMPORTED_TARGET sysrepo sysrepo-cpp>=2)
-pkg_check_modules(LIBYANG REQUIRED IMPORTED_TARGET libyang libyang-cpp>=2)
+pkg_check_modules(SYSREPO REQUIRED IMPORTED_TARGET sysrepo sysrepo-cpp>=3)
+pkg_check_modules(LIBYANG REQUIRED IMPORTED_TARGET libyang libyang-cpp>=3)
 pkg_check_modules(LIBNL REQUIRED IMPORTED_TARGET libnl-route-3.0)
 
 include(GNUInstallDirs)

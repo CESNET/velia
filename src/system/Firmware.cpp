@@ -7,6 +7,7 @@
 
 #include <regex>
 #include "Firmware.h"
+#include "utils/libyang.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
@@ -81,7 +82,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
         auto lock = updateSlotStatus();
 
         try {
-            auto source = std::string{input.findPath("url")->asTerm().valueStr()};
+            auto source = utils::getValueAsString(*input.findPath("url"));
             m_rauc->install(source);
         } catch (sdbus::Error& e) {
             m_log->warn("RAUC install error: '{}'", e.what());
@@ -94,7 +95,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
     m_srSubscribeRPC = m_srSessionRPC.onRPCAction(CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/install", cbRPC);
 
     ::sysrepo::RpcActionCb markSlotAs = [this](auto, auto, auto path, auto input, auto, auto, auto) {
-        auto bootName = std::string{input.parent()->findPath("name")->asTerm().valueStr()};
+        auto bootName = utils::getValueAsString(*input.parent()->findPath("name"));
         std::string action;
         if (path == CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot/set-active-after-reboot") {
             action = "active";

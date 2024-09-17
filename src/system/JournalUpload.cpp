@@ -29,7 +29,7 @@ std::optional<std::string> extractURL(sysrepo::Session session)
     std::string url;
 
     auto hostNode = data->findPath(UPLOAD_URL_CONTAINER + "/host"s);
-    auto hostValue = velia::utils::getValueAsString(*hostNode);
+    auto hostValue = velia::utils::asString(*hostNode);
     auto isIpv6 = hostNode->asTerm().valueType().internalPluginId().find("ipv6") != std::string::npos;
 
     url += data->findPath(UPLOAD_URL_CONTAINER + "/protocol"s)->asTerm().valueStr();

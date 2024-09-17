@@ -46,7 +46,7 @@ TEST_CASE("IETF Hardware with sysrepo")
     auto directLeafNodeQuery = [&](const std::string& xpath) {
         auto val = client.getData(xpath);
         REQUIRE(val);
-        return velia::utils::getValueAsString(*val->findPath(xpath));
+        return velia::utils::asString(*val->findPath(xpath));
     };
 
     auto sysfsTempCpu = std::make_shared<FakeHWMon>();

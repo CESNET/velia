@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa025588_8e7a416c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-09-23T07:42:32Z",
+      "side": 1,
+      "message": "I found two more occurences\n\n```\ndiff --git a/src/health/outputs/AlarmsOutputs.cpp b/src/health/outputs/AlarmsOutputs.cpp\nindex b9c3a00d..848ae45a 100644\n--- a/src/health/outputs/AlarmsOutputs.cpp\n+++ b/src/health/outputs/AlarmsOutputs.cpp\n@@ -56,7 +56,7 @@ AlarmsOutputs::AlarmsOutputs(sysrepo::Session session, const std::vector\u003cstd::fu\n \n             if (auto data \u003d session.getData(alarmSummary)) {\n                 for (const auto\u0026 [severity, errorState] : severityToHealthStateMapping) {\n-                    const auto activeAlarms \u003d std::stoi(std::string(data-\u003efindPath(alarmSummary + \"/alarm-summary[severity\u003d\u0027\"s + severity + \"\u0027]/not-cleared\")-\u003easTerm().valueStr()));\n+                    const auto activeAlarms \u003d std::stoi(data-\u003efindPath(alarmSummary + \"/alarm-summary[severity\u003d\u0027\"s + severity + \"\u0027]/not-cleared\")-\u003easTerm().valueStr());\n \n                     if (activeAlarms \u003e 0) {\n                         state \u003d errorState;\ndiff --git a/src/system/JournalUpload.cpp b/src/system/JournalUpload.cpp\nindex 12f268e5..e3c20e9e 100644\n--- a/src/system/JournalUpload.cpp\n+++ b/src/system/JournalUpload.cpp\n@@ -42,7 +42,7 @@ std::optional\u003cstd::string\u003e extractURL(sysrepo::Session session)\n     }\n \n     url +\u003d \":\";\n-    url +\u003d std::string(data-\u003efindPath(UPLOAD_URL_CONTAINER + \"/port\"s)-\u003easTerm().valueStr());\n+    url +\u003d data-\u003efindPath(UPLOAD_URL_CONTAINER + \"/port\"s)-\u003easTerm().valueStr();\n \n     return url;\n }\n```",
+      "revId": "32f87630c6b28d1c979aab693055603f02c6172c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

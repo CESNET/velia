@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f185b52_36d1f40f",
+        "filename": "src/list-alarms/velia-list-alarms.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-09-24T21:06:35Z",
+      "side": 1,
+      "message": "`-f json` was missing, so this was producing XML stuff, which led to:\n # velia-list-alarms \n jq: parse error: Invalid numeric literal at line 1, column 8\n\nBuildroot required BR2_PACKAGE_ONIGURUMA:\n jq: error (at \u003cstdin\u003e:843): jq was compiled without ONIGURUMA regex library. match/test/sub and related functions are not available.\n   Resource  Severity  Detail  Last raised  Cleared",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 43
+      },
+      "revId": "5b66d67afc2fdf341c2ad63e70507a8f8183f5e1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

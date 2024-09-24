@@ -21,7 +21,6 @@
             requires: CzechLight-deps-f38-clang-tsan
             required-projects: *projects
             pre-run: ci/pre.yaml
-            voting: false # suspected broken sysrepo/TSAN
         - f38-cpp-coverage-diff:
             voting: false
         - clang-format:

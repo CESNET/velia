@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+usage() {
+    cat <<EOF
+Usage: $0 [--cleared | --active] [-h]
+
+Lists alarms from ietf-alarms.
+
+Options:
+ --help, -h                 Show this help message.
+ --cleared, -c              List only cleared alarms.
+ --active, -a               List only active alarms.
+ --since DATE, -s=DATE      List alarms last raised after the given date. DATE is ISO 8601 string.
+ --until DATE, -u=DATE      List alarms last raised before the given date. DATE is ISO 8601 string.
+EOF
+    exit 1
+}
+
+CONFIG="{}"
+
+OPTS=$(getopt -q \
+    --options cas:u: \
+    --longoptions 'cleared,active,since:,until:' \
+    -n list-alarms -- $@)
+[ $? -eq 0 ] || usage
+
+eval set -- "$OPTS"
+
+while true; do
+    case "$1" in
+        -c | --cleared)
+            CONFIG=$(jq '.cleared = true' <<< "${CONFIG}")
+            shift
+            ;;
+        -a | --active)
+            CONFIG=$(jq '.cleared = false' <<< "${CONFIG}")
+            shift
+            ;;
+        -s | --since)
+            CONFIG=$(jq ".since = \"$2\"" <<< "${CONFIG}")
+            shift 2
+            ;;
+        -u | --until)
+            CONFIG=$(jq ".until = \"$2\"" <<< "${CONFIG}")
+            shift 2
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -h|--help)
+            ;&
+        *)
+            usage
+            ;;
+    esac
+done
+
+sysrepocfg -f json -d operational -X -m ietf-alarms | \
+jq -r \
+    -f "@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBEXECDIR@/velia/velia-list-alarms.jq" \
+    --argjson config "${CONFIG}" \
+    | column -ts $'\t'

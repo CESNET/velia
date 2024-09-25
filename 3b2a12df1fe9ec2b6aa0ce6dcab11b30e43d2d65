@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "389151c5_dc8e3f4c",
+        "filename": ".zuul.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-09-25T07:42:02Z",
+      "side": 0,
+      "message": "I am confused how this ignores the CI fail which the commit message states :)",
+      "range": {
+        "startLine": 24,
+        "startChar": 12,
+        "endLine": 24,
+        "endChar": 57
+      },
+      "revId": "3b2a12df1fe9ec2b6aa0ce6dcab11b30e43d2d65",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

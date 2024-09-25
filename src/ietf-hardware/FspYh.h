@@ -56,16 +56,17 @@ protected:
 
     virtual void createPower() = 0;
     virtual std::string missingAlarmDescription() const = 0;
+    void startThread();
 };
 
 struct FspYhPsu : public FspYh {
-    using FspYh::FspYh;
+    FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psu, std::shared_ptr<TransientI2C> i2c);
     void createPower() override;
     std::string missingAlarmDescription() const override;
 };
 
 struct FspYhPdu : public FspYh {
-    using FspYh::FspYh;
+    FspYhPdu(const std::filesystem::path& hwmonDir, const std::string& pdu, std::shared_ptr<TransientI2C> i2c);
     void createPower() override;
     std::string missingAlarmDescription() const override;
 };

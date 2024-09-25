@@ -83,6 +83,10 @@ FspYh::FspYh(const std::filesystem::path& hwmonDir, const std::string& name, std
     , m_staticData(velia::ietf_hardware::data_reader::StaticData(m_namePrefix, "ne", {{"class", "iana-hardware:power-supply"}})().data)
 {
     m_exit = false;
+}
+
+void FspYh::startThread()
+{
     m_psuWatcher = std::thread([this] {
         while (!m_exit) {
             if (m_i2c->isPresent()) {
@@ -156,6 +160,12 @@ SensorPollData FspYh::readValues()
 
     res.sideLoadedAlarms.insert({ALARM_SENSOR_MISSING, componentXPath, "cleared", missingAlarmDescription()});
     return res;
+}
+
+FspYhPsu::FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psu, std::shared_ptr<TransientI2C> i2c)
+    : FspYh(hwmonDir, psu, i2c)
+{
+    startThread();
 }
 
 void FspYhPsu::createPower()
@@ -241,6 +251,12 @@ void FspYhPsu::createPower()
 std::string FspYhPsu::missingAlarmDescription() const
 {
     return "PSU is unplugged.";
+}
+
+FspYhPdu::FspYhPdu(const std::filesystem::path& hwmonDir, const std::string& pdu, std::shared_ptr<TransientI2C> i2c)
+    : FspYh(hwmonDir, pdu, i2c)
+{
+    startThread();
 }
 
 void FspYhPdu::createPower()

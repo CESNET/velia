@@ -65,6 +65,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7833ed85_5d0d6ea5",
+        "filename": "src/list-alarms/velia-list-alarms.jq",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-09-25T15:07:07Z",
+      "side": 1,
+      "message": "I have changed that after writing the comment; Cleared alarms are in the default color, alarms with indeterminate severity are white. Feel free to change.",
+      "parentUuid": "5bdaa5c9_c88e14a5",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 8
+      },
+      "revId": "7c9dab2f0dc29e1da518604a4d1c2a795ec93fe3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e33dec89_bffe90f8",

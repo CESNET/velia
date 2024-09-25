@@ -41,6 +41,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bdaa5c9_c88e14a5",
+        "filename": "src/list-alarms/velia-list-alarms.jq",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-09-25T11:53:51Z",
+      "side": 1,
+      "message": "Is there actually a sequence for gray color? I\u0027ve put white.",
+      "parentUuid": "ef8201a4_09f8f90a",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 8
+      },
+      "revId": "7c9dab2f0dc29e1da518604a4d1c2a795ec93fe3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e33dec89_bffe90f8",
@@ -54,6 +78,30 @@
       "writtenOn": "2024-09-24T22:21:25Z",
       "side": 1,
       "message": "this shows \"˚C\" for all HW sensors, not just the temperature ones; just drop that, I guess?",
+      "range": {
+        "startLine": 24,
+        "startChar": 26,
+        "endLine": 24,
+        "endChar": 66
+      },
+      "revId": "7c9dab2f0dc29e1da518604a4d1c2a795ec93fe3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e54dd3ed_3c408269",
+        "filename": "src/list-alarms/velia-list-alarms.jq",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-09-25T11:53:51Z",
+      "side": 1,
+      "message": "oops, done.",
+      "parentUuid": "e33dec89_bffe90f8",
       "range": {
         "startLine": 24,
         "startChar": 26,

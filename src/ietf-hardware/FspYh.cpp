@@ -87,7 +87,7 @@ FspYh::FspYh(const std::filesystem::path& hwmonDir, const std::string& name, std
 
 void FspYh::startThread()
 {
-    m_psuWatcher = std::thread([this] {
+    m_psuWatcher = std::jthread([this] {
         while (!m_exit) {
             if (m_i2c->isPresent()) {
                 if (!std::filesystem::is_directory(m_hwmonDir)) {
@@ -119,7 +119,6 @@ void FspYh::startThread()
 FspYh::~FspYh()
 {
     m_exit = true;
-    m_psuWatcher.join();
 }
 
 SensorPollData FspYh::readValues()

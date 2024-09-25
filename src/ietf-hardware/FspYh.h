@@ -41,7 +41,7 @@ public:
 protected:
     std::mutex m_mtx;
     std::condition_variable m_cond;
-    std::thread m_psuWatcher;
+    std::jthread m_psuWatcher;
     std::atomic<bool> m_exit;
     std::shared_ptr<TransientI2C> m_i2c;
 

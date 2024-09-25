@@ -5,6 +5,7 @@
  *
  */
 #include <sysrepo-cpp/Enum.hpp>
+#include <spdlog/spdlog.h>
 #include "alarms.h"
 #include "utils/libyang.h"
 #include "utils/sysrepo.h"
@@ -27,6 +28,7 @@ void push(sysrepo::Session session, const std::string& alarmId, const std::strin
     inputNode.newPath(alarmRpc + "/severity"s, severity);
     inputNode.newPath(alarmRpc + "/alarm-text"s, text);
 
+    spdlog::get("main")->trace("alarms::push");
     session.sendRPC(inputNode);
 }
 
@@ -49,6 +51,7 @@ void pushInventory(sysrepo::Session session, const std::vector<AlarmInventoryEnt
         }
     }
 
+    spdlog::get("main")->trace("alarms::pushInventory");
     session.applyChanges();
 }
 
@@ -63,6 +66,7 @@ void addResourcesToInventory(sysrepo::Session session, const std::map<std::strin
             session.setItem(prefix + "/resource", resource);
         }
     }
+    spdlog::get("main")->trace("alarms::addResourcesToInventory");
     session.applyChanges();
 }
 

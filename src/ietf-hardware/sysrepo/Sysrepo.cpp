@@ -20,9 +20,10 @@ const auto ALARM_SENSOR_MISSING = "velia-alarms:sensor-missing-alarm";
 const auto ALARM_MISSING_SEVERITY = "warning";
 const auto ALARM_MISSING_DESCRIPTION = "Sensor value not reported. Maybe the sensor was unplugged?";
 const auto ALARM_THRESHOLD_CROSSING_LOW = "velia-alarms:sensor-low-value-alarm";
-const auto ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION = "Sensor value crossed low threshold.";
+const auto ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION = "Sensor value crossed low threshold ({} < {}).";
 const auto ALARM_THRESHOLD_CROSSING_HIGH = "velia-alarms:sensor-high-value-alarm";
-const auto ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION = "Sensor value crossed high threshold.";
+const auto ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION = "Sensor value crossed high threshold ({} > {}).";
+const auto ALARM_THRESHOLD_OK = "Sensor value is within normal parameters.";
 const auto ALARM_SENSOR_NONOPERATIONAL = "velia-alarms:sensor-nonoperational";
 const auto ALARM_SENSOR_NONOPERATIONAL_SEVERITY = "warning";
 const auto ALARM_SENSOR_NONOPERATIONAL_DESCRIPTION = "Sensor is nonoperational. The values it reports may not be relevant.";
@@ -175,7 +176,9 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                 }
             }
 
-            for (const auto& [sensorXPath, state] : thresholds) {
+            for (const auto& [sensorXPath, updatedThresholdCrossing] : thresholds) {
+                auto [state, newValue, exceededThresholdValue] = updatedThresholdCrossing;
+
                 // missing prevState can be considered as Normal
                 const State prevState = [&, sensorXPath = sensorXPath] {
                     if (auto it = thresholdsStates.find(sensorXPath); it != thresholdsStates.end()) {
@@ -208,19 +211,21 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                  */
                 if (isThresholdCrossingLow(state)) {
                     logAlarm(m_log, componentXPath, ALARM_THRESHOLD_CROSSING_LOW, toYangAlarmSeverity(state));
-                    alarms::push(m_session, ALARM_THRESHOLD_CROSSING_LOW, componentXPath, toYangAlarmSeverity(state), ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION);
+                    alarms::push(m_session, ALARM_THRESHOLD_CROSSING_LOW, componentXPath, toYangAlarmSeverity(state),
+                            fmt::format(fmt::runtime(ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION), *newValue, *exceededThresholdValue));
                 } else if (isThresholdCrossingHigh(state)) {
                     logAlarm(m_log, componentXPath, ALARM_THRESHOLD_CROSSING_HIGH, toYangAlarmSeverity(state));
-                    alarms::push(m_session, ALARM_THRESHOLD_CROSSING_HIGH, componentXPath, toYangAlarmSeverity(state), ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION);
+                    alarms::push(m_session, ALARM_THRESHOLD_CROSSING_HIGH, componentXPath, toYangAlarmSeverity(state),
+                            fmt::format(fmt::runtime(ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION), *newValue, *exceededThresholdValue));
                 }
 
                 /* Now we can clear the old threshold alarms that are no longer active, i.e., we transition away from the CriticalLow/WarningLow or CriticalHigh/WarningHigh. */
                 if (!isThresholdCrossingLow(state) && isThresholdCrossingLow(prevState)) {
                     logAlarm(m_log, componentXPath, ALARM_THRESHOLD_CROSSING_LOW, ALARM_CLEARED);
-                    alarms::push(m_session, ALARM_THRESHOLD_CROSSING_LOW, componentXPath, ALARM_CLEARED, ALARM_THRESHOLD_CROSSING_LOW_DESCRIPTION);
+                    alarms::push(m_session, ALARM_THRESHOLD_CROSSING_LOW, componentXPath, ALARM_CLEARED, ALARM_THRESHOLD_OK);
                 } else if (!isThresholdCrossingHigh(state) && isThresholdCrossingHigh(prevState)) {
                     logAlarm(m_log, componentXPath, ALARM_THRESHOLD_CROSSING_HIGH, ALARM_CLEARED);
-                    alarms::push(m_session, ALARM_THRESHOLD_CROSSING_HIGH, componentXPath, ALARM_CLEARED, ALARM_THRESHOLD_CROSSING_HIGH_DESCRIPTION);
+                    alarms::push(m_session, ALARM_THRESHOLD_CROSSING_HIGH, componentXPath, ALARM_CLEARED, ALARM_THRESHOLD_OK);
                 }
 
                 thresholdsStates[sensorXPath] = state;

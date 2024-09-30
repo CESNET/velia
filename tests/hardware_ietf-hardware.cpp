@@ -12,7 +12,7 @@ using namespace std::literals;
 
 #define COMPONENT(RESOURCE) "/ietf-hardware:hardware/component[name='" RESOURCE "']"
 
-#define THRESHOLD_STATE(RESOURCE, STATE) {COMPONENT(RESOURCE) "/sensor-data/value", STATE}
+#define THRESHOLD_STATE(RESOURCE, STATE, NEW_VALUE, THRESHOLD_VALUE) {COMPONENT(RESOURCE) "/sensor-data/value", {STATE, NEW_VALUE, THRESHOLD_VALUE}}
 
 using velia::ietf_hardware::State;
 
@@ -148,7 +148,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:fans:fan1:rpm") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:fans:fan1:rpm") "/parent", "ne:fans:fan1"},
         {COMPONENT("ne:fans:fan1:rpm") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:fans:fan1:rpm", "777"),
+        {COMPONENT("ne:fans:fan1:rpm") "/sensor-data/value", "777"},
         {COMPONENT("ne:fans:fan1:rpm") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:fans:fan1:rpm") "/sensor-data/value-scale", "units"},
         {COMPONENT("ne:fans:fan1:rpm") "/sensor-data/value-type", "rpm"},
@@ -159,7 +159,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:fans:fan2:rpm") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:fans:fan2:rpm") "/parent", "ne:fans:fan2"},
         {COMPONENT("ne:fans:fan2:rpm") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:fans:fan2:rpm", "0"),
+        {COMPONENT("ne:fans:fan2:rpm") "/sensor-data/value", "0"},
         {COMPONENT("ne:fans:fan2:rpm") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:fans:fan2:rpm") "/sensor-data/value-scale", "units"},
         {COMPONENT("ne:fans:fan2:rpm") "/sensor-data/value-type", "rpm"},
@@ -170,7 +170,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:fans:fan3:rpm") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:fans:fan3:rpm") "/parent", "ne:fans:fan3"},
         {COMPONENT("ne:fans:fan3:rpm") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:fans:fan3:rpm", "1280"),
+        {COMPONENT("ne:fans:fan3:rpm") "/sensor-data/value", "1280"},
         {COMPONENT("ne:fans:fan3:rpm") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:fans:fan3:rpm") "/sensor-data/value-scale", "units"},
         {COMPONENT("ne:fans:fan3:rpm") "/sensor-data/value-type", "rpm"},
@@ -181,7 +181,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:fans:fan4:rpm") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:fans:fan4:rpm") "/parent", "ne:fans:fan4"},
         {COMPONENT("ne:fans:fan4:rpm") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:fans:fan4:rpm", "666"),
+        {COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value", "666"},
         {COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value-scale", "units"},
         {COMPONENT("ne:fans:fan4:rpm") "/sensor-data/value-type", "rpm"},
@@ -194,7 +194,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:ctrl:temperature-cpu") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:ctrl:temperature-cpu") "/parent", "ne:ctrl"},
         {COMPONENT("ne:ctrl:temperature-cpu") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:ctrl:temperature-cpu", "41800"),
+        {COMPONENT("ne:ctrl:temperature-cpu") "/sensor-data/value", "41800"},
         {COMPONENT("ne:ctrl:temperature-cpu") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:ctrl:temperature-cpu") "/sensor-data/value-scale", "milli"},
         {COMPONENT("ne:ctrl:temperature-cpu") "/sensor-data/value-type", "celsius"},
@@ -203,7 +203,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:ctrl:power") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:ctrl:power") "/parent", "ne:ctrl"},
         {COMPONENT("ne:ctrl:power") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:ctrl:power", "14000000"),
+        {COMPONENT("ne:ctrl:power") "/sensor-data/value", "14000000"},
         {COMPONENT("ne:ctrl:power") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:ctrl:power") "/sensor-data/value-scale", "micro"},
         {COMPONENT("ne:ctrl:power") "/sensor-data/value-type", "watts"},
@@ -212,7 +212,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:ctrl:voltage-in") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:ctrl:voltage-in") "/parent", "ne:ctrl"},
         {COMPONENT("ne:ctrl:voltage-in") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:ctrl:voltage-in", "220000"),
+        {COMPONENT("ne:ctrl:voltage-in") "/sensor-data/value", "220000"},
         {COMPONENT("ne:ctrl:voltage-in") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:ctrl:voltage-in") "/sensor-data/value-scale", "milli"},
         {COMPONENT("ne:ctrl:voltage-in") "/sensor-data/value-type", "volts-AC"},
@@ -220,7 +220,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:ctrl:voltage-out") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:ctrl:voltage-out") "/parent", "ne:ctrl"},
         {COMPONENT("ne:ctrl:voltage-out") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:ctrl:voltage-out", "12000"),
+        {COMPONENT("ne:ctrl:voltage-out") "/sensor-data/value", "12000"},
         {COMPONENT("ne:ctrl:voltage-out") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:ctrl:voltage-out") "/sensor-data/value-scale", "milli"},
         {COMPONENT("ne:ctrl:voltage-out") "/sensor-data/value-type", "volts-DC"},
@@ -229,7 +229,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:ctrl:current") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:ctrl:current") "/parent", "ne:ctrl"},
         {COMPONENT("ne:ctrl:current") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:ctrl:current", "200"),
+        {COMPONENT("ne:ctrl:current") "/sensor-data/value", "200"},
         {COMPONENT("ne:ctrl:current") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:ctrl:current") "/sensor-data/value-scale", "milli"},
         {COMPONENT("ne:ctrl:current") "/sensor-data/value-type", "amperes"},
@@ -244,7 +244,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:ctrl:emmc:lifetime") "/class", "iana-hardware:sensor"},
         {COMPONENT("ne:ctrl:emmc:lifetime") "/parent", "ne:ctrl:emmc"},
         {COMPONENT("ne:ctrl:emmc:lifetime") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:ctrl:emmc:lifetime", "40"),
+        {COMPONENT("ne:ctrl:emmc:lifetime") "/sensor-data/value", "40"},
         {COMPONENT("ne:ctrl:emmc:lifetime") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:ctrl:emmc:lifetime") "/sensor-data/value-scale", "units"},
         {COMPONENT("ne:ctrl:emmc:lifetime") "/sensor-data/value-type", "other"},
@@ -258,28 +258,28 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
         {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
         {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
-        THRESHOLD_STATE("ne:psu:child", "20000"),
+        {COMPONENT("ne:psu:child") "/sensor-data/value", "20000"},
         {COMPONENT("ne:psu:child") "/sensor-data/value-precision", "0"},
         {COMPONENT("ne:psu:child") "/sensor-data/value-scale", "milli"},
         {COMPONENT("ne:psu:child") "/sensor-data/value-type", "volts-DC"},
     };
 
     {
-        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
+        auto [data, updatedThresholdCrossings, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
-        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
-                    THRESHOLD_STATE("ne:ctrl:current", State::Disabled),
-                    THRESHOLD_STATE("ne:ctrl:power", State::Disabled),
-                    THRESHOLD_STATE("ne:ctrl:temperature-cpu", State::Disabled),
-                    THRESHOLD_STATE("ne:ctrl:voltage-in", State::Disabled),
-                    THRESHOLD_STATE("ne:ctrl:voltage-out", State::Disabled),
-                    THRESHOLD_STATE("ne:ctrl:emmc:lifetime", State::WarningLow),
-                    THRESHOLD_STATE("ne:fans:fan1:rpm", State::Normal),
-                    THRESHOLD_STATE("ne:fans:fan2:rpm", State::CriticalLow),
-                    THRESHOLD_STATE("ne:fans:fan3:rpm", State::Normal),
-                    THRESHOLD_STATE("ne:fans:fan4:rpm", State::Normal),
-                    THRESHOLD_STATE("ne:psu:child", State::WarningHigh),
+        REQUIRE(updatedThresholdCrossings == std::map<std::string, velia::ietf_hardware::ThresholdUpdate<int64_t>>{
+                    THRESHOLD_STATE("ne:ctrl:current", State::Disabled, 200, std::nullopt),
+                    THRESHOLD_STATE("ne:ctrl:power", State::Disabled, 14000000, std::nullopt),
+                    THRESHOLD_STATE("ne:ctrl:temperature-cpu", State::Disabled, 41800, std::nullopt),
+                    THRESHOLD_STATE("ne:ctrl:voltage-in", State::Disabled, 220000, std::nullopt),
+                    THRESHOLD_STATE("ne:ctrl:voltage-out", State::Disabled, 12000, std::nullopt),
+                    THRESHOLD_STATE("ne:ctrl:emmc:lifetime", State::WarningLow, 40, 50),
+                    THRESHOLD_STATE("ne:fans:fan1:rpm", State::Normal, 777, std::nullopt),
+                    THRESHOLD_STATE("ne:fans:fan2:rpm", State::CriticalLow, 0, 300),
+                    THRESHOLD_STATE("ne:fans:fan3:rpm", State::Normal, 1280, std::nullopt),
+                    THRESHOLD_STATE("ne:fans:fan4:rpm", State::Normal, 666, std::nullopt),
+                    THRESHOLD_STATE("ne:psu:child", State::WarningHigh, 20000, 15000),
                 });
         REQUIRE(activeSensors == std::set<std::string>{
                     COMPONENT("ne:ctrl:current") "/sensor-data/value",
@@ -300,11 +300,11 @@ TEST_CASE("HardwareState")
     fanValues[1] = 500;
     expected[COMPONENT("ne:fans:fan2:rpm") "/sensor-data/value"] = "500";
     {
-        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
+        auto [data, updatedThresholdCrossings, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
         REQUIRE(data == expected);
-        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
-                    THRESHOLD_STATE("ne:fans:fan2:rpm", State::WarningLow),
+        REQUIRE(updatedThresholdCrossings == std::map<std::string, velia::ietf_hardware::ThresholdUpdate<int64_t>>{
+                    THRESHOLD_STATE("ne:fans:fan2:rpm", State::WarningLow, 500, 600),
                 });
         REQUIRE(activeSensors == std::set<std::string>{
                     COMPONENT("ne:ctrl:current") "/sensor-data/value",
@@ -339,13 +339,13 @@ TEST_CASE("HardwareState")
     expected[COMPONENT("ne:fans:fan3:rpm") "/sensor-data/value"] = "5000";
 
     {
-        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
+        auto [data, updatedThresholdCrossings, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
-        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
-                    THRESHOLD_STATE("ne:fans:fan2:rpm", State::CriticalLow),
-                    THRESHOLD_STATE("ne:psu:child", State::NoValue),
+        REQUIRE(updatedThresholdCrossings == std::map<std::string, velia::ietf_hardware::ThresholdUpdate<int64_t>>{
+                    THRESHOLD_STATE("ne:fans:fan2:rpm", State::CriticalLow, 1, 300),
+                    THRESHOLD_STATE("ne:psu:child", State::NoValue, std::nullopt, std::nullopt),
                 });
         REQUIRE(activeSensors == std::set<std::string>{
                     COMPONENT("ne:ctrl:current") "/sensor-data/value",
@@ -376,12 +376,12 @@ TEST_CASE("HardwareState")
     expected[COMPONENT("ne:psu:child") "/sensor-data/value-type"] = "volts-DC";
 
     {
-        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
+        auto [data, updatedThresholdCrossings, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
-        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
-                    THRESHOLD_STATE("ne:psu:child", State::WarningHigh),
+        REQUIRE(updatedThresholdCrossings == std::map<std::string, velia::ietf_hardware::ThresholdUpdate<int64_t>>{
+                    THRESHOLD_STATE("ne:psu:child", State::WarningHigh, 20000, 15000),
                 });
         REQUIRE(activeSensors == std::set<std::string>{
                     COMPONENT("ne:ctrl:current") "/sensor-data/value",
@@ -408,13 +408,13 @@ TEST_CASE("HardwareState")
     expected[COMPONENT("ne:fans:fan2:rpm") "/sensor-data/oper-status"] = "nonoperational";
 
     {
-        auto [data, alarms, activeSensors, sideLoadedAlarms] = ietfHardware->process();
+        auto [data, updatedThresholdCrossings, activeSensors, sideLoadedAlarms] = ietfHardware->process();
         NUKE_LAST_CHANGE(data);
 
         REQUIRE(data == expected);
-        REQUIRE(alarms == std::map<std::string, velia::ietf_hardware::State>{
-                    THRESHOLD_STATE("ne:fans:fan1:rpm", State::CriticalLow),
-                    THRESHOLD_STATE("ne:fans:fan2:rpm", State::Normal),
+        REQUIRE(updatedThresholdCrossings == std::map<std::string, velia::ietf_hardware::ThresholdUpdate<int64_t>>{
+                    THRESHOLD_STATE("ne:fans:fan1:rpm", State::CriticalLow, -1'000'000'000, 300),
+                    THRESHOLD_STATE("ne:fans:fan2:rpm", State::Normal, 1'000'000'000, std::nullopt),
                 });
         REQUIRE(activeSensors == std::set<std::string>{
                     COMPONENT("ne:ctrl:current") "/sensor-data/value",

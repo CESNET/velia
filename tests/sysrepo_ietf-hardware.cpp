@@ -197,7 +197,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCES(ALARMS("velia-alarms:sensor-missing-alarm"), COMPONENTS(COMPONENT("ne:psu"))).TIMES(AT_LEAST(1));
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold (0 < 8000000).").IN_SEQUENCE(seq1);
 
         auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSess, ietfHardware, 150ms);
         std::this_thread::sleep_for(400ms); // let's wait until the bg polling thread is spawned; 400 ms is probably enough to spawn the thread and poll 2 or 3 times
@@ -220,7 +220,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                        }))
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "critical", "PSU missing.").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "cleared", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "cleared", "Sensor value is within normal parameters.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "warning",
                 "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
         REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).LR_RETURN(cpuTempValue).TIMES(AT_LEAST(1));
@@ -247,7 +247,7 @@ TEST_CASE("IETF Hardware with sysrepo")
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "cleared", "PSU missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "cleared", "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:psu:child", "warning", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:psu:child", "warning", "Sensor value crossed high threshold (50000 > 15000).").IN_SEQUENCE(seq1);
         psuSensorValue = 50000;
         psuActive = true;
 
@@ -268,7 +268,7 @@ TEST_CASE("IETF Hardware with sysrepo")
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "critical", "PSU missing.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "warning", "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:psu:child", "cleared", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:psu:child", "cleared", "Sensor value is within normal parameters.").IN_SEQUENCE(seq1);
         psuActive = false;
         waitForCompletionAndBitMore(seq1);
 
@@ -277,7 +277,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:power") "/sensor-data/value", "21000000"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "warning", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "warning", "Sensor value crossed high threshold (21000000 > 20000000).").IN_SEQUENCE(seq1);
         powerValue = 21'000'000;
         waitForCompletionAndBitMore(seq1);
 
@@ -285,7 +285,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:power") "/sensor-data/value", "24000000"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "critical", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "critical", "Sensor value crossed high threshold (24000000 > 22000000).").IN_SEQUENCE(seq1);
         powerValue = 24'000'000;
         waitForCompletionAndBitMore(seq1);
 
@@ -293,8 +293,8 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:power") "/sensor-data/value", "1"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "cleared", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold (1 < 8000000).").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "cleared", "Sensor value is within normal parameters.").IN_SEQUENCE(seq1);
         powerValue = 1;
         waitForCompletionAndBitMore(seq1);
 
@@ -302,7 +302,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:power") "/sensor-data/value", "14000000"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "cleared", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "cleared", "Sensor value is within normal parameters.").IN_SEQUENCE(seq1);
         powerValue = 14'000'000;
         waitForCompletionAndBitMore(seq1);
 
@@ -315,7 +315,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_RPC("velia-alarms:sensor-nonoperational", "ne:power", "warning",
                 "Sensor is nonoperational. The values it reports may not be relevant.").IN_SEQUENCE(seq1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "critical",
-                "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+                "Sensor value crossed high threshold (1000000000 > 22000000).").IN_SEQUENCE(seq1);
         powerValue = 2'999'999'999;
         waitForCompletionAndBitMore(seq1);
 
@@ -326,8 +326,8 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:power") "/sensor-data/value", "-1000000000"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "cleared", "Sensor value crossed high threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold (-1000000000 < 8000000).").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-high-value-alarm", "ne:power", "cleared", "Sensor value is within normal parameters.").IN_SEQUENCE(seq1);
         powerValue = -2'999'999'999;
         waitForCompletionAndBitMore(seq1);
 
@@ -398,7 +398,7 @@ TEST_CASE("IETF Hardware with sysrepo")
             .IN_SEQUENCE(seq1);
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCES(ALARMS("velia-alarms:sensor-missing-alarm"), COMPONENTS(COMPONENT("ne:psu"))).TIMES(AT_LEAST(1));
         REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "critical", "PSU missing.").IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold (0 < 8000000).").IN_SEQUENCE(seq1);
 
         auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSess, ietfHardware, 150ms);
         std::this_thread::sleep_for(400ms); // let's wait until the bg polling thread is spawned; 400 ms is probably enough to spawn the thread and poll 2 or 3 times

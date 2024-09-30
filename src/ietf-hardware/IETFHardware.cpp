@@ -98,7 +98,7 @@ HardwareInfo IETFHardware::process()
 {
     SensorPollData pollData;
     std::set<std::string> activeSensors;
-    std::map<std::string, State> alarms;
+    std::map<std::string, ThresholdUpdate<int64_t>> alarms;
 
     for (auto& dataReader : m_callbacks) {
         pollData.merge(dataReader());
@@ -126,7 +126,7 @@ HardwareInfo IETFHardware::process()
 
         if (auto update = thresholdsWatcher.update(newValue)) {
             m_log->debug("threshold: {} {}", sensorXPath, update->newState);
-            alarms.emplace(sensorXPath, update->newState);
+            alarms.emplace(sensorXPath, *update);
         }
     }
 

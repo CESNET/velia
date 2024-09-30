@@ -35,7 +35,7 @@ struct SideLoadedAlarm {
 
 struct HardwareInfo {
     DataTree dataTree;
-    std::map<std::string, State> updatedTresholdCrossing;
+    std::map<std::string, ThresholdUpdate<int64_t>> updatedTresholdCrossing;
     std::set<std::string> activeSensors;
     std::set<SideLoadedAlarm> sideLoadedAlarms;
 };

@@ -23,11 +23,12 @@ public:
     Watcher w(thr);
 
 
-#define EXPECT_EVENT(E, STATE) \
+#define EXPECT_EVENT(E, STATE, THRESHOLD_VALUE) \
     { \
         auto statusChange = E; \
         REQUIRE(statusChange); \
-        REQUIRE(statusChange == STATE); \
+        REQUIRE(statusChange->newState == STATE); \
+        REQUIRE(statusChange->exceededThresholdValue == THRESHOLD_VALUE); \
     }
 
 #define EXPECT_NONE(E) \
@@ -44,32 +45,32 @@ TEST_CASE("just one threshold")
     {
         thr.criticalLow = OneThr{0, 1};
         EVENTS_INIT
-        EXPECT_EVENT(w.update(10), State::Normal);
-        EXPECT_EVENT(w.update(-10), State::CriticalLow);
-        EXPECT_EVENT(w.update(10), State::Normal);
+        EXPECT_EVENT(w.update(10), State::Normal, std::nullopt);
+        EXPECT_EVENT(w.update(-10), State::CriticalLow, 0);
+        EXPECT_EVENT(w.update(10), State::Normal, std::nullopt);
     }
 
     SECTION("critical-low failed")
     {
         thr.criticalLow = OneThr{0, 1};
         EVENTS_INIT
-        EXPECT_EVENT(w.update(-10), State::CriticalLow);
+        EXPECT_EVENT(w.update(-10), State::CriticalLow, 0);
     }
 
     SECTION("warning-low ok")
     {
         thr.warningLow = OneThr{0, 1};
         EVENTS_INIT
-        EXPECT_EVENT(w.update(10), State::Normal);
+        EXPECT_EVENT(w.update(10), State::Normal, std::nullopt);
     }
 
     SECTION("warning-low failed -> ignoring")
     {
         thr.warningLow = OneThr{0, 1};
         EVENTS_INIT
-        EXPECT_EVENT(w.update(-10), State::WarningLow);
+        EXPECT_EVENT(w.update(-10), State::WarningLow, 0);
         thr.warningLow.reset();
-        EXPECT_EVENT(w.setThresholds(thr), State::Disabled);
+        EXPECT_EVENT(w.setThresholds(thr), State::Disabled, std::nullopt);
 
         EXPECT_NONE(w.update(-20));
         EXPECT_NONE(w.update(-10));
@@ -93,25 +94,25 @@ TEST_CASE("state transitions")
 
     EVENTS_INIT
 
-    EXPECT_EVENT(w.update(10), State::Normal);
+    EXPECT_EVENT(w.update(10), State::Normal, std::nullopt);
     EXPECT_NONE(w.update(12));
-    EXPECT_EVENT(w.update(8), State::CriticalLow);
+    EXPECT_EVENT(w.update(8), State::CriticalLow, 10);
 
-    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue, std::nullopt);
     EXPECT_NONE(w.update(std::nullopt));
-    EXPECT_EVENT(w.update(10), State::Normal);
-    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
-    EXPECT_EVENT(w.update(6), State::CriticalLow);
+    EXPECT_EVENT(w.update(10), State::Normal, std::nullopt);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue, std::nullopt);
+    EXPECT_EVENT(w.update(6), State::CriticalLow, 10);
 
     thr.warningHigh = OneThr{20, 1};
-    EXPECT_EVENT(w.setThresholds(thr), State::CriticalLow);
+    EXPECT_EVENT(w.setThresholds(thr), State::CriticalLow, 10);
 
-    EXPECT_EVENT(w.setThresholds(thr), State::CriticalLow);
-    EXPECT_EVENT(w.update(10), State::Normal);
+    EXPECT_EVENT(w.setThresholds(thr), State::CriticalLow, 10);
+    EXPECT_EVENT(w.update(10), State::Normal, std::nullopt);
 
     thr.warningLow = OneThr{13, 1};
     thr.criticalHigh = OneThr{30, 1};
-    EXPECT_EVENT( w.setThresholds(thr), State::WarningLow);
+    EXPECT_EVENT(w.setThresholds(thr), State::WarningLow, 13);
 
     EXPECT_NONE(w.update(12));
 }
@@ -125,8 +126,8 @@ TEST_CASE("hysteresis")
     thr.criticalLow = OneThr{10, 2};
     EVENTS_INIT
 
-    EXPECT_EVENT(w.update(25), State::Normal);
-    EXPECT_EVENT(w.update(31), State::WarningHigh);
+    EXPECT_EVENT(w.update(25), State::Normal, std::nullopt);
+    EXPECT_EVENT(w.update(31), State::WarningHigh, 30);
 
     EXPECT_NONE(w.update(31));
     EXPECT_NONE(w.update(31));
@@ -138,25 +139,25 @@ TEST_CASE("hysteresis")
     EXPECT_NONE(w.update(31));
     EXPECT_NONE(w.update(29));
 
-    EXPECT_EVENT(w.update(41), State::CriticalHigh);
-    EXPECT_EVENT(w.update(37), State::WarningHigh);
+    EXPECT_EVENT(w.update(41), State::CriticalHigh, 40);
+    EXPECT_EVENT(w.update(37), State::WarningHigh, 30);
 
     EXPECT_NONE(w.update(38));
     EXPECT_NONE(w.update(39));
     EXPECT_NONE(w.update(40));
 
-    EXPECT_EVENT(w.update(41), State::CriticalHigh);
+    EXPECT_EVENT(w.update(41), State::CriticalHigh, 40);
     EXPECT_NONE(w.update(39));
-    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
-    EXPECT_EVENT(w.update(41), State::CriticalHigh);
-    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
-    EXPECT_EVENT(w.update(39), State::WarningHigh);
-    EXPECT_EVENT(w.update(std::nullopt), State::NoValue);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue, std::nullopt);
+    EXPECT_EVENT(w.update(41), State::CriticalHigh, 40);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue, std::nullopt);
+    EXPECT_EVENT(w.update(39), State::WarningHigh, 30);
+    EXPECT_EVENT(w.update(std::nullopt), State::NoValue, std::nullopt);
 
     thr.criticalHigh.reset();
     EXPECT_NONE(w.setThresholds(thr));
 
     thr.criticalHigh = OneThr{40, 2};
     EXPECT_NONE(w.setThresholds(thr));
-    EXPECT_EVENT(w.update(41), State::CriticalHigh);
+    EXPECT_EVENT(w.update(41), State::CriticalHigh, 40);
 }

@@ -26,6 +26,16 @@ struct Thresholds {
 };
 
 template <typename Value>
+struct ThresholdUpdate
+{
+    State newState;
+    std::optional<Value> value;
+    std::optional<Value> exceededThresholdValue;
+
+    bool operator==(const ThresholdUpdate<Value>& other) const = default;
+};
+
+template <typename Value>
 class Watcher {
 public:
     Watcher(const Thresholds<Value>& thresholds = Thresholds<Value>())
@@ -35,27 +45,32 @@ public:
 
     ~Watcher() = default;
 
-    std::optional<State> setThresholds(const Thresholds<Value>& thresholds)
+    std::optional<ThresholdUpdate<Value>> setThresholds(const Thresholds<Value>& thresholds)
     {
         m_thresholds = thresholds;
         m_state = State::NoValue;
         return update(m_lastValue);
     }
 
-    std::optional<State> update(const std::optional<Value> value)
+    std::optional<ThresholdUpdate<Value>> update(const std::optional<Value> value)
     {
         State oldState = m_state;
+        std::optional<OneThreshold<Value>> violatedThresholdValue;
 
         if (!value) {
             maybeTransition(State::NoValue, value);
         } else if (violates<std::less>(value, m_thresholds.criticalLow)) {
             maybeTransition(State::CriticalLow, value);
+            violatedThresholdValue = *m_thresholds.criticalLow;
         } else if (violates<std::greater>(value, m_thresholds.criticalHigh)) {
             maybeTransition(State::CriticalHigh, value);
+            violatedThresholdValue = *m_thresholds.criticalHigh;
         } else if (violates<std::less>(value, m_thresholds.warningLow)) {
             maybeTransition(State::WarningLow, value);
+            violatedThresholdValue = *m_thresholds.warningLow;
         } else if (violates<std::greater>(value, m_thresholds.warningHigh)) {
             maybeTransition(State::WarningHigh, value);
+            violatedThresholdValue = *m_thresholds.warningHigh;
         } else if (!m_thresholds.criticalHigh && !m_thresholds.criticalLow && !m_thresholds.warningHigh && !m_thresholds.warningLow) {
             maybeTransition(State::Disabled, value);
         } else {
@@ -64,8 +79,13 @@ public:
 
         m_lastValue = value;
 
-        if (oldState != m_state)
-            return m_state;
+        if (oldState != m_state) {
+            if (violatedThresholdValue) {
+                return ThresholdUpdate<Value>{m_state, value, violatedThresholdValue->value};
+            } else {
+                return ThresholdUpdate<Value>{m_state, value, std::nullopt};
+            }
+        }
         return std::nullopt;
     }
 

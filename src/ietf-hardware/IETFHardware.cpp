@@ -124,9 +124,9 @@ HardwareInfo IETFHardware::process()
             newValue = std::nullopt;
         }
 
-        if (auto newState = thresholdsWatcher.update(newValue)) {
-            m_log->debug("threshold: {} {}", sensorXPath, *newState);
-            alarms.emplace(sensorXPath, *newState);
+        if (auto update = thresholdsWatcher.update(newValue)) {
+            m_log->debug("threshold: {} {}", sensorXPath, update->newState);
+            alarms.emplace(sensorXPath, update->newState);
         }
     }
 

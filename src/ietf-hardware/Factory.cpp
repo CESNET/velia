@@ -69,7 +69,6 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
 
         /* FIXME:
          * Publish more properties for ne element. We have an EEPROM at the PCB for storing serial numbers (etc.), but it's so far unused. We could also use U-Boot env variables
-         * This will be needed for sdn-roadm-line only. So we should also parse the model from /proc/cmdline here
          */
         ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}}));
 

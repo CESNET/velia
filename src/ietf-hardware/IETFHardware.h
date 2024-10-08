@@ -169,5 +169,11 @@ public:
     SensorPollData operator()() const;
 };
 
+/** brief Static data and a serial number read from the trailing part of the EEPROM */
+struct EepromWithUid : private DataReader {
+    EepromWithUid(std::string componentName, std::optional<std::string> parent, const std::string& sysfsPrefix, const uint8_t bus, const uint8_t address);
+    SensorPollData operator()() const;
+};
+
 }
 }

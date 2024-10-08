@@ -5,7 +5,9 @@
  *
  */
 
+#include <boost/algorithm/hex.hpp>
 #include <chrono>
+#include <filesystem>
 #include <libyang-cpp/Time.hpp>
 #include <utility>
 #include "IETFHardware.h"
@@ -24,7 +26,7 @@ std::string xpathForComponent(const std::string& componentName)
 }
 
 /** @brief Prefix all properties from values DataTree with a component name (calculated from @p componentName) and push them into the DataTree */
-void addComponent(velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::optional<std::string>& parent, const velia::ietf_hardware::DataTree& values)
+void addComponent(velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::optional<std::string>& parent, const velia::ietf_hardware::DataTree& values, const std::string& operState = "enabled")
 {
     auto componentPrefix = xpathForComponent(componentName);
 
@@ -35,7 +37,7 @@ void addComponent(velia::ietf_hardware::DataTree& res, const std::string& compon
         res[componentPrefix + k] = v;
     }
 
-    res[componentPrefix + "state/oper-state"] = "enabled";
+    res[componentPrefix + "state/oper-state"] = operState;
 }
 
 void writeSensorValue(velia::ietf_hardware::DataTree& res, const std::string& componentName, const std::string& value, const std::string& operStatus)
@@ -353,5 +355,51 @@ SensorPollData EMMC::operator()() const
 
     return {data, ThresholdsBySensorPath{{xpathForComponent(m_componentName + ":lifetime") + "sensor-data/value", m_thresholds}}, {}};
 }
+
+EepromWithUid::EepromWithUid(std::string componentName, std::optional<std::string> parent, const std::string& sysfsPrefix, const uint8_t bus, const uint8_t address)
+    : DataReader(std::move(componentName), std::move(parent))
+{
+    namespace fs = std::filesystem;
+    auto log = spdlog::get("hardware");
+
+    auto dirname = fs::path{fmt::format("{}/bus/i2c/devices/{}-{:04x}", sysfsPrefix, bus, address)};
+    if (!fs::is_directory(dirname)) {
+        // this is a hard error because the device is expected to always exist, even when it fails to probe
+        throw std::runtime_error{fmt::format("EEPROM: no I2C device defined at bus {} address 0x{:02x}", bus, address)};
+    }
+    auto filename = dirname / "eeprom";
+    DataTree tree{
+        {"class", "iana-hardware:module"},
+    };
+    try {
+        // any errors are "soft errors": older clearfog boards don't have these EEPROMs populated at all
+        if (!fs::is_regular_file(filename)) {
+            throw std::runtime_error{"sysfs entry missing"};
+        }
+        std::ifstream stream;
+        stream.exceptions(std::ifstream::badbit | std::ifstream::failbit);
+        stream.open(filename, std::ios_base::in | std::ios_base::binary);
+        std::vector<uint8_t> buf(std::istreambuf_iterator<char>{stream}, {});
+        if (buf.size() != 256) {
+            throw std::runtime_error{fmt::format("expected 256 bytes of data, got {}", buf.size())};
+        }
+        const auto len = 6; // six unique bytes at the end of these EEPROMs
+        std::string res;
+        res.reserve(len * 2 /* two hex characters per byte */);
+        boost::algorithm::hex(buf.begin() + buf.size() - len, buf.end(), std::back_inserter(res));
+        tree["serial-num"] = res;
+        log->trace("I2C EEPROM at bus {} address {:#02x}: UID/EUI {}", bus, address, res);
+    } catch (std::exception& e) {
+        log->error("EEPROM: cannot read from {}: {}", filename.string(), e.what());
+    }
+
+    addComponent(m_staticData,
+                 m_componentName,
+                 m_parent,
+                 tree,
+                 tree.count("serial-num") ? "enabled" : "disabled");
+}
+
+SensorPollData EepromWithUid::operator()() const { return {m_staticData, {}, {}}; }
 }
 }

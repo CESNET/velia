@@ -7,6 +7,7 @@
 
 namespace velia::ietf_hardware {
 using velia::ietf_hardware::data_reader::EMMC;
+using velia::ietf_hardware::data_reader::EepromWithUid;
 using velia::ietf_hardware::data_reader::Fans;
 using velia::ietf_hardware::data_reader::SensorType;
 using velia::ietf_hardware::data_reader::StaticData;
@@ -83,6 +84,20 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                                                   .warningHigh = std::nullopt,
                                                   .criticalHigh = std::nullopt,
                                               }));
+        ietfHardware->registerDataReader(StaticData{"ne:ctrl:som",
+                                                    "ne:ctrl",
+                                                    {
+                                                        {"class", "iana-hardware:module"},
+                                                        {"model-name", "ClearFog A388 SOM"},
+                                                    }});
+        ietfHardware->registerDataReader(EepromWithUid{"ne:ctrl:som:eeprom", "ne:ctrl:som", "/sys", 0, 0x53});
+        ietfHardware->registerDataReader(StaticData{"ne:ctrl:carrier",
+                                                    "ne:ctrl",
+                                                    {
+                                                        {"class", "iana-hardware:module"},
+                                                        {"model-name", "ClearFog Base"},
+                                                    }});
+        ietfHardware->registerDataReader(EepromWithUid{"ne:ctrl:carrier:eeprom", "ne:ctrl:carrier", "/sys", 0, 0x52});
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-front", "ne:ctrl", tempMainBoard, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", tempCpu, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-rear", "ne:ctrl", tempFans, 1));

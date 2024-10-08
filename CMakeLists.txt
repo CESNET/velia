@@ -404,6 +404,7 @@ if(BUILD_TESTING)
     velia_test(NAME system_lldp LIBRARIES velia-system DbusTesting)
 
     velia_test(NAME hardware_thresholds LIBRARIES velia-ietf-hardware)
+    velia_test(NAME hardware_eeprom LIBRARIES velia-ietf-hardware)
     velia_test(NAME hardware_emmc LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_hwmon LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_fspyh LIBRARIES velia-ietf-hardware FsTestUtils)

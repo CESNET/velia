@@ -7,6 +7,7 @@
 
 namespace velia::ietf_hardware {
 using velia::ietf_hardware::data_reader::EMMC;
+using velia::ietf_hardware::data_reader::EepromWithUid;
 using velia::ietf_hardware::data_reader::Fans;
 using velia::ietf_hardware::data_reader::SensorType;
 using velia::ietf_hardware::data_reader::StaticData;
@@ -69,11 +70,24 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         auto emmc = std::make_shared<velia::ietf_hardware::sysfs::EMMC>("/sys/block/mmcblk0/device/");
 
         /* FIXME:
-         * Publish more properties for ne element. We have an EEPROM at the PCB for storing serial numbers (etc.), but it's so far unused. We could also use U-Boot env variables
+         * - handle dynamic hot plug of the ne:fans, read (and re-read) its EEPROM for the S/N
          */
         ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}}));
 
-        ietfHardware->registerDataReader(StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
+        ietfHardware->registerDataReader(StaticData{"ne:ctrl",
+                                                    "ne",
+                                                    {
+                                                        {"class", "iana-hardware:module"},
+                                                        {"serial-num", *hexEEPROM("/sys", 1, 0x5b, 16, 0, 16)},
+                                                    }});
+        if (auto eeprom = hexEEPROM("/sys", 1, 0x5a, 16, 0, 16)) {
+            ietfHardware->registerDataReader(StaticData{"ne:voa-sw",
+                                                        "ne",
+                                                        {
+                                                            {"class", "iana-hardware:module"},
+                                                            {"serial-num", *eeprom},
+                                                        }});
+        }
         ietfHardware->registerDataReader(Fans("ne:fans",
                                               "ne",
                                               fans,
@@ -84,6 +98,20 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                                                   .warningHigh = std::nullopt,
                                                   .criticalHigh = std::nullopt,
                                               }));
+        ietfHardware->registerDataReader(StaticData{"ne:ctrl:som",
+                                                    "ne:ctrl",
+                                                    {
+                                                        {"class", "iana-hardware:module"},
+                                                        {"model-name", "ClearFog A388 SOM"},
+                                                    }});
+        ietfHardware->registerDataReader(EepromWithUid{"ne:ctrl:som:eeprom", "ne:ctrl:som", "/sys", 0, 0x53, 256, 256 - 6, 6});
+        ietfHardware->registerDataReader(StaticData{"ne:ctrl:carrier",
+                                                    "ne:ctrl",
+                                                    {
+                                                        {"class", "iana-hardware:module"},
+                                                        {"model-name", "ClearFog Base"},
+                                                    }});
+        ietfHardware->registerDataReader(EepromWithUid{"ne:ctrl:carrier:eeprom", "ne:ctrl:carrier", "/sys", 0, 0x52, 256, 256 - 6, 6});
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-front", "ne:ctrl", tempMainBoard, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", tempCpu, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-rear", "ne:ctrl", tempFans, 1));

@@ -90,6 +90,11 @@ private:
 };
 
 /**
+ * @brief Read a range of bytes from an EEPROM in hex
+ */
+std::optional<std::string> hexEEPROM(const std::string& sysfsPrefix, const uint8_t bus, const uint8_t address, const uint32_t totalSize, const uint32_t offset, const uint32_t length);
+
+/**
  * This namespace contains several predefined data readers for IETFHardware.
  * They are implemented as functors and fulfill the required interface -- std::function<DataTree()>
  *
@@ -166,6 +171,12 @@ private:
 
 public:
     EMMC(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::EMMC> emmc, Thresholds<int64_t> thresholds = {});
+    SensorPollData operator()() const;
+};
+
+/** brief Static data and a serial number read from the trailing part of the EEPROM */
+struct EepromWithUid : private DataReader {
+    EepromWithUid(std::string componentName, std::optional<std::string> parent, const std::string& sysfsPrefix, const uint8_t bus, const uint8_t address, const uint32_t totalSize, const uint32_t offset, const uint32_t length);
     SensorPollData operator()() const;
 };
 

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "213f35b0_7e78002e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-09T08:26:31Z",
+      "side": 1,
+      "message": "The CI failure on ARM looks like the an insignificant timeout -\u003e overriding.",
+      "revId": "9b3352026a817ea6c15896aafd150625985f3f37",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

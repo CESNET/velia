@@ -15,9 +15,10 @@ using velia::ietf_hardware::data_reader::SysfsValue;
 
 void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware)
 {
+    // FIXME: also bind/unbind the EEPROMs which are embedded in the PDU/PSUs
     auto pdu = std::make_shared<velia::ietf_hardware::FspYhPdu>("/sys/bus/i2c/devices/2-0025/hwmon",
                                                                 "pdu",
-                                                                std::make_shared<TransientI2C>(2, 0x25, "ym2151e"));
+                                                                std::make_shared<TransientI2C>(2, 0x25, "yh5151e"));
     auto psu1 = std::make_shared<velia::ietf_hardware::FspYhPsu>("/sys/bus/i2c/devices/2-0058/hwmon",
                                                                  "psu1",
                                                                  std::make_shared<TransientI2C>(2, 0x58, "ym2151e"));

@@ -53,7 +53,7 @@ bool TransientI2C::isPresent() const
 
 void TransientI2C::bind() const
 {
-    spdlog::get("hardware")->info("Registering PSU at {}", m_addressString);
+    spdlog::get("hardware")->info("Registering {} at {}", m_driverName, m_addressString);
     std::ofstream ofs(m_bindPath);
     if (!ofs.is_open()) {
         throw std::runtime_error("TransientI2C::bind(): can't open file '" + m_bindPath + "'");
@@ -65,7 +65,7 @@ void TransientI2C::bind() const
 }
 void TransientI2C::unbind() const
 {
-    spdlog::get("hardware")->info("Deregistering PSU from {}", m_addressString);
+    spdlog::get("hardware")->info("Deregistering {} from {}", m_driverName, m_addressString);
     std::ofstream ofs(m_unbindPath);
     if (!ofs.is_open()) {
         throw std::runtime_error("TransientI2C::unbind(): can't open file '" + m_unbindPath + "'");

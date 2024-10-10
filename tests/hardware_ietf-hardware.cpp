@@ -43,21 +43,23 @@ TEST_CASE("HardwareState")
     };
     FAKE_EMMC(emmc, attributesEMMC);
 
+    // how many times do we call ietfHardware->process() ?
+    constexpr int readOpsCount = 5;
     std::array<int64_t, 4> fanValues = {777, 0, 1280, 666};
-    REQUIRE_CALL(*fans, attribute("fan1_input"s)).LR_RETURN(fanValues[0]).TIMES(5);
-    REQUIRE_CALL(*fans, attribute("fan2_input"s)).LR_RETURN(fanValues[1]).TIMES(5);
-    REQUIRE_CALL(*fans, attribute("fan3_input"s)).LR_RETURN(fanValues[2]).TIMES(5);
-    REQUIRE_CALL(*fans, attribute("fan4_input"s)).LR_RETURN(fanValues[3]).TIMES(5);
+    REQUIRE_CALL(*fans, attribute("fan1_input"s)).LR_RETURN(fanValues[0]).TIMES(readOpsCount);
+    REQUIRE_CALL(*fans, attribute("fan2_input"s)).LR_RETURN(fanValues[1]).TIMES(readOpsCount);
+    REQUIRE_CALL(*fans, attribute("fan3_input"s)).LR_RETURN(fanValues[2]).TIMES(readOpsCount);
+    REQUIRE_CALL(*fans, attribute("fan4_input"s)).LR_RETURN(fanValues[3]).TIMES(readOpsCount);
 
-    REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800).TIMES(5);
+    REQUIRE_CALL(*sysfsTempCpu, attribute("temp1_input")).RETURN(41800).TIMES(readOpsCount);
 
-    REQUIRE_CALL(*sysfsVoltageAc, attribute("in1_input")).RETURN(220000).TIMES(5);
-    REQUIRE_CALL(*sysfsVoltageDc, attribute("in1_input")).RETURN(12000).TIMES(5);
-    REQUIRE_CALL(*sysfsPower, attribute("power1_input")).RETURN(14000000).TIMES(5);
-    REQUIRE_CALL(*sysfsCurrent, attribute("curr1_input")).RETURN(200).TIMES(5);
+    REQUIRE_CALL(*sysfsVoltageAc, attribute("in1_input")).RETURN(220000).TIMES(readOpsCount);
+    REQUIRE_CALL(*sysfsVoltageDc, attribute("in1_input")).RETURN(12000).TIMES(readOpsCount);
+    REQUIRE_CALL(*sysfsPower, attribute("power1_input")).RETURN(14000000).TIMES(readOpsCount);
+    REQUIRE_CALL(*sysfsCurrent, attribute("curr1_input")).RETURN(200).TIMES(readOpsCount);
 
     attributesEMMC = {{"life_time"s, "40"s}};
-    FAKE_EMMC(emmc, attributesEMMC).TIMES(5);
+    FAKE_EMMC(emmc, attributesEMMC).TIMES(readOpsCount);
 
     using velia::ietf_hardware::OneThreshold;
     using velia::ietf_hardware::Thresholds;

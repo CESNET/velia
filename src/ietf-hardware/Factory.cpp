@@ -6,9 +6,9 @@
 #include "ietf-hardware/sysfs/HWMon.h"
 
 namespace velia::ietf_hardware {
+using velia::ietf_hardware::data_reader::CzechLightFans;
 using velia::ietf_hardware::data_reader::EMMC;
 using velia::ietf_hardware::data_reader::EepromWithUid;
-using velia::ietf_hardware::data_reader::Fans;
 using velia::ietf_hardware::data_reader::SensorType;
 using velia::ietf_hardware::data_reader::StaticData;
 using velia::ietf_hardware::data_reader::SysfsValue;
@@ -69,9 +69,6 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         auto tempMII1 = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/devices/platform/soc/soc:internal-regs/f1072004.mdio/mdio_bus/f1072004.mdio-mii/f1072004.mdio-mii:01/hwmon/");
         auto emmc = std::make_shared<velia::ietf_hardware::sysfs::EMMC>("/sys/block/mmcblk0/device/");
 
-        /* FIXME:
-         * - handle dynamic hot plug of the ne:fans, read (and re-read) its EEPROM for the S/N
-         */
         ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}}));
 
         ietfHardware->registerDataReader(StaticData{"ne:ctrl",
@@ -92,16 +89,20 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
             // this EEPROM is only present on regular inline amplifiers and on ROADM line/degree boxes
             // -> silently ignore any failures
         }
-        ietfHardware->registerDataReader(Fans("ne:fans",
-                                              "ne",
-                                              fans,
-                                              4,
-                                              Thresholds<int64_t>{
-                                                  .criticalLow = OneThreshold<int64_t>{3680, 300}, /* 40 % of 9200 RPM */
-                                                  .warningLow = OneThreshold<int64_t>{7360, 300}, /* 80 % of 9200 RPM */
-                                                  .warningHigh = std::nullopt,
-                                                  .criticalHigh = std::nullopt,
-                                              }));
+
+        ietfHardware->registerDataReader(CzechLightFans("ne:fans",
+                                                        "ne",
+                                                        fans,
+                                                        4,
+                                                        Thresholds<int64_t>{
+                                                            .criticalLow = OneThreshold<int64_t>{3680, 300}, /* 40 % of 9200 RPM */
+                                                            .warningLow = OneThreshold<int64_t>{7360, 300}, /* 80 % of 9200 RPM */
+                                                            .warningHigh = std::nullopt,
+                                                            .criticalHigh = std::nullopt,
+                                                        },
+                                                        []() {
+                                                            return hexEEPROM("/sys", 1, 0x5c, 16, 0, 16);
+                                                        }));
         ietfHardware->registerDataReader(StaticData{"ne:ctrl:som",
                                                     "ne:ctrl",
                                                     {

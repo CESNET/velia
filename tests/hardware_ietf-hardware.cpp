@@ -44,7 +44,7 @@ TEST_CASE("HardwareState")
     FAKE_EMMC(emmc, attributesEMMC);
 
     // how many times do we call ietfHardware->process() ?
-    constexpr int readOpsCount = 5;
+    constexpr int readOpsCount = 6;
     std::array<int64_t, 4> fanValues = {777, 0, 1280, 666};
     REQUIRE_CALL(*fans, attribute("fan1_input"s)).LR_RETURN(fanValues[0]).TIMES(readOpsCount);
     REQUIRE_CALL(*fans, attribute("fan2_input"s)).LR_RETURN(fanValues[1]).TIMES(readOpsCount);
@@ -63,21 +63,32 @@ TEST_CASE("HardwareState")
 
     using velia::ietf_hardware::OneThreshold;
     using velia::ietf_hardware::Thresholds;
+    using velia::ietf_hardware::data_reader::CzechLightFans;
     using velia::ietf_hardware::data_reader::EMMC;
-    using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
     using velia::ietf_hardware::data_reader::StaticData;
     using velia::ietf_hardware::data_reader::SysfsValue;
 
+    bool hasFanEeprom = true;
+    auto fanEeprom = [&hasFanEeprom]() {
+        return hasFanEeprom ? std::optional<std::string>{"xyz"} : std::nullopt;
+    };
+
     // register components into hw state
     ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}, {"mfg-name", "CESNET"s}}));
     ietfHardware->registerDataReader(StaticData("ne:ctrl", "ne", {{"class", "iana-hardware:module"}}));
-    ietfHardware->registerDataReader(Fans("ne:fans", "ne", fans, 4, Thresholds<int64_t>{
-                                                                        .criticalLow = OneThreshold<int64_t>{300, 200},
-                                                                        .warningLow = OneThreshold<int64_t>{600, 200},
-                                                                        .warningHigh = std::nullopt,
-                                                                        .criticalHigh =std::nullopt,
-                                                                    }));
+    ietfHardware->registerDataReader(
+        CzechLightFans("ne:fans",
+                       "ne",
+                       fans,
+                       4,
+                       Thresholds<int64_t>{
+                           .criticalLow = OneThreshold<int64_t>{300, 200},
+                           .warningLow = OneThreshold<int64_t>{600, 200},
+                           .warningHigh = std::nullopt,
+                           .criticalHigh = std::nullopt,
+                       },
+                       fanEeprom));
     ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", sysfsTempCpu, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageAC>("ne:ctrl:voltage-in", "ne:ctrl", sysfsVoltageAc, 1));
     ietfHardware->registerDataReader(SysfsValue<SensorType::VoltageDC>("ne:ctrl:voltage-out", "ne:ctrl", sysfsVoltageDc, 1));
@@ -143,6 +154,7 @@ TEST_CASE("HardwareState")
 
         {COMPONENT("ne:fans") "/class", "iana-hardware:module"},
         {COMPONENT("ne:fans") "/parent", "ne"},
+        {COMPONENT("ne:fans") "/serial-num", "xyz"},
         {COMPONENT("ne:fans") "/state/oper-state", "enabled"},
         {COMPONENT("ne:fans:fan1") "/class", "iana-hardware:fan"},
         {COMPONENT("ne:fans:fan1") "/parent", "ne:fans"},
@@ -432,5 +444,14 @@ TEST_CASE("HardwareState")
                     COMPONENT("ne:psu:child") "/sensor-data/value",
                 });
         REQUIRE(sideLoadedAlarms == std::set<velia::ietf_hardware::SideLoadedAlarm>{{"velia-alarms:sensor-missing", COMPONENT("ne:psu"), "cleared", "PSU missing."}});
+    }
+
+    hasFanEeprom = false;
+    expected[COMPONENT("ne:fans") "/state/oper-state"] = "disabled";
+    expected.erase(COMPONENT("ne:fans") "/serial-num");
+    {
+        auto [data, updatedThresholdCrossings, activeSensors, sideLoadedAlarms] = ietfHardware->process();
+        NUKE_LAST_CHANGE(data);
+        REQUIRE(data == expected);
     }
 }

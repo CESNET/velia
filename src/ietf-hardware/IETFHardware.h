@@ -130,7 +130,7 @@ struct StaticData : private DataReader {
 };
 
 /** @brief Manages fans component. Data is provided by a sysfs::HWMon object. */
-struct Fans : private DataReader {
+struct Fans : protected DataReader {
 private:
     std::shared_ptr<sysfs::HWMon> m_hwmon;
     unsigned m_fanChannelsCount;
@@ -138,6 +138,21 @@ private:
 
 public:
     Fans(std::string propertyPrefix, std::optional<std::string> parent, std::shared_ptr<sysfs::HWMon> hwmon, unsigned fanChannelsCount, Thresholds<int64_t> thresholds = {});
+    SensorPollData operator()() const;
+};
+
+/** @brief Wrapper around a hwmon chip which adds extra metadata such as a dynamic S/N from an EEPROM */
+struct CzechLightFans : public Fans {
+    using SerialNumberCallback = std::function<std::optional<std::string>()>;
+private:
+    SerialNumberCallback m_serialNumber;
+public:
+    CzechLightFans(std::string propertyPrefix,
+         std::optional<std::string> parent,
+         std::shared_ptr<sysfs::HWMon> hwmon,
+         unsigned fanChannelsCount,
+         Thresholds<int64_t> thresholds,
+         const SerialNumberCallback& cbSerialNumber);
     SensorPollData operator()() const;
 };
 

@@ -224,6 +224,38 @@ SensorPollData Fans::operator()() const
     return {data, thr, {}};
 }
 
+CzechLightFans::CzechLightFans(std::string componentName,
+                               std::optional<std::string> parent,
+                               std::shared_ptr<sysfs::HWMon> hwmon,
+                               unsigned fanChannelsCount,
+                               Thresholds<int64_t> thresholds,
+                               const SerialNumberCallback& cbSerialNumber)
+    : Fans(std::move(componentName), std::move(parent), std::move(hwmon), std::move(fanChannelsCount), std::move(thresholds))
+    , m_serialNumber(std::move(cbSerialNumber))
+{
+}
+
+SensorPollData CzechLightFans::operator()() const
+{
+    auto res = Fans::operator()();
+
+    if (auto eeprom = m_serialNumber()) {
+        // if the EEPROM is readable, then we assume that the component "is there"
+        res.data[xpathForComponent(m_componentName) + "state/oper-state"] = "enabled";
+        res.data[xpathForComponent(m_componentName) + "serial-num"] = *eeprom;
+    } else {
+        // EEPROM expected, but not readable -> mark as fubar
+        res.data[xpathForComponent(m_componentName) + "state/oper-state"] = "disabled";
+    }
+
+    // FIXME: do "something" when the S/N from EEPROM has changed. That's our only way of detecting
+    // board un/re/plugging, so there should be an alarm if stuff is not plugged in, and a notification
+    // when it gets changed. Fortunately we still process performance data about fan speeds, so the
+    // user "will know" if there's a problem.
+
+    return res;
+}
+
 std::string getSysfsFilename(const SensorType type, int sysfsChannelNr)
 {
     switch (type) {

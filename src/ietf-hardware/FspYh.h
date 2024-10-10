@@ -57,6 +57,7 @@ protected:
     virtual void createPower() = 0;
     virtual std::string missingAlarmDescription() const = 0;
     void startThread();
+    void pollDevicePresence();
 };
 
 struct FspYhPsu : public FspYh {

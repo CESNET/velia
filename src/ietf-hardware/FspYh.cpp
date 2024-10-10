@@ -85,35 +85,41 @@ FspYh::FspYh(const std::filesystem::path& hwmonDir, const std::string& name, std
     m_exit = false;
 }
 
-void FspYh::startThread()
-{
+void FspYh::startThread() {
+    // Always run at least once to prevent a false positive initial "there's no device here"
+    pollDevicePresence();
+
     m_psuWatcher = std::jthread([this] {
         while (!m_exit) {
-            if (m_i2c->isPresent()) {
-                if (!std::filesystem::is_directory(m_hwmonDir)) {
-                    m_i2c->bind();
-                }
-
-                // The driver might already be loaded before the program starts. This ensures that the properties still
-                // get initialized if that's the case.
-                if (!m_hwmon) {
-                    std::lock_guard lk(m_mtx);
-                    createPower();
-                }
-            } else if (std::filesystem::is_directory(m_hwmonDir)) {
-                {
-                    std::lock_guard lk(m_mtx);
-                    m_hwmon = nullptr;
-                    m_properties.clear();
-                }
-
-                m_i2c->unbind();
-            }
-
+            pollDevicePresence();
             std::unique_lock lock(m_mtx);
             m_cond.wait_for(lock, std::chrono::seconds(3));
         }
     });
+}
+
+void FspYh::pollDevicePresence()
+{
+    if (m_i2c->isPresent()) {
+        if (!std::filesystem::is_directory(m_hwmonDir)) {
+            m_i2c->bind();
+        }
+
+        // The driver might already be loaded before the program starts. This ensures that the properties still
+        // get initialized if that's the case.
+        if (!m_hwmon) {
+            std::lock_guard lk(m_mtx);
+            createPower();
+        }
+    } else if (std::filesystem::is_directory(m_hwmonDir)) {
+        {
+            std::lock_guard lk(m_mtx);
+            m_hwmon = nullptr;
+            m_properties.clear();
+        }
+
+        m_i2c->unbind();
+    }
 }
 
 FspYh::~FspYh()

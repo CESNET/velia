@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e37d0eb7_71da33ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-15T20:56:05Z",
+      "side": 1,
+      "message": "(I also read the original patch (and loved it, btw))",
+      "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6aa7c3e5_db1c6f9e",
+        "filename": "src/main-ipmi-fru-eeprom.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-10-15T17:57:32Z",
+      "side": 1,
+      "message": "We actually do not log anything into this sink, so I think this can be removed (together with the occurences in the docopt string)",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 7
+      },
+      "revId": "26194d9e6be14a74a21f5f7076c8c20946b22b88",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a77e7e39_de22f6df",
+        "filename": "src/main-ipmi-fru-eeprom.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-10-15T17:57:32Z",
+      "side": 1,
+      "message": "typo: extra e",
+      "range": {
+        "startLine": 64,
+        "startChar": 30,
+        "endLine": 64,
+        "endChar": 31
+      },
+      "revId": "26194d9e6be14a74a21f5f7076c8c20946b22b88",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -138,6 +138,8 @@ add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/sysfs/EMMC.h
     src/ietf-hardware/sysfs/HWMon.cpp
     src/ietf-hardware/sysfs/HWMon.h
+    src/ietf-hardware/sysfs/IpmiFruEEPROM.cpp
+    src/ietf-hardware/sysfs/IpmiFruEEPROM.h
     src/ietf-hardware/IETFHardware.cpp
     src/ietf-hardware/IETFHardware.h
     src/ietf-hardware/FspYh.cpp
@@ -318,6 +320,18 @@ target_link_libraries(veliad-hardware
         velia-ietf-hardware
         velia-ietf-hardware-sysrepo
         PkgConfig::DOCOPT
+    )
+add_dependencies(veliad-hardware target-VELIA_VERSION)
+target_include_directories(veliad-hardware PUBLIC ${CMAKE_BINARY_DIR})
+
+add_executable(velia-ipmi-fru-eeprom
+    src/main-ipmi-fru-eeprom.cpp
+    )
+target_link_libraries(velia-ipmi-fru-eeprom
+    PUBLIC
+        velia-ietf-hardware
+        PkgConfig::DOCOPT
+        fmt::fmt
     )
 add_dependencies(veliad-hardware target-VELIA_VERSION)
 target_include_directories(veliad-hardware PUBLIC ${CMAKE_BINARY_DIR})
@@ -533,7 +547,7 @@ set(YANG_DIR ${CMAKE_INSTALL_PREFIX}/share/yang/modules/velia)
 install(FILES ${YANG_SRCS} ${YANG_SUBMODULES} DESTINATION ${YANG_DIR})
 set(YANG_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share/yang/static-data/velia)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-authentication.json DESTINATION ${YANG_DATA_DIR})
-install(TARGETS veliad-health veliad-system veliad-hardware veliad-firewall RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
+install(TARGETS veliad-health veliad-system veliad-hardware veliad-firewall velia-ipmi-fru-eeprom RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/list-alarms/velia-list-alarms.in ${CMAKE_CURRENT_BINARY_DIR}/velia-list-alarms @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/velia-list-alarms

@@ -1,6 +1,6 @@
 #include <cstring>
 #include <fcntl.h>
-#include <fstream>
+#include <fmt/os.h>
 #include <iterator>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
@@ -18,23 +18,18 @@ const auto ALARM_SENSOR_MISSING_SEVERITY = "critical";
 
 namespace velia::ietf_hardware {
 
-TransientI2C::TransientI2C(const uint8_t bus, const uint8_t address, const std::string& driverName)
-    : m_address(address)
-    , m_driverName(driverName)
-    , m_isPresentPath("/dev/i2c-" + std::to_string(bus))
-    , m_bindPath("/sys/bus/i2c/devices/i2c-" + std::to_string(bus) + "/new_device")
-    , m_unbindPath("/sys/bus/i2c/devices/i2c-" + std::to_string(bus) + "/delete_device")
+TransientI2C::TransientI2C(const uint8_t bus, const uint8_t address, const std::string& driver)
+    : m_bus(bus)
+    , m_address(address)
+    , m_driver(driver)
 {
-    std::ostringstream addressString;
-    addressString << std::showbase << std::hex << int{m_address};
-    m_addressString = addressString.str();
 }
 
 TransientI2C::~TransientI2C() = default;
 
 bool TransientI2C::isPresent() const
 {
-    auto file = open(m_isPresentPath.c_str(), O_RDWR);
+    auto file = open(fmt::format("/dev/i2c-{}", m_bus).c_str(), O_RDWR);
     if (file < 0) {
         throw std::system_error(errno, std::system_category(), "TransientI2C::isPresent: open()");
     }
@@ -53,27 +48,17 @@ bool TransientI2C::isPresent() const
 
 void TransientI2C::bind() const
 {
-    spdlog::get("hardware")->info("Registering {} at {}", m_driverName, m_addressString);
-    std::ofstream ofs(m_bindPath);
-    if (!ofs.is_open()) {
-        throw std::runtime_error("TransientI2C::bind(): can't open file '" + m_bindPath + "'");
-    }
-    ofs << m_driverName << " " << m_addressString;
-    if (ofs.bad()) {
-        throw std::runtime_error("TransientI2C::bind(): can't write file '" + m_bindPath + "'");
-    }
+    spdlog::get("hardware")->info("Registering {} at I2C bus {} address {:#02x}", m_driver, m_bus, m_address);
+    fmt::output_file(
+        fmt::format("/sys/bus/i2c/devices/i2c-{}/new_device", m_bus), fmt::file::WRONLY)
+        .print("{} {:#02x}", m_driver, m_address);
 }
 void TransientI2C::unbind() const
 {
-    spdlog::get("hardware")->info("Deregistering {} from {}", m_driverName, m_addressString);
-    std::ofstream ofs(m_unbindPath);
-    if (!ofs.is_open()) {
-        throw std::runtime_error("TransientI2C::unbind(): can't open file '" + m_unbindPath + "'");
-    }
-    ofs << m_addressString;
-    if (ofs.bad()) {
-        throw std::runtime_error("TransientI2C::unbind(): can't write file '" + m_unbindPath + "'");
-    }
+    spdlog::get("hardware")->info("Deregistering {} from I2C bus {} address {:#02x}", m_driver, m_bus, m_address);
+    fmt::output_file(
+        fmt::format("/sys/bus/i2c/devices/i2c-{}/delete_device", m_bus), fmt::file::WRONLY)
+        .print("{:#02x}", m_address);
 }
 
 FspYh::FspYh(const std::filesystem::path& hwmonDir, const std::string& name, std::shared_ptr<TransientI2C> i2c)

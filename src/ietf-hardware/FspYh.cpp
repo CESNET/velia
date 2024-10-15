@@ -61,9 +61,13 @@ void TransientI2C::unbind() const
         .print("{:#02x}", m_address);
 }
 
-FspYh::FspYh(const std::filesystem::path& hwmonDir, const std::string& name, std::shared_ptr<TransientI2C> i2c)
-    : m_i2c(i2c)
-    , m_hwmonDir(hwmonDir)
+std::filesystem::path TransientI2C::sysfsEntry() const
+{
+    return fmt::format("/sys/bus/i2c/devices/{}-{:04x}", m_bus, m_address);
+}
+
+FspYh::FspYh(const std::string& name, std::shared_ptr<TransientI2C> pmbus)
+    : m_pmbus(pmbus)
     , m_namePrefix("ne:"s + name)
     , m_staticData(velia::ietf_hardware::data_reader::StaticData(m_namePrefix, "ne", {{"class", "iana-hardware:power-supply"}})().data)
 {
@@ -85,9 +89,9 @@ void FspYh::startThread() {
 
 void FspYh::pollDevicePresence()
 {
-    if (m_i2c->isPresent()) {
-        if (!std::filesystem::is_directory(m_hwmonDir)) {
-            m_i2c->bind();
+    if (m_pmbus->isPresent()) {
+        if (!std::filesystem::is_directory(m_pmbus->sysfsEntry() / "hwmon")) {
+            m_pmbus->bind();
         }
 
         // The driver might already be loaded before the program starts. This ensures that the properties still
@@ -96,14 +100,14 @@ void FspYh::pollDevicePresence()
             std::lock_guard lk(m_mtx);
             createPower();
         }
-    } else if (std::filesystem::is_directory(m_hwmonDir)) {
+    } else if (std::filesystem::is_directory(m_pmbus->sysfsEntry() / "hwmon")) {
         {
             std::lock_guard lk(m_mtx);
             m_hwmon = nullptr;
             m_properties.clear();
         }
 
-        m_i2c->unbind();
+        m_pmbus->unbind();
     }
 }
 
@@ -152,15 +156,15 @@ SensorPollData FspYh::readValues()
     return res;
 }
 
-FspYhPsu::FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psu, std::shared_ptr<TransientI2C> i2c)
-    : FspYh(hwmonDir, psu, i2c)
+FspYhPsu::FspYhPsu(const std::string& psu, std::shared_ptr<TransientI2C> pmbus)
+    : FspYh(psu, pmbus)
 {
     startThread();
 }
 
 void FspYhPsu::createPower()
 {
-    m_hwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(m_hwmonDir);
+    m_hwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(m_pmbus->sysfsEntry() / "hwmon");
     using velia::ietf_hardware::OneThreshold;
     using velia::ietf_hardware::Thresholds;
     using velia::ietf_hardware::data_reader::Fans;
@@ -243,15 +247,15 @@ std::string FspYhPsu::missingAlarmDescription() const
     return "PSU is unplugged.";
 }
 
-FspYhPdu::FspYhPdu(const std::filesystem::path& hwmonDir, const std::string& pdu, std::shared_ptr<TransientI2C> i2c)
-    : FspYh(hwmonDir, pdu, i2c)
+FspYhPdu::FspYhPdu(const std::string& pdu, std::shared_ptr<TransientI2C> pmbus)
+    : FspYh(pdu, pmbus)
 {
     startThread();
 }
 
 void FspYhPdu::createPower()
 {
-    m_hwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(m_hwmonDir);
+    m_hwmon = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(m_pmbus->sysfsEntry() / "hwmon");
 
     using velia::ietf_hardware::OneThreshold;
     using velia::ietf_hardware::Thresholds;

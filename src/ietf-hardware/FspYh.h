@@ -8,18 +8,14 @@
 namespace velia::ietf_hardware {
 class TransientI2C {
 public:
-    TransientI2C(const uint8_t bus, const uint8_t address, const std::string& driverName);
+    TransientI2C(const uint8_t bus, const uint8_t address, const std::string& driver);
     virtual ~TransientI2C();
     virtual bool isPresent() const;
     virtual void bind() const;
     virtual void unbind() const;
 private:
-    uint8_t m_address;
-    std::string m_driverName;
-    std::string m_isPresentPath;
-    std::string m_bindPath;
-    std::string m_unbindPath;
-    std::string m_addressString;
+    uint8_t m_bus, m_address;
+    std::string m_driver;
 };
 
 /**

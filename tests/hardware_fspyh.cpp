@@ -12,9 +12,9 @@ using namespace std::literals;
 
 class FakeI2C : public velia::ietf_hardware::TransientI2C {
 public:
-    FakeI2C(const std::string& fakeHwmonRoot)
+    FakeI2C(const std::filesystem::path& fakeSysfsDeviceEntry)
         : TransientI2C({}, {}, {})
-        , m_fakeHwmonRoot(fakeHwmonRoot)
+        , m_fakeSysfsDeviceEntry(fakeSysfsDeviceEntry)
     {
     }
 
@@ -24,18 +24,19 @@ public:
 
     void removeHwmonFile(const std::string& name) const
     {
-        std::filesystem::remove(m_fakeHwmonRoot / ("hwmon" + std::to_string(m_hwmonNo)) / name);
+        std::filesystem::remove(m_fakeSysfsDeviceEntry / "hwmon" / ("hwmon" + std::to_string(m_hwmonNo)) / name);
     }
 
     void bind() const override
     {
         bind_mock();
-        removeDirectoryTreeIfExists(m_fakeHwmonRoot);
-        std::filesystem::create_directory(m_fakeHwmonRoot);
-        std::filesystem::create_directory(m_fakeHwmonRoot / ("hwmon" + std::to_string(m_hwmonNo)));
+        removeDirectoryTreeIfExists(m_fakeSysfsDeviceEntry);
+        std::filesystem::create_directory(m_fakeSysfsDeviceEntry);
+        std::filesystem::create_directory(m_fakeSysfsDeviceEntry / "hwmon");
+        std::filesystem::create_directory(m_fakeSysfsDeviceEntry / "hwmon" / ("hwmon" + std::to_string(m_hwmonNo)));
 
         for (const auto& filename : {"name", "temp1_input", "temp2_input", "curr1_input", "curr2_input", "curr3_input", "in1_input", "in2_input", "in3_input", "power1_input", "power2_input", "fan1_input"}) {
-            std::ofstream ofs(m_fakeHwmonRoot / ("hwmon" + std::to_string(m_hwmonNo)) / filename);
+            std::ofstream ofs(m_fakeSysfsDeviceEntry / "hwmon" / ("hwmon" + std::to_string(m_hwmonNo)) / filename);
             // I don't really care about the values here, I just need the HWMon class to think that the files exist.
             ofs << 0 << "\n";
         }
@@ -43,12 +44,16 @@ public:
     void unbind() const override
     {
         unbind_mock();
-        removeDirectoryTreeIfExists(m_fakeHwmonRoot);
+        removeDirectoryTreeIfExists(m_fakeSysfsDeviceEntry);
         m_hwmonNo++;
+    }
+    std::filesystem::path sysfsEntry() const override
+    {
+        return m_fakeSysfsDeviceEntry;
     }
 
 private:
-    std::filesystem::path m_fakeHwmonRoot;
+    std::filesystem::path m_fakeSysfsDeviceEntry;
     mutable std::atomic<int> m_hwmonNo = 1;
 };
 
@@ -56,9 +61,9 @@ TEST_CASE("FspYhPsu")
 {
     TEST_INIT_LOGS;
     std::atomic<int> counter = 0;
-    const auto fakeHwmonRoot = CMAKE_CURRENT_BINARY_DIR + "/tests/psu"s;
-    removeDirectoryTreeIfExists(fakeHwmonRoot);
-    auto fakeI2c = std::make_shared<FakeI2C>(fakeHwmonRoot);
+    const auto fakeSysfsDeviceEntry = CMAKE_CURRENT_BINARY_DIR + "/tests/psu"s;
+    removeDirectoryTreeIfExists(fakeSysfsDeviceEntry);
+    auto fakePMBus = std::make_shared<FakeI2C>(fakeSysfsDeviceEntry);
     trompeloeil::sequence seq1;
     std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu;
     std::vector<std::unique_ptr<trompeloeil::expectation>> expectations;
@@ -78,13 +83,13 @@ TEST_CASE("FspYhPsu")
         __builtin_unreachable();
     };
 
-    ALLOW_CALL(*fakeI2c, isPresent()).LR_RETURN(i2cPresence());
-    REQUIRE_CALL(*fakeI2c, bind_mock()).LR_WITH(counter == 1).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*fakeI2c, unbind_mock()).LR_WITH(counter == 2).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*fakeI2c, bind_mock()).LR_WITH(counter == 3).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*fakeI2c, unbind_mock()).LR_WITH(counter == 4).IN_SEQUENCE(seq1);
+    ALLOW_CALL(*fakePMBus, isPresent()).LR_RETURN(i2cPresence());
+    REQUIRE_CALL(*fakePMBus, bind_mock()).LR_WITH(counter == 1).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakePMBus, unbind_mock()).LR_WITH(counter == 2).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakePMBus, bind_mock()).LR_WITH(counter == 3).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakePMBus, unbind_mock()).LR_WITH(counter == 4).IN_SEQUENCE(seq1);
 
-    psu = std::make_shared<velia::ietf_hardware::FspYhPsu>(fakeHwmonRoot, "psu", fakeI2c);
+    psu = std::make_shared<velia::ietf_hardware::FspYhPsu>("psu", fakePMBus);
 
     const velia::ietf_hardware::DataTree expectedDisabled = {
         {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
@@ -230,7 +235,7 @@ TEST_CASE("FspYhPsu")
         case 3:
             // Here I simulate read failure by a file from the hwmon directory. This happens when the user wants data from
             // a PSU that's no longer there and the watcher thread didn't unbind it yet.
-            fakeI2c->removeHwmonFile("temp1_input");
+            fakePMBus->removeHwmonFile("temp1_input");
             expected = expectedDisabled;
             expectedThresholdsKeys.clear();
             expectedAlarms = {alarmUnplugged};

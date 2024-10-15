@@ -34,7 +34,7 @@ find_package(Boost REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ "1.0.0" REQUIRED)
 find_package(PkgConfig)
-find_package(fmt "8.0.0" REQUIRED)
+find_package(fmt "9.0.0" REQUIRED)
 find_package(nlohmann_json REQUIRED)
 pkg_check_modules(DOCOPT REQUIRED IMPORTED_TARGET docopt)
 

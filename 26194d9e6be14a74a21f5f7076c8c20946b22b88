@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "debe9925_386326ce",
+        "filename": "src/main-ipmi-fru-eeprom.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-15T19:30:58Z",
+      "side": 1,
+      "message": "thanks, they\u0027re only used for exceptions -\u003e done",
+      "parentUuid": "6aa7c3e5_db1c6f9e",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 7
+      },
+      "revId": "26194d9e6be14a74a21f5f7076c8c20946b22b88",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a77e7e39_de22f6df",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-10-15T17:57:32Z",
       "side": 1,
       "message": "typo: extra e",
+      "range": {
+        "startLine": 64,
+        "startChar": 30,
+        "endLine": 64,
+        "endChar": 31
+      },
+      "revId": "26194d9e6be14a74a21f5f7076c8c20946b22b88",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94911411_950ff0c2",
+        "filename": "src/main-ipmi-fru-eeprom.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-15T19:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a77e7e39_de22f6df",
       "range": {
         "startLine": 64,
         "startChar": 30,

@@ -48,6 +48,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb863e42_2d9f483a",
+        "filename": "src/main-ipmi-fru-eeprom.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-10-15T20:06:28Z",
+      "side": 1,
+      "message": "Well I meant logger, not sink, but yeah, no logs needed",
+      "parentUuid": "debe9925_386326ce",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 7
+      },
+      "revId": "26194d9e6be14a74a21f5f7076c8c20946b22b88",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a77e7e39_de22f6df",

@@ -134,6 +134,8 @@ target_link_libraries(velia-health
 
 # - ietf-hardware
 add_library(velia-ietf-hardware STATIC
+    src/ietf-hardware/sysfs/EEPROM.cpp
+    src/ietf-hardware/sysfs/EEPROM.h
     src/ietf-hardware/sysfs/EMMC.cpp
     src/ietf-hardware/sysfs/EMMC.h
     src/ietf-hardware/sysfs/HWMon.cpp
@@ -317,6 +319,17 @@ target_link_libraries(veliad-hardware
     PUBLIC
         velia-ietf-hardware
         velia-ietf-hardware-sysrepo
+        PkgConfig::DOCOPT
+    )
+add_dependencies(veliad-hardware target-VELIA_VERSION)
+target_include_directories(veliad-hardware PUBLIC ${CMAKE_BINARY_DIR})
+
+add_executable(velia-eeprom
+    src/main-eeprom.cpp
+    )
+target_link_libraries(velia-eeprom
+    PUBLIC
+        velia-ietf-hardware
         PkgConfig::DOCOPT
     )
 add_dependencies(veliad-hardware target-VELIA_VERSION)

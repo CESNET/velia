@@ -133,6 +133,8 @@ target_link_libraries(velia-health
 
 # - ietf-hardware
 add_library(velia-ietf-hardware STATIC
+    src/ietf-hardware/sysfs/EEPROM.cpp
+    src/ietf-hardware/sysfs/EEPROM.h
     src/ietf-hardware/sysfs/EMMC.cpp
     src/ietf-hardware/sysfs/EMMC.h
     src/ietf-hardware/sysfs/HWMon.cpp
@@ -321,6 +323,17 @@ target_link_libraries(veliad-hardware
 add_dependencies(veliad-hardware target-VELIA_VERSION)
 target_include_directories(veliad-hardware PUBLIC ${CMAKE_BINARY_DIR})
 
+add_executable(velia-eeprom
+    src/main-eeprom.cpp
+    )
+target_link_libraries(velia-eeprom
+    PUBLIC
+        velia-ietf-hardware
+        PkgConfig::DOCOPT
+    )
+add_dependencies(veliad-hardware target-VELIA_VERSION)
+target_include_directories(veliad-hardware PUBLIC ${CMAKE_BINARY_DIR})
+
 # Testing
 include(CTest)
 if(BUILD_TESTING)
@@ -403,7 +416,7 @@ if(BUILD_TESTING)
     velia_test(NAME system_lldp LIBRARIES velia-system DbusTesting)
 
     velia_test(NAME hardware_thresholds LIBRARIES velia-ietf-hardware)
-    velia_test(NAME hardware_eeprom LIBRARIES velia-ietf-hardware)
+    velia_test(NAME hardware_eeprom LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_emmc LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_hwmon LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_fspyh LIBRARIES velia-ietf-hardware FsTestUtils)

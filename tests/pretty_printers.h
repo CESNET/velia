@@ -12,6 +12,7 @@
 #include <set>
 #include <sstream>
 #include <trompeloeil.hpp>
+#include "ietf-hardware/sysfs/EEPROM.h"
 #include "ietf-hardware/thresholds.h"
 #include "tests/sysrepo-helpers/common.h"
 
@@ -84,6 +85,45 @@ struct StringMaker<std::map<std::string, velia::ietf_hardware::State>> {
         }
         os << "}";
         return os.str().c_str();
+    }
+};
+
+template <>
+struct StringMaker<velia::ietf_hardware::sysfs::ProductInfo> {
+    static String convert(const velia::ietf_hardware::sysfs::ProductInfo& e)
+    {
+        std::ostringstream oss;
+        oss << "ProductInfo{manufacturer: >" << e.manufacturer << "<, "
+            << "name: >" << e.name << "<, "
+            << "partNumber: >" << e.partNumber << "<, "
+            << "version: >" << e.version << "<, "
+            << "serialNumber: >" << e.serialNumber << "<, "
+            << "assetTag: >" << e.assetTag << "<, "
+            << "fruFileId: >" << e.fruFileId << "<, "
+            << "custom: " << StringMaker<decltype(e.custom)>::convert(e.custom) << "}";
+        return oss.str().c_str();
+    }
+};
+
+template <>
+struct StringMaker<velia::ietf_hardware::sysfs::CommonHeader> {
+    static String convert(const velia::ietf_hardware::sysfs::CommonHeader& e)
+    {
+        std::ostringstream oss;
+        oss << "CommonHeader{internalUseAreaOfs: " << static_cast<int>(e.internalUseAreaOfs) << ", "
+            << "chassisInfoAreaOfs: " << static_cast<int>(e.chassisInfoAreaOfs) << ", "
+            << "boardAreaOfs: " << static_cast<int>(e.boardAreaOfs) << ", "
+            << "productInfoAreaOfs: " << static_cast<int>(e.productInfoAreaOfs) << ", "
+            << "multiRecordAreaOfs: " << static_cast<int>(e.multiRecordAreaOfs) << "}";
+        return oss.str().c_str();
+    }
+};
+
+template <>
+struct StringMaker<velia::ietf_hardware::sysfs::FRUInformationStorage> {
+    static String convert(const velia::ietf_hardware::sysfs::FRUInformationStorage& e)
+    {
+        return (std::string{"EEPROM{"} + StringMaker<decltype(e.header)>::convert(e.header).c_str() + ", " + StringMaker<decltype(e.productInfo)>::convert(e.productInfo).c_str() + "}").c_str();
     }
 };
 }

@@ -12,6 +12,7 @@
 #include <utility>
 #include "IETFHardware.h"
 #include "utils/log.h"
+#include "utils/io.h"
 
 using namespace std::literals;
 
@@ -434,10 +435,7 @@ std::optional<std::string> hexEEPROM(const std::string& sysfsPrefix,
         if (!fs::is_regular_file(filename)) {
             throw std::runtime_error{"sysfs entry missing"};
         }
-        std::ifstream stream;
-        stream.exceptions(std::ifstream::badbit | std::ifstream::failbit);
-        stream.open(filename, std::ios_base::in | std::ios_base::binary);
-        std::vector<uint8_t> buf(std::istreambuf_iterator<char>{stream}, {});
+        auto buf = velia::utils::readFileToBytes(filename);
         if (buf.size() != totalSize) {
             throw std::runtime_error{fmt::format("expected {} bytes of data, got {}", totalSize, buf.size())};
         }

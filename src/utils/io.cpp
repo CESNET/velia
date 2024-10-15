@@ -78,6 +78,14 @@ std::string readFileToString(const std::filesystem::path& path)
     return std::string(begin, end);
 }
 
+/** @brief Read the entire content of `path` into a vector of bytes */
+std::vector<uint8_t> readFileToBytes(const std::filesystem::path& path)
+{
+    std::ifstream ifs(openStream(path));
+    return {std::istreambuf_iterator<char>{ifs}, {}};
+}
+
+
 void writeFile(const std::string& path, const std::string_view& contents)
 {
     std::ofstream ofs(path);

@@ -13,6 +13,7 @@ public:
     virtual bool isPresent() const;
     virtual void bind() const;
     virtual void unbind() const;
+    virtual std::filesystem::path sysfsEntry() const;
 private:
     uint8_t m_bus, m_address;
     std::string m_driver;
@@ -30,7 +31,7 @@ private:
  */
 struct FspYh {
 public:
-    FspYh(const std::filesystem::path& hwmonDir, const std::string& psu, std::shared_ptr<TransientI2C> i2c);
+    FspYh(const std::string& psu, std::shared_ptr<TransientI2C> pmbus);
     virtual ~FspYh();
     SensorPollData readValues();
 
@@ -39,9 +40,7 @@ protected:
     std::condition_variable m_cond;
     std::jthread m_psuWatcher;
     std::atomic<bool> m_exit;
-    std::shared_ptr<TransientI2C> m_i2c;
-
-    std::filesystem::path m_hwmonDir;
+    std::shared_ptr<TransientI2C> m_pmbus;
 
     std::shared_ptr<velia::ietf_hardware::sysfs::HWMon> m_hwmon;
 
@@ -57,13 +56,13 @@ protected:
 };
 
 struct FspYhPsu : public FspYh {
-    FspYhPsu(const std::filesystem::path& hwmonDir, const std::string& psu, std::shared_ptr<TransientI2C> i2c);
+    FspYhPsu(const std::string& psu, std::shared_ptr<TransientI2C> pmbus);
     void createPower() override;
     std::string missingAlarmDescription() const override;
 };
 
 struct FspYhPdu : public FspYh {
-    FspYhPdu(const std::filesystem::path& hwmonDir, const std::string& pdu, std::shared_ptr<TransientI2C> i2c);
+    FspYhPdu(const std::string& pdu, std::shared_ptr<TransientI2C> pmbus);
     void createPower() override;
     std::string missingAlarmDescription() const override;
 };

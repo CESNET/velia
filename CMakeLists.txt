@@ -568,3 +568,4 @@ function(add_jq_utility NAME)
 endfunction()
 
 add_jq_utility(velia-list-alarms)
+add_jq_utility(velia-list-hardware)

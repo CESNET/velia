@@ -1,3 +1,4 @@
+#include <boost/algorithm/string/join.hpp>
 #include <cstring>
 #include <fcntl.h>
 #include <fmt/os.h>
@@ -7,6 +8,7 @@
 #include <unistd.h>
 #include "FspYh.h"
 #include "ietf-hardware/IETFHardware.h"
+#include "ietf-hardware/sysfs/IpmiFruEEPROM.h"
 #include "ietf-hardware/thresholds.h"
 #include "utils/UniqueResource.h"
 #include "utils/log.h"
@@ -71,10 +73,47 @@ std::string xpathFor(const std::string& component, const std::string& suffix)
 {
     return fmt::format("/ietf-hardware:hardware/component[name='{}']/{}", component, suffix);
 }
+
+void discoverIpmiFru(const std::string& name, const std::filesystem::path& sysfsEeprom, velia::ietf_hardware::DataTree& eepromData)
+{
+    try {
+        eepromData.clear();
+        auto data = velia::ietf_hardware::sysfs::ipmiFruEeprom(sysfsEeprom);
+        const auto& pi = data.productInfo;
+        eepromData = {
+            {xpathFor(name, "mfg-name"), pi.manufacturer},
+            // Apparently, there's some impedance mismatch between field naming in the IPMI FRU and the YANG model.
+            // The idea is to print something like "YH-5151E (URP1X151AH)" so that we do not lose any information.
+            {xpathFor(name, "model-name"), fmt::format("{} ({})", pi.partNumber, pi.name)},
+            {xpathFor(name, "hardware-rev"), pi.version},
+            {xpathFor(name, "software-rev"), pi.fruFileId},
+            {xpathFor(name, "serial-num"), pi.serialNumber},
+            {xpathFor(name, "is-fru"), "true"},
+        };
+        if (pi.custom.size()) {
+            // Another magic. We don't know for sure, but this looks like it has something to do with FW versions.
+            // Of course there's no real difference between "FW" and "SW" on this device, at least from my perspective.
+            eepromData[xpathFor(name, "firmware-rev")] = boost::algorithm::join(pi.custom, " ");
+        }
+        auto field = [&](const auto field) {
+                         if (auto it = eepromData.find(xpathFor(name, field)); it != eepromData.end()) {
+                             return it->second;
+                         } else {
+                             return "<unavailable>"s;
+                         }
+        };
+        spdlog::get("hardware")->info("{}: {} {} (HW {}, SW {}, FW {}) S/N {}", name, field("mfg-name"), field("model-name"),
+                field("hardware-rev"), field("software-rev"), field("firmware-rev"), field("serial-num"));
+    } catch (std::exception& e) {
+        spdlog::get("hardware")->error("{}: IPMI FRU EEPROM unreadable: {}", name, e.what());
+    }
+
+}
 }
 
-FspYh::FspYh(const std::string& name, std::shared_ptr<TransientI2C> pmbus)
+FspYh::FspYh(const std::string& name, std::shared_ptr<TransientI2C> pmbus, std::shared_ptr<TransientI2C> eeprom)
     : m_pmbus(pmbus)
+    , m_eeprom(eeprom)
     , m_namePrefix("ne:"s + name)
     , m_staticData({
             {xpathFor(m_namePrefix, "parent"), "ne"},
@@ -104,6 +143,9 @@ void FspYh::pollDevicePresence()
         if (!std::filesystem::is_directory(m_pmbus->sysfsEntry() / "hwmon")) {
             m_pmbus->bind();
         }
+        if (!std::filesystem::is_regular_file(m_eeprom->sysfsEntry() / "eeprom")) {
+            m_eeprom->bind();
+        }
 
         // The driver might already be loaded before the program starts. This ensures that the properties still
         // get initialized if that's the case.
@@ -116,9 +158,11 @@ void FspYh::pollDevicePresence()
             std::lock_guard lk(m_mtx);
             m_hwmon = nullptr;
             m_properties.clear();
+            m_eepromData.clear();
         }
 
         m_pmbus->unbind();
+        m_eeprom->unbind();
     }
 }
 
@@ -135,6 +179,7 @@ SensorPollData FspYh::readValues()
 
     SensorPollData res;
     res.data = m_staticData;
+    res.data.insert(m_eepromData.begin(), m_eepromData.end());
 
     if (m_properties.empty()) {
         res.data[xpathFor(m_namePrefix, "state/oper-state")] = "disabled";
@@ -152,6 +197,7 @@ SensorPollData FspYh::readValues()
             spdlog::get("hardware")->warn("Couldn't read {} sysfs data (maybe the device was just ejected?): {}", m_namePrefix, ex.what());
 
             res.data = m_staticData;
+            res.data.insert(m_eepromData.begin(), m_eepromData.end());
             res.data[xpathFor(m_namePrefix, "state/oper-state")] = "disabled";
             res.thresholds.clear();
             res.sideLoadedAlarms.insert({ALARM_SENSOR_MISSING, componentXPath, ALARM_SENSOR_MISSING_SEVERITY, missingAlarmDescription()});
@@ -167,8 +213,8 @@ SensorPollData FspYh::readValues()
     return res;
 }
 
-FspYhPsu::FspYhPsu(const std::string& psu, std::shared_ptr<TransientI2C> pmbus)
-    : FspYh(psu, pmbus)
+FspYhPsu::FspYhPsu(const std::string& psu, std::shared_ptr<TransientI2C> pmbus, std::shared_ptr<TransientI2C> eeprom)
+    : FspYh(psu, pmbus, eeprom)
 {
     startThread();
 }
@@ -181,6 +227,8 @@ void FspYhPsu::createPower()
     using velia::ietf_hardware::data_reader::Fans;
     using velia::ietf_hardware::data_reader::SensorType;
     using velia::ietf_hardware::data_reader::SysfsValue;
+
+    discoverIpmiFru(m_namePrefix, m_eeprom->sysfsEntry() / "eeprom", m_eepromData);
 
     auto registerReader = [&]<typename DataReaderType>(DataReaderType&& reader) {
         m_properties.emplace_back(reader);
@@ -258,8 +306,8 @@ std::string FspYhPsu::missingAlarmDescription() const
     return "PSU is unplugged.";
 }
 
-FspYhPdu::FspYhPdu(const std::string& pdu, std::shared_ptr<TransientI2C> pmbus)
-    : FspYh(pdu, pmbus)
+FspYhPdu::FspYhPdu(const std::string& pdu, std::shared_ptr<TransientI2C> pmbus, std::shared_ptr<TransientI2C> eeprom)
+    : FspYh(pdu, pmbus, eeprom)
 {
     startThread();
 }
@@ -272,6 +320,8 @@ void FspYhPdu::createPower()
     using velia::ietf_hardware::Thresholds;
     using velia::ietf_hardware::data_reader::SensorType;
     using velia::ietf_hardware::data_reader::SysfsValue;
+
+    discoverIpmiFru(m_namePrefix, m_eeprom->sysfsEntry() / "eeprom", m_eepromData);
 
     auto registerReader = [&]<typename DataReaderType>(DataReaderType&& reader) {
         m_properties.emplace_back(reader);

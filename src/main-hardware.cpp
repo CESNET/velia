@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
         loggingSink = std::make_shared<spdlog::sinks::ansicolor_stderr_sink_mt>();
     }
 
-    auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "veliad-system " VELIA_VERSION, true);
+    auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "veliad-hardware " VELIA_VERSION, true);
 
     velia::utils::initLogs(loggingSink);
     velia::utils::initLogsSysrepo();

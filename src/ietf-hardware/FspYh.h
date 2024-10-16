@@ -31,7 +31,7 @@ private:
  */
 struct FspYh {
 public:
-    FspYh(const std::string& psu, std::shared_ptr<TransientI2C> pmbus);
+    FspYh(const std::string& psu, std::shared_ptr<TransientI2C> pmbus, std::shared_ptr<TransientI2C> eeprom);
     virtual ~FspYh();
     SensorPollData readValues();
 
@@ -40,12 +40,12 @@ protected:
     std::condition_variable m_cond;
     std::jthread m_psuWatcher;
     std::atomic<bool> m_exit;
-    std::shared_ptr<TransientI2C> m_pmbus;
+    std::shared_ptr<TransientI2C> m_pmbus, m_eeprom;
 
     std::shared_ptr<velia::ietf_hardware::sysfs::HWMon> m_hwmon;
 
     std::string m_namePrefix;
-    velia::ietf_hardware::DataTree m_staticData;
+    velia::ietf_hardware::DataTree m_staticData, m_eepromData;
 
     std::vector<std::function<SensorPollData()>> m_properties;
 
@@ -56,13 +56,13 @@ protected:
 };
 
 struct FspYhPsu : public FspYh {
-    FspYhPsu(const std::string& psu, std::shared_ptr<TransientI2C> pmbus);
+    FspYhPsu(const std::string& psu, std::shared_ptr<TransientI2C> pmbus, std::shared_ptr<TransientI2C> eeprom);
     void createPower() override;
     std::string missingAlarmDescription() const override;
 };
 
 struct FspYhPdu : public FspYh {
-    FspYhPdu(const std::string& pdu, std::shared_ptr<TransientI2C> pmbus);
+    FspYhPdu(const std::string& pdu, std::shared_ptr<TransientI2C> pmbus, std::shared_ptr<TransientI2C> eeprom);
     void createPower() override;
     std::string missingAlarmDescription() const override;
 };

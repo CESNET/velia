@@ -17,11 +17,14 @@ void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardwar
 {
     // FIXME: also bind/unbind the EEPROMs which are embedded in the PDU/PSUs
     auto pdu = std::make_shared<velia::ietf_hardware::FspYhPdu>("pdu",
-                                                                std::make_shared<TransientI2C>(2, 0x25, "yh5151e"));
+                                                                std::make_shared<TransientI2C>(2, 0x25, "yh5151e"),
+                                                                std::make_shared<TransientI2C>(2, 0x56, "24c02"));
     auto psu1 = std::make_shared<velia::ietf_hardware::FspYhPsu>("psu1",
-                                                                 std::make_shared<TransientI2C>(2, 0x58, "ym2151e"));
+                                                                 std::make_shared<TransientI2C>(2, 0x58, "ym2151e"),
+                                                                 std::make_shared<TransientI2C>(2, 0x50, "24c02"));
     auto psu2 = std::make_shared<velia::ietf_hardware::FspYhPsu>("psu2",
-                                                                 std::make_shared<TransientI2C>(2, 0x59, "ym2151e"));
+                                                                 std::make_shared<TransientI2C>(2, 0x59, "ym2151e"),
+                                                                 std::make_shared<TransientI2C>(2, 0x51, "24c02"));
 
     struct ParallelPDUReader {
         std::shared_ptr<velia::ietf_hardware::FspYhPdu> pdu;

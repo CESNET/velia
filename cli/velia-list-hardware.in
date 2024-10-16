@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+usage() {
+    cat <<EOF
+Usage: $0 [-h]
+
+Lists hardware components
+
+Options:
+ --help, -h                 Show this help message.
+EOF
+    exit 1
+}
+
+CONFIG="{}"
+
+OPTS=$(getopt -q \
+    -o 'h' \
+    -n list-hardware -- $@)
+[ $? -eq 0 ] || usage
+
+eval set -- "$OPTS"
+
+while true; do
+    case "$1" in
+        --)
+            shift
+            break
+            ;;
+        -h|--help)
+            ;&
+        *)
+            usage
+            ;;
+    esac
+done
+
+sysrepocfg -f json -d operational -X -m ietf-hardware | \
+jq -r \
+    -f "@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBEXECDIR@/velia/velia-list-hardware.jq" \
+    | column -ts $'\t'

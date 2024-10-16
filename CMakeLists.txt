@@ -569,3 +569,4 @@ endfunction()
 add_custom_target(jq_utils SOURCES ${JQ_SRCS})
 
 add_jq_utility(velia-list-alarms)
+add_jq_utility(velia-list-hardware)

@@ -197,6 +197,30 @@
       },
       "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0ae051d_06094688",
+        "filename": "src/ietf-hardware/sysfs/IpmiFruEEPROM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-10-16T11:59:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "184200d7_d4dc216c",
+      "range": {
+        "startLine": 288,
+        "startChar": 12,
+        "endLine": 288,
+        "endChar": 26
+      },
+      "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

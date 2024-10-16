@@ -549,8 +549,8 @@ set(YANG_DATA_DIR ${CMAKE_INSTALL_PREFIX}/share/yang/static-data/velia)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-authentication.json DESTINATION ${YANG_DATA_DIR})
 install(TARGETS veliad-health veliad-system veliad-hardware veliad-firewall velia-ipmi-fru-eeprom RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/list-alarms/velia-list-alarms.in ${CMAKE_CURRENT_BINARY_DIR}/velia-list-alarms @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cli/velia-list-alarms.in ${CMAKE_CURRENT_BINARY_DIR}/velia-list-alarms @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/velia-list-alarms
     PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
     DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/list-alarms/velia-list-alarms.jq DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBEXECDIR}/velia)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/cli/velia-list-alarms.jq DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBEXECDIR}/velia)

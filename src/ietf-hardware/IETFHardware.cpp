@@ -441,7 +441,7 @@ std::optional<std::string> hexEEPROM(const std::string& sysfsPrefix,
         }
         std::string res;
         res.reserve(length * 2 /* two hex characters per byte */);
-        boost::algorithm::hex(buf.begin() + offset, buf.end(), std::back_inserter(res));
+        boost::algorithm::hex(buf.begin() + offset, buf.begin() + offset + length, std::back_inserter(res));
         log->trace("I2C EEPROM at bus {} address {:#02x}: UID/EUI {}", bus, address, res);
         return res;
     } catch (std::exception& e) {

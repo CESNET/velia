@@ -24,6 +24,7 @@ TEST_CASE("EEPROM with UID/EID")
     TEST_INIT_LOGS;
 
     REQUIRE(*hexEEPROM(sysfsPrefix, 1, 0x5c, 16, 0, 16) == "1E70C61C941000628C2EA000A000000C");
+    REQUIRE(*hexEEPROM(sysfsPrefix, 1, 0x5c, 16, 0, 15) == "1E70C61C941000628C2EA000A00000");
 
     auto working = EepromWithUid("x:eeprom", "x", sysfsPrefix, 0, 0x52, 256, 256 - 6, 6);
     REQUIRE(working().data == DataTree{

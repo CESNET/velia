@@ -16,6 +16,103 @@
       "message": "(I also read the original patch (and loved it, btw))",
       "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09907f42_f5f505a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-16T09:19:20Z",
+      "side": 1,
+      "message": "(sending the review comments from today\u0027s call, thanks to Tomas)",
+      "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "885d3440_7a791c03",
+        "filename": "src/ietf-hardware/sysfs/IpmiFruEEPROM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-16T09:19:20Z",
+      "side": 1,
+      "message": "this is redundant; just keeping a copy of `begin` (as done in `beginIter` above) should be sufficient",
+      "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "869779a1_00f58cb6",
+        "filename": "src/ietf-hardware/sysfs/IpmiFruEEPROM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-16T09:19:20Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d83e29a_3c24eabf",
+        "filename": "src/ietf-hardware/sysfs/IpmiFruEEPROM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-16T09:19:20Z",
+      "side": 1,
+      "message": "this ain\u0027t padding, this is the total length of the entire struct",
+      "range": {
+        "startLine": 151,
+        "startChar": 100,
+        "endLine": 151,
+        "endChar": 112
+      },
+      "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01eca4dc_269760e6",
+        "filename": "src/ietf-hardware/sysfs/IpmiFruEEPROM.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-16T09:19:20Z",
+      "side": 1,
+      "message": "let\u0027s replace this with something like:\n \nauto prodInfoAreaData \u003d x3::rule\u003c...\u003e \u003d\n  savePosition \u003e\u003e // save the initial offset of the padded structure\n  x3::omit[byteWithValue(0x01)] \u003e\u003e // format version magic number\n  withPadding\u003csavePosition\u003e[actualProdInfo];\n\n...which will also one level of indirection (or functors returning other struct) in the definition of WithPadding.\n\nAlso, consider porting the implementation to the same approach that\u0027s used for string fields with:\n *(x3::byte_[more])",
+      "range": {
+        "startLine": 288,
+        "startChar": 12,
+        "endLine": 288,
+        "endChar": 26
+      },
+      "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

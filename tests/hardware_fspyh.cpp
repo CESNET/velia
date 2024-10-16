@@ -10,9 +10,9 @@
 
 using namespace std::literals;
 
-class FakeI2C : public velia::ietf_hardware::TransientI2C {
+class FakePMBus : public velia::ietf_hardware::TransientI2C {
 public:
-    FakeI2C(const std::filesystem::path& fakeSysfsDeviceEntry)
+    FakePMBus(const std::filesystem::path& fakeSysfsDeviceEntry)
         : TransientI2C({}, {}, {})
         , m_fakeSysfsDeviceEntry(fakeSysfsDeviceEntry)
     {
@@ -57,13 +57,51 @@ private:
     mutable std::atomic<int> m_hwmonNo = 1;
 };
 
+class FakeIpmiFruEEPROM : public velia::ietf_hardware::TransientI2C {
+public:
+    FakeIpmiFruEEPROM(const std::filesystem::path& fakeSysfsDeviceEntry)
+        : TransientI2C({}, {}, {})
+        , m_fakeSysfsDeviceEntry(fakeSysfsDeviceEntry)
+    {
+    }
+
+    MAKE_CONST_MOCK0(isPresent, bool(), override);
+    MAKE_CONST_MOCK0(bind_mock, void());
+    MAKE_CONST_MOCK0(unbind_mock, void());
+
+    void bind() const override
+    {
+        bind_mock();
+        removeDirectoryTreeIfExists(m_fakeSysfsDeviceEntry);
+        std::filesystem::create_directory(m_fakeSysfsDeviceEntry);
+        std::filesystem::copy(
+            std::filesystem::path{CMAKE_CURRENT_SOURCE_DIR} / "tests" / "sysfs" / "eeprom" / "SDN-ID210512_eeprom-2-0056.bin",
+            sysfsEntry() / "eeprom");
+    }
+    void unbind() const override
+    {
+        unbind_mock();
+        removeDirectoryTreeIfExists(m_fakeSysfsDeviceEntry);
+    }
+    std::filesystem::path sysfsEntry() const override
+    {
+        return m_fakeSysfsDeviceEntry;
+    }
+
+private:
+    std::filesystem::path m_fakeSysfsDeviceEntry;
+};
+
 TEST_CASE("FspYhPsu")
 {
     TEST_INIT_LOGS;
     std::atomic<int> counter = 0;
-    const auto fakeSysfsDeviceEntry = CMAKE_CURRENT_BINARY_DIR + "/tests/psu"s;
-    removeDirectoryTreeIfExists(fakeSysfsDeviceEntry);
-    auto fakePMBus = std::make_shared<FakeI2C>(fakeSysfsDeviceEntry);
+    const auto fakeSysfsPMBus = CMAKE_CURRENT_BINARY_DIR + "/tests/psu-hwm"s;
+    removeDirectoryTreeIfExists(fakeSysfsPMBus);
+    auto fakePMBus = std::make_shared<FakePMBus>(fakeSysfsPMBus);
+    const auto fakeSysfsEEPROM = CMAKE_CURRENT_BINARY_DIR + "/tests/psu-eep"s;
+    removeDirectoryTreeIfExists(fakeSysfsEEPROM);
+    auto fakeEEPROM = std::make_shared<FakeIpmiFruEEPROM>(fakeSysfsEEPROM);
     trompeloeil::sequence seq1;
     std::shared_ptr<velia::ietf_hardware::FspYhPsu> psu;
     std::vector<std::unique_ptr<trompeloeil::expectation>> expectations;
@@ -84,12 +122,17 @@ TEST_CASE("FspYhPsu")
     };
 
     ALLOW_CALL(*fakePMBus, isPresent()).LR_RETURN(i2cPresence());
+    ALLOW_CALL(*fakeEEPROM, isPresent()).LR_RETURN(i2cPresence());
     REQUIRE_CALL(*fakePMBus, bind_mock()).LR_WITH(counter == 1).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakeEEPROM, bind_mock()).LR_WITH(counter == 1).IN_SEQUENCE(seq1);
     REQUIRE_CALL(*fakePMBus, unbind_mock()).LR_WITH(counter == 2).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakeEEPROM, unbind_mock()).LR_WITH(counter == 2).IN_SEQUENCE(seq1);
     REQUIRE_CALL(*fakePMBus, bind_mock()).LR_WITH(counter == 3).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakeEEPROM, bind_mock()).LR_WITH(counter == 3).IN_SEQUENCE(seq1);
     REQUIRE_CALL(*fakePMBus, unbind_mock()).LR_WITH(counter == 4).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakeEEPROM, unbind_mock()).LR_WITH(counter == 4).IN_SEQUENCE(seq1);
 
-    psu = std::make_shared<velia::ietf_hardware::FspYhPsu>("psu", fakePMBus);
+    psu = std::make_shared<velia::ietf_hardware::FspYhPsu>("psu", fakePMBus, fakeEEPROM);
 
     const velia::ietf_hardware::DataTree expectedDisabled = {
         {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
@@ -116,6 +159,13 @@ TEST_CASE("FspYhPsu")
             expected = {
                 {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
                 {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
+                {"/ietf-hardware:hardware/component[name='ne:psu']/mfg-name", "3Y POWER"},
+                {"/ietf-hardware:hardware/component[name='ne:psu']/model-name", "YH-5151E (URP1X151AH)"},
+                {"/ietf-hardware:hardware/component[name='ne:psu']/is-fru", "true"},
+                {"/ietf-hardware:hardware/component[name='ne:psu']/hardware-rev", "B01R"},
+                {"/ietf-hardware:hardware/component[name='ne:psu']/firmware-rev", "A14"},
+                {"/ietf-hardware:hardware/component[name='ne:psu']/software-rev", "P2J700A01"},
+                {"/ietf-hardware:hardware/component[name='ne:psu']/serial-num", "SA140T302044001013"},
                 {"/ietf-hardware:hardware/component[name='ne:psu']/state/oper-state", "enabled"},
                 {"/ietf-hardware:hardware/component[name='ne:psu:current-12V']/class", "iana-hardware:sensor"},
                 {"/ietf-hardware:hardware/component[name='ne:psu:current-12V']/parent", "ne:psu"},

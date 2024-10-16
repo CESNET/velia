@@ -1,0 +1,1005 @@
+{
+  "ietf-hardware:hardware": {
+    "last-change": "2024-10-16T15:53:03.328307844+00:00",
+    "component": [
+      {
+        "name": "ne",
+        "class": "iana-hardware:chassis",
+        "description": "CzechLight SDN Inline Amplifier",
+        "model-name": "sdn-inline",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl",
+        "class": "iana-hardware:module",
+        "parent": "ne",
+        "serial-num": "1E70C61C941000512022A000A0000090",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:carrier",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl",
+        "model-name": "ClearFog Base",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:carrier:eeprom",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl:carrier",
+        "serial-num": "294100B13DA3",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:emmc",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl",
+        "serial-num": "0xc9488d8a",
+        "model-name": "8GTF4R",
+        "mfg-date": "2018-12-01T00:00:00-00:00",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:emmc:lifetime",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl:emmc",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "other",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok",
+          "units-display": "percent"
+        }
+      },
+      {
+        "name": "ne:ctrl:som",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl",
+        "model-name": "ClearFog A388 SOM",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:som:eeprom",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl:som",
+        "serial-num": "801F12C6CC39",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-cpu",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 44171,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-front",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 24625,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-internal-0",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 45000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-internal-1",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 36000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-rear",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 25125,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:edfa",
+        "class": "iana-hardware:module",
+        "parent": "ne",
+        "firmware-rev": "1.0.1",
+        "serial-num": "484118",
+        "model-name": "DUAL FIXED GAIN"
+      },
+      {
+        "name": "ne:edfa:pump1",
+        "class": "iana-hardware:module",
+        "parent": "ne:edfa"
+      },
+      {
+        "name": "ne:edfa:pump1:laser-current",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump1",
+        "sensor-data": {
+          "value": 426,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 1,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:edfa:pump1:operating-time",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump1",
+        "sensor-data": {
+          "value": 43,
+          "value-type": "other",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok",
+          "units-display": "hours"
+        }
+      },
+      {
+        "name": "ne:edfa:pump1:tec-current",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump1",
+        "sensor-data": {
+          "value": 470,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 1,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:edfa:pump1:tec-voltage",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump1",
+        "sensor-data": {
+          "value": 98,
+          "value-type": "volts-DC",
+          "value-scale": "units",
+          "value-precision": 3,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:edfa:pump1:temperature",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump1",
+        "sensor-data": {
+          "value": 256,
+          "value-type": "celsius",
+          "value-scale": "units",
+          "value-precision": 1,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:edfa:pump2",
+        "class": "iana-hardware:module",
+        "parent": "ne:edfa"
+      },
+      {
+        "name": "ne:edfa:pump2:laser-current",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump2",
+        "sensor-data": {
+          "value": 431,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 1,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:edfa:pump2:operating-time",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump2",
+        "sensor-data": {
+          "value": 43,
+          "value-type": "other",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok",
+          "units-display": "hours"
+        }
+      },
+      {
+        "name": "ne:edfa:pump2:tec-current",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump2",
+        "sensor-data": {
+          "value": 240,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 1,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:edfa:pump2:tec-voltage",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump2",
+        "sensor-data": {
+          "value": 48,
+          "value-type": "volts-DC",
+          "value-scale": "units",
+          "value-precision": 3,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:edfa:pump2:temperature",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa:pump2",
+        "sensor-data": {
+          "value": 252,
+          "value-type": "celsius",
+          "value-scale": "units",
+          "value-precision": 1,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:edfa:temperature",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:edfa",
+        "sensor-data": {
+          "value": 267,
+          "value-type": "celsius",
+          "value-scale": "units",
+          "value-precision": 1,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fans",
+        "class": "iana-hardware:module",
+        "parent": "ne",
+        "serial-num": "1290C00806A200918440A000A000005C",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan1",
+        "class": "iana-hardware:fan",
+        "parent": "ne:fans",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan1:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:fans:fan1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 8856,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fans:fan2",
+        "class": "iana-hardware:fan",
+        "parent": "ne:fans",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan2:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:fans:fan2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 8936,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fans:fan3",
+        "class": "iana-hardware:fan",
+        "parent": "ne:fans",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan3:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:fans:fan3",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 9018,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fans:fan4",
+        "class": "iana-hardware:fan",
+        "parent": "ne:fans",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan4:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:fans:fan4",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 9018,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu",
+        "class": "iana-hardware:power-supply",
+        "parent": "ne",
+        "hardware-rev": "B01R",
+        "firmware-rev": "A14",
+        "software-rev": "P2J700A01",
+        "serial-num": "SA140T302044001013",
+        "mfg-name": "3Y POWER",
+        "model-name": "YH-5151E (URP1X151AH)",
+        "is-fru": true,
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:pdu:current-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 957,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:current-3V3",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:current-5V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 50,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:power-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 8000000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:power-3V3",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 9000000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:power-5V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 7000000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:temperature-1",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 28000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:temperature-2",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 31000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:temperature-3",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 34000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:voltage-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 12068,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:voltage-3V3",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 3363,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:voltage-5V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 5183,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1",
+        "class": "iana-hardware:power-supply",
+        "parent": "ne",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu1:current-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 1218,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:current-5Vsb",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 152,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:current-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 148,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:fan",
+        "class": "iana-hardware:module",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu1:fan:fan1",
+        "class": "iana-hardware:fan",
+        "parent": "ne:psu1:fan",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu1:fan:fan1:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1:fan:fan1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 4696,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:power-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 20500000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:power-out",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 15000000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:temperature-1",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 36000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:temperature-2",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 35000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:voltage-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 11988,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:voltage-5Vsb",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 5025,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:voltage-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 228250,
+          "value-type": "volts-AC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2",
+        "class": "iana-hardware:power-supply",
+        "parent": "ne",
+        "hardware-rev": "BR  ",
+        "firmware-rev": "B09",
+        "software-rev": "P20000A00",
+        "serial-num": "SB090S512343000017",
+        "mfg-name": "3Y POWER",
+        "model-name": "YM-2151F (URP1X151DM)",
+        "is-fru": true,
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu2:current-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:current-5Vsb",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:current-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:fan",
+        "class": "iana-hardware:module",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu2:fan:fan1",
+        "class": "iana-hardware:fan",
+        "parent": "ne:psu2:fan",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu2:fan:fan1:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2:fan:fan1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 2600,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:power-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:power-out",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:temperature-1",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 26000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:temperature-2",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 25000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:voltage-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:voltage-5Vsb",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:voltage-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "volts-AC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:voa-sw",
+        "class": "iana-hardware:module",
+        "parent": "ne",
+        "serial-num": "1290C00806A200911021A000A00000C9",
+        "state": {
+          "oper-state": "enabled"
+        }
+      }
+    ]
+  }
+}

@@ -71,11 +71,12 @@ TEST_CASE("FspYhPsu")
     auto i2cPresence = [&counter] {
         switch (counter) {
         case 0:
-        case 2:
-        case 4:
+        case 3:
+        case 5:
             return false;
         case 1:
-        case 3:
+        case 2:
+        case 4:
             return true;
         }
 
@@ -85,9 +86,9 @@ TEST_CASE("FspYhPsu")
 
     ALLOW_CALL(*fakePMBus, isPresent()).LR_RETURN(i2cPresence());
     REQUIRE_CALL(*fakePMBus, bind_mock()).LR_WITH(counter == 1).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*fakePMBus, unbind_mock()).LR_WITH(counter == 2).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*fakePMBus, bind_mock()).LR_WITH(counter == 3).IN_SEQUENCE(seq1);
-    REQUIRE_CALL(*fakePMBus, unbind_mock()).LR_WITH(counter == 4).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakePMBus, unbind_mock()).LR_WITH(counter == 3).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakePMBus, bind_mock()).LR_WITH(counter == 4).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(*fakePMBus, unbind_mock()).LR_WITH(counter == 5).IN_SEQUENCE(seq1);
 
     psu = std::make_shared<velia::ietf_hardware::FspYhPsu>("psu", fakePMBus);
 
@@ -101,7 +102,7 @@ TEST_CASE("FspYhPsu")
 
     std::set<std::string> expectedThresholdsKeys;
 
-    for (auto i : {0, 1, 2, 3, 4}) {
+    for (auto i : {0, 1, 2, 3, 4, 5}) {
         std::this_thread::sleep_for(std::chrono::seconds(4));
         velia::ietf_hardware::DataTree expected;
         std::set<velia::ietf_hardware::SideLoadedAlarm> expectedAlarms;
@@ -113,6 +114,7 @@ TEST_CASE("FspYhPsu")
             expectedAlarms = {alarmUnplugged};
             break;
         case 1:
+        case 2:
             expected = {
                 {"/ietf-hardware:hardware/component[name='ne:psu']/class", "iana-hardware:power-supply"},
                 {"/ietf-hardware:hardware/component[name='ne:psu']/parent", "ne"},
@@ -227,12 +229,12 @@ TEST_CASE("FspYhPsu")
             };
             expectedAlarms = {alarmPlugged};
             break;
-        case 2:
+        case 3:
             expected = expectedDisabled;
             expectedThresholdsKeys.clear();
             expectedAlarms = {alarmUnplugged};
             break;
-        case 3:
+        case 4:
             // Here I simulate read failure by a file from the hwmon directory. This happens when the user wants data from
             // a PSU that's no longer there and the watcher thread didn't unbind it yet.
             fakePMBus->removeHwmonFile("temp1_input");
@@ -240,7 +242,7 @@ TEST_CASE("FspYhPsu")
             expectedThresholdsKeys.clear();
             expectedAlarms = {alarmUnplugged};
             break;
-        case 4:
+        case 5:
             expected = expectedDisabled;
             expectedThresholdsKeys.clear();
             expectedAlarms = {alarmUnplugged};

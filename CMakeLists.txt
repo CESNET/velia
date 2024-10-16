@@ -567,5 +567,23 @@ function(add_jq_utility NAME)
     install(FILES ${JQ_FILE} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBEXECDIR}/velia)
 endfunction()
 
+function(add_jq_test UTILITY_NAME TEST_NAME)
+    set(test_input_prefix ${CMAKE_CURRENT_SOURCE_DIR}/tests/jq/${UTILITY_NAME}/${TEST_NAME})
+    if(EXISTS ${test_input_prefix}.config.json)
+        set(jq_extra_config "--argjson config \"$(< ${test_input_prefix}.config.json)\"")
+    else()
+        set(jq_extra_config "")
+    endif()
+    add_test(NAME jq-${UTILITY_NAME}-${TEST_NAME}
+        COMMAND sh -c
+            "jq -f ${CMAKE_CURRENT_SOURCE_DIR}/cli/${UTILITY_NAME}.jq ${jq_extra_config} \
+                < ${test_input_prefix}.json \
+                | diff -u ${test_input_prefix}.expected -")
+endfunction()
+
 add_jq_utility(velia-list-alarms)
+add_jq_test(velia-list-alarms EDFA-LINE-SDN-ID210512)
+add_jq_test(velia-list-alarms active-since)
+add_jq_test(velia-list-alarms cleared-before)
 add_jq_utility(velia-list-hardware)
+add_jq_test(velia-list-hardware EDFA-LINE-SDN-ID210512)

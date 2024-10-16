@@ -66,10 +66,21 @@ std::filesystem::path TransientI2C::sysfsEntry() const
     return fmt::format("/sys/bus/i2c/devices/{}-{:04x}", m_bus, m_address);
 }
 
+namespace {
+std::string xpathFor(const std::string& component, const std::string& suffix)
+{
+    return fmt::format("/ietf-hardware:hardware/component[name='{}']/{}", component, suffix);
+}
+}
+
 FspYh::FspYh(const std::string& name, std::shared_ptr<TransientI2C> pmbus)
     : m_pmbus(pmbus)
     , m_namePrefix("ne:"s + name)
-    , m_staticData(velia::ietf_hardware::data_reader::StaticData(m_namePrefix, "ne", {{"class", "iana-hardware:power-supply"}})().data)
+    , m_staticData({
+            {xpathFor(m_namePrefix, "parent"), "ne"},
+            {xpathFor(m_namePrefix, "class"), "iana-hardware:power-supply"},
+            {xpathFor(m_namePrefix, "state/oper-state"), "enabled"},
+            })
 {
     m_exit = false;
 }
@@ -126,7 +137,7 @@ SensorPollData FspYh::readValues()
     res.data = m_staticData;
 
     if (m_properties.empty()) {
-        res.data[componentXPath + "/state/oper-state"] = "disabled";
+        res.data[xpathFor(m_namePrefix, "state/oper-state")] = "disabled";
         res.sideLoadedAlarms.insert({ALARM_SENSOR_MISSING, componentXPath, ALARM_SENSOR_MISSING_SEVERITY, missingAlarmDescription()});
         return res;
     }
@@ -141,7 +152,7 @@ SensorPollData FspYh::readValues()
             spdlog::get("hardware")->warn("Couldn't read {} sysfs data (maybe the device was just ejected?): {}", m_namePrefix, ex.what());
 
             res.data = m_staticData;
-            res.data["/ietf-hardware:hardware/component[name='" + m_namePrefix + "']/state/oper-state"] = "disabled";
+            res.data[xpathFor(m_namePrefix, "state/oper-state")] = "disabled";
             res.thresholds.clear();
             res.sideLoadedAlarms.insert({ALARM_SENSOR_MISSING, componentXPath, ALARM_SENSOR_MISSING_SEVERITY, missingAlarmDescription()});
 

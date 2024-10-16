@@ -256,6 +256,7 @@ void FspYhPsu::createPower()
                                                        }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 2));
+    // FIXME: adjust the unit & threshold on the DC unit
     registerReader(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in",
                                                      m_namePrefix,
                                                      m_hwmon,

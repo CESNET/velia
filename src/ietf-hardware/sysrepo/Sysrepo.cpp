@@ -10,6 +10,7 @@
 #include <sysrepo-cpp/Connection.hpp>
 #include "Sysrepo.h"
 #include "utils/alarms.h"
+#include "utils/benchmark.h"
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
@@ -106,6 +107,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             });
 
         while (!m_quit) {
+            auto benchmark = std::make_optional<velia::utils::MeasureTime>("ietf-hardware/poll");
             m_log->trace("IetfHardware poll");
 
             auto [hwStateValues, thresholds, activeSensors, sideLoadedAlarms] = m_hwState->process();
@@ -232,6 +234,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             }
 
             prevValues = std::move(hwStateValues);
+            benchmark.reset();
             std::this_thread::sleep_for(m_pollInterval);
             }
     });

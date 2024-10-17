@@ -20,5 +20,6 @@ void initLogs(std::shared_ptr<spdlog::sinks::sink> sink)
     for (const auto& name : {"main", "health", "hardware", "sysrepo", "system", "firewall"}) {
         spdlog::register_logger(std::make_shared<spdlog::logger>(name, sink));
     }
+    spdlog::set_default_logger(spdlog::get("main"));
 }
 }

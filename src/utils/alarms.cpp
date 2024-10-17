@@ -7,6 +7,7 @@
 #include <sysrepo-cpp/Enum.hpp>
 #include <spdlog/spdlog.h>
 #include "alarms.h"
+#include "utils/benchmark.h"
 #include "utils/libyang.h"
 #include "utils/sysrepo.h"
 
@@ -20,6 +21,7 @@ const auto alarmRpc = "/sysrepo-ietf-alarms:create-or-update-alarm";
 namespace velia::alarms {
 void push(sysrepo::Session session, const std::string& alarmId, const std::string& resource, const std::string& severity, const std::string& text)
 {
+    WITH_TIME_MEASUREMENT{};
     auto inputNode = session.getContext().newPath(alarmRpc, std::nullopt);
 
     inputNode.newPath(alarmRpc + "/resource"s, resource);
@@ -34,6 +36,7 @@ void push(sysrepo::Session session, const std::string& alarmId, const std::strin
 
 void pushInventory(sysrepo::Session session, const std::vector<AlarmInventoryEntry>& entries)
 {
+    WITH_TIME_MEASUREMENT{};
     utils::ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
 
     for (const auto& entry: entries) {
@@ -52,11 +55,13 @@ void pushInventory(sysrepo::Session session, const std::vector<AlarmInventoryEnt
     }
 
     spdlog::get("main")->trace("alarms::pushInventory: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
+    WITH_TIME_MEASUREMENT{"pushInventory/applyChanges"};
     session.applyChanges();
 }
 
 void addResourcesToInventory(sysrepo::Session session, const std::map<std::string, std::vector<std::string>>& resourcesPerAlarm)
 {
+    WITH_TIME_MEASUREMENT{};
     utils::ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
 
     for (const auto& [alarmId, resources] : resourcesPerAlarm) {
@@ -67,6 +72,7 @@ void addResourcesToInventory(sysrepo::Session session, const std::map<std::strin
         }
     }
     spdlog::get("main")->trace("alarms::addResourcesToInventory: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
+    WITH_TIME_MEASUREMENT{"addResourcesToInventory/applyChanges"};
     session.applyChanges();
 }
 

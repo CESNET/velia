@@ -46,6 +46,30 @@
       },
       "revId": "28fe19cb76b3b8fdbe4c987983a00176421f93c5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b97b1eca_c64daf07",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-17T14:40:17Z",
+      "side": 1,
+      "message": "OK, I was missing one important thing:\n\nhttps://stackoverflow.com/questions/55269098/cmake-adding-ide-visibility-for-common-headers-in-a-multi-library-binary-c-pr\n\nFixed now.",
+      "parentUuid": "8d5bcf00_dcf1d593",
+      "range": {
+        "startLine": 558,
+        "startChar": 0,
+        "endLine": 558,
+        "endChar": 1
+      },
+      "revId": "28fe19cb76b3b8fdbe4c987983a00176421f93c5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

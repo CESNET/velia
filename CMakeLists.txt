@@ -90,6 +90,8 @@ add_compile_definitions(FMT_DEPRECATED_OSTREAM)
 add_library(velia-utils STATIC
     src/utils/alarms.cpp
     src/utils/alarms.h
+    src/utils/benchmark.cpp
+    src/utils/benchmark.h
     src/utils/exceptions.cpp
     src/utils/exceptions.h
     src/utils/exec.cpp

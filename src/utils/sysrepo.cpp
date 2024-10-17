@@ -75,8 +75,6 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
     auto log = spdlog::get("main");
 
     for (const auto& propertyName : removePaths) {
-        log->trace("Processing node deletion {}", propertyName);
-
         if (!parent) {
             parent = session.getContext().newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
         } else {
@@ -91,8 +89,6 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
     }
 
     for (const auto& [propertyName, value] : values) {
-        log->trace("Processing node update {} -> {}", propertyName, value);
-
         if (!parent) {
             parent = session.getContext().newPath(propertyName, value, libyang::CreationOptions::Output);
         } else {
@@ -101,8 +97,6 @@ void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::st
     }
 
     for (const auto& propertyName : discardPaths) {
-        log->trace("Processing node discard {}", propertyName);
-
         auto discard = session.getContext().newOpaqueJSON("sysrepo", "discard-items", libyang::JSON{propertyName});
 
         if (!parent) {
@@ -131,6 +125,7 @@ void valuesPush(const std::map<std::string, std::string>& values, const std::vec
 
     if (edit) {
         session.editBatch(*edit, sysrepo::DefaultOperation::Merge);
+        spdlog::get("main")->trace("valuesPush: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
         session.applyChanges();
     }
 }
@@ -153,6 +148,7 @@ void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::stri
 
     if (edit) {
         session.editBatch(*edit, sysrepo::DefaultOperation::Merge);
+        spdlog::get("main")->trace("valuesPush: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
         session.applyChanges();
     }
 }

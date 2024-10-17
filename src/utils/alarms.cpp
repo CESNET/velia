@@ -51,7 +51,7 @@ void pushInventory(sysrepo::Session session, const std::vector<AlarmInventoryEnt
         }
     }
 
-    spdlog::get("main")->trace("alarms::pushInventory");
+    spdlog::get("main")->trace("alarms::pushInventory: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
     session.applyChanges();
 }
 
@@ -66,7 +66,7 @@ void addResourcesToInventory(sysrepo::Session session, const std::map<std::strin
             session.setItem(prefix + "/resource", resource);
         }
     }
-    spdlog::get("main")->trace("alarms::addResourcesToInventory");
+    spdlog::get("main")->trace("alarms::addResourcesToInventory: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
     session.applyChanges();
 }
 

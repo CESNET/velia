@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79ae7eea_954afecd",
+        "filename": "src/ietf-hardware/FspYh.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-17T08:02:46Z",
+      "side": 0,
+      "message": "Maybe just a note -- the previous version was writing \"\u003caddress\u003e \u003cdriver\u003e\", which is the same string as when registering. This \"works\", but it isn\u0027t really needed, and it results in an error in the kernel log\n\n [604068.683162] i2c i2c-2: delete_device: Extra parameters",
+      "revId": "df96abf5a42c3cc8e5be62b54cf0f92476b15032",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -27,4 +27,4 @@ def main:
       ]
   ) | @tsv;
 
-.["ietf-hardware:hardware"]?.["component"]? | main
+.["ietf-hardware:hardware"]?["component"]? | main

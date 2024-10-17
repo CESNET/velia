@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41aeb913_7d5ab109",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-10-17T14:33:47Z",
+      "side": 1,
+      "message": "What is the list used for? I only see appends to it, no usages.",
+      "range": {
+        "startLine": 558,
+        "startChar": 0,
+        "endLine": 558,
+        "endChar": 1
+      },
+      "revId": "28fe19cb76b3b8fdbe4c987983a00176421f93c5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

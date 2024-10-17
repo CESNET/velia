@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e22f1788_6e4aa892",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-17T21:50:44Z",
+      "side": 1,
+      "message": "this link will (hopefully) work after I merge this (after a rename of the cli/ dir)",
+      "revId": "47c8707843bd7df5012909e15f920f4c185fcb8c",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

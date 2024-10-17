@@ -22,6 +22,30 @@
       },
       "revId": "28fe19cb76b3b8fdbe4c987983a00176421f93c5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d5bcf00_dcf1d593",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-17T14:36:12Z",
+      "side": 1,
+      "message": "This is for IDE integration. I remember that KDevelop or QtCreator used to work like this, but I cannot find any resources now. Given that we also do not list the YANG models in this repo, and given that I\u0027m on a different editor now, I don\u0027t care too much, so I can remove this if you wish.",
+      "parentUuid": "41aeb913_7d5ab109",
+      "range": {
+        "startLine": 558,
+        "startChar": 0,
+        "endLine": 558,
+        "endChar": 1
+      },
+      "revId": "28fe19cb76b3b8fdbe4c987983a00176421f93c5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -87,4 +87,4 @@ def main:
     | colorize($severity; $cleared)
   ) | @tsv;
 
-.["ietf-alarms:alarms"]?.["alarm-list"]?.["alarm"]? | main
+.["ietf-alarms:alarms"]?["alarm-list"]?["alarm"]? | main

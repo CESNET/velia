@@ -46,6 +46,7 @@ For building, one needs:
 - optionally, [Doctest](https://github.com/onqtam/doctest/) as a C++ unit test framework
 - optionally, [trompeloeil](https://github.com/rollbear/trompeloeil) for mock objects in C++
 - optionally, [`iproute2`](https://wiki.linuxfoundation.org/networking/iproute2) - the `ip` tool for testing
+- optionally, [`jq`](https://jqlang.github.io/jq/) to run [some CLI utilities](./cli) and for testing them
 
 The build process uses [CMake](https://cmake.org/runningcmake/).
 A quick-and-dirty build with no fancy options can be as simple as `mkdir build && cd build && cmake .. && make && make install`.

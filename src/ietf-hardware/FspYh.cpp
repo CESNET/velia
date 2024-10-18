@@ -229,6 +229,12 @@ void FspYhPsu::createPower()
     using velia::ietf_hardware::data_reader::SysfsValue;
 
     discoverIpmiFru(m_namePrefix, m_eeprom->sysfsEntry() / "eeprom", m_eepromData);
+    bool isDcModule = false;
+    if (auto it = m_eepromData.find(xpathFor(m_namePrefix, "model-name")); it != m_eepromData.end()) {
+        if (boost::algorithm::starts_with(it->value, "YM-2151F")) {
+            isDcModule = true;
+        }
+    }
 
     auto registerReader = [&]<typename DataReaderType>(DataReaderType&& reader) {
         m_properties.emplace_back(reader);
@@ -256,16 +262,29 @@ void FspYhPsu::createPower()
                                                        }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 2));
-    registerReader(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in",
-                                                     m_namePrefix,
-                                                     m_hwmon,
-                                                     1,
-                                                     Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{90000, 3000},
-                                                         .warningLow = OneThreshold<int64_t>{100000, 3000},
-                                                         .warningHigh = OneThreshold<int64_t>{245000, 3000},
-                                                         .criticalHigh = OneThreshold<int64_t>{264000, 3000},
-                                                     }));
+    if (isDcModule) {
+        registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-in",
+                                                         m_namePrefix,
+                                                         m_hwmon,
+                                                         1,
+                                                         Thresholds<int64_t>{
+                                                             .criticalLow = OneThreshold<int64_t>{36'000, 1000},
+                                                             .warningLow = OneThreshold<int64_t>{38'000, 500},
+                                                             .warningHigh = OneThreshold<int64_t>{70'000, 500},
+                                                             .criticalHigh = OneThreshold<int64_t>{72'000, 1000},
+                                                         }));
+    } else {
+        registerReader(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in",
+                                                         m_namePrefix,
+                                                         m_hwmon,
+                                                         1,
+                                                         Thresholds<int64_t>{
+                                                             .criticalLow = OneThreshold<int64_t>{90000, 3000},
+                                                             .warningLow = OneThreshold<int64_t>{100000, 3000},
+                                                             .warningHigh = OneThreshold<int64_t>{245000, 3000},
+                                                             .criticalHigh = OneThreshold<int64_t>{264000, 3000},
+                                                         }));
+    }
     registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-12V",
                                                      m_namePrefix,
                                                      m_hwmon,

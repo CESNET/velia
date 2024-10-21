@@ -96,6 +96,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
         std::set<std::string> seenSensors;
         std::map<std::string, State> thresholdsStates;
         std::set<std::pair<std::string, std::string>> activeSideLoadedAlarms;
+        std::set<std::string> sensorMissingResources;
 
         alarms::pushInventory(
             m_session,
@@ -149,7 +150,10 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             /* Publish sideloaded alarms */
             for (const auto& [alarm, resource, severity, text] : sideLoadedAlarms) {
                 // Sideloaded alarms are not registered using the code above, let's register those too
-                alarms::addResourcesToInventory(m_session, {{ALARM_SENSOR_MISSING, {resource}}});
+                if (!sensorMissingResources.contains(resource)) {
+                    alarms::addResourcesToInventory(m_session, {{ALARM_SENSOR_MISSING, {resource}}});
+                    sensorMissingResources.insert(resource);
+                }
 
                 bool isActive = activeSideLoadedAlarms.contains({alarm, resource});
                 if (isActive && severity == "cleared") {

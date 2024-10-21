@@ -13,6 +13,7 @@
 #include <sstream>
 #include <trompeloeil.hpp>
 #include "ietf-hardware/sysfs/IpmiFruEEPROM.h"
+#include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/thresholds.h"
 #include "tests/sysrepo-helpers/common.h"
 
@@ -65,6 +66,35 @@ struct StringMaker<std::map<T, U>> {
         }
         os << "}";
         return os.str().c_str();
+    }
+};
+
+template <class T>
+struct StringMaker<velia::ietf_hardware::ThresholdUpdate<T>> {
+    static String convert(const velia::ietf_hardware::ThresholdUpdate<T>& x) {
+        std::ostringstream oss;
+        oss << "ThresholdUpdate{new state: " << x.newState;
+        if (x.value) {
+            oss << ", new value: " << StringMaker<T>::convert(*x.value);
+        }
+        if (x.exceededThresholdValue) {
+            oss << " exceeds threshold: " << StringMaker<T>::convert(*x.exceededThresholdValue);
+        }
+        oss << "}";
+        return oss.str().c_str();
+    }
+};
+
+template <>
+struct StringMaker<velia::ietf_hardware::SideLoadedAlarm> {
+    static String convert(const velia::ietf_hardware::SideLoadedAlarm& a) {
+        std::ostringstream oss;
+        oss << "SideLoadedAlarm{"
+            << a.alarmTypeId << ", "
+            << a.resource << ", "
+            << a.severity << ", "
+            << a.text << "}";
+        return oss.str().c_str();
     }
 };
 

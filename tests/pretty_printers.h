@@ -18,6 +18,14 @@
 
 namespace doctest {
 
+template <>
+struct StringMaker<int64_t> {
+    static String convert(const int64_t v)
+    {
+        return std::to_string(v).c_str();
+    }
+};
+
 template <class T>
 struct StringMaker<std::vector<T>> {
     static String convert(const std::vector<T>& v)
@@ -25,63 +33,35 @@ struct StringMaker<std::vector<T>> {
         std::ostringstream os;
         os << "{" << std::endl;
         for (const auto& value : v) {
-            os << "  \"" << value << "\"," << std::endl;
+            os << "  \"" << StringMaker<T>::convert(value) << "\"," << std::endl;
         }
         os << "}";
         return os.str().c_str();
     }
 };
 
-template <>
-struct StringMaker<std::set<std::string>> {
-    static String convert(const std::set<std::string>& v)
+template <class T>
+struct StringMaker<std::set<T>> {
+    static String convert(const std::set<T>& v)
     {
         std::ostringstream os;
         os << "{" << std::endl;
         for (const auto& value : v) {
-            os << "  \"" << value << "\"," << std::endl;
+            os << "  \"" << StringMaker<T>::convert(value) << "\"," << std::endl;
         }
         os << "}";
         return os.str().c_str();
     }
 };
 
-template <>
-struct StringMaker<std::map<std::string, std::string>> {
-    static String convert(const std::map<std::string, std::string>& map)
+template <class T, class U>
+struct StringMaker<std::map<T, U>> {
+    static String convert(const std::map<T, U>& map)
     {
         std::ostringstream os;
         os << "{" << std::endl;
         for (const auto& [key, value] : map) {
-            os << "  \"" << key << "\": \"" << value << "\"," << std::endl;
-        }
-        os << "}";
-        return os.str().c_str();
-    }
-};
-
-template <>
-struct StringMaker<std::map<std::string, int64_t>> {
-    static String convert(const std::map<std::string, int64_t>& map)
-    {
-        std::ostringstream os;
-        os << "{" << std::endl;
-        for (const auto& [key, value] : map) {
-            os << "  \"" << key << "\": " << value << "," << std::endl;
-        }
-        os << "}";
-        return os.str().c_str();
-    }
-};
-
-template <>
-struct StringMaker<std::map<std::string, velia::ietf_hardware::State>> {
-    static String convert(const std::map<std::string, velia::ietf_hardware::State>& map)
-    {
-        std::ostringstream os;
-        os << "{" << std::endl;
-        for (const auto& [key, value] : map) {
-            os << "  \"" << key << "\": " << value << "," << std::endl;
+            os << "  \"" << StringMaker<T>::convert(key) << "\": " << StringMaker<U>::convert(value) << "," << std::endl;
         }
         os << "}";
         return os.str().c_str();

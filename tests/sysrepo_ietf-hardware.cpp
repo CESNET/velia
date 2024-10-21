@@ -196,7 +196,7 @@ TEST_CASE("IETF Hardware with sysrepo")
                                            {COMPONENT("ne:temperature-cpu") "/state/oper-state", "enabled"},
                                        }))
             .IN_SEQUENCE(seq1);
-        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES(ALARMS("velia-alarms:sensor-missing-alarm"), COMPONENTS(COMPONENT("ne:psu"))).TIMES(AT_LEAST(1));
+        REQUIRE_ALARM_INVENTORY_ADD_RESOURCES(ALARMS("velia-alarms:sensor-missing-alarm"), COMPONENTS(COMPONENT("ne:psu"))).TIMES(1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold (0 < 8000000).").IN_SEQUENCE(seq1);
 
         auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSess, ietfHardware, 150ms);
@@ -433,5 +433,44 @@ TEST_CASE("IETF Hardware with sysrepo")
 
         std::this_thread::sleep_for(1000ms); // last-change leaf resolution is in seconds, let's wait until the second increments
         REQUIRE(directLeafNodeQuery(modulePrefix + "/last-change") > lastChange); // check that last-change leaf has timestamp that is greater than the previous one
+
+        // unplug again
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
+                                                       {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
+                                                       {COMPONENT("ne:psu:child") "/class", Deleted{}},
+                                                       {COMPONENT("ne:psu:child") "/parent", Deleted{}},
+                                                       {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
+                                                       {COMPONENT("ne:psu:child") "/sensor-data/value", Deleted{}},
+                                                       {COMPONENT("ne:psu:child") "/sensor-data/value-precision", Deleted{}},
+                                                       {COMPONENT("ne:psu:child") "/sensor-data/value-scale", Deleted{}},
+                                                       {COMPONENT("ne:psu:child") "/sensor-data/value-type", Deleted{}},
+                                                       {COMPONENT("ne:psu:child") "/state/oper-state", Deleted{}},
+                                                   }))
+            .IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "critical", "PSU missing.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "warning",
+                "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
+        psuActive = false;
+        waitForCompletionAndBitMore(seq1);
+
+
+        // PSU inserted again - no inventory-alarm updates expected
+        REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
+                                           {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
+                                           {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value", "12000"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-precision", "0"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-scale", "milli"},
+                                           {COMPONENT("ne:psu:child") "/sensor-data/value-type", "volts-DC"},
+                                           {COMPONENT("ne:psu:child") "/state/oper-state", "enabled"},
+                                       }))
+            .IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu", "cleared", "PSU missing.").IN_SEQUENCE(seq1);
+        REQUIRE_ALARM_RPC("velia-alarms:sensor-missing-alarm", "ne:psu:child", "cleared",
+                "Sensor value not reported. Maybe the sensor was unplugged?").IN_SEQUENCE(seq1);
+        psuActive = true;
+        waitForCompletionAndBitMore(seq1);
     }
 }

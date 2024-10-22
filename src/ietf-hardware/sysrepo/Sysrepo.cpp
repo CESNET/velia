@@ -152,10 +152,10 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                 alarms::addResourcesToInventory(m_session, {{ALARM_SENSOR_MISSING, {resource}}});
 
                 bool isActive = activeSideLoadedAlarms.contains({alarm, resource});
-                if (isActive && severity == "cleared") {
-                    alarms::push(m_session, alarm, resource, "cleared", text);
+                if (isActive && severity == ALARM_CLEARED) {
+                    alarms::push(m_session, alarm, resource, ALARM_CLEARED, text);
                     activeSideLoadedAlarms.erase({alarm, resource});
-                } else if (!isActive && severity != "cleared") {
+                } else if (!isActive && severity != ALARM_CLEARED) {
                     alarms::push(m_session, alarm, resource, severity, text);
                     activeSideLoadedAlarms.insert({alarm, resource});
                 }

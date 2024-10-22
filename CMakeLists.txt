@@ -30,7 +30,7 @@ find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
 find_package(date REQUIRED) # FIXME: Remove when we have STL with __cpp_lib_chrono >= 201907 (gcc 14)
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED CONFIG)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ "1.0.0" REQUIRED)
 find_package(PkgConfig)

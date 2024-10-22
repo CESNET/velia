@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a67a7cd_0632df0f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-22T23:05:18Z",
+      "side": 1,
+      "message": "recheck\n\nI don\u0027t understand that failure in the clearfog build at all; it\u0027s as if the build started to run once again? WTF?",
+      "revId": "1c5a6fdc0e76d9f20c5e8cc5f32786ff918e2d52",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

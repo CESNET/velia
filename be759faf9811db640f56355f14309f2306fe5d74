@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4432d5b_cb7b5413",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-10-22T16:03:14Z",
+      "side": 1,
+      "message": "We have to upgrade buildroot first -- see https://github.com/buildroot/buildroot/commit/96f10934763edd7ca781de44c6a7cc9e915e4cff",
+      "revId": "be759faf9811db640f56355f14309f2306fe5d74",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

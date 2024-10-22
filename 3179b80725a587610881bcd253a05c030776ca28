@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37133dae_e752ff70",
+        "filename": "src/ietf-hardware/sysrepo/Sysrepo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-22T20:02:00Z",
+      "side": 1,
+      "message": "nit: I fixed this to an uppercase \"L\" for consistency",
+      "range": {
+        "startLine": 99,
+        "startChar": 62,
+        "endLine": 99,
+        "endChar": 63
+      },
+      "revId": "3179b80725a587610881bcd253a05c030776ca28",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

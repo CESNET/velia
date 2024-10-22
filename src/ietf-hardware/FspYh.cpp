@@ -210,6 +210,10 @@ SensorPollData FspYh::readValues()
         }
     }
 
+    /*
+     * FIXME: this is here for the Sysrepo wrapper; it will pick up that the PSU is connected and will add alarm inventory entry
+     * We should refactor the whole alarm code so we do not have to create hacks like this.
+     */
     res.sideLoadedAlarms.insert({ALARM_SENSOR_MISSING, componentXPath, "cleared", missingAlarmDescription()});
     return res;
 }

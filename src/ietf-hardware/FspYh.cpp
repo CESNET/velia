@@ -45,6 +45,10 @@ bool TransientI2C::isPresent() const
         throw std::system_error(errno, std::system_category(), "TransientI2C::isPresent: ioctl(I2C_SLAVE_FORCE)");
     }
 
+    if (ioctl(file, I2C_RETRIES, 1) < 0) {
+        throw std::system_error(errno, std::system_category(), "TransientI2C::isPresent: ioctl(I2C_RETRIES)");
+    }
+
     char bufferIn[1];
     return read(file, bufferIn, 1) != -1;
 }

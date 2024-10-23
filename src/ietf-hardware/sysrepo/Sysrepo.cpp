@@ -151,7 +151,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             for (const auto& [alarm, resource, severity, text] : sideLoadedAlarms) {
                 // Sideloaded alarms' resources are not registered using the code above, let's register those too
                 if (!seenSideLoadedAlarms.contains({alarm, resource})) {
-                    alarms::addResourcesToInventory(m_session, {{ALARM_SENSOR_MISSING, {resource}}});
+                    alarms::addResourcesToInventory(m_session, {{alarm, {resource}}});
                     seenSideLoadedAlarms.insert({alarm, resource});
                 }
 

@@ -39,6 +39,30 @@
       },
       "revId": "1c5a6fdc0e76d9f20c5e8cc5f32786ff918e2d52",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aed732c7_53462ce7",
+        "filename": "src/ietf-hardware/FspYh.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-23T08:02:19Z",
+      "side": 1,
+      "message": "It overrides the kernel\u0027s default for this particular transaction. At first, I thought that the default number of retries is crazy, but then I consulted the SMBus spec which says that when there\u0027s a comms error, the recommended course of action is to retry -- so I just tried to reduce the number of retries.",
+      "parentUuid": "4943979c_8984e8c2",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 35
+      },
+      "revId": "1c5a6fdc0e76d9f20c5e8cc5f32786ff918e2d52",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

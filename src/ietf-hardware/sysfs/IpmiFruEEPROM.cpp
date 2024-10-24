@@ -11,6 +11,7 @@
 #include <fmt/format.h>
 #include <numeric>
 #include "IpmiFruEEPROM.h"
+#include <spdlog/spdlog.h>
 #include "utils/io.h"
 
 namespace {
@@ -144,13 +145,19 @@ struct WithPadding_directive : boost::spirit::x3::unary_parser<Subject, WithPadd
         const auto saveAreaLength = [](auto& ctx) { get<_areaLength>(ctx).get() = 8 * _attr(ctx); };
 
         const auto padding = [](auto& ctx) {
-            const auto areaLength = get<_areaLength>(ctx).get();
+            auto& areaLength = get<_areaLength>(ctx).get();
             const auto originalBegin = get<SavePositionTag>(ctx).get();
             const size_t bytesReadTotal = std::distance(originalBegin, _where(ctx).begin());
 
             _pass(ctx) = bytesReadTotal < areaLength /* we must read one less than areaLength, checksum is ahead and counts towards the area length */;
 
+            // There is a bug at least in some FRU EEPROMs where the product area length is not correctly set, it says it is 80 bytes long but it is actually 88 bytes long
             // bytesReadTotal - 1 because we don't want to count the first suspected padding byte
+            if (bytesReadTotal - 1 >= areaLength && areaLength == 80) {
+                areaLength = 88;
+                spdlog::get("hardware")->warn("IPMI FRU EEPROM: padding overflow: ate {} bytes, total expected size = 80. Trying to correct to 88 bytes.", bytesReadTotal - 1);
+            }
+
             if (bytesReadTotal - 1 >= areaLength) {
                 throw std::runtime_error{
                     fmt::format("IPMI FRU EEPROM: padding overflow: ate {} bytes, total expected size = {}",

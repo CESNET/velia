@@ -149,6 +149,41 @@ TEST_CASE("IPMI FRU EEPROM reader")
                 },
             };
         }
+        DOCTEST_SUBCASE("Wrong product area length")
+        {
+            DOCTEST_SUBCASE("1")
+            {
+                eepromFile = "SDN-ID210512_eeprom-2-0050_wrong_prodarea_len.bin";
+                expected = FRUInformationStorage{
+                    .header = CommonHeader(0, 0, 0, 1, 12),
+                    .productInfo = ProductInfo{
+                        .manufacturer = "3Y POWER",
+                        .name = "URP1X151AM",
+                        .partNumber = "YM-2151E",
+                        .version = "B01R       ",
+                        .serialNumber = "SA110T292044002126 ",
+                        .assetTag = "",
+                        .fruFileId = "P2J700A04",
+                        .custom = {"A11"},
+                    }};
+            }
+            DOCTEST_SUBCASE("2")
+            {
+                eepromFile = "SDN-ID210512_eeprom-2-0051_wrong_prodarea_len.bin";
+                expected = FRUInformationStorage{
+                    .header = CommonHeader(0, 0, 0, 1, 12),
+                    .productInfo = ProductInfo{
+                        .manufacturer = "3Y POWER",
+                        .name = "URP1X151AM",
+                        .partNumber = "YM-2151E",
+                        .version = "B01R       ",
+                        .serialNumber = "SA110T292044002125 ",
+                        .assetTag = "",
+                        .fruFileId = "P2J700A04",
+                        .custom = {"A11"},
+                    }};
+            }
+        }
 
         REQUIRE(ipmiFruEeprom(testsDir / eepromFile) == expected);
     }
@@ -159,15 +194,9 @@ TEST_CASE("IPMI FRU EEPROM reader")
 
         DOCTEST_SUBCASE("Wrong product area length")
         {
-            DOCTEST_SUBCASE("1")
-            {
-                eepromFile = "SDN-ID210512_eeprom-2-0050_wrong_prodarea_len.bin";
-            }
-            DOCTEST_SUBCASE("2")
-            {
-                eepromFile = "SDN-ID210512_eeprom-2-0051_wrong_prodarea_len.bin";
-            }
-            exception = "IPMI FRU EEPROM: padding overflow: ate 83 bytes, total expected size = 80";
+            // our hack doesn't apply because the size is given as an "unexpected" number
+            eepromFile = "very_wrong_prodarea_len.bin";
+            exception = "IPMI FRU EEPROM: padding overflow: ate 83 bytes, total expected size = 72";
         }
         DOCTEST_SUBCASE("Wrong header checksum")
         {

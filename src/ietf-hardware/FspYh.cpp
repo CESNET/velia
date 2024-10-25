@@ -55,17 +55,17 @@ bool TransientI2C::isPresent() const
 
 void TransientI2C::bind() const
 {
-    spdlog::get("hardware")->info("Registering {} at I2C bus {} address {:#02x}", m_driver, m_bus, m_address);
+    spdlog::get("hardware")->info("Registering {} at I2C bus {} address {:#04x}", m_driver, m_bus, m_address);
     fmt::output_file(
         fmt::format("/sys/bus/i2c/devices/i2c-{}/new_device", m_bus), fmt::file::WRONLY)
-        .print("{} {:#02x}", m_driver, m_address);
+        .print("{} {:#04x}", m_driver, m_address);
 }
 void TransientI2C::unbind() const
 {
-    spdlog::get("hardware")->info("Deregistering {} from I2C bus {} address {:#02x}", m_driver, m_bus, m_address);
+    spdlog::get("hardware")->info("Deregistering {} from I2C bus {} address {:#04x}", m_driver, m_bus, m_address);
     fmt::output_file(
         fmt::format("/sys/bus/i2c/devices/i2c-{}/delete_device", m_bus), fmt::file::WRONLY)
-        .print("{:#02x}", m_address);
+        .print("{:#04x}", m_address);
 }
 
 std::filesystem::path TransientI2C::sysfsEntry() const

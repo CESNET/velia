@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
             auto bus = parseAddress(args["<i2c_bus>"].asString(), "an I2C bus number", 0, 255);
             auto address = parseAddress(args["<i2c_address>"].asString(), "an I2C device address", 0x08, 0x77);
             eepromData = velia::ietf_hardware::sysfs::ipmiFruEeprom(std::filesystem::path{"/sys"}, bus, address);
-            fmt::print("IPMI FRU EEPROM at I2C bus {}, device {:#02x}:\n", bus, address);
+            fmt::print("IPMI FRU EEPROM at I2C bus {}, device {:#04x}:\n", bus, address);
         }
 
         const auto& pi = eepromData.productInfo;

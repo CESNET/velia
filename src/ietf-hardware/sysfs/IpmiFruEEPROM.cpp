@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <fmt/format.h>
 #include <numeric>
+#include <spdlog/spdlog.h>
 #include "IpmiFruEEPROM.h"
 #include "utils/io.h"
 
@@ -310,8 +311,20 @@ namespace velia::ietf_hardware::sysfs {
 
 FRUInformationStorage ipmiFruEeprom(const std::filesystem::path& eepromPath)
 {
-    const auto data = velia::utils::readFileToBytes(eepromPath);
-    return parse(data.begin(), data.end());
+    auto data = velia::utils::readFileToBytes(eepromPath);
+    try {
+        return parse(data.begin(), data.end());
+    } catch (std::runtime_error& e) {
+        constexpr auto IDX_CHASSISINFO_LENGTH = 0x09;
+        constexpr auto IDX_CHASSISINFO_CSUM = 0x5f;
+        if (data.size() == 256 && data[IDX_CHASSISINFO_LENGTH] == 0x0a) {
+            spdlog::get("hardware")->warn("IPMI FRU EEPROM parsing error: {}, trying to work around", e.what());
+            data[IDX_CHASSISINFO_LENGTH] += 1;
+            data[IDX_CHASSISINFO_CSUM] -= 1;
+            return parse(data.begin(), data.end());
+        }
+        throw;
+    }
 }
 
 FRUInformationStorage ipmiFruEeprom(const std::filesystem::path& sysfsPrefix, const uint8_t bus, const uint8_t address)

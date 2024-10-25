@@ -201,7 +201,7 @@ TEST_CASE("IPMI FRU EEPROM reader")
         DOCTEST_SUBCASE("Wrong header checksum")
         {
             eepromFile = "wrong_header_checksum.bin";
-            exception = "IPMI FRU EEPROM: failed to parse Common Header";
+            exception = "checksum error: bytes sum to 0x01";
         }
         DOCTEST_SUBCASE("format is not 0x01, correct checksum")
         {

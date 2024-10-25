@@ -243,7 +243,7 @@ struct StringField : x3::parser<StringField> {
         } else {
             auto typeByte = static_cast<std::underlying_type<Type>::type>(type);
             throw std::runtime_error{
-                fmt::format("IPMI FRU EEPROM: type/length byte {:#02x} (type code {:#02b}) not implemented",
+                fmt::format("IPMI FRU EEPROM: type/length byte {:#04x} (type code {:#04b}) not implemented",
                             uint32_t{(typeByte << 6) | length},
                             uint32_t{typeByte})};
         }

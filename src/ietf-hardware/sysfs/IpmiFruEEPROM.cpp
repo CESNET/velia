@@ -158,7 +158,7 @@ struct WithPadding_directive : boost::spirit::x3::unary_parser<Subject, WithPadd
             // bytesReadTotal - 1 because we don't want to count the first suspected padding byte
             if (bytesReadTotal - 1 >= areaLength) {
                 throw std::runtime_error{
-                    fmt::format("IPMI FRU EEPROM: padding overflow: ate {} bytes, total expected size = {}",
+                    fmt::format("padding overflow: ate {} bytes, total expected size = {}",
                                 bytesReadTotal - 1,
                                 areaLength)};
             }
@@ -243,7 +243,7 @@ struct StringField : x3::parser<StringField> {
         } else {
             auto typeByte = static_cast<std::underlying_type<Type>::type>(type);
             throw std::runtime_error{
-                fmt::format("IPMI FRU EEPROM: type/length byte {:#04x} (type code {:#04b}) not implemented",
+                fmt::format("type/length byte {:#04x} (type code {:#04b}) not implemented",
                             uint32_t{(typeByte << 6) | length},
                             uint32_t{typeByte})};
         }
@@ -295,7 +295,7 @@ FRUInformationStorage parse(std::vector<uint8_t>::const_iterator begin, std::vec
     FRUInformationStorage fruInfo;
     auto headerParser = x3::parse(begin, end, CommonHeaderParser, fruInfo.header);
     if (!headerParser) {
-        throw std::runtime_error{"IPMI FRU EEPROM: failed to parse Common Header"};
+        throw std::runtime_error{"failed to parse Common Header"};
     }
 
     begin = beginCopy;
@@ -304,7 +304,7 @@ FRUInformationStorage parse(std::vector<uint8_t>::const_iterator begin, std::vec
     const auto productInfoAreaGrammar = WithOffset(fruInfo.header.productInfoAreaOfs * 8)[ProductInfoAreaParser];
     auto productInfoArea = x3::parse(begin, end, productInfoAreaGrammar, fruInfo.productInfo);
     if (!productInfoArea) {
-        throw std::runtime_error{"IPMI FRU EEPROM: failed to parse Product Info Area"};
+        throw std::runtime_error{"failed to parse Product Info Area"};
     }
 
     return fruInfo;

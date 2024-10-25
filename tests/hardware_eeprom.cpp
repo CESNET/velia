@@ -132,6 +132,23 @@ TEST_CASE("IPMI FRU EEPROM reader")
                     .custom = {"A02"},
                 }};
         }
+        DOCTEST_SUBCASE("YM-2151F.bin")
+        {
+            eepromFile = "YM-2151F.bin";
+            expected = FRUInformationStorage{
+                .header = CommonHeader{0, 0, 0, 1, 11},
+                .productInfo = ProductInfo{
+                    .manufacturer = "3Y POWER",
+                    .name = "URP1X151DM",
+                    .partNumber = "YM-2151F",
+                    .version = "BR  ",
+                    .serialNumber = "SB090S512343000017",
+                    .assetTag = "",
+                    .fruFileId = "P20000A00",
+                    .custom = {"B09"},
+                },
+            };
+        }
 
         REQUIRE(ipmiFruEeprom(testsDir / eepromFile) == expected);
     }

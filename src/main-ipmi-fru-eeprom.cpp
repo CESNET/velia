@@ -16,6 +16,7 @@ static const char usage[] =
 
 Usage:
   velia-ipmi-fru-eeprom <i2c_bus> <i2c_address>
+  velia-ipmi-fru-eeprom <file>
   velia-ipmi-fru-eeprom (-h | --help)
   velia-ipmi-fru-eeprom --version
 
@@ -33,26 +34,31 @@ int main(int argc, char* argv[])
     auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "velia-ipmi-fru-eeprom" VELIA_VERSION, true);
 
     try {
-        auto parseAddress = [](const std::string& input, const std::string& thing, const uint8_t min, const uint8_t max) -> uint8_t {
-            namespace x3 = boost::spirit::x3;
-            const auto num = x3::rule<struct _r, int>{} = (x3::lit("0x") >> x3::hex) | x3::int_;
-            auto with_valid_range = [=](auto& ctx) {
-                x3::_pass(ctx) = x3::_attr(ctx) <= max && x3::_attr(ctx) >= min;
+        velia::ietf_hardware::sysfs::FRUInformationStorage eepromData;
+        if (args.contains("<file>")) {
+            eepromData = velia::ietf_hardware::sysfs::ipmiFruEeprom(std::filesystem::path{args["<file>"].asString()});
+        } else {
+            auto parseAddress = [](const std::string& input, const std::string& thing, const uint8_t min, const uint8_t max) -> uint8_t {
+                namespace x3 = boost::spirit::x3;
+                const auto num = x3::rule<struct _r, int>{} = (x3::lit("0x") >> x3::hex) | x3::int_;
+                auto with_valid_range = [=](auto& ctx) {
+                    x3::_pass(ctx) = x3::_attr(ctx) <= max && x3::_attr(ctx) >= min;
+                };
+                unsigned res; // this *must* be big enough to store the full range of X3's int_ and hex parsers
+                if (!x3::parse(begin(input), end(input), num[with_valid_range], res)) {
+                    throw std::runtime_error{
+                        fmt::format("Cannot parse \"{}\" as {}: expected a decimal or hex number between {} and {}",
+                                    input, thing, min, max)};
+                }
+                return res;
             };
-            unsigned res; // this *must* be big enough to store the full range of X3's int_ and hex parsers
-            if (!x3::parse(begin(input), end(input), num[with_valid_range], res)) {
-                throw std::runtime_error{
-                    fmt::format("Cannot parse \"{}\" as {}: expected a decimal or hex number between {} and {}",
-                                input, thing, min, max)};
-            }
-            return res;
-        };
 
-        auto bus = parseAddress(args["<i2c_bus>"].asString(), "an I2C bus number", 0, 255);
-        auto address = parseAddress(args["<i2c_address>"].asString(), "an I2C device address", 0x08, 0x77);
-        const auto eepromData = velia::ietf_hardware::sysfs::ipmiFruEeprom(std::filesystem::path{"/sys"}, bus, address);
+            auto bus = parseAddress(args["<i2c_bus>"].asString(), "an I2C bus number", 0, 255);
+            auto address = parseAddress(args["<i2c_address>"].asString(), "an I2C device address", 0x08, 0x77);
+            eepromData = velia::ietf_hardware::sysfs::ipmiFruEeprom(std::filesystem::path{"/sys"}, bus, address);
+            fmt::print("IPMI FRU EEPROM at I2C bus {}, device {:#02x}:\n", bus, address);
+        }
 
-        fmt::print("IPMI FRU EEPROM at I2C bus {}, device {:#02x}:\n", bus, address);
         const auto& pi = eepromData.productInfo;
         fmt::print("Manufacturer: {}\nProduct name: {}\nP/N: {}\nVersion: {}\nS/N: {}\nAsset tag:{}\nFRU file ID: {}\n",
                 pi.manufacturer, pi.name, pi.partNumber, pi.version, pi.serialNumber, pi.assetTag, pi.fruFileId);

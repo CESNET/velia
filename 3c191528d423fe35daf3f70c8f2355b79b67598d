@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "015145ba_86c881f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-10-25T17:43:12Z",
+      "side": 1,
+      "message": "I was not a big fan of changing the parser like this, so I was thinking that simply changing the input might be cleaner. That way, the parser doesn\u0027t have to \"know\" that some very specific input that\u0027s broken is actually something that we want to parse.\n\nI have to fix the checksum as well, but still, I think that it\u0027s \"nicer\":\n\n https://gerrit.cesnet.cz/c/CzechLight/velia/+/7911",
+      "revId": "3c191528d423fe35daf3f70c8f2355b79b67598d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

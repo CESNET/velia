@@ -72,7 +72,11 @@ struct WithChecksum_directive : boost::spirit::x3::unary_parser<Subject, WithChe
         }
 
         // bytes that were read + checksum byte must sum to zero
-        return std::accumulate(originalBegin, begin, uint8_t{0}, [](uint8_t acc, uint8_t byte) { return acc + byte; }) == 0;
+        auto checksum = std::accumulate(originalBegin, begin, uint8_t{0}, [](uint8_t acc, uint8_t byte) { return acc + byte; });
+        if (checksum) {
+            throw std::runtime_error{fmt::format("checksum error: bytes sum to {:#04x}", checksum)};
+        }
+        return checksum == 0;
     }
 };
 struct WithChecksum_gen {

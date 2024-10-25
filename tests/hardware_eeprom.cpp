@@ -196,7 +196,7 @@ TEST_CASE("IPMI FRU EEPROM reader")
         {
             // our hack doesn't apply because the size is given as an "unexpected" number
             eepromFile = "very_wrong_prodarea_len.bin";
-            exception = "IPMI FRU EEPROM: padding overflow: ate 83 bytes, total expected size = 72";
+            exception = "padding overflow: ate 83 bytes, total expected size = 72";
         }
         DOCTEST_SUBCASE("Wrong header checksum")
         {
@@ -206,12 +206,12 @@ TEST_CASE("IPMI FRU EEPROM reader")
         DOCTEST_SUBCASE("format is not 0x01, correct checksum")
         {
             eepromFile = "wrong_header_format.bin";
-            exception = "IPMI FRU EEPROM: failed to parse Common Header";
+            exception = "failed to parse Common Header";
         }
         DOCTEST_SUBCASE("pad is not 0x00, correct checksum")
         {
             eepromFile = "wrong_header_pad.bin";
-            exception = "IPMI FRU EEPROM: failed to parse Common Header";
+            exception = "failed to parse Common Header";
         }
 
         REQUIRE_THROWS_WITH_AS(ipmiFruEeprom(testsDir / eepromFile), exception.c_str(), std::runtime_error);

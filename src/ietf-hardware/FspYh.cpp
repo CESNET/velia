@@ -299,10 +299,10 @@ void FspYhPsu::createPower()
                                                      m_hwmon,
                                                      2,
                                                      Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{11300, 50},
-                                                         .warningLow = OneThreshold<int64_t>{11500, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{12500, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{12700, 50},
+                                                         .criticalLow = OneThreshold<int64_t>{10830, 50},
+                                                         .warningLow = OneThreshold<int64_t>{11400, 50},
+                                                         .warningHigh = OneThreshold<int64_t>{12600, 50},
+                                                         .criticalHigh = OneThreshold<int64_t>{13230, 50},
                                                      }));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-out", m_namePrefix, m_hwmon, 2));
@@ -322,10 +322,10 @@ void FspYhPsu::createPower()
                                                      m_hwmon,
                                                      3,
                                                      Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{4600, 50},
-                                                         .warningLow = OneThreshold<int64_t>{4700, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{5300, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{5400, 50},
+                                                         .criticalLow = OneThreshold<int64_t>{4513, 50},
+                                                         .warningLow = OneThreshold<int64_t>{4750, 50},
+                                                         .warningHigh = OneThreshold<int64_t>{5250, 50},
+                                                         .criticalHigh = OneThreshold<int64_t>{5513, 50},
                                                      }));
 }
 
@@ -367,10 +367,10 @@ void FspYhPdu::createPower()
                                                      m_hwmon,
                                                      1,
                                                      Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{11300, 50},
-                                                         .warningLow = OneThreshold<int64_t>{11500, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{12500, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{12700, 50},
+                                                         .criticalLow = OneThreshold<int64_t>{10830, 50},
+                                                         .warningLow = OneThreshold<int64_t>{11400, 50},
+                                                         .warningHigh = OneThreshold<int64_t>{12600, 50},
+                                                         .criticalHigh = OneThreshold<int64_t>{13230, 50},
                                                      }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-12V", m_namePrefix, m_hwmon, 1));
@@ -410,10 +410,10 @@ void FspYhPdu::createPower()
                                                      m_hwmon,
                                                      2,
                                                      Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{4600, 50},
-                                                         .warningLow = OneThreshold<int64_t>{4700, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{5300, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{5400, 50},
+                                                         .criticalLow = OneThreshold<int64_t>{4513, 50},
+                                                         .warningLow = OneThreshold<int64_t>{4750, 50},
+                                                         .warningHigh = OneThreshold<int64_t>{5250, 50},
+                                                         .criticalHigh = OneThreshold<int64_t>{5513, 50},
                                                      }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-5V", m_namePrefix, m_hwmon, 2));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-5V", m_namePrefix, m_hwmon, 2));
@@ -423,10 +423,10 @@ void FspYhPdu::createPower()
                                                      m_hwmon,
                                                      3,
                                                      Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{3100, 25},
-                                                         .warningLow = OneThreshold<int64_t>{3200, 25},
-                                                         .warningHigh = OneThreshold<int64_t>{3400, 25},
-                                                         .criticalHigh = OneThreshold<int64_t>{3500, 25},
+                                                         .criticalLow = OneThreshold<int64_t>{2978, 25},
+                                                         .warningLow = OneThreshold<int64_t>{3135, 25},
+                                                         .warningHigh = OneThreshold<int64_t>{3465, 25},
+                                                         .criticalHigh = OneThreshold<int64_t>{3639, 25},
                                                      }));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-3V3", m_namePrefix, m_hwmon, 3));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-3V3", m_namePrefix, m_hwmon, 3));

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77e25224_19f3b110",
+        "filename": "src/ietf-hardware/FspYh.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-11-04T08:41:11Z",
+      "side": 1,
+      "message": "What about writing these numbers as follows:\n\n  constexpr auto VOLTAGE_TOLERANCE_FACTOR \u003d 0.05; // from standard X\n  constexpr auto MEASUREMENTS_TOLERANCE_FACTOR \u003d 0.05; // from standard Y\n\n  12 * (1 - VOLTAGE_TOLERANCE_FACTOR) * (1 - MEASUREMENT_TOLERANCE_FACTOR)\n  12 * (1 - VOLTAGE_TOLERANCE_FACTOR)\n  12 * (1 + VOLTAGE_TOLERANCE_FACTOR)\n  12 * (1 - VOLTAGE_TOLERANCE_FACTOR) * (1 + MEASUREMENT_TOLERANCE_FACTOR)\n\nOf course, this is repeated code at every voltage definition so maybe a helper function might help here, but that might be too much.\n\nThis way I will see the at the first glance that these numbers are not arbitrary (without too much git blaming and reading logs).",
+      "range": {
+        "startLine": 302,
+        "startChar": 94,
+        "endLine": 305,
+        "endChar": 100
+      },
+      "revId": "182c928153111b4c7e3f99ffda187825e34dfd60",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

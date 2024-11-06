@@ -1,2 +1,4 @@
-"\tResource\tSeverity\tDetail\tLast raised\tStatus"
-"⏸\tcla-sdn-inline.service\tcritical\tsystemd unit state: (activating, auto-restart-queued)\t2024-10-16T13:44:50.866721368+00:00\tcleared"
+"\tResource\tSeverity\tDetail\tTimestamp\tStatus"
+"⏸\tcla-sdn-inline.service\tcleared\tsystemd unit state: (active, running)\t2024-10-16T13:44:33.123368627+00:00\tcleared"
+" \t\tcritical\tsystemd unit state: (activating, auto-restart-queued)\t2024-10-16T13:44:32.123721368+00:00\t"
+" \t\tcritical\tsystemd unit state: (inactive, dead)\t2024-10-16T13:44:31.123368627+00:00\t"

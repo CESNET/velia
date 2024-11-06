@@ -1041,7 +1041,24 @@
           "last-raised": "2024-10-16T15:44:51.860986472+00:00",
           "last-changed": "2024-10-16T15:44:51.860986472+00:00",
           "perceived-severity": "critical",
-          "alarm-text": "Sensor value crossed low threshold (0 < 11300)."
+          "alarm-text": "Sensor value crossed low threshold (0 < 11300).",
+          "status-change": [
+            {
+              "time": "2024-10-16T15:44:51.860986472+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 11300)."
+            },
+            {
+              "time": "2024-10-16T15:42:11.123456789+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2024-10-16T15:41:51.987654321+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 11300)."
+            }
+          ]
         },
         {
           "resource": "/ietf-hardware:hardware/component[name='ne:psu2:voltage-5Vsb']",
@@ -1052,7 +1069,14 @@
           "last-raised": "2024-10-16T15:43:29.681984164+00:00",
           "last-changed": "2024-10-16T15:43:29.681984164+00:00",
           "perceived-severity": "critical",
-          "alarm-text": "Sensor value crossed low threshold (0 < 4600)."
+          "alarm-text": "Sensor value crossed low threshold (0 < 4600).",
+          "status-change": [
+            {
+              "time": "2024-10-16T15:43:29.681984164+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 4600)."
+            }
+          ]
         },
         {
           "resource": "/ietf-hardware:hardware/component[name='ne:psu2:voltage-in']",
@@ -1063,7 +1087,14 @@
           "last-raised": "1980-01-01T00:00:11.951295922+00:00",
           "last-changed": "1980-01-01T00:00:11.951295922+00:00",
           "perceived-severity": "critical",
-          "alarm-text": "Sensor value crossed low threshold (0 < 90000)."
+          "alarm-text": "Sensor value crossed low threshold (0 < 90000).",
+          "status-change": [
+            {
+              "time": "1980-01-01T00:00:11.951295922+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 90000)."
+            }
+          ]
         },
         {
           "resource": "/ietf-hardware:hardware/component[name='ne:psu2:voltage-12V']",
@@ -1074,7 +1105,29 @@
           "last-raised": "2024-10-16T15:44:42.659951986+00:00",
           "last-changed": "2024-10-16T15:52:56.916417975+00:00",
           "perceived-severity": "critical",
-          "alarm-text": "Sensor value is within normal parameters."
+          "alarm-text": "Sensor value is within normal parameters.",
+          "status-change": [
+            {
+              "time": "2024-10-16T15:52:56.916417975+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2024-10-16T15:44:42.659951986+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (0 > 11300)."
+            },
+            {
+              "time": "2024-10-16T15:44:41.123951986+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2024-10-16T15:44:40.987951986+00:00",
+              "perceived-severity": "warning",
+              "alarm-text": "Sensor value crossed high threshold (11500 > 11300)."
+            }
+          ]
         },
         {
           "resource": "/ietf-hardware:hardware/component[name='ne:psu2:voltage-5Vsb']",
@@ -1085,7 +1138,14 @@
           "last-raised": "2024-10-16T15:46:12.835583822+00:00",
           "last-changed": "2024-10-16T15:46:12.835583822+00:00",
           "perceived-severity": "critical",
-          "alarm-text": "Sensor value crossed high threshold (53248000 > 5400)."
+          "alarm-text": "Sensor value crossed high threshold (53248000 > 5400).",
+          "status-change": [
+            {
+              "time": "2024-10-16T15:46:12.835583822+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (53248000 > 5400)."
+            }
+          ]
         },
         {
           "resource": "/ietf-hardware:hardware/component[name='ne:psu1:voltage-5Vsb']",
@@ -1096,7 +1156,14 @@
           "last-raised": "2024-10-16T15:53:17.455473252+00:00",
           "last-changed": "2024-10-16T15:53:17.455473252+00:00",
           "perceived-severity": "warning",
-          "alarm-text": "Sensor value crossed high threshold (11988 > 5400)."
+          "alarm-text": "Sensor value crossed high threshold (11988 > 5400).",
+          "status-change": [
+            {
+              "time": "2024-10-16T15:53:17.455473252+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (11988 > 5400)."
+            }
+          ]
         },
         {
           "resource": "cla-sdn-inline.service",
@@ -1107,7 +1174,24 @@
           "last-raised": "2024-10-16T13:44:50.866721368+00:00",
           "last-changed": "2024-10-16T13:44:51.892368627+00:00",
           "perceived-severity": "critical",
-          "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+          "alarm-text": "systemd unit state: (activating, auto-restart-queued)",
+          "status-change": [
+            {
+              "time": "2024-10-16T13:44:33.123368627+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (active, running)"
+            },
+            {
+              "time": "2024-10-16T13:44:32.123721368+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2024-10-16T13:44:31.123368627+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (inactive, dead)"
+            }
+          ]
         },
         {
           "resource": "/ietf-hardware:hardware/component[name='ne:psu1:voltage-12V']",
@@ -1118,7 +1202,19 @@
           "last-raised": "2024-10-16T15:23:43.628416544+00:00",
           "last-changed": "2024-10-16T15:23:50.162103817+00:00",
           "perceived-severity": "critical",
-          "alarm-text": "Sensor value is within normal parameters."
+          "alarm-text": "Sensor value is within normal parameters.",
+          "status-change": [
+            {
+              "time": "2024-10-16T15:23:50.162103817+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2024-10-16T15:23:43.628416544+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 11300)."
+            }
+          ]
         }
       ]
     },

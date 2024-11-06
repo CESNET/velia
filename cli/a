@@ -1,0 +1,17 @@
+	Resource	Severity	Detail	Timestamp	Status
+[31;1m⏷[0m	[31;1mne:psu2:voltage-12V[0m	[31;1mcritical[0m	[31;1mSensor value crossed low threshold (0 < 11300).[0m	[31;1m2024-10-16T15:44:51.860986472+00:00[0m	[31;1mactive[0m
+ 		cleared	Sensor value is within normal parameters.	2024-10-16T15:42:11.123456789+00:00	
+ 		critical	Sensor value crossed low threshold (0 < 11300).	2024-10-16T15:41:51.987654321+00:00	
+[31;1m⏷[0m	[31;1mne:psu2:voltage-5Vsb[0m	[31;1mcritical[0m	[31;1mSensor value crossed low threshold (0 < 4600).[0m	[31;1m2024-10-16T15:43:29.681984164+00:00[0m	[31;1mactive[0m
+[31;1m⏷[0m	[31;1mne:psu2:voltage-in[0m	[31;1mcritical[0m	[31;1mSensor value crossed low threshold (0 < 90000).[0m	[31;1m1980-01-01T00:00:11.951295922+00:00[0m	[31;1mactive[0m
+[31;1m⏶[0m	[31;1mne:psu2:voltage-5Vsb[0m	[31;1mcritical[0m	[31;1mSensor value crossed high threshold (53248000 > 5400).[0m	[31;1m2024-10-16T15:46:12.835583822+00:00[0m	[31;1mactive[0m
+[33;1m⏶[0m	[33;1mne:psu1:voltage-5Vsb[0m	[33;1mcritical[0m	[33;1mSensor value crossed high threshold (11988 > 5400).[0m	[33;1m2024-10-16T15:53:17.455473252+00:00[0m	[33;1mactive[0m
+⏶	ne:psu2:voltage-12V	cleared	Sensor value is within normal parameters.	2024-10-16T15:52:56.916417975+00:00	cleared
+ 		critical	Sensor value crossed high threshold (0 > 11300).	2024-10-16T15:44:42.659951986+00:00	
+ 		cleared	Sensor value is within normal parameters.	2024-10-16T15:44:41.123951986+00:00	
+ 		warning	Sensor value crossed high threshold (11500 > 11300).	2024-10-16T15:44:40.987951986+00:00	
+⏸	cla-sdn-inline.service	cleared	systemd unit state: (active, running)	2024-10-16T13:44:33.123368627+00:00	cleared
+ 		critical	systemd unit state: (activating, auto-restart-queued)	2024-10-16T13:44:32.123721368+00:00	
+ 		critical	systemd unit state: (inactive, dead)	2024-10-16T13:44:31.123368627+00:00	
+⏷	ne:psu1:voltage-12V	cleared	Sensor value is within normal parameters.	2024-10-16T15:23:50.162103817+00:00	cleared
+ 		critical	Sensor value crossed low threshold (0 < 11300).	2024-10-16T15:23:43.628416544+00:00	

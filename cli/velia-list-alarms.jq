@@ -35,10 +35,12 @@ def formatAlarmType($type;$qualifier):
     end;
 
 def formatIsCleared($isCleared):
-    if $isCleared then
+    if $isCleared == true then
         "cleared"
-    else
+    elif $isCleared == false then
         "active"
+    else
+        ""
     end;
 
 def filterCleared($config):
@@ -67,24 +69,39 @@ def filterTimestamp($config):
 def sortBySeverity:
     . | sort_by(.["is-cleared"] != (false, true), .["perceived-severity"] != ("critical", "major", "minor", "warning", "indeterminate", "cleared"));
 
+def formatline($alarmTypeId; $alarmTypeQualifier; $resource; $cleared):
+    .
+    | [formatAlarmType($alarmTypeId; $alarmTypeQualifier),
+         ($resource | formatResource),
+         .["perceived-severity"],
+         .["alarm-text"],
+         .["time"],
+          formatIsCleared($cleared)
+        ];
+
+def pop:
+    .
+    | length as $len
+    | .[1:$len];
+
 def main:
-  (["", "Resource", "Severity", "Detail", "Last raised", "Status"]),
+  (["", "Resource", "Severity", "Detail", "Timestamp", "Status"]),
   ( .
     | if . == null then halt else . end # guard against null object (no alarms)
     | filterCleared($config)
     | filterTimestamp($config)
     | sortBySeverity
     | .[]
-    | .["perceived-severity"] as $severity
+    | .["alarm-type-id"] as $alarmTypeId
+    | .["alarm-type-qualifier"] as $alarmTypeQualifier
+    | .["resource"] as $resource
     | .["is-cleared"] as $cleared
-    | [formatAlarmType(.["alarm-type-id"]; .["alarm-type-qualifier"]),
-       (.["resource"] | formatResource),
-       .["perceived-severity"],
-       .["alarm-text"],
-       .["last-raised"],
-       formatIsCleared(.["is-cleared"])
-      ]
-    | colorize($severity; $cleared)
+    | .["perceived-severity"] as $severity
+    | .["status-change"]
+    | (
+        (. | first | formatline($alarmTypeId; $alarmTypeQualifier; $resource; $cleared) | colorize($severity; $cleared)),
+        (. | pop | .[]? | formatline(""; ""; ""; ""))
+    )
   ) | @tsv;
 
 .["ietf-alarms:alarms"]?["alarm-list"]?["alarm"]? | main

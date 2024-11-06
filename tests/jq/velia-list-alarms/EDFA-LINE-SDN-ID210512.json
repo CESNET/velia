@@ -1095,7 +1095,7 @@
           "is-cleared": false,
           "last-raised": "2024-10-16T15:53:17.455473252+00:00",
           "last-changed": "2024-10-16T15:53:17.455473252+00:00",
-          "perceived-severity": "critical",
+          "perceived-severity": "warning",
           "alarm-text": "Sensor value crossed high threshold (11988 > 5400)."
         },
         {

@@ -12,6 +12,8 @@ Options:
  --active, -a               List only active alarms.
  --since DATE, -s=DATE      List alarms last raised after the given date. DATE is ISO 8601 string.
  --until DATE, -u=DATE      List alarms last raised before the given date. DATE is ISO 8601 string.
+ --history-count COUNT, -n=COUNT
+                            Limit the number of history entries to COUNT. Must be at least 1.
 EOF
     exit 1
 }
@@ -19,8 +21,8 @@ EOF
 CONFIG="{}"
 
 OPTS=$(getopt -q \
-    --options cas:u: \
-    --longoptions 'cleared,active,since:,until:' \
+    --options cans:u: \
+    --longoptions 'cleared,active,since:,until:,no-history' \
     -n list-alarms -- $@)
 [ $? -eq 0 ] || usage
 
@@ -34,6 +36,15 @@ while true; do
             ;;
         -a | --active)
             CONFIG=$(jq '.cleared = false' <<< "${CONFIG}")
+            shift
+            ;;
+        -n | --history-count)
+            if [ "$2" -lt 1 ]; then
+                echo "History count must be at least 1."
+                exit 1
+            fi
+
+            CONFIG=$(jq ".historyCount = \"$2\"" <<< "${CONFIG}")
             shift
             ;;
         -s | --since)

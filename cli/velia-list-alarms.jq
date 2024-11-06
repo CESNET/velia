@@ -50,6 +50,13 @@ def filterCleared($config):
     .
   end;
 
+def historyCount($config; $default):
+  if $config | has("history") then
+    $config.history
+  else
+    $default
+  end;
+
 def parseTimestamp:
   . | strptime("%Y-%m-%dT%H:%M:%S%Z");
 
@@ -100,7 +107,7 @@ def main:
     | .["status-changes"]
     | (
         (. | first | formatline($alarmTypeId; $alarmTypeQualifier; $resource; $cleared) | colorize($severity; $cleared)),
-        (. | pop | .[] | formatline(""; ""; ""; ""))
+        (limit(historyCount($config; . | length) - 1; (. | pop | .[] | formatline(""; ""; ""; ""))))
     )
   ) | @tsv;
 

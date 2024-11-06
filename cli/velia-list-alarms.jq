@@ -65,7 +65,7 @@ def filterTimestamp($config):
 
 # https://stackoverflow.com/questions/76476166/jq-sorting-by-value
 def sortBySeverity:
-    . | sort_by(.["perceived-severity"] != ("critical", "major", "minor", "warning", "indeterminate", "cleared"));
+    . | sort_by(.["is-cleared"] != (false, true), .["perceived-severity"] != ("critical", "major", "minor", "warning", "indeterminate", "cleared"));
 
 def main:
   (["", "Resource", "Severity", "Detail", "Last raised", "Status"]),

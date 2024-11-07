@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95da2966_ed177d27",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-11-07T09:33:28Z",
+      "side": 1,
+      "message": "The test data were ",
+      "revId": "98bc404dfa202bf7b26f23706f1a38a25bb85f43",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "326e77e6_d195b50e",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-11-07T09:33:28Z",
+      "side": 1,
+      "message": "the test data are missing from the commit",
+      "revId": "98bc404dfa202bf7b26f23706f1a38a25bb85f43",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

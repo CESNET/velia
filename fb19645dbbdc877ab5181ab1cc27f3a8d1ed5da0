@@ -16,6 +16,24 @@
       "message": "could you please explain how the jq bits work?",
       "revId": "fb19645dbbdc877ab5181ab1cc27f3a8d1ed5da0",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "987e9e0c_7810eaae",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-11-18T14:51:14Z",
+      "side": 0,
+      "message": "I tried to add some comments",
+      "parentUuid": "78354e7f_b1a47fc4",
+      "revId": "fb19645dbbdc877ab5181ab1cc27f3a8d1ed5da0",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

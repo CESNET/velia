@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a89cc10_3ae4f93e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-11-18T15:08:38Z",
+      "side": 1,
+      "message": "apart from that extra file, this looks good to me",
+      "revId": "03c1c22b76bdfeb0c81bf174627bb16a9f5bb63a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "088c03b6_f9f44ee8",
+        "filename": "cli/a",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-11-18T15:08:38Z",
+      "side": 1,
+      "message": "tests/ ?",
+      "revId": "03c1c22b76bdfeb0c81bf174627bb16a9f5bb63a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

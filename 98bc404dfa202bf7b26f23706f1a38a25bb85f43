@@ -33,6 +33,24 @@
       "message": "the test data are missing from the commit",
       "revId": "98bc404dfa202bf7b26f23706f1a38a25bb85f43",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a00eed36_4822f430",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2024-11-18T14:50:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "326e77e6_d195b50e",
+      "revId": "98bc404dfa202bf7b26f23706f1a38a25bb85f43",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

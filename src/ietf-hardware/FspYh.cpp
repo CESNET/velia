@@ -17,6 +17,30 @@
 namespace {
 const auto ALARM_SENSOR_MISSING = "velia-alarms:sensor-missing-alarm";
 const auto ALARM_SENSOR_MISSING_SEVERITY = "critical";
+
+using velia::ietf_hardware::OneThreshold;
+using velia::ietf_hardware::Thresholds;
+template<typename T>
+constexpr auto thresholds_5_percent(const T nominal, const T hysteresis)
+{
+    // assume a 5% allowed tolerance and 5% measurement inaccuracy
+    return Thresholds<T> {
+        .criticalLow = OneThreshold<T>{static_cast<T>(nominal * 0.95 * 0.95), hysteresis},
+        .warningLow = OneThreshold<T>{static_cast<T>(nominal * 0.95), hysteresis},
+        .warningHigh = OneThreshold<T>{static_cast<T>(nominal * 1.05), hysteresis},
+        .criticalHigh = OneThreshold<T>{static_cast<T>(nominal * 1.05 * 1.05), hysteresis},
+    };
+}
+constexpr auto voltage_thresholds(const int64_t nominal, const int64_t hysteresis = 50)
+{
+    return thresholds_5_percent<int64_t>(nominal, hysteresis);
+}
+constexpr Thresholds<int64_t> temperature_thresholds{
+    .criticalLow = std::nullopt,
+    .warningLow = std::nullopt,
+    .warningHigh = OneThreshold<int64_t>{50000, 1000},
+    .criticalHigh = OneThreshold<int64_t>{55000, 1000},
+};
 }
 
 namespace velia::ietf_hardware {
@@ -253,22 +277,12 @@ void FspYhPsu::createPower()
                                                        m_namePrefix,
                                                        m_hwmon,
                                                        1,
-                                                       Thresholds<int64_t>{
-                                                           .criticalLow = std::nullopt,
-                                                           .warningLow = std::nullopt,
-                                                           .warningHigh = OneThreshold<int64_t>{40000, 1000},
-                                                           .criticalHigh = OneThreshold<int64_t>{45000, 1000},
-                                                       }));
+                                                       temperature_thresholds));
     registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-2",
                                                        m_namePrefix,
                                                        m_hwmon,
                                                        2,
-                                                       Thresholds<int64_t>{
-                                                           .criticalLow = std::nullopt,
-                                                           .warningLow = std::nullopt,
-                                                           .warningHigh = OneThreshold<int64_t>{40000, 1000},
-                                                           .criticalHigh = OneThreshold<int64_t>{45000, 1000},
-                                                       }));
+                                                       temperature_thresholds));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 2));
     if (isDcModule) {
@@ -298,12 +312,7 @@ void FspYhPsu::createPower()
                                                      m_namePrefix,
                                                      m_hwmon,
                                                      2,
-                                                     Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{11300, 50},
-                                                         .warningLow = OneThreshold<int64_t>{11500, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{12500, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{12700, 50},
-                                                     }));
+                                                     voltage_thresholds(12'000)));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-in", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-out", m_namePrefix, m_hwmon, 2));
     registerReader(Fans(m_namePrefix + ":fan",
@@ -321,12 +330,7 @@ void FspYhPsu::createPower()
                                                      m_namePrefix,
                                                      m_hwmon,
                                                      3,
-                                                     Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{4600, 50},
-                                                         .warningLow = OneThreshold<int64_t>{4700, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{5300, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{5400, 50},
-                                                     }));
+                                                     voltage_thresholds(5'000)));
 }
 
 std::string FspYhPsu::missingAlarmDescription() const
@@ -366,55 +370,30 @@ void FspYhPdu::createPower()
                                                      m_namePrefix,
                                                      m_hwmon,
                                                      1,
-                                                     Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{11300, 50},
-                                                         .warningLow = OneThreshold<int64_t>{11500, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{12500, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{12700, 50},
-                                                     }));
+                                                     voltage_thresholds(12'000)));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-12V", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-12V", m_namePrefix, m_hwmon, 1));
     registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-1",
                                                        m_namePrefix,
                                                        m_hwmon,
                                                        1,
-                                                       Thresholds<int64_t>{
-                                                           .criticalLow = std::nullopt,
-                                                           .warningLow = std::nullopt,
-                                                           .warningHigh = OneThreshold<int64_t>{40000, 1000},
-                                                           .criticalHigh = OneThreshold<int64_t>{45000, 1000},
-                                                       }));
+                                                       temperature_thresholds));
     registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-2",
                                                        m_namePrefix,
                                                        m_hwmon,
                                                        2,
-                                                       Thresholds<int64_t>{
-                                                           .criticalLow = std::nullopt,
-                                                           .warningLow = std::nullopt,
-                                                           .warningHigh = OneThreshold<int64_t>{40000, 1000},
-                                                           .criticalHigh = OneThreshold<int64_t>{45000, 1000},
-                                                       }));
+                                                       temperature_thresholds));
     registerReader(SysfsValue<SensorType::Temperature>(m_namePrefix + ":temperature-3",
                                                        m_namePrefix,
                                                        m_hwmon,
                                                        3,
-                                                       Thresholds<int64_t>{
-                                                           .criticalLow = std::nullopt,
-                                                           .warningLow = std::nullopt,
-                                                           .warningHigh = OneThreshold<int64_t>{40000, 1000},
-                                                           .criticalHigh = OneThreshold<int64_t>{45000, 1000},
-                                                       }));
+                                                       temperature_thresholds));
 
     registerReader(SysfsValue<SensorType::VoltageDC>(m_namePrefix + ":voltage-5V",
                                                      m_namePrefix,
                                                      m_hwmon,
                                                      2,
-                                                     Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{4600, 50},
-                                                         .warningLow = OneThreshold<int64_t>{4700, 50},
-                                                         .warningHigh = OneThreshold<int64_t>{5300, 50},
-                                                         .criticalHigh = OneThreshold<int64_t>{5400, 50},
-                                                     }));
+                                                     voltage_thresholds(5'000)));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-5V", m_namePrefix, m_hwmon, 2));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-5V", m_namePrefix, m_hwmon, 2));
 
@@ -422,12 +401,7 @@ void FspYhPdu::createPower()
                                                      m_namePrefix,
                                                      m_hwmon,
                                                      3,
-                                                     Thresholds<int64_t>{
-                                                         .criticalLow = OneThreshold<int64_t>{3100, 25},
-                                                         .warningLow = OneThreshold<int64_t>{3200, 25},
-                                                         .warningHigh = OneThreshold<int64_t>{3400, 25},
-                                                         .criticalHigh = OneThreshold<int64_t>{3500, 25},
-                                                     }));
+                                                     voltage_thresholds(3'300)));
     registerReader(SysfsValue<SensorType::Current>(m_namePrefix + ":current-3V3", m_namePrefix, m_hwmon, 3));
     registerReader(SysfsValue<SensorType::Power>(m_namePrefix + ":power-3V3", m_namePrefix, m_hwmon, 3));
 }

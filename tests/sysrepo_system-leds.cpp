@@ -104,7 +104,7 @@ TEST_CASE("Sysrepo reports system LEDs")
         auto rpcInput = client.getContext().newPath("/czechlight-system:leds/uid/state", state);
 
         auto res = client.sendRPC(rpcInput);
-        REQUIRE(res.child() == std::nullopt);
+        REQUIRE(!res);
         REQUIRE(velia::utils::readFileString(fakeSysfsDir / "uid:blue" / "trigger") == expectedTrigger);
         REQUIRE(velia::utils::readFileString(fakeSysfsDir / "uid:blue" / "brightness") == expectedBrightness);
     }

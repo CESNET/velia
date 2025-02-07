@@ -195,7 +195,7 @@ TEST_CASE("Firmware in czechlight-system, RPC")
             raucServer.installBundleBehaviour(installType);
             auto progressExpectations = expectationFactory(installType, installProgressMock, seq1);
             auto res = client.sendRPC(rpcInput);
-            REQUIRE(res.child() == std::nullopt);
+            REQUIRE(!res);
 
             std::this_thread::sleep_for(10ms); // lets wait a while, so the RAUC's callback for operation changed takes place
             REQUIRE(dataFromSysrepo(client, "/czechlight-system:firmware/installation", sysrepo::Datastore::Operational) == expectedInProgress);
@@ -287,19 +287,19 @@ TEST_CASE("Firmware in czechlight-system, RPC")
         auto rpcInput = client.getContext().newPath("/czechlight-system:firmware/firmware-slot[name='A']/set-active-after-reboot");
         {
             REQUIRE_CALL(raucServer, impl_Mark("active", "rootfs.0")).IN_SEQUENCE(seq1);
-            REQUIRE(client.sendRPC(rpcInput).child() == std::nullopt);
+            REQUIRE(!client.sendRPC(rpcInput));
         }
 
         rpcInput = client.getContext().newPath("/czechlight-system:firmware/firmware-slot[name='B']/set-active-after-reboot");
         {
             REQUIRE_CALL(raucServer, impl_Mark("active", "rootfs.1")).IN_SEQUENCE(seq1);
-            REQUIRE(client.sendRPC(rpcInput).child() == std::nullopt);
+            REQUIRE(!client.sendRPC(rpcInput));
         }
 
         rpcInput = client.getContext().newPath("/czechlight-system:firmware/firmware-slot[name='B']/set-unhealthy");
         {
             REQUIRE_CALL(raucServer, impl_Mark("bad", "rootfs.1")).IN_SEQUENCE(seq1);
-            REQUIRE(client.sendRPC(rpcInput).child() == std::nullopt);
+            REQUIRE(!client.sendRPC(rpcInput));
         }
 
         waitForCompletionAndBitMore(seq1);

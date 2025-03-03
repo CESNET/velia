@@ -232,7 +232,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
 
     if (action == NL_ACT_DEL) {
         std::lock_guard<std::mutex> lock(m_mtx);
-        utils::valuesPush(std::vector<utils::YANGPair>{}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, {}, m_srSession, sysrepo::Datastore::Operational);
+        utils::valuesPush(utils::YANGData{}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, {}, m_srSession, sysrepo::Datastore::Operational);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
         std::map<std::string, std::string> values;
         std::vector<std::string> deletePaths;

@@ -36,7 +36,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
             }
         },
         [this](int32_t perc, const std::string& msg) {
-            std::map<std::string, std::string> data = {
+            utils::YANGData data = {
                 {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/update/message", msg},
                 {CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/update/progress", std::to_string(perc)},
             };
@@ -122,14 +122,16 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
     m_srSubscribeRPC->onRPCAction(CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "firmware-slot/set-unhealthy", markSlotAs);
 
     ::sysrepo::OperGetCb cbOper = [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
-        std::map<std::string, std::string> data;
+        velia::utils::YANGData data;
 
         {
             auto lock = updateSlotStatus();
 
-            data.insert(m_slotStatusCache.begin(), m_slotStatusCache.end());
-            data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status"] = m_installStatus;
-            data[CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message"] = m_installMessage;
+            for (const auto& [k, v] : m_slotStatusCache) {
+                data.emplace_back(k, v);
+            }
+            data.emplace_back(CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/status", m_installStatus);
+            data.emplace_back(CZECHLIGHT_SYSTEM_FIRMWARE_MODULE_PREFIX + "installation/message", m_installMessage);
         }
 
         utils::valuesToYang(data, {}, {}, session, parent);

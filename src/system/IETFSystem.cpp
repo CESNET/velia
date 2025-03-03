@@ -126,7 +126,7 @@ void IETFSystem::initStaticProperties(const std::filesystem::path& osRelease)
 
     std::map<std::string, std::string> osReleaseContents = parseKeyValueFile(osRelease);
 
-    std::map<std::string, std::string> opsSystemStateData {
+    utils::YANGData opsSystemStateData {
         {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-name", osReleaseContents.at("NAME")},
         {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-release", osReleaseContents.at("VERSION")},
         {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-version", osReleaseContents.at("VERSION")},
@@ -213,13 +213,18 @@ void IETFSystem::initClock()
 /** @short DNS resolver callbacks */
 void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbusName) {
     sysrepo::OperGetCb dnsOper = [&connection, dbusName] (auto session, auto, auto, auto, auto, auto, auto& parent) {
-        std::map<std::string, std::string> values;
+        utils::YANGData values;
+        std::set<std::string> seen;
 
         /* RFC 7317 specifies that key leaf 'name' contains "An arbitrary name for the DNS server".
            We use the IP address which is unique. If the server is returned multiple times (e.g. once as system-wide and once
            for some specific ifindex, it doesn't matter that it is listed only once. */
         for (const auto& e : getDNSResolvers(connection, dbusName)) {
-            values[IETF_SYSTEM_DNS_PATH + "/server[name='"s + e + "']/udp-and-tcp/address"] = e;
+            if (seen.contains(e)) {
+                continue;
+            }
+            seen.insert(e);
+            values.emplace_back(IETF_SYSTEM_DNS_PATH + "/server[name='"s + e + "']/udp-and-tcp/address", e);
         }
 
         utils::valuesToYang(values, {}, {}, session, parent);

@@ -20,13 +20,15 @@ struct YANGPair {
     YANGPair(std::string xpath, std::string value);
 };
 
-void valuesToYang(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent);
+using YANGData = std::vector<YANGPair>;
+
+void valuesToYang(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent);
 void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent);
 
 void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session);
-void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session);
+void valuesPush(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session);
 void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, sysrepo::Datastore datastore);
-void valuesPush(const std::vector<YANGPair>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, sysrepo::Datastore datastore);
+void valuesPush(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, sysrepo::Datastore datastore);
 
 void initLogsSysrepo();
 void ensureModuleImplemented(::sysrepo::Session session, const std::string& module, const std::string& revision);

@@ -91,20 +91,14 @@ void valuesToYang(const YANGData& values, const std::vector<std::string>& remove
     }
 }
 
-/** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
-void valuesPush(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, sysrepo::Session session, sysrepo::Datastore datastore)
-{
-    ScopedDatastoreSwitch s(session, datastore);
-    valuesPush(values, removePaths, discardPaths, session);
-}
-
 /** @brief Set or remove paths in Sysrepo's current datastore. */
-void valuesPush(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, sysrepo::Session session)
+void valuesPush(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, sysrepo::Session session, sysrepo::Datastore datastore)
 {
     WITH_TIME_MEASUREMENT{};
     if (values.empty() && removePaths.empty() && discardPaths.empty())
         return;
 
+    ScopedDatastoreSwitch s(session, datastore);
     std::optional<libyang::DataNode> edit;
     valuesToYang(values, removePaths, discardPaths, session, edit);
 

@@ -151,7 +151,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
                 for (const auto& [k, v] : hwStateValues) {
                     data.emplace_back(k, v);
                 }
-                utils::valuesPush(data, {}, discards, m_session, ::sysrepo::Datastore::Operational);
+                utils::valuesPush(m_session, data, {}, discards);
             }
 
             /* Publish sideloaded alarms */

@@ -105,7 +105,7 @@ void LED::poll() const
             }
         }
 
-        utils::valuesPush(data, {}, {}, m_srSession, sysrepo::Datastore::Operational);
+        utils::valuesPush(m_srSession, data, {}, {});
 
         std::this_thread::sleep_for(POLL_INTERVAL);
     }

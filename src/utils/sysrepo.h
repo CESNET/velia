@@ -23,7 +23,7 @@ using YANGData = std::vector<YANGPair>;
 
 void valuesToYang(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent);
 
-void valuesPush(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, sysrepo::Datastore datastore);
+void valuesPush(::sysrepo::Session session, const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths);
 
 void initLogsSysrepo();
 void ensureModuleImplemented(::sysrepo::Session session, const std::string& module, const std::string& revision);

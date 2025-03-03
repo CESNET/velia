@@ -132,7 +132,7 @@ void IETFSystem::initStaticProperties(const std::filesystem::path& osRelease)
         {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-version", osReleaseContents.at("VERSION")},
     };
 
-    utils::valuesPush(opsSystemStateData, {}, {}, m_srSession, sysrepo::Datastore::Operational);
+    utils::valuesPush(m_srSession, opsSystemStateData, {}, {});
 }
 
 void IETFSystem::initSystemRestart()

@@ -465,6 +465,7 @@ if(BUILD_TESTING)
             --enable-feature hardware-sensor
             --enable-feature hardware-state
         --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-alarms@2019-09-11.yang
+            --enable-feature alarm-history
             --enable-feature alarm-shelving
             --enable-feature alarm-summary
         --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/velia-alarms@2022-07-12.yang
@@ -506,6 +507,7 @@ if(BUILD_TESTING)
 
     set(fixture_sysrepo-alarms
         --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-alarms@2019-09-11.yang
+            --enable-feature alarm-history
             --enable-feature alarm-shelving
             --enable-feature alarm-summary
         --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/velia-alarms@2022-07-12.yang

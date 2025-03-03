@@ -42,19 +42,6 @@ static void spdlog_sr_log_cb(sr_log_level_t level, const char* message)
 }
 }
 
-namespace {
-std::vector<velia::utils::YANGPair> mapToVector(const std::map<std::string, std::string>& values)
-{
-    std::vector<velia::utils::YANGPair> res;
-    for (const auto& [xpath, value] : values) {
-        res.emplace_back(xpath, value);
-    }
-
-    return res;
-}
-
-}
-
 namespace velia::utils {
 
 /** @short Setup sysrepo log forwarding
@@ -63,11 +50,6 @@ You must call cla::utils::initLogs prior to this function.
 void initLogsSysrepo()
 {
     sr_log_set_cb(spdlog_sr_log_cb);
-}
-
-void valuesToYang(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent)
-{
-    valuesToYang(mapToVector(values), removePaths, discardPaths, std::move(session), parent);
 }
 
 void valuesToYang(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent)
@@ -106,30 +88,6 @@ void valuesToYang(const YANGData& values, const std::vector<std::string>& remove
             parent->insertSibling(*discard);
             parent->newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
         }
-    }
-}
-
-/** @brief Set or remove values in Sysrepo's specified datastore. It changes the datastore and after the data are applied, the original datastore is restored. */
-void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, sysrepo::Datastore datastore)
-{
-    ScopedDatastoreSwitch s(session, datastore);
-    valuesPush(values, removePaths, discardPaths, session);
-}
-
-/** @brief Set or remove paths in Sysrepo's current datastore. */
-void valuesPush(const std::map<std::string, std::string>& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session)
-{
-    WITH_TIME_MEASUREMENT{};
-    if (values.empty() && removePaths.empty() && discardPaths.empty()) return;
-
-    std::optional<libyang::DataNode> edit;
-    valuesToYang(values, removePaths, discardPaths, session, edit);
-
-    if (edit) {
-        session.editBatch(*edit, sysrepo::DefaultOperation::Merge);
-        spdlog::get("main")->trace("valuesPush: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
-        WITH_TIME_MEASUREMENT("valuesPush<map>/applyChanges");
-        session.applyChanges();
     }
 }
 

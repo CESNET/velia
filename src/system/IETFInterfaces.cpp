@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <linux/if_arp.h>
 #include <linux/netdevice.h>
+#include <map>
 #include "IETFInterfaces.h"
 #include "Rtnetlink.h"
 #include "utils/log.h"
@@ -124,9 +125,9 @@ std::string getIPVersion(int addrFamily)
 }
 
 /** @brief Returns YANG structure for ietf-ip:ipv(4|6)/neighbours. Set requestedAddrFamily to required ip version (AF_INET for ipv4 or AF_INET6 for ipv6). */
-std::map<std::string, std::string> collectNeighboursIP(std::shared_ptr<velia::system::Rtnetlink> rtnetlink, int requestedAddrFamily, velia::Log log)
+velia::utils::YANGData collectNeighboursIP(std::shared_ptr<velia::system::Rtnetlink> rtnetlink, int requestedAddrFamily, velia::Log log)
 {
-    std::map<std::string, std::string> values;
+    velia::utils::YANGData values;
 
     for (const auto& [neigh, link] : rtnetlink->getNeighbours()) {
         if (rtnl_neigh_get_state(neigh.get()) == NUD_NOARP) {
@@ -147,7 +148,7 @@ std::map<std::string, std::string> collectNeighboursIP(std::shared_ptr<velia::sy
         auto llAddr = rtnl_neigh_get_lladdr(neigh.get());
         std::array<char, PHYS_ADDR_BUF_SIZE> llAddrBuf {};
         if (auto llAddress = nl_addr2str(llAddr, llAddrBuf.data(), llAddrBuf.size()); llAddress != "none"s) {
-            values[IETF_INTERFACES + "/interface[name='" + linkName + "']/ietf-ip:" + getIPVersion(ipAddrFamily) + "/neighbor[ip='" + ipAddress + "']/link-layer-address"] = llAddress;
+            values.emplace_back(IETF_INTERFACES + "/interface[name='" + linkName + "']/ietf-ip:" + getIPVersion(ipAddrFamily) + "/neighbor[ip='" + ipAddress + "']/link-layer-address", llAddress);
         } else {
             log->warn("Neighbor '{}' on link '{}' returned link layer address 'none'", ipAddress, linkName);
         }
@@ -192,16 +193,16 @@ IETFInterfaces::IETFInterfaces(::sysrepo::Session srSess)
     // TODO: Implement /ietf-routing:routing/interfaces and /ietf-routing:routing/router-id
 
     sysrepo::OperGetCb statsCb = [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
-        std::map<std::string, std::string> values;
+        utils::YANGData values;
         for (const auto& link : m_rtnetlink->getLinks()) {
             const auto yangPrefix = IETF_INTERFACES + "/interface[name='" + rtnl_link_get_name(link.get()) + "']/statistics";
 
-            values[yangPrefix + "/in-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_BYTES));
-            values[yangPrefix + "/out-octets"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_BYTES));
-            values[yangPrefix + "/in-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_DROPPED));
-            values[yangPrefix + "/out-discards"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_DROPPED));
-            values[yangPrefix + "/in-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_ERRORS));
-            values[yangPrefix + "/out-errors"] = std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_ERRORS));
+            values.emplace_back(yangPrefix + "/in-octets", std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_BYTES)));
+            values.emplace_back(yangPrefix + "/out-octets", std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_BYTES)));
+            values.emplace_back(yangPrefix + "/in-discards", std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_DROPPED)));
+            values.emplace_back(yangPrefix + "/out-discards", std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_DROPPED)));
+            values.emplace_back(yangPrefix + "/in-errors", std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_RX_ERRORS)));
+            values.emplace_back(yangPrefix + "/out-errors", std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_ERRORS)));
         }
 
         utils::valuesToYang(values, {}, {}, session, parent);
@@ -234,13 +235,13 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
         std::lock_guard<std::mutex> lock(m_mtx);
         utils::valuesPush(utils::YANGData{}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, {}, m_srSession, sysrepo::Datastore::Operational);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
-        std::map<std::string, std::string> values;
+        utils::YANGData values;
         std::vector<std::string> deletePaths;
 
         auto linkAddr = rtnl_link_get_addr(link);
         std::array<char, PHYS_ADDR_BUF_SIZE> buf;
         if (auto physAddr = nl_addr2str(linkAddr, buf.data(), buf.size()); physAddr != "none"s && nl_addr_get_family(linkAddr) == AF_LLC) { // set physical address if the link has one
-            values[IETF_INTERFACES + "/interface[name='" + name + "']/phys-address"] = physAddr;
+            values.emplace_back(IETF_INTERFACES + "/interface[name='" + name + "']/phys-address", physAddr);
         } else {
             // delete physical address from sysrepo if not provided by rtnetlink
             // Note: During testing I have noticed that my wireless interface loses a physical address. There were several change callbacks invoked
@@ -248,8 +249,10 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
             deletePaths.emplace_back(IETF_INTERFACES + "/interface[name='" + name + "']/phys-address");
         }
 
-        values[IETF_INTERFACES + "/interface[name='" + name + "']/type"] = isBridge(link) ? "iana-if-type:bridge" : arpTypeToString(rtnl_link_get_arptype(link), m_log);
-        values[IETF_INTERFACES + "/interface[name='" + name + "']/oper-status"] = operStatusToString(rtnl_link_get_operstate(link), m_log);
+        values.emplace_back(IETF_INTERFACES + "/interface[name='" + name + "']/type",
+                isBridge(link) ? "iana-if-type:bridge" : arpTypeToString(rtnl_link_get_arptype(link), m_log));
+        values.emplace_back(IETF_INTERFACES + "/interface[name='" + name + "']/oper-status",
+                operStatusToString(rtnl_link_get_operstate(link), m_log));
 
         std::lock_guard<std::mutex> lock(m_mtx);
         utils::valuesPush(values, deletePaths, {}, m_srSession, sysrepo::Datastore::Operational);
@@ -274,14 +277,14 @@ void IETFInterfaces::onAddrUpdate(rtnl_addr* addr, int action)
     std::string ipAddress = binaddrToString(nl_addr_get_binary_addr(nlAddr), addrFamily); // We don't use libnl's nl_addr2str because it appends a prefix length to the string (e.g. 192.168.0.1/24)
     std::string ipVersion = getIPVersion(addrFamily);
 
-    std::map<std::string, std::string> values;
+    utils::YANGData values;
     std::vector<std::string> deletePaths;
     const auto yangPrefix = IETF_INTERFACES + "/interface[name='" + linkName + "']/ietf-ip:" + ipVersion + "/address[ip='" + ipAddress + "']";
 
     if (action == NL_ACT_DEL) {
         deletePaths.emplace_back(yangPrefix);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
-        values[yangPrefix + "/prefix-length"] = std::to_string(rtnl_addr_get_prefixlen(addr));
+        values.emplace_back(yangPrefix + "/prefix-length", std::to_string(rtnl_addr_get_prefixlen(addr)));
     } else {
         m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
     }
@@ -298,7 +301,7 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
      * Unfortunately, this function may be called several times during the "reconstruction" of the routing table.
      */
 
-    std::vector<utils::YANGPair> values;
+    utils::YANGData values;
 
     auto routes = m_rtnetlink->getRoutes();
     auto links = m_rtnetlink->getLinks();

@@ -144,8 +144,15 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             discards.reserve(deletedComponents.size());
             std::copy(deletedComponents.begin(), deletedComponents.end(), std::back_inserter(discards));
 
-            m_log->trace("updating HW state ({} entries)", hwStateValues.size());
-            utils::valuesPush(hwStateValues, {}, discards, m_session, ::sysrepo::Datastore::Operational);
+            {
+                m_log->trace("updating HW state ({} entries)", hwStateValues.size());
+                utils::YANGData data;
+                data.reserve(hwStateValues.size());
+                for (const auto& [k, v] : hwStateValues) {
+                    data.emplace_back(k, v);
+                }
+                utils::valuesPush(data, {}, discards, m_session, ::sysrepo::Datastore::Operational);
+            }
 
             /* Publish sideloaded alarms */
             for (const auto& [alarm, resource, severity, text] : sideLoadedAlarms) {

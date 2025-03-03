@@ -86,7 +86,7 @@ LED::~LED()
 void LED::poll() const
 {
     while (m_thrRunning) {
-        std::map<std::string, std::string> data;
+        velia::utils::YANGData data;
 
         for (const auto& [ledDirectory, maxBrightness] : m_ledsMaxBrightness) {
             const auto deviceName = ledDirectory.filename();
@@ -98,7 +98,8 @@ void LED::poll() const
                 const uint32_t brightness = velia::utils::readFileInt64(ledDirectory / "brightness");
                 auto percent = brightness * 100 / maxBrightness;
 
-                data[CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "led[name='" + std::string(deviceName) + "']/brightness"] = std::to_string(percent);
+                data.emplace_back(CZECHLIGHT_SYSTEM_LEDS_MODULE_PREFIX + "led[name='" + std::string(deviceName) + "']/brightness",
+                        std::to_string(percent));
             } catch (const std::invalid_argument& e) {
                 m_log->warn("Failed reading state of the LED '{}': {}", std::string(deviceName), e.what());
             }

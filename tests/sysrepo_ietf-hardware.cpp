@@ -207,6 +207,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         // second batch of values, sensor data changed, PSU ejected
         REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:psu:child") "/class", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/name", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/parent", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value", Deleted{}},
@@ -236,6 +237,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
                                            {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:psu:child") "/name", "ne:psu:child"},
                                            {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value", "50000"},
@@ -256,6 +258,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         // fourth round. We unplug with a warning
         REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:psu:child") "/class", Deleted{}},
+                                           {COMPONENT("ne:psu:child") "/name", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/parent", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value", Deleted{}},
@@ -438,6 +441,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                                        {COMPONENT("ne:psu") "/state/oper-state", "disabled"},
                                                        {COMPONENT("ne:psu:child") "/class", Deleted{}},
+                                                       {COMPONENT("ne:psu:child") "/name", Deleted{}},
                                                        {COMPONENT("ne:psu:child") "/parent", Deleted{}},
                                                        {COMPONENT("ne:psu:child") "/sensor-data/oper-status", Deleted{}},
                                                        {COMPONENT("ne:psu:child") "/sensor-data/value", Deleted{}},
@@ -458,6 +462,7 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{
                                            {COMPONENT("ne:psu") "/state/oper-state", "enabled"},
                                            {COMPONENT("ne:psu:child") "/class", "iana-hardware:sensor"},
+                                           {COMPONENT("ne:psu:child") "/name", "ne:psu:child"},
                                            {COMPONENT("ne:psu:child") "/parent", "ne:psu"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/oper-status", "ok"},
                                            {COMPONENT("ne:psu:child") "/sensor-data/value", "12000"},

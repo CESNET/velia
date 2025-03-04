@@ -116,6 +116,30 @@
       },
       "revId": "7150a8e37caefdbf6ceeb9d620d36b62104d4caa",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d36b626_6bb858ac",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-04T12:01:57Z",
+      "side": 1,
+      "message": "I *think* that the root cause is that we never explicitly create the list entry in the /ietf-hardware:hardware. Instead, we only create some child nodes below. Previously, this would have caused the global, coalesced edit to also contain the parent node which was implicitly created. With this change, all the edits are stored as-is, and if we remove all the child nodes, the list entry itself also disappears. At least that\u0027s my understanding.\n\nI tried creating the list key (`name`) implicitly, but that had some ripple effects to other tests, so I think it\u0027s OK to leave this as-is. It has a side effect that the alarm now points to a non-existing node, but that\u0027s allowed in the operational DS. We might revisit this later.\n\nI\u0027m not 100% happy with this, but I would prefer to move forward and merge this, if you agree.",
+      "parentUuid": "15ff36dd_36f5419a",
+      "range": {
+        "startLine": 210,
+        "startChar": 0,
+        "endLine": 210,
+        "endChar": 5
+      },
+      "revId": "7150a8e37caefdbf6ceeb9d620d36b62104d4caa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

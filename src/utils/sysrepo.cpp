@@ -52,58 +52,62 @@ void initLogsSysrepo()
     sr_log_set_cb(spdlog_sr_log_cb);
 }
 
-void valuesToYang(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent)
+/** @brief Build/update an edit
+ *
+ * @arg foreignRemovals lists nodes which might have originated from some other session, or even from the running DS
+ * @arg ourRemovals are nodes which we might have pushed before as an ops edit
+ * */
+void valuesToYang(const YANGData& values, const std::vector<std::string>& foreignRemovals, const std::vector<std::string>& ourRemovals, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent)
 {
-    auto netconf = session.getContext().getModuleImplemented("ietf-netconf");
     auto log = spdlog::get("main");
 
-    for (const auto& propertyName : removePaths) {
-        if (!parent) {
-            parent = session.getContext().newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
-        } else {
-            parent->newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
-        }
+    for (const auto& xpath : foreignRemovals) {
+        // FIXME: only create these if not found
+        // That requires lyd_find_sibling_opaq_next() because lyd_find_xpath() doesn't find /sysrepo:discard-items.
+        auto discard = session.getContext().newOpaqueJSON("sysrepo", "discard-items", libyang::JSON{xpath});
 
-        auto deletion = parent->findPath(propertyName);
-        if (!deletion) {
-            throw std::logic_error {"Cannot find XPath " + propertyName + " for deletion in libyang's new_path() output"};
+        if (!parent) {
+            parent = discard;
+        } else {
+            parent->insertSibling(*discard);
         }
-        deletion->newMeta(*netconf, "operation", "remove");
     }
 
     for (const auto& [propertyName, value] : values) {
         if (!parent) {
             parent = session.getContext().newPath(propertyName, value, libyang::CreationOptions::Output);
         } else {
-            parent->newPath(propertyName, value, libyang::CreationOptions::Output);
+            parent->newPath(propertyName, value, libyang::CreationOptions::Update | libyang::CreationOptions::Output);
         }
     }
 
-    for (const auto& propertyName : discardPaths) {
-        auto discard = session.getContext().newOpaqueJSON("sysrepo", "discard-items", libyang::JSON{propertyName});
-
+    for (const auto& xpath : ourRemovals) {
         if (!parent) {
-            parent = discard;
+            log->trace("Cannot remove {} from stored ops edit: no data", xpath);
+        } else if (auto node = parent->findPath(xpath)) {
+            node->unlink();
         } else {
-            parent->insertSibling(*discard);
-            parent->newPath(propertyName, std::nullopt, libyang::CreationOptions::Opaque);
+            log->trace("Cannot remove {} from stored ops edit: not found", xpath);
         }
     }
 }
 
-/** @brief Update the operational DS */
-void valuesPush(sysrepo::Session session, const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths)
+/** @brief Update the operational DS
+ *
+ * See valuesToYang() for details.
+ * */
+void valuesPush(sysrepo::Session session, const YANGData& values, const std::vector<std::string>& foreignRemovals, const std::vector<std::string>& ourRemovals)
 {
     WITH_TIME_MEASUREMENT{};
-    if (values.empty() && removePaths.empty() && discardPaths.empty())
+    if (values.empty() && foreignRemovals.empty() && ourRemovals.empty())
         return;
 
     ScopedDatastoreSwitch s(session, sysrepo::Datastore::Operational);
-    std::optional<libyang::DataNode> edit;
-    valuesToYang(values, removePaths, discardPaths, session, edit);
+    auto edit = session.operationalChanges();
+    valuesToYang(values, foreignRemovals, ourRemovals, session, edit);
 
     if (edit) {
-        session.editBatch(*edit, sysrepo::DefaultOperation::Merge);
+        session.editBatch(*edit, sysrepo::DefaultOperation::Replace);
         spdlog::get("main")->trace("valuesPush: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
         WITH_TIME_MEASUREMENT("valuesPush/applyChanges");
         session.applyChanges();

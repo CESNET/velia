@@ -21,9 +21,9 @@ struct YANGPair {
 
 using YANGData = std::vector<YANGPair>;
 
-void valuesToYang(const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent);
+void valuesToYang(const YANGData& values, const std::vector<std::string>& foreignRemovals, const std::vector<std::string>& ourRemovals, ::sysrepo::Session session, std::optional<libyang::DataNode>& parent);
 
-void valuesPush(::sysrepo::Session session, const YANGData& values, const std::vector<std::string>& removePaths, const std::vector<std::string>& discardPaths);
+void valuesPush(::sysrepo::Session session, const YANGData& values, const std::vector<std::string>& foreignRemovals, const std::vector<std::string>& ourRemovals);
 
 void initLogsSysrepo();
 void ensureModuleImplemented(::sysrepo::Session session, const std::string& module, const std::string& revision);

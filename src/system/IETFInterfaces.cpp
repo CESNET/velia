@@ -233,7 +233,8 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
 
     if (action == NL_ACT_DEL) {
         std::lock_guard<std::mutex> lock(m_mtx);
-        utils::valuesPush(m_srSession, utils::YANGData{}, {IETF_INTERFACES + "/interface[name='" + name + "']"}, {});
+        std::vector<std::string> deletePaths = {IETF_INTERFACES + "/interface[name='" + name + "']"};
+        utils::valuesPush(m_srSession, utils::YANGData{}, deletePaths, deletePaths);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
         utils::YANGData values;
         std::vector<std::string> deletePaths;
@@ -255,7 +256,7 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
                 operStatusToString(rtnl_link_get_operstate(link), m_log));
 
         std::lock_guard<std::mutex> lock(m_mtx);
-        utils::valuesPush(m_srSession, values, deletePaths, {});
+        utils::valuesPush(m_srSession, values, deletePaths, deletePaths);
     } else {
         m_log->warn("Unhandled cache update action {} ({})", action, nlActionToString(action));
     }
@@ -290,7 +291,7 @@ void IETFInterfaces::onAddrUpdate(rtnl_addr* addr, int action)
     }
 
     std::lock_guard<std::mutex> lock(m_mtx);
-    utils::valuesPush(m_srSession, values, deletePaths, {});
+    utils::valuesPush(m_srSession, values, deletePaths, deletePaths);
 }
 
 void IETFInterfaces::onRouteUpdate(rtnl_route*, int)

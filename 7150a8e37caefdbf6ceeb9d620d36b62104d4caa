@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9478d9a2_078e2c1d",
+        "filename": "src/utils/sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-04T11:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a854b358_4078a2b6",
+      "range": {
+        "startLine": 55,
+        "startChar": 74,
+        "endLine": 55,
+        "endChar": 89
+      },
+      "revId": "7150a8e37caefdbf6ceeb9d620d36b62104d4caa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a17670c0_8e1e77ec",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-03-04T10:51:46Z",
       "side": 1,
       "message": "nit: typo find",
+      "range": {
+        "startLine": 61,
+        "startChar": 66,
+        "endLine": 61,
+        "endChar": 70
+      },
+      "revId": "7150a8e37caefdbf6ceeb9d620d36b62104d4caa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e4b5725_203ae70a",
+        "filename": "src/utils/sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-04T11:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a17670c0_8e1e77ec",
       "range": {
         "startLine": 61,
         "startChar": 66,

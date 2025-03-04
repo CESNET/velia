@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a854b358_4078a2b6",
+        "filename": "src/utils/sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-03-04T10:51:46Z",
+      "side": 1,
+      "message": "Can you please add comments what `{foreign,our}Removals` parameters represent? Same for other functions. I did not understand that at first. The original names made a sense to me, now it requires some docs I am afraid.\n\nIn our internal communication, you explained it like this:\n  \"foreign\" \u003d potrebuju zaridit, aby v ops nebyly nejaky data, o kterych nic nevim, krome toho, ze ja jsem je tam explicitne nepushnul jako muj ops edit z tyhle session\n  \"our\" \u003d driv jsem to pushnul jako ops data skrz tuhle session, a ted uz je tam mit nechci\n\nMaybe if `ourRemovals` was named `removalsFromOurEdit` it would make more sense to me but the name is ugly so ourRemovals withComment would be better I guess.",
+      "range": {
+        "startLine": 55,
+        "startChar": 74,
+        "endLine": 55,
+        "endChar": 89
+      },
+      "revId": "7150a8e37caefdbf6ceeb9d620d36b62104d4caa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a17670c0_8e1e77ec",
+        "filename": "src/utils/sysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-03-04T10:51:46Z",
+      "side": 1,
+      "message": "nit: typo find",
+      "range": {
+        "startLine": 61,
+        "startChar": 66,
+        "endLine": 61,
+        "endChar": 70
+      },
+      "revId": "7150a8e37caefdbf6ceeb9d620d36b62104d4caa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15ff36dd_36f5419a",
+        "filename": "tests/sysrepo_ietf-hardware.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-03-04T10:51:46Z",
+      "side": 1,
+      "message": "Do you know why is this now reported as Deleted?",
+      "range": {
+        "startLine": 210,
+        "startChar": 0,
+        "endLine": 210,
+        "endChar": 5
+      },
+      "revId": "7150a8e37caefdbf6ceeb9d620d36b62104d4caa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

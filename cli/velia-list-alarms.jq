@@ -113,7 +113,7 @@ def main:
         # Print first status-change entry in the alarm, along with the alarm details and colorize it
         (. | first | formatline($alarmTypeId; $alarmTypeQualifier; $resource; $cleared) | colorize($severity; $cleared)),
         # Print other status-change entries (number is limited by historyCount) in the alarm but do not output the alarm details, print only emptystrings
-        (limit(historyCount($config; . | length) - 1; (. | pop | .[]? | formatline(""; ""; ""; ""))))
+        (limit(historyCount($config; . | length) - 1; (. | pop | sort_by(.time) | reverse | .[]? | formatline(""; ""; ""; ""))))
     )
   ) | @tsv;
 

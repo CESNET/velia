@@ -1,0 +1,2597 @@
+{
+  "ietf-alarms:alarms": {
+    "control": {
+      "alarm-shelving": {
+        "shelf": [
+          {
+            "name": "systemd journal upload",
+            "resource": [
+              "systemd-journal-upload.service"
+            ],
+            "alarm-type": [
+              {
+                "alarm-type-id": "velia-alarms:systemd-unit-failure",
+                "alarm-type-qualifier-match": ""
+              }
+            ],
+            "description": "Ignore systemd-journal-upload.service failures"
+          }
+        ]
+      }
+    },
+    "alarm-inventory": {
+      "alarm-type": [
+        {
+          "alarm-type-id": "velia-alarms:systemd-unit-failure",
+          "alarm-type-qualifier": "",
+          "resource": [
+            "dev-ttyMAX0.device",
+            "sys-devices-virtual-tty-ttyd2.device",
+            "sys-kernel-debug.mount",
+            "sys-devices-virtual-tty-ttyyf.device",
+            "dev-ttyq6.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2dlabel-cfg.0.device",
+            "dev-ttyd0.device",
+            "systemd-ask-password-console.service",
+            "modprobe@configfs.service",
+            "dev-ttyvc.device",
+            "dev-ttya7.device",
+            "sys-devices-virtual-tty-ttyq2.device",
+            "time-set.target",
+            "dev-ttybb.device",
+            "dev-disk-by\\x2did-mmc\\x2d8GTF4R_0x35c95f36\\x2dpart3.device",
+            "systemd-machine-id-commit.service",
+            "cla-sdn-bidi-cplus1572.service",
+            "dev-ttysd.device",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f10d8000.sdhci-mmc_host-mmc0-mmc0:0001-block-mmcblk0-mmcblk0p1.device",
+            "sshd.service",
+            "dev-ttyyb.device",
+            "max31780-fans.service",
+            "dev-ttyc0.device",
+            "sys-devices-virtual-tty-ttyce.device",
+            "sys-devices-virtual-tty-ttyz3.device",
+            "dev-ttyza.device",
+            "cryptsetup.target",
+            "dev-ttye0.device",
+            "sys-devices-virtual-tty-ttyye.device",
+            "dev-ttyw8.device",
+            "dev-ttyda.device",
+            "sys-devices-virtual-tty-ttyv6.device",
+            "dev-ttya3.device",
+            "dev-ttyb3.device",
+            "sys-devices-virtual-tty-ttypd.device",
+            "sys-devices-virtual-tty-ttyv8.device",
+            "sys-devices-virtual-tty-ttytf.device",
+            "dev-disk-by\\x2ddiskseq-10.device",
+            "dev-ttyuc.device",
+            "dev-ttyv4.device",
+            "velia-firewall.service",
+            "dev-ttyu8.device",
+            "sys-devices-virtual-tty-ttyqa.device",
+            "openssh-persistent-keys.service",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f1034000.ethernet-net-eth2.device",
+            "dev-ttyt2.device",
+            "dev-ttyy9.device",
+            "dev-ttytc.device",
+            "velia-health.service",
+            "dev-ttysc.device",
+            "sysrepo-ietf-alarms.service",
+            "sys-devices-virtual-tty-ttyy2.device",
+            "dev-ttyba.device",
+            "systemd-udevd-kernel.socket",
+            "dev-ttytd.device",
+            "sys-devices-virtual-tty-ttydd.device",
+            "sys-devices-virtual-tty-ttyda.device",
+            "sys-devices-virtual-tty-ttyzb.device",
+            "dev-ttyz9.device",
+            "sys-devices-virtual-tty-ttyw5.device",
+            "dev-ttyc9.device",
+            "dev-ttyr2.device",
+            "dev-ttys9.device",
+            "dev-ttyb5.device",
+            "cla-sdn-roadm-add-drop.service",
+            "dev-disk-by\\x2ddiskseq-12.device",
+            "dev-ttyv0.device",
+            "var.mount",
+            "sys-devices-virtual-tty-ttye5.device",
+            "sys-devices-virtual-tty-ttyzf.device",
+            "sys-devices-virtual-tty-ttytb.device",
+            "serial-getty@ttyS0.service",
+            "dev-disk-by\\x2ddiskseq-10\\x2dpart2.device",
+            "dev-mmcblk0boot1.device",
+            "run-credentials-systemd\\x2dresolved.service.mount",
+            "sys-devices-virtual-tty-ttyyc.device",
+            "sys-subsystem-net-devices-eth1.device",
+            "dev-ttyac.device",
+            "nghttpx.service",
+            "sshd-unix-local.socket",
+            "sys-devices-virtual-tty-ttye8.device",
+            "systemd-pstore.service",
+            "sys-devices-virtual-tty-ttyp4.device",
+            "run-credentials-systemd\\x2dudev\\x2dload\\x2dcredentials.service.mount",
+            "dev-ttyz1.device",
+            "sys-devices-virtual-tty-ttyqb.device",
+            "auditd.service",
+            "dev-ttypd.device",
+            "sys-devices-virtual-tty-ttyze.device",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f10d8000.sdhci-mmc_host-mmc0-mmc0:0001-block-mmcblk0-mmcblk0p2.device",
+            "sys-devices-virtual-tty-ttyt6.device",
+            "dev-mtdblock0.device",
+            "sys-devices-virtual-tty-ttybf.device",
+            "sys-kernel-tracing.mount",
+            "nghttpd@sdn-roadm-hires-add-drop-g2.service",
+            "dev-ttype.device",
+            "systemd-networkd-persistent-storage.service",
+            "sys-devices-virtual-tty-ttyz2.device",
+            "run-credentials-systemd\\x2dtmpfiles\\x2dsetup.service.mount",
+            "dev-ttyx9.device",
+            "sys-devices-virtual-tty-ttyp5.device",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f10d8000.sdhci-mmc_host-mmc0-mmc0:0001-block-mmcblk0.device",
+            "dev-ttyt6.device",
+            "dev-ttyw1.device",
+            "multi-user.target",
+            "dev-ttya4.device",
+            "systemd-ask-password-wall.service",
+            "dev-ttys0.device",
+            "dev-ttyyc.device",
+            "dev-disk-by\\x2dlabel-rootfs.1.device",
+            "sys-devices-virtual-tty-ttya0.device",
+            "sys-devices-virtual-tty-ttys1.device",
+            "dev-ttyce.device",
+            "dev-ttyw0.device",
+            "sys-devices-virtual-tty-ttyv5.device",
+            "velia-system.service",
+            "dev-ttyra.device",
+            "systemd-networkd.service",
+            "systemd-creds.socket",
+            "systemd-remount-fs.service",
+            "sys-kernel-config.mount",
+            "sys-devices-virtual-tty-ttyv4.device",
+            "systemd-tmpfiles-clean.timer",
+            "system-serial\\x2dgetty.slice",
+            "dev-disk-by\\x2did-mmc\\x2d8GTF4R_0x35c95f36\\x2dpart4.device",
+            "systemd-hwdb-update.service",
+            "dev-ttyzb.device",
+            "sys-devices-virtual-tty-ttyba.device",
+            "sys-devices-virtual-tty-ttydc.device",
+            "sys-devices-virtual-tty-ttyta.device",
+            "dev-ttys6.device",
+            "sys-devices-virtual-tty-ttyzc.device",
+            "sys-devices-virtual-tty-ttyx8.device",
+            "final.target",
+            "sys-devices-virtual-tty-ttyd4.device",
+            "fstrim.timer",
+            "dev-disk-by\\x2ddiskseq-11.device",
+            "sys-devices-platform-soc-f1010680.spi-spi_master-spi1-spi1.2-tty-ttyMAX1.device",
+            "sys-devices-virtual-tty-ttyw6.device",
+            "sys-devices-virtual-tty-ttyb2.device",
+            "dev-disk-by\\x2did-mmc\\x2d8GTF4R_0x35c95f36\\x2dpart1.device",
+            "dev-ttyp5.device",
+            "dev-ttyvd.device",
+            "sys-devices-virtual-tty-ttyc3.device",
+            "sys-devices-virtual-tty-ttyva.device",
+            "dev-ttyb1.device",
+            "dev-ttyyd.device",
+            "sys-devices-virtual-tty-ttycb.device",
+            "dev-ttyx0.device",
+            "dev-ttyq7.device",
+            "dev-disk-by\\x2ddiskseq-10\\x2dpart3.device",
+            "\\x2eov.mount",
+            "sys-devices-virtual-tty-ttyc4.device",
+            "systemd-tmpfiles-setup-dev.service",
+            "sys-devices-virtual-tty-ttyb0.device",
+            "sys-devices-virtual-tty-ttys5.device",
+            "sys-devices-virtual-tty-ttya3.device",
+            "dev-ttyv1.device",
+            "dev-ttyrb.device",
+            "dev-ttyt8.device",
+            "sys-devices-virtual-tty-ttydf.device",
+            "sys-devices-virtual-tty-ttyue.device",
+            "sys-devices-virtual-tty-ttyr4.device",
+            "sys-devices-virtual-tty-ttyb8.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart1.device",
+            "systemd-timesyncd.service",
+            "dev-ttyy3.device",
+            "dev-ttyde.device",
+            "dev-ttyc2.device",
+            "dev-ttyp7.device",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f10d8000.sdhci-mmc_host-mmc0-mmc0:0001-block-mmcblk0-mmcblk0boot1.device",
+            "sys-devices-virtual-tty-ttyr5.device",
+            "sys-subsystem-net-devices-br0.device",
+            "network-pre.target",
+            "plymouth-start.service",
+            "systemd-random-seed.service",
+            "sys-devices-virtual-tty-ttyu8.device",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f1070000.ethernet-net-eth0.device",
+            "sys-devices-virtual-tty-ttyy0.device",
+            "nghttpd@sdn-roadm-line-g2.service",
+            "sys-devices-virtual-tty-ttyyb.device",
+            "sys-devices-virtual-tty-ttycc.device",
+            "sys-devices-virtual-tty-ttyt8.device",
+            "sys-devices-virtual-tty-ttyyd.device",
+            "dev-ttyr4.device",
+            "dev-ttya8.device",
+            "getty-pre.target",
+            "dev-ttyq0.device",
+            "dev-ttyw5.device",
+            "time-sync.target",
+            "dev-ttytf.device",
+            "dev-mmcblk0p4.device",
+            "sys-devices-virtual-tty-ttyad.device",
+            "dev-ttyv2.device",
+            "sys-devices-virtual-tty-ttyqc.device",
+            "dev-mqueue.mount",
+            "sys-devices-virtual-tty-ttys4.device",
+            "sys-devices-virtual-tty-ttyu0.device",
+            "sys-devices-virtual-tty-ttyw1.device",
+            "dev-ttyad.device",
+            "shutdown.target",
+            "systemd-udevd-control.socket",
+            "sys-devices-virtual-tty-ttyvb.device",
+            "dev-ttyr1.device",
+            "system-nghttpd.slice",
+            "sys-devices-virtual-tty-ttya2.device",
+            "sys-devices-virtual-tty-ttyub.device",
+            "dev-ttyqc.device",
+            "nghttpd@sdn-roadm-add-drop-g2.service",
+            "systemd-journald.service",
+            "sys-devices-virtual-tty-ttyxb.device",
+            "sys-devices-virtual-tty-ttyw4.device",
+            "dev-ttyd2.device",
+            "getty.target",
+            "sys-devices-virtual-tty-ttyq5.device",
+            "dev-ttye1.device",
+            "sys-devices-virtual-tty-ttyuc.device",
+            "sys-devices-virtual-tty-ttyef.device",
+            "dev-ttydf.device",
+            "dev-ttyMAX3.device",
+            "systemd-udev-trigger.service",
+            "sys-devices-platform-soc-f1010680.spi-spi_master-spi1-spi1.2-tty-ttyMAX2.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2dlabel-rootfs.0.device",
+            "sys-devices-virtual-tty-ttypf.device",
+            "sys-devices-virtual-tty-ttyu7.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2dpartnum-1.device",
+            "sys-subsystem-net-devices-eth0.device",
+            "sys-devices-virtual-tty-ttyc8.device",
+            "systemd-udevd.service",
+            "dev-ttyae.device",
+            "sys-devices-virtual-tty-ttyaf.device",
+            "sys-devices-virtual-tty-ttyr2.device",
+            "sys-devices-virtual-tty-ttya9.device",
+            "network.target",
+            "dev-ttyc3.device",
+            "dev-ttyqf.device",
+            "dev-ttyv6.device",
+            "systemd-journal-upload.service",
+            "nghttpd@sdn-bidi-cplus1572-g2.service",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2duuid-918ce14c\\x2df3f9\\x2d407f\\x2db5fe\\x2df029c5b11745.device",
+            "dev-ttyu1.device",
+            "sys-devices-virtual-tty-ttyve.device",
+            "systemd-coredump.socket",
+            "dev-ttyx6.device",
+            "cfg-yang.service",
+            "sys-devices-virtual-tty-ttypa.device",
+            "sys-devices-virtual-tty-ttyy9.device",
+            "systemd-networkd.socket",
+            "sys-devices-virtual-tty-ttyxf.device",
+            "dev-ttybd.device",
+            "sys-devices-virtual-tty-ttyd6.device",
+            "sys-devices-virtual-tty-ttyy6.device",
+            "dev-ttyvf.device",
+            "sys-devices-virtual-tty-ttyd5.device",
+            "sys-devices-virtual-tty-ttyya.device",
+            "sys-devices-virtual-tty-ttyde.device",
+            "sys-devices-virtual-tty-ttycf.device",
+            "sys-devices-virtual-tty-ttyy8.device",
+            "sys-devices-virtual-tty-ttytd.device",
+            "sys-devices-virtual-tty-ttyeb.device",
+            "initrd-switch-root.target",
+            "sys-devices-virtual-tty-ttye9.device",
+            "sys-devices-virtual-tty-ttyq1.device",
+            "sys-devices-virtual-tty-ttyq4.device",
+            "sys-devices-virtual-tty-ttya6.device",
+            "dev-ttyMAX2.device",
+            "sys-devices-virtual-tty-ttysf.device",
+            "emergency.target",
+            "dev-ttyef.device",
+            "sys-devices-virtual-tty-ttyr0.device",
+            "systemd-resolved.service",
+            "systemd-journald-audit.socket",
+            "sys-devices-virtual-tty-ttydb.device",
+            "syslog.target",
+            "sys-devices-virtual-tty-ttyu5.device",
+            "sys-devices-virtual-tty-ttyq7.device",
+            "sys-devices-virtual-tty-ttyza.device",
+            "local-fs-pre.target",
+            "dev-ttysf.device",
+            "sys-devices-virtual-tty-ttyy3.device",
+            "sys-devices-virtual-tty-ttya7.device",
+            "sys-devices-virtual-tty-ttyr8.device",
+            "sys-devices-virtual-tty-ttyx7.device",
+            "dev-ttyc8.device",
+            "systemd-sysusers.service",
+            "dev-ttypc.device",
+            "blockdev@dev-root.target",
+            "dev-ttyz8.device",
+            "cla-calibration-box.service",
+            "sys-devices-virtual-tty-ttycd.device",
+            "dev-ttya9.device",
+            "cla-sdn-roadm-hires-add-drop.service",
+            "dev-mmcblk0.device",
+            "sys-subsystem-net-devices-eth2.device",
+            "dev-ttyc4.device",
+            "sys-devices-virtual-tty-ttyxe.device",
+            "sys-devices-virtual-tty-ttys3.device",
+            "sys-devices-virtual-tty-ttyc9.device",
+            "run-credentials-serial\\x2dgetty\\x40ttyS0.service.mount",
+            "sys-devices-virtual-tty-ttys8.device",
+            "dev-ttyq8.device",
+            "sys-devices-virtual-tty-ttyq0.device",
+            "sys-devices-virtual-tty-ttyb3.device",
+            "systemd-update-done.service",
+            "dev-ttyu7.device",
+            "cla-sdn-roadm-line.service",
+            "sys-devices-virtual-tty-ttyec.device",
+            "dev-ttyp9.device",
+            "dev-ttyvb.device",
+            "dev-ttyt0.device",
+            "systemd-vconsole-setup.service",
+            "dev-ttywc.device",
+            "sys-devices-virtual-tty-ttyp9.device",
+            "dev-ttyq3.device",
+            "dev-ttysb.device",
+            "sys-devices-virtual-tty-ttya1.device",
+            "dev-ttys8.device",
+            "sys-devices-virtual-tty-ttybe.device",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f10d8000.sdhci-mmc_host-mmc0-mmc0:0001-block-mmcblk0-mmcblk0p4.device",
+            "dev-ttyw7.device",
+            "sys-devices-virtual-tty-ttyu9.device",
+            "dev-ttyaa.device",
+            "dev-ttyee.device",
+            "rescue.target",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f1012000.serial-tty-ttyS0.device",
+            "sys-devices-virtual-tty-ttysb.device",
+            "dev-ttyr0.device",
+            "dev-ttyz4.device",
+            "dev-ttye9.device",
+            "systemd-ask-password-wall.path",
+            "dev-ttyb8.device",
+            "sys-devices-virtual-tty-ttyua.device",
+            "dev-ttyb4.device",
+            "run-credentials-systemd\\x2dnetwork\\x2dgenerator.service.mount",
+            "dev-ttybf.device",
+            "dev-ttypb.device",
+            "etc.mount",
+            "systemd-network-generator.service",
+            "sys-devices-virtual-tty-ttysc.device",
+            "dev-ttyy5.device",
+            "dev-mmcblk0boot0.device",
+            "modprobe@efi_pstore.service",
+            "sys-devices-virtual-tty-ttyp6.device",
+            "first-boot-complete.target",
+            "sys-devices-virtual-net-br0.device",
+            "sys-devices-virtual-tty-ttyt9.device",
+            "czechlight-clearfog-leds.service",
+            "dev-ttyca.device",
+            "sys-devices-virtual-tty-ttyy1.device",
+            "rescue.service",
+            "dev-ttye4.device",
+            "dev-ttys4.device",
+            "dev-ttys3.device",
+            "dev-ttycd.device",
+            "systemd-modules-load.service",
+            "systemd-soft-reboot.service",
+            "dev-ttyd6.device",
+            "sys-devices-virtual-tty-ttyp3.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2dpartnum-2.device",
+            "dev-ttyxc.device",
+            "dev-ttyMAX1.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2duuid-0b4dd826\\x2d2730\\x2d4775\\x2d9672\\x2d681cd5db3589.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2duuid-181a3f1b\\x2d2356\\x2d4810\\x2d8f28\\x2d5d068f99ec20.device",
+            "sys-devices-virtual-tty-ttyb7.device",
+            "-.slice",
+            "dev-ttyp0.device",
+            "sys-devices-virtual-tty-ttyx6.device",
+            "dev-disk-by\\x2did-mmc\\x2d8GTF4R_0x35c95f36.device",
+            "slices.target",
+            "sys-devices-virtual-tty-ttyc6.device",
+            "sys-devices-virtual-tty-ttype.device",
+            "sys-devices-virtual-tty-ttyd7.device",
+            "sys-devices-virtual-tty-ttyx1.device",
+            "dev-ttyw2.device",
+            "dev-ttyd4.device",
+            "dev-disk-by\\x2duuid-21680eb8\\x2d418b\\x2d42c0\\x2daa27\\x2d1cff5bb7bf82.device",
+            "sys-devices-virtual-tty-ttyc0.device",
+            "sys-devices-virtual-tty-ttyr1.device",
+            "dev-ttyp4.device",
+            "dev-ttyre.device",
+            "sys-devices-virtual-tty-ttyx4.device",
+            "sys-devices-virtual-tty-ttyy4.device",
+            "dev-ttys7.device",
+            "sys-devices-virtual-tty-ttyae.device",
+            "sys-devices-virtual-tty-ttyt2.device",
+            "systemd-tmpfiles-setup.service",
+            "dev-ttyya.device",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f10d8000.sdhci-mmc_host-mmc0-mmc0:0001-block-mmcblk0-mmcblk0boot0.device",
+            "sys-devices-virtual-tty-ttyd0.device",
+            "sys-devices-platform-soc-f1010680.spi-spi_master-spi1-spi1.2-tty-ttyMAX3.device",
+            "sys-devices-virtual-tty-ttyse.device",
+            "dev-ttyr7.device",
+            "sys-devices-virtual-tty-ttyt7.device",
+            "-.mount",
+            "dev-ttypa.device",
+            "dev-ttyv9.device",
+            "local-fs.target",
+            "dev-ttyz2.device",
+            "sys-devices-virtual-tty-ttys6.device",
+            "dev-ttyqd.device",
+            "sys-devices-virtual-tty-ttyaa.device",
+            "cla-sdn-bidi-cplus1572-ocm.service",
+            "dev-disk-by\\x2duuid-0b4dd826\\x2d2730\\x2d4775\\x2d9672\\x2d681cd5db3589.device",
+            "sys-devices-virtual-tty-ttybc.device",
+            "run-credentials-systemd\\x2dnetworkd.service.mount",
+            "dev-ttyzd.device",
+            "dev-ttyq9.device",
+            "sys-devices-virtual-tty-ttye7.device",
+            "dev-ttyrc.device",
+            "dev-ttye8.device",
+            "dev-ttyzc.device",
+            "dev-ttya6.device",
+            "systemd-udev-load-credentials.service",
+            "netopeer2.service",
+            "nghttpd@sdn-bidi-cplus1572-ocm-g2.service",
+            "dev-ttyc5.device",
+            "dev-ttyr8.device",
+            "modprobe@fuse.service",
+            "dev-ttyr6.device",
+            "dev-ttywb.device",
+            "dev-ttyp8.device",
+            "dev-ttya1.device",
+            "dev-ttyx8.device",
+            "sys-devices-virtual-tty-ttys9.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dboot0.device",
+            "dev-ttyeb.device",
+            "sys-devices-virtual-tty-ttya5.device",
+            "sys-devices-virtual-tty-ttyx3.device",
+            "sys-devices-virtual-tty-ttywb.device",
+            "sys-devices-virtual-tty-ttyp1.device",
+            "dev-ttyt4.device",
+            "umount.target",
+            "systemd-journald-dev-log.socket",
+            "sys-devices-virtual-tty-ttyx2.device",
+            "sys-devices-virtual-tty-ttysd.device",
+            "sys-devices-virtual-tty-ttyvc.device",
+            "sys-devices-virtual-tty-ttyz4.device",
+            "dev-ttyye.device",
+            "sys-devices-virtual-tty-ttyr9.device",
+            "velia-hardware-g2.service",
+            "sys-devices-virtual-tty-ttye1.device",
+            "sockets.target",
+            "system-modprobe.slice",
+            "save-machineid-to-uboot.service",
+            "cfg-restore-systemd-networkd.service",
+            "dev-ttysa.device",
+            "dev-ttyxd.device",
+            "remote-fs.target",
+            "sys-devices-virtual-tty-ttywf.device",
+            "dev-ttyx5.device",
+            "systemd-tmpfiles-clean.service",
+            "dev-ttyq2.device",
+            "remote-fs-pre.target",
+            "dbus.socket",
+            "sys-devices-virtual-tty-ttyy5.device",
+            "dev-ttyu4.device",
+            "sys-devices-virtual-tty-ttyrb.device",
+            "dev-ttyp6.device",
+            "cfg-migrate.service",
+            "dev-ttywd.device",
+            "sys-devices-virtual-tty-ttyuf.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2dpartnum-4.device",
+            "sys-devices-virtual-tty-ttyab.device",
+            "dev-mmcblk0p2.device",
+            "dev-ttyy8.device",
+            "dev-ttyyf.device",
+            "sys-devices-virtual-tty-ttyw9.device",
+            "sys-fs-fuse-connections.mount",
+            "dev-ttya0.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart4.device",
+            "plymouth-quit-wait.service",
+            "sys-devices-virtual-tty-ttyz0.device",
+            "sys-devices-virtual-tty-ttye0.device",
+            "dev-ttyse.device",
+            "system.slice",
+            "dev-ttyqb.device",
+            "sys-devices-virtual-tty-ttya4.device",
+            "dev-ttyy7.device",
+            "dev-ttydb.device",
+            "run-credentials-systemd\\x2dsysctl.service.mount",
+            "sys-devices-virtual-tty-ttye3.device",
+            "mstpd.service",
+            "systemd-fsck-root.service",
+            "dev-ttyd7.device",
+            "dev-ttyd3.device",
+            "dev-ttyS0.device",
+            "sys-devices-virtual-tty-ttys0.device",
+            "sys-devices-virtual-tty-ttyx0.device",
+            "systemd-user-sessions.service",
+            "sys-devices-virtual-tty-ttyxc.device",
+            "sys-devices-virtual-tty-ttyv9.device",
+            "sys-devices-virtual-tty-ttyea.device",
+            "dev-ttyu3.device",
+            "sys-devices-virtual-tty-ttyz1.device",
+            "sys-devices-virtual-tty-ttyb5.device",
+            "run-credentials-systemd\\x2dtmpfiles\\x2dclean.service.mount",
+            "dev-ttyve.device",
+            "sys-devices-virtual-tty-ttybd.device",
+            "dev-ttyd1.device",
+            "dev-ttyxa.device",
+            "dev-ttyx1.device",
+            "sys-devices-virtual-tty-ttyrf.device",
+            "dev-ttyy6.device",
+            "sys-devices-platform-soc-f1010680.spi-spi_master-spi1-spi1.2-tty-ttyMAX0.device",
+            "dev-ttyy1.device",
+            "nss-user-lookup.target",
+            "dev-ttyr9.device",
+            "sys-devices-virtual-tty-ttye2.device",
+            "sys-devices-virtual-tty-ttyz5.device",
+            "sys-devices-virtual-tty-ttywc.device",
+            "sys-devices-virtual-tty-ttyv1.device",
+            "dev-ttye7.device",
+            "dev-ttyqe.device",
+            "sys-devices-virtual-tty-ttyu4.device",
+            "dev-ttyv5.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci.device",
+            "dev-ttye3.device",
+            "sysinit.target",
+            "sys-devices-virtual-tty-ttyv7.device",
+            "nss-lookup.target",
+            "dev-ttyt3.device",
+            "init.scope",
+            "dev-ttybc.device",
+            "dev-ttyze.device",
+            "dev-ttyw9.device",
+            "sys-devices-virtual-tty-ttyt1.device",
+            "cfg.mount",
+            "dev-ttyy2.device",
+            "sys-devices-platform-soc-f1010680.spi-spi_master-spi1-spi1.0-mtd-mtd0-mtdblock0.device",
+            "dev-ttyub.device",
+            "dev-ttyx3.device",
+            "sys-devices-virtual-tty-ttywd.device",
+            "sys-devices-virtual-tty-ttyre.device",
+            "kmod-static-nodes.service",
+            "dev-ttyq5.device",
+            "dev-ttyd5.device",
+            "sys-devices-virtual-tty-ttye6.device",
+            "sys-devices-virtual-tty-ttyed.device",
+            "sys-devices-virtual-tty-ttyd1.device",
+            "systemd-tmpfiles-setup-dev-early.service",
+            "sys-devices-virtual-tty-ttyxa.device",
+            "dev-ttyu2.device",
+            "dev-ttyua.device",
+            "dev-ttywa.device",
+            "sys-devices-virtual-tty-ttypb.device",
+            "dev-ttyxe.device",
+            "dev-ttyp1.device",
+            "sys-devices-virtual-tty-ttyw7.device",
+            "cla-sdn-roadm-coherent-a-d.service",
+            "dev-disk-by\\x2duuid-918ce14c\\x2df3f9\\x2d407f\\x2db5fe\\x2df029c5b11745.device",
+            "sys-devices-virtual-tty-ttyqd.device",
+            "sys-devices-virtual-tty-ttytc.device",
+            "sys-devices-virtual-tty-ttyt0.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2duuid-21680eb8\\x2d418b\\x2d42c0\\x2daa27\\x2d1cff5bb7bf82.device",
+            "sys-devices-virtual-tty-ttyz7.device",
+            "sys-devices-virtual-tty-ttyx9.device",
+            "dev-ttyw6.device",
+            "dev-ttye2.device",
+            "sys-devices-virtual-tty-ttyac.device",
+            "dev-ttyc1.device",
+            "sys-devices-virtual-tty-ttyz9.device",
+            "sys-devices-virtual-tty-ttyd8.device",
+            "dev-ttyrd.device",
+            "sys-devices-virtual-tty-ttyc5.device",
+            "dev-disk-by\\x2dlabel-cfg.1.device",
+            "swap.target",
+            "sys-devices-virtual-tty-ttyp8.device",
+            "dev-ttybe.device",
+            "dev-disk-by\\x2duuid-181a3f1b\\x2d2356\\x2d4810\\x2d8f28\\x2d5d068f99ec20.device",
+            "sys-devices-virtual-tty-ttyzd.device",
+            "enable-hw-watchdog.service",
+            "systemd-journal-flush.service",
+            "dev-ttyy0.device",
+            "dev-ttyx7.device",
+            "dev-disk-by\\x2did-mmc\\x2d8GTF4R_0x35c95f36\\x2dpart2.device",
+            "systemd-quotacheck-root.service",
+            "run-credentials-systemd\\x2dtmpfiles\\x2dsetup\\x2ddev.service.mount",
+            "dev-ttyx2.device",
+            "sys-devices-virtual-tty-ttyc2.device",
+            "dev-ttyu9.device",
+            "dev-mmcblk0p1.device",
+            "dev-ttyr5.device",
+            "dbus.service",
+            "home.mount",
+            "dev-ttyv7.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2dpartnum-3.device",
+            "dev-ttyz7.device",
+            "sys-devices-virtual-tty-ttyr7.device",
+            "sys-devices-virtual-tty-ttyra.device",
+            "sys-devices-virtual-tty-ttyt3.device",
+            "dev-ttyue.device",
+            "dev-mmcblk0p3.device",
+            "dev-ttyb0.device",
+            "sys-devices-virtual-tty-ttyw0.device",
+            "dev-disk-by\\x2ddiskseq-10\\x2dpart1.device",
+            "sys-devices-virtual-tty-ttyu3.device",
+            "timers.target",
+            "tmp.mount",
+            "sys-devices-virtual-tty-ttys2.device",
+            "rauc.service",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dboot1.device",
+            "dev-ttyuf.device",
+            "dev-ttyc6.device",
+            "systemd-sysctl.service",
+            "nghttpd@sdn-roadm-coherent-a-d-g2.service",
+            "sys-devices-virtual-tty-ttyq6.device",
+            "sys-devices-virtual-tty-ttyvf.device",
+            "sys-devices-virtual-tty-ttyv0.device",
+            "dev-ttyw3.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2dlabel-cfg.1.device",
+            "dev-ttyva.device",
+            "sys-devices-virtual-tty-ttyz6.device",
+            "sys-devices-virtual-tty-ttyud.device",
+            "dev-disk-by\\x2dlabel-rootfs.0.device",
+            "sys-devices-virtual-tty-ttyrc.device",
+            "dev-ttyq1.device",
+            "dev-ttyte.device",
+            "dev-ttyta.device",
+            "dev-ttyd9.device",
+            "sys-devices-virtual-tty-ttyc7.device",
+            "sys-devices-virtual-tty-ttyb9.device",
+            "sys-devices-virtual-tty-ttypc.device",
+            "dev-ttyrf.device",
+            "dev-ttyt5.device",
+            "sys-devices-virtual-tty-ttyz8.device",
+            "sys-devices-virtual-tty-ttyx5.device",
+            "rauc-mark-good.service",
+            "dev-disk-by\\x2dlabel-cfg.0.device",
+            "sys-devices-virtual-tty-ttyq8.device",
+            "dev-ttyt9.device",
+            "sysrepo-persistent-cfg.service",
+            "sys-devices-virtual-tty-ttyr3.device",
+            "sys-devices-virtual-tty-ttyq3.device",
+            "dev-ttyu5.device",
+            "sys-devices-virtual-tty-ttyb4.device",
+            "dev-ttyp2.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart2.device",
+            "sys-devices-virtual-tty-ttyu6.device",
+            "dev-ttydc.device",
+            "sys-devices-virtual-tty-ttyrd.device",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f10d8000.sdhci-mmc_host-mmc0-mmc0:0001-block-mmcblk0-mmcblk0p3.device",
+            "sys-devices-virtual-tty-ttyb1.device",
+            "dev-ttyb6.device",
+            "dev-ttyec.device",
+            "dev-ttyq4.device",
+            "dev-ttycc.device",
+            "dev-ttypf.device",
+            "dev-ttyp3.device",
+            "dev-ttyaf.device",
+            "sys-devices-virtual-tty-ttyte.device",
+            "sys-devices-virtual-tty-ttyr6.device",
+            "dev-ttya5.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2dlabel-rootfs.1.device",
+            "dev-ttyz3.device",
+            "dev-ttyt1.device",
+            "dev-ttyz0.device",
+            "dev-ttyc7.device",
+            "dev-ttycf.device",
+            "sys-devices-virtual-tty-ttyxd.device",
+            "dev-ttywf.device",
+            "emergency.service",
+            "sys-devices-virtual-tty-ttywa.device",
+            "dev-ttyxf.device",
+            "sys-devices-virtual-tty-ttyv3.device",
+            "dev-ttyed.device",
+            "dev-ttyzf.device",
+            "sys-devices-virtual-tty-ttyy7.device",
+            "sysrepo-plugind.service",
+            "run-credentials-systemd\\x2djournald.service.mount",
+            "cla-sdn-inline.service",
+            "dev-ttyx4.device",
+            "dev-ttys2.device",
+            "sys-devices-virtual-tty-ttyu2.device",
+            "sys-devices-virtual-tty-ttyb6.device",
+            "dev-hugepages.mount",
+            "dev-ttyv8.device",
+            "dev-ttyv3.device",
+            "dev-ttytb.device",
+            "sys-devices-virtual-tty-ttyp0.device",
+            "dev-ttyy4.device",
+            "basic.target",
+            "sys-devices-virtual-tty-ttyt5.device",
+            "dev-ttyxb.device",
+            "sys-devices-virtual-tty-ttyt4.device",
+            "dev-ttyab.device",
+            "dev-ttyz6.device",
+            "rousette.service",
+            "dev-ttyr3.device",
+            "sys-devices-virtual-tty-ttysa.device",
+            "systemd-hostnamed.socket",
+            "run-credentials-systemd\\x2dtmpfiles\\x2dsetup\\x2ddev\\x2dearly.service.mount",
+            "paths.target",
+            "syslog.service",
+            "sys-devices-virtual-tty-ttyvd.device",
+            "dev-ttyb2.device",
+            "soft-reboot.target",
+            "sys-devices-virtual-tty-ttyu1.device",
+            "dev-ttywe.device",
+            "sys-devices-virtual-tty-ttyp2.device",
+            "sys-devices-virtual-tty-ttyq9.device",
+            "nghttpd@sdn-inline-g2.service",
+            "dev-ttyea.device",
+            "sys-devices-virtual-tty-ttyp7.device",
+            "sys-devices-virtual-tty-ttyv2.device",
+            "sys-devices-virtual-tty-ttyw3.device",
+            "dev-ttys5.device",
+            "dev-disk-by\\x2ddiskseq-10\\x2dpart4.device",
+            "blockdev@dev-mmcblk0p2.target",
+            "sys-devices-virtual-tty-ttyw8.device",
+            "dev-ttyu0.device",
+            "systemd-journald.socket",
+            "sys-devices-platform-soc-soc:internal\\x2dregs-f1030000.ethernet-net-eth1.device",
+            "sys-devices-virtual-tty-ttyca.device",
+            "dev-ttyb7.device",
+            "dev-ttys1.device",
+            "dev-ttyqa.device",
+            "dev-ttyt7.device",
+            "sys-devices-virtual-tty-ttyd3.device",
+            "sys-devices-virtual-tty-ttye4.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart3.device",
+            "sys-devices-virtual-tty-ttyd9.device",
+            "sys-devices-virtual-tty-ttyw2.device",
+            "dev-ttydd.device",
+            "dev-ttycb.device",
+            "dev-ttyu6.device",
+            "systemd-ask-password-console.path",
+            "dev-ttye5.device",
+            "sys-devices-virtual-tty-ttyc1.device",
+            "dev-ttyb9.device",
+            "systemd-hostnamed.service",
+            "sys-devices-virtual-tty-ttys7.device",
+            "sys-devices-virtual-tty-ttywe.device",
+            "dev-ttyd8.device",
+            "sys-devices-virtual-tty-ttyqe.device",
+            "fstrim.service",
+            "run-sysrepo.mount",
+            "sys-devices-virtual-tty-ttya8.device",
+            "sys-devices-virtual-tty-ttyee.device",
+            "dev-ttya2.device",
+            "dev-ttye6.device",
+            "sys-devices-virtual-tty-ttyqf.device",
+            "sys-devices-virtual-tty-ttybb.device",
+            "dev-ttyw4.device",
+            "dev-ttyud.device",
+            "syslog.socket",
+            "dev-ttyz5.device",
+            "system-systemd\\x2dcoredump.slice",
+            "var-tmp.mount",
+            "var-lib-systemd-coredump.mount",
+            "var-lib-systemd.mount",
+            "var-lib.mount",
+            "systemd-coredump@803-16843-0.service",
+            "systemd-coredump@804-16866-0.service",
+            "systemd-coredump@805-16887-0.service",
+            "systemd-coredump@806-16908-0.service",
+            "systemd-coredump@807-16932-0.service",
+            "systemd-coredump@808-16953-0.service",
+            "systemd-coredump@809-16974-0.service",
+            "systemd-coredump@810-16995-0.service",
+            "systemd-coredump@811-17016-0.service",
+            "systemd-coredump@812-17037-0.service",
+            "systemd-coredump@813-17061-0.service",
+            "systemd-coredump@814-17082-0.service",
+            "systemd-coredump@815-17103-0.service",
+            "systemd-coredump@816-17124-0.service",
+            "systemd-coredump@817-17148-0.service",
+            "systemd-coredump@818-17169-0.service",
+            "systemd-coredump@819-17190-0.service",
+            "systemd-coredump@820-17214-0.service",
+            "systemd-coredump@821-17235-0.service",
+            "systemd-coredump@822-17256-0.service",
+            "systemd-coredump@823-17277-0.service",
+            "systemd-coredump@824-17301-0.service",
+            "systemd-coredump@825-17323-0.service",
+            "systemd-coredump@826-17344-0.service",
+            "systemd-coredump@827-17365-0.service",
+            "systemd-coredump@828-17386-0.service",
+            "systemd-coredump@829-17407-0.service",
+            "systemd-coredump@830-17431-0.service",
+            "systemd-coredump@831-17452-0.service",
+            "systemd-coredump@832-17473-0.service",
+            "systemd-coredump@833-17497-0.service",
+            "systemd-coredump@834-17518-0.service",
+            "systemd-coredump@835-17530-0.service",
+            "systemd-coredump@836-17540-0.service",
+            "systemd-coredump@837-17552-0.service",
+            "systemd-coredump@838-17578-0.service",
+            "systemd-coredump@839-17599-0.service",
+            "systemd-coredump@840-17620-0.service",
+            "systemd-coredump@841-17641-0.service",
+            "systemd-coredump@842-17662-0.service",
+            "systemd-coredump@843-17686-0.service",
+            "systemd-coredump@844-17707-0.service",
+            "systemd-coredump@845-17728-0.service",
+            "systemd-coredump@846-17749-0.service",
+            "systemd-coredump@847-17773-0.service",
+            "systemd-coredump@848-17794-0.service",
+            "systemd-coredump@849-17815-0.service",
+            "systemd-coredump@850-17836-0.service",
+            "systemd-coredump@851-17857-0.service",
+            "systemd-coredump@852-17881-0.service",
+            "systemd-coredump@853-17903-0.service",
+            "systemd-coredump@854-17924-0.service",
+            "systemd-coredump@855-17945-0.service",
+            "systemd-coredump@856-17966-0.service",
+            "systemd-coredump@857-17990-0.service",
+            "systemd-coredump@858-18008-0.service",
+            "systemd-coredump@859-18032-0.service",
+            "systemd-coredump@860-18053-0.service",
+            "systemd-coredump@861-18074-0.service",
+            "systemd-coredump@862-18095-0.service",
+            "systemd-coredump@863-18116-0.service",
+            "systemd-coredump@864-18140-0.service",
+            "systemd-coredump@865-18161-0.service",
+            "systemd-coredump@866-18182-0.service",
+            "systemd-coredump@867-18203-0.service",
+            "systemd-coredump@868-18227-0.service",
+            "systemd-coredump@869-18248-0.service",
+            "systemd-coredump@870-18269-0.service",
+            "systemd-coredump@871-18290-0.service",
+            "systemd-coredump@872-18311-0.service",
+            "systemd-coredump@873-18335-0.service",
+            "systemd-coredump@874-18356-0.service",
+            "systemd-coredump@875-18377-0.service",
+            "systemd-coredump@876-18399-0.service",
+            "systemd-coredump@877-18420-0.service",
+            "systemd-coredump@878-18444-0.service",
+            "systemd-coredump@879-18465-0.service",
+            "systemd-coredump@880-18486-0.service",
+            "systemd-coredump@881-18507-0.service",
+            "systemd-coredump@882-18528-0.service",
+            "systemd-coredump@883-18552-0.service",
+            "systemd-coredump@884-18573-0.service",
+            "systemd-coredump@885-18594-0.service",
+            "systemd-coredump@886-18612-0.service",
+            "systemd-coredump@887-18636-0.service",
+            "systemd-coredump@888-18657-0.service",
+            "systemd-coredump@889-18678-0.service",
+            "systemd-coredump@890-18700-0.service",
+            "systemd-coredump@891-18725-0.service",
+            "systemd-coredump@892-18746-0.service",
+            "systemd-coredump@893-18767-0.service",
+            "systemd-coredump@894-18788-0.service",
+            "systemd-coredump@895-18809-0.service",
+            "systemd-coredump@896-18833-0.service",
+            "systemd-coredump@897-18855-0.service",
+            "systemd-coredump@898-18876-0.service",
+            "systemd-coredump@899-18897-0.service",
+            "systemd-coredump@900-18918-0.service",
+            "systemd-coredump@901-18939-0.service",
+            "systemd-coredump@902-18960-0.service",
+            "systemd-coredump@903-18984-0.service",
+            "systemd-coredump@904-19005-0.service",
+            "systemd-coredump@905-19026-0.service",
+            "systemd-coredump@906-19047-0.service",
+            "systemd-coredump@907-19069-0.service",
+            "systemd-coredump@908-19090-0.service",
+            "systemd-coredump@909-19114-0.service",
+            "systemd-coredump@910-19135-0.service",
+            "systemd-coredump@911-19156-0.service",
+            "systemd-coredump@912-19177-0.service",
+            "systemd-coredump@913-19198-0.service",
+            "systemd-coredump@914-19219-0.service",
+            "systemd-coredump@915-19240-0.service",
+            "systemd-coredump@916-19261-0.service",
+            "systemd-coredump@917-19285-0.service",
+            "systemd-coredump@918-19306-0.service",
+            "systemd-coredump@919-19327-0.service",
+            "systemd-coredump@920-19348-0.service",
+            "systemd-coredump@921-19369-0.service",
+            "systemd-coredump@922-19393-0.service",
+            "systemd-coredump@923-19414-0.service",
+            "systemd-coredump@924-19435-0.service",
+            "systemd-coredump@925-19456-0.service",
+            "systemd-coredump@926-19478-0.service",
+            "systemd-coredump@927-19502-0.service",
+            "systemd-coredump@928-19523-0.service",
+            "systemd-coredump@929-19544-0.service",
+            "systemd-coredump@930-19565-0.service",
+            "systemd-coredump@931-19586-0.service",
+            "systemd-coredump@932-19607-0.service",
+            "systemd-coredump@933-19628-0.service",
+            "systemd-coredump@934-19652-0.service",
+            "systemd-coredump@935-19670-0.service",
+            "systemd-coredump@936-19694-0.service",
+            "systemd-coredump@937-19715-0.service",
+            "systemd-coredump@938-19736-0.service",
+            "systemd-coredump@939-19757-0.service",
+            "systemd-coredump@940-19778-0.service",
+            "systemd-coredump@941-19799-0.service",
+            "systemd-coredump@942-19820-0.service",
+            "systemd-coredump@943-19841-0.service",
+            "systemd-coredump@944-19862-0.service",
+            "systemd-coredump@945-19883-0.service",
+            "systemd-coredump@946-19911-0.service",
+            "systemd-coredump@947-19951-0.service",
+            "systemd-coredump@948-19975-0.service",
+            "sys-devices-virtual-block-loop0.device",
+            "dev-loop0.device",
+            "dev-disk-by\\x2dloop\\x2dinode-0:24\\x2d3833.device",
+            "dev-disk-by\\x2ddiskseq-13.device",
+            "dev-disk-by\\x2duuid-d322a86e\\x2d8eeb\\x2d4b14\\x2d97e7\\x2de320e48f0c76.device",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2duuid-d322a86e\\x2d8eeb\\x2d4b14\\x2d97e7\\x2de320e48f0c76.device",
+            "systemd-coredump@949-20015-0.service",
+            "systemd-coredump@950-20040-0.service",
+            "systemd-coredump@951-20061-0.service",
+            "systemd-coredump@952-20082-0.service",
+            "systemd-coredump@953-20113-0.service",
+            "dev-disk-by\\x2dpath-platform\\x2df10d8000.sdhci\\x2dpart-by\\x2duuid-25c556f4\\x2da262\\x2d4866\\x2d96cd\\x2d7999f2ef2fcb.device",
+            "dev-disk-by\\x2duuid-25c556f4\\x2da262\\x2d4866\\x2d96cd\\x2d7999f2ef2fcb.device",
+            "systemd-coredump@954-20168-0.service",
+            "systemd-coredump@955-20189-0.service",
+            "systemd-coredump@956-20210-0.service",
+            "systemd-coredump@957-20232-0.service",
+            "systemd-coredump@958-20254-0.service",
+            "systemd-coredump@959-20278-0.service",
+            "systemd-coredump@960-20299-0.service",
+            "systemd-coredump@961-20321-0.service"
+          ],
+          "will-clear": true,
+          "severity-level": [
+            "critical"
+          ],
+          "description": "The systemd service is considered in failed state."
+        },
+        {
+          "alarm-type-id": "velia-alarms:sensor-low-value-alarm",
+          "alarm-type-qualifier": "",
+          "resource": [
+            "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-rear']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-5V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-5V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-5V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:fan:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:power-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:power-out']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:fan:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:power-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:power-out']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-in']"
+          ],
+          "will-clear": true,
+          "description": "Sensor value is below the low threshold."
+        },
+        {
+          "alarm-type-id": "velia-alarms:sensor-high-value-alarm",
+          "alarm-type-qualifier": "",
+          "resource": [
+            "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-rear']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-5V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-5V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-5V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:fan:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:power-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:power-out']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:fan:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:power-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:power-out']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-in']"
+          ],
+          "will-clear": true,
+          "description": "Sensor value is above the high threshold."
+        },
+        {
+          "alarm-type-id": "velia-alarms:sensor-missing-alarm",
+          "alarm-type-qualifier": "",
+          "resource": [
+            "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-rear']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-5V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-5V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-5V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:fan:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:power-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:power-out']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:fan:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:power-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:power-out']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-in']",
+            "/ietf-hardware:hardware/component[name='ne:pdu']",
+            "/ietf-hardware:hardware/component[name='ne:psu1']",
+            "/ietf-hardware:hardware/component[name='ne:psu2']"
+          ],
+          "will-clear": true,
+          "description": "Sensor is missing."
+        },
+        {
+          "alarm-type-id": "velia-alarms:sensor-nonoperational",
+          "alarm-type-qualifier": "",
+          "resource": [
+            "/ietf-hardware:hardware/component[name='ne:ctrl:emmc:lifetime']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-cpu']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-front']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-0']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-internal-1']",
+            "/ietf-hardware:hardware/component[name='ne:ctrl:temperature-rear']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan2:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan3:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:fans:fan4:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:current-5V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:power-5V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:temperature-3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-3V3']",
+            "/ietf-hardware:hardware/component[name='ne:pdu:voltage-5V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:current-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:fan:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:power-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:power-out']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu1:voltage-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:current-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:fan:fan1:rpm']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:power-in']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:power-out']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:temperature-1']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:temperature-2']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-12V']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-5Vsb']",
+            "/ietf-hardware:hardware/component[name='ne:psu2:voltage-in']"
+          ],
+          "will-clear": true,
+          "description": "Sensor is flagged as nonoperational."
+        }
+      ]
+    },
+    "summary": {
+      "alarm-summary": [
+        {
+          "severity": "indeterminate",
+          "total": 0,
+          "not-cleared": 0,
+          "cleared": 0
+        },
+        {
+          "severity": "warning",
+          "total": 0,
+          "not-cleared": 0,
+          "cleared": 0
+        },
+        {
+          "severity": "minor",
+          "total": 0,
+          "not-cleared": 0,
+          "cleared": 0
+        },
+        {
+          "severity": "major",
+          "total": 0,
+          "not-cleared": 0,
+          "cleared": 0
+        },
+        {
+          "severity": "critical",
+          "total": 8,
+          "not-cleared": 5,
+          "cleared": 3
+        }
+      ]
+    },
+    "alarm-list": {
+      "number-of-alarms": 8,
+      "last-changed": "2025-03-06T13:45:17.424592315+00:00",
+      "alarm": [
+        {
+          "resource": "velia-hardware-g2.service",
+          "alarm-type-id": "velia-alarms:systemd-unit-failure",
+          "alarm-type-qualifier": "",
+          "time-created": "2025-03-06T13:28:47.582565992+00:00",
+          "is-cleared": true,
+          "last-raised": "2025-03-06T13:32:14.570129489+00:00",
+          "last-changed": "2025-03-06T13:32:16.820815209+00:00",
+          "perceived-severity": "critical",
+          "alarm-text": "systemd unit state: (activating, auto-restart-queued)",
+          "status-change": [
+            {
+              "time": "2025-03-06T13:32:14.570129489+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:28:51.941922836+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:32:14.643206999+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:28:47.582565992+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:32:16.820815209+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            }
+          ]
+        },
+        {
+          "resource": "cla-sdn-bidi-cplus1572.service",
+          "alarm-type-id": "velia-alarms:systemd-unit-failure",
+          "alarm-type-qualifier": "",
+          "time-created": "2025-03-06T13:28:51.830577937+00:00",
+          "is-cleared": true,
+          "last-raised": "2025-03-06T13:45:17.209319170+00:00",
+          "last-changed": "2025-03-06T13:45:17.424592315+00:00",
+          "perceived-severity": "critical",
+          "alarm-text": "systemd unit state: (activating, auto-restart-queued)",
+          "status-change": [
+            {
+              "time": "2025-03-06T13:44:39.676787900+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:39.785371828+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:39.927038779+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:44:45.906643365+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:46.016851176+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:46.180271060+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:44:52.208416750+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:52.333882296+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:52.593963870+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:44:58.615833431+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:12.820038245+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:58.726438404+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:12.929447299+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:44:58.927508260+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:44:20.731403932+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:45:05.073907699+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:20.859464644+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:45:05.222248312+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:20.947813235+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:45:05.292696009+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:44:27.318197175+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:45:10.995760536+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:27.462500771+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:45:11.102867529+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:28.833913946+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:45:11.175566882+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:44:33.496284469+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:45:17.209319170+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (failed, failed-before-auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:33.603340838+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:45:17.316677162+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "systemd unit state: (activating, auto-restart)"
+            },
+            {
+              "time": "2025-03-06T13:44:33.671590565+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            },
+            {
+              "time": "2025-03-06T13:45:17.424592315+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "systemd unit state: (activating, auto-restart-queued)"
+            }
+          ]
+        },
+        {
+          "resource": "/ietf-hardware:hardware/component[name='ne:psu1:voltage-12V']",
+          "alarm-type-id": "velia-alarms:sensor-high-value-alarm",
+          "alarm-type-qualifier": "",
+          "time-created": "2025-03-06T13:28:53.541504017+00:00",
+          "is-cleared": false,
+          "last-raised": "2025-03-06T13:28:53.541504017+00:00",
+          "last-changed": "2025-03-06T13:32:18.680581427+00:00",
+          "perceived-severity": "critical",
+          "alarm-text": "Sensor value crossed high threshold (6158000 > 13230).",
+          "status-change": [
+            {
+              "time": "2025-03-06T13:28:53.541504017+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (6148000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:32:18.680581427+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (6158000 > 13230)."
+            }
+          ]
+        },
+        {
+          "resource": "/ietf-hardware:hardware/component[name='ne:psu2:fan:fan1:rpm']",
+          "alarm-type-id": "velia-alarms:sensor-low-value-alarm",
+          "alarm-type-qualifier": "",
+          "time-created": "2025-03-06T13:28:53.634612590+00:00",
+          "is-cleared": false,
+          "last-raised": "2025-03-06T13:28:53.634612590+00:00",
+          "last-changed": "2025-03-06T13:28:53.634612590+00:00",
+          "perceived-severity": "critical",
+          "alarm-text": "Sensor value crossed low threshold (0 < 1500).",
+          "status-change": [
+            {
+              "time": "2025-03-06T13:28:53.634612590+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 1500)."
+            }
+          ]
+        },
+        {
+          "resource": "/ietf-hardware:hardware/component[name='ne:psu2:voltage-12V']",
+          "alarm-type-id": "velia-alarms:sensor-low-value-alarm",
+          "alarm-type-qualifier": "",
+          "time-created": "2025-03-06T13:28:53.682570573+00:00",
+          "is-cleared": false,
+          "last-raised": "2025-03-06T13:44:24.492637936+00:00",
+          "last-changed": "2025-03-06T13:44:24.492637936+00:00",
+          "perceived-severity": "critical",
+          "alarm-text": "Sensor value crossed low threshold (0 < 10830).",
+          "status-change": [
+            {
+              "time": "2025-03-06T13:34:23.688931332+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:29:11.140314731+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:34:25.692803392+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:30:40.200116803+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:34:41.491139763+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:29:17.308225758+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:34:43.503128041+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:31:18.921365310+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:37:14.432530149+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:28:53.682570573+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:37:16.672893791+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:31:20.925720095+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:42:25.435967799+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:29:19.283995675+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:42:27.478613194+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:34:17.223699268+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:44:00.842374103+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:29:13.092123988+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:44:02.952452784+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:34:19.232440019+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            },
+            {
+              "time": "2025-03-06T13:44:22.401027429+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:30:38.214404551+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:44:24.492637936+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 10830)."
+            }
+          ]
+        },
+        {
+          "resource": "/ietf-hardware:hardware/component[name='ne:psu2:voltage-5Vsb']",
+          "alarm-type-id": "velia-alarms:sensor-low-value-alarm",
+          "alarm-type-qualifier": "",
+          "time-created": "2025-03-06T13:28:53.731743486+00:00",
+          "is-cleared": false,
+          "last-raised": "2025-03-06T13:28:53.731743486+00:00",
+          "last-changed": "2025-03-06T13:28:53.731743486+00:00",
+          "perceived-severity": "critical",
+          "alarm-text": "Sensor value crossed low threshold (0 < 4512).",
+          "status-change": [
+            {
+              "time": "2025-03-06T13:28:53.731743486+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 4512)."
+            }
+          ]
+        },
+        {
+          "resource": "/ietf-hardware:hardware/component[name='ne:psu2:voltage-in']",
+          "alarm-type-id": "velia-alarms:sensor-low-value-alarm",
+          "alarm-type-qualifier": "",
+          "time-created": "2025-03-06T13:28:53.782980268+00:00",
+          "is-cleared": false,
+          "last-raised": "2025-03-06T13:28:53.782980268+00:00",
+          "last-changed": "2025-03-06T13:28:53.782980268+00:00",
+          "perceived-severity": "critical",
+          "alarm-text": "Sensor value crossed low threshold (0 < 36000).",
+          "status-change": [
+            {
+              "time": "2025-03-06T13:28:53.782980268+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed low threshold (0 < 36000)."
+            }
+          ]
+        },
+        {
+          "resource": "/ietf-hardware:hardware/component[name='ne:psu2:voltage-12V']",
+          "alarm-type-id": "velia-alarms:sensor-high-value-alarm",
+          "alarm-type-qualifier": "",
+          "time-created": "2025-03-06T13:29:11.080850585+00:00",
+          "is-cleared": true,
+          "last-raised": "2025-03-06T13:44:22.283632281+00:00",
+          "last-changed": "2025-03-06T13:44:24.607261965+00:00",
+          "perceived-severity": "critical",
+          "alarm-text": "Sensor value is within normal parameters.",
+          "status-change": [
+            {
+              "time": "2025-03-06T13:30:40.276580198+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:34:25.777244844+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:29:13.153055538+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:34:41.405927352+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:31:18.842170304+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:34:43.592437702+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:29:19.348424931+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:37:14.343177580+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:31:21.002412820+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:37:16.881742457+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:29:11.080850585+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:42:25.340152956+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:32:03.666892194+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:42:27.577238449+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:30:38.139596236+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:44:00.738037906+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:34:19.316541428+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:44:03.066048030+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            },
+            {
+              "time": "2025-03-06T13:29:17.244323493+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:44:22.283632281+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:34:23.604090024+00:00",
+              "perceived-severity": "critical",
+              "alarm-text": "Sensor value crossed high threshold (114000 > 13230)."
+            },
+            {
+              "time": "2025-03-06T13:44:24.607261965+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "Sensor value is within normal parameters."
+            }
+          ]
+        }
+      ]
+    },
+    "shelved-alarms": {
+      "number-of-shelved-alarms": 0,
+      "shelved-alarms-last-changed": "2025-03-06T13:28:46.209141658+00:00"
+    }
+  },
+  "ietf-hardware:hardware": {
+    "last-change": "2025-03-06T13:45:19.996298205-00:00",
+    "component": [
+      {
+        "name": "ne",
+        "class": "iana-hardware:chassis",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl",
+        "class": "iana-hardware:module",
+        "parent": "ne",
+        "serial-num": "0910C308541008405C14A080A08000CC",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:carrier",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl",
+        "model-name": "ClearFog Base",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:carrier:eeprom",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl:carrier",
+        "serial-num": "294100B137D2",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:emmc",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl",
+        "serial-num": "0x35c95f36",
+        "model-name": "8GTF4R",
+        "mfg-date": "2022-11-01T00:00:00-00:00",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:emmc:lifetime",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl:emmc",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "other",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok",
+          "units-display": "percent"
+        }
+      },
+      {
+        "name": "ne:ctrl:som",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl",
+        "model-name": "ClearFog A388 SOM",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:som:eeprom",
+        "class": "iana-hardware:module",
+        "parent": "ne:ctrl:som",
+        "serial-num": "80342872BDD7",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-cpu",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 42267,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-front",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 27125,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-internal-0",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 49000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-internal-1",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 38000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:ctrl:temperature-rear",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:ctrl",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 27250,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fans",
+        "class": "iana-hardware:module",
+        "parent": "ne",
+        "serial-num": "0910C30854100840CC29A088A088009E",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan1",
+        "class": "iana-hardware:fan",
+        "parent": "ne:fans",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan1:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:fans:fan1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 9018,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fans:fan2",
+        "class": "iana-hardware:fan",
+        "parent": "ne:fans",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan2:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:fans:fan2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 9018,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fans:fan3",
+        "class": "iana-hardware:fan",
+        "parent": "ne:fans",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan3:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:fans:fan3",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 8936,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fans:fan4",
+        "class": "iana-hardware:fan",
+        "parent": "ne:fans",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:fans:fan4:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:fans:fan4",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 9018,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu",
+        "class": "iana-hardware:power-supply",
+        "parent": "ne",
+        "hardware-rev": "BR0A2D     ",
+        "firmware-rev": "B08",
+        "software-rev": "P20000A00",
+        "serial-num": "SB080S522433000009 ",
+        "mfg-name": "3Y POWER",
+        "model-name": "YH-5151F (URP1X151UH)",
+        "is-fru": true,
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:pdu:current-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 902,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:current-3V3",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:current-5V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 265,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:power-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 12000000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:power-3V3",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 11000000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:power-5V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 6000000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:temperature-1",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 29000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:temperature-2",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 34000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:temperature-3",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 35000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:voltage-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 11968,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:voltage-3V3",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 3328,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:pdu:voltage-5V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:pdu",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 5093,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1",
+        "class": "iana-hardware:power-supply",
+        "parent": "ne",
+        "hardware-rev": "B01R       ",
+        "firmware-rev": "A17",
+        "software-rev": "P2J700A04",
+        "serial-num": "SA170T292229004908 ",
+        "mfg-name": "3Y POWER",
+        "model-name": "YM-2151E (URP1X151AM)",
+        "is-fru": true,
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu1:current-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 1148,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:current-5Vsb",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 113,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:current-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 203,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:fan",
+        "class": "iana-hardware:module",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu1:fan:fan1",
+        "class": "iana-hardware:fan",
+        "parent": "ne:psu1:fan",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu1:fan:fan1:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1:fan:fan1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 4096,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:power-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 19750000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:power-out",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 14000000,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:temperature-1",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 32000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:temperature-2",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 34000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:voltage-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 6158000,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:voltage-5Vsb",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 5035,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu1:voltage-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 230750,
+          "value-type": "volts-AC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2",
+        "class": "iana-hardware:power-supply",
+        "parent": "ne",
+        "hardware-rev": "BR  ",
+        "firmware-rev": "B09",
+        "software-rev": "P20000A00",
+        "serial-num": "SB090S512433000039",
+        "mfg-name": "3Y POWER",
+        "model-name": "YM-2151F (URP1X151DM)",
+        "is-fru": true,
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu2:current-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:current-5Vsb",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:current-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:fan",
+        "class": "iana-hardware:module",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu2:fan:fan1",
+        "class": "iana-hardware:fan",
+        "parent": "ne:psu2:fan",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:psu2:fan:fan1:rpm",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2:fan:fan1",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "rpm",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:power-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:power-out",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:temperature-1",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 26000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:temperature-2",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 26000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:voltage-12V",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:voltage-5Vsb",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:psu2:voltage-in",
+        "class": "iana-hardware:sensor",
+        "parent": "ne:psu2",
+        "state": {
+          "oper-state": "enabled"
+        },
+        "sensor-data": {
+          "value": 0,
+          "value-type": "volts-DC",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      }
+    ]
+  }
+}

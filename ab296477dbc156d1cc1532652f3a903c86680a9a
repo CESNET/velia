@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed5917f1_3d453d20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-06T10:39:31Z",
+      "side": 1,
+      "message": "And just for the record, this took some effort to debug because of how the Linux kernel deals with failed device probes. When an I2C driver returns -ENODEV from its .probe(), apparently the kernel somehow \"remembers\" this failure, and subsequent attempts to bind the same driver at the same address from userspace returns EBUSY immediately, without actually touching the underlying bus at all.\n\nIt looked like this when I2C tracing was runtime-enabled:\n\n veliad-hardware-6268    [001] ..... 69681.075992: i2c_read: i2c-2 #0 a\u003d025 f\u003d0001 l\u003d1\n veliad-hardware-6268    [001] ..... 69681.076266: i2c_reply: i2c-2 #0 a\u003d025 f\u003d0001 l\u003d1 [fb]\n veliad-hardware-6268    [001] ..... 69681.076267: i2c_result: i2c-2 n\u003d1 ret\u003d1\n\n...which puzzled me a lot, but in the end this turned out to be just some jitter which originated from the runtime presence checks in velia (TransientI2C). The actual bind was nowhere to be seen.\n\nA kernel fix (not for the mysterious bind error, but for the chip ID mismatch) is at https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/8369.",
+      "revId": "ab296477dbc156d1cc1532652f3a903c86680a9a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

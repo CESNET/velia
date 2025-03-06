@@ -16,7 +16,7 @@ using velia::ietf_hardware::data_reader::SysfsValue;
 void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware)
 {
     auto pdu = std::make_shared<velia::ietf_hardware::FspYhPdu>("pdu",
-                                                                std::make_shared<TransientI2C>(2, 0x25, "yh5151e"),
+                                                                std::make_shared<TransientI2C>(2, 0x25, "yh5151"),
                                                                 std::make_shared<TransientI2C>(2, 0x56, "24c02"));
     auto psu1 = std::make_shared<velia::ietf_hardware::FspYhPsu>("psu1",
                                                                  std::make_shared<TransientI2C>(2, 0x58, "ym2151"),

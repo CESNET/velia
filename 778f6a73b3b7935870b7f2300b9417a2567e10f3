@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e82b74c5_013a87ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-03-10T09:00:52Z",
+      "side": 1,
+      "message": "We agreed on today\u0027s call that this is only a hotfix. The RFC says, that the list should be sorted (https://datatracker.ietf.org/doc/rfc8632/, yang module `list status-change`)\n\n           This list is ordered according to the timestamps of alarm\n           state changes.  The first item corresponds to the latest\n           state change.",
+      "revId": "778f6a73b3b7935870b7f2300b9417a2567e10f3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -9,6 +9,7 @@
 #include "sysrepo.h"
 #include "utils/benchmark.h"
 #include "utils/log.h"
+#include "sysrepo-cpp/utils/utils.hpp"
 
 extern "C" {
 #include <sysrepo.h>
@@ -62,14 +63,24 @@ void valuesToYang(const YANGData& values, const std::vector<std::string>& foreig
     auto log = spdlog::get("main");
 
     for (const auto& xpath : foreignRemovals) {
-        // FIXME: only create these if not found
-        // That requires lyd_find_sibling_opaq_next() because lyd_find_xpath() doesn't find /sysrepo:discard-items.
-        auto discard = session.getContext().newOpaqueJSON({"sysrepo", "sysrepo", "discard-items"}, libyang::JSON{xpath});
+        bool hasExactDiscard = false;
+        if (parent) {
+            for (auto& node : sysrepo::findMatchingDiscardPrefixes(*parent, xpath)) {
+                if (node.value() == xpath) {
+                    hasExactDiscard = true;
+                } else {
+                    sysrepo::unlinkFromForest(parent, node);
+                }
+            }
+        }
+        if (!hasExactDiscard) {
+            auto discard = session.getContext().newOpaqueJSON({"sysrepo", "sysrepo", "discard-items"}, libyang::JSON{xpath});
 
-        if (!parent) {
-            parent = discard;
-        } else {
-            parent->insertSibling(*discard);
+            if (!parent) {
+                parent = discard;
+            } else {
+                parent = parent->insertSibling(*discard);
+            }
         }
     }
 

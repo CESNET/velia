@@ -64,7 +64,7 @@ void valuesToYang(const YANGData& values, const std::vector<std::string>& foreig
     for (const auto& xpath : foreignRemovals) {
         // FIXME: only create these if not found
         // That requires lyd_find_sibling_opaq_next() because lyd_find_xpath() doesn't find /sysrepo:discard-items.
-        auto discard = session.getContext().newOpaqueJSON("sysrepo", "discard-items", libyang::JSON{xpath});
+        auto discard = session.getContext().newOpaqueJSON({"sysrepo", "sysrepo", "discard-items"}, libyang::JSON{xpath});
 
         if (!parent) {
             parent = discard;

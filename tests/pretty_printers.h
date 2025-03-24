@@ -13,6 +13,7 @@
 #include <sstream>
 #include <trompeloeil.hpp>
 #include "ietf-hardware/sysfs/IpmiFruEEPROM.h"
+#include "ietf-hardware/sysfs/OnieEEPROM.h"
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/thresholds.h"
 #include "tests/sysrepo-helpers/common.h"
@@ -134,6 +135,32 @@ struct StringMaker<velia::ietf_hardware::sysfs::FRUInformationStorage> {
     static String convert(const velia::ietf_hardware::sysfs::FRUInformationStorage& e)
     {
         return (std::string{"EEPROM{"} + StringMaker<decltype(e.header)>::convert(e.header).c_str() + ", " + StringMaker<decltype(e.productInfo)>::convert(e.productInfo).c_str() + "}").c_str();
+    }
+};
+
+template <>
+struct StringMaker<velia::ietf_hardware::sysfs::TLV> {
+    static String convert(const velia::ietf_hardware::sysfs::TLV& e)
+    {
+        constexpr auto visitor = [](auto&& arg) -> std::string {
+            using T = std::decay_t<decltype(arg)>;
+
+            if constexpr (std::is_same_v<T, std::string>) {
+                return arg;
+            } else if constexpr (std::is_same_v<T, uint8_t>) {
+                return fmt::format(" {:02x}", arg);
+            } else if constexpr (std::is_same_v<T, std::vector<uint8_t>>) {
+                std::ostringstream oss;
+                for (const auto& e : arg) {
+                    oss << fmt::format(" {:02x}", e);
+                }
+                return oss.str();
+            } else {
+                return "unknown";
+            }
+        };
+
+        return fmt::format("TLV{{type: {}, value: {}}}", static_cast<int>(e.type), std::visit<std::string>(visitor, e.value)).c_str();
     }
 };
 }

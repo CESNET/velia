@@ -141,6 +141,8 @@ add_library(velia-ietf-hardware STATIC
     src/ietf-hardware/sysfs/HWMon.h
     src/ietf-hardware/sysfs/IpmiFruEEPROM.cpp
     src/ietf-hardware/sysfs/IpmiFruEEPROM.h
+    src/ietf-hardware/sysfs/OnieEEPROM.cpp
+    src/ietf-hardware/sysfs/OnieEEPROM.h
     src/ietf-hardware/IETFHardware.cpp
     src/ietf-hardware/IETFHardware.h
     src/ietf-hardware/FspYh.cpp

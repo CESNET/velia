@@ -10,6 +10,7 @@
 #include <filesystem>
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/sysfs/IpmiFruEEPROM.h"
+#include "ietf-hardware/sysfs/OnieEEPROM.h"
 #include "pretty_printers.h"
 #include "test_log_setup.h"
 #include "tests/configure.cmake.h"
@@ -215,5 +216,79 @@ TEST_CASE("IPMI FRU EEPROM reader")
         }
 
         REQUIRE_THROWS_WITH_AS(ipmiFruEeprom(testsDir / eepromFile), exception.c_str(), std::runtime_error);
+    }
+}
+
+TEST_CASE("ONIE EEPROM reader")
+{
+    using velia::ietf_hardware::sysfs::TLV;
+    using velia::ietf_hardware::sysfs::TlvInfo;
+    TEST_INIT_LOGS;
+
+    const auto testsDir = std::filesystem::path{sysfsPrefix} / "eeprom"s;
+    std::filesystem::path eepromFile;
+
+    DOCTEST_SUBCASE("Valid files")
+    {
+        TlvInfo expected;
+
+        DOCTEST_SUBCASE("188_0-0052_eeprom.bin")
+        {
+            eepromFile = "188_0-0052_eeprom.bin";
+            expected = TlvInfo({
+                TLV{.type = TLV::Type::ProductName, .value = "Clearfog Base"},
+                TLV{.type = TLV::Type::PartNumber, .value = "SRCFCBE000CV14"},
+                TLV{.type = TLV::Type::SerialNumber, .value = "IP01195230800010"},
+                TLV{.type = TLV::Type::ManufactureDate, .value = "2023-02-23 06:12:51"},
+                TLV{.type = TLV::Type::DeviceVersion, .value = uint8_t{0x14}},
+                TLV{.type = TLV::Type::Vendor, .value = "SolidRun"},
+                TLV{.type = TLV::Type::VendorExtension, .value = std::vector<uint8_t>{0xff, 0xff, 0xff, 0xff, 0x81, 0x04}},
+            });
+        }
+        DOCTEST_SUBCASE("188_0-0053_eeprom.bin")
+        {
+            eepromFile = "188_0-0053_eeprom.bin";
+            expected = TlvInfo({
+                TLV{.type = TLV::Type::ProductName, .value = "A38x SOM"},
+                TLV{.type = TLV::Type::PartNumber, .value = "SRM6828S32D01GE008V21C0"},
+                TLV{.type = TLV::Type::SerialNumber, .value = "IP01195230800010"},
+                TLV{.type = TLV::Type::ManufactureDate, .value = "2023-02-23 06:12:51"},
+                TLV{.type = TLV::Type::DeviceVersion, .value = uint8_t{0x21}},
+                TLV{.type = TLV::Type::Vendor, .value = "SolidRun"},
+                TLV{.type = TLV::Type::VendorExtension, .value = std::vector<uint8_t>{0xff, 0xff, 0xff, 0xff, 0x81, 0x04}},
+            });
+        }
+        DOCTEST_SUBCASE("191_0-0052_eeprom.bin")
+        {
+            eepromFile = "191_0-0052_eeprom.bin";
+            expected = TlvInfo({
+                TLV{.type = TLV::Type::ProductName, .value = "Clearfog Base"},
+                TLV{.type = TLV::Type::PartNumber, .value = "SRCFCBE000CV14"},
+                TLV{.type = TLV::Type::SerialNumber, .value = "IP01195230800003"},
+                TLV{.type = TLV::Type::ManufactureDate, .value = "2023-02-23 06:00:08"},
+                TLV{.type = TLV::Type::DeviceVersion, .value = uint8_t{0x14}},
+                TLV{.type = TLV::Type::Vendor, .value = "SolidRun"},
+                TLV{.type = TLV::Type::VendorExtension, .value = std::vector<uint8_t>{0xff, 0xff, 0xff, 0xff, 0x81, 0x04}},
+            });
+        }
+        DOCTEST_SUBCASE("191_0-0053_eeprom.bin")
+        {
+            eepromFile = "191_0-0053_eeprom.bin";
+            expected = TlvInfo({
+                TLV{.type = TLV::Type::ProductName, .value = "A38x SOM"},
+                TLV{.type = TLV::Type::PartNumber, .value = "SRM6828S32D01GE008V21C0"},
+                TLV{.type = TLV::Type::SerialNumber, .value = "IP01195230800003"},
+                TLV{.type = TLV::Type::ManufactureDate, .value = "2023-02-23 06:00:08"},
+                TLV{.type = TLV::Type::DeviceVersion, .value = uint8_t{0x21}},
+                TLV{.type = TLV::Type::Vendor, .value = "SolidRun"},
+                TLV{.type = TLV::Type::VendorExtension, .value = std::vector<uint8_t>{0xff, 0xff, 0xff, 0xff, 0x81, 0x04}},
+            });
+        }
+        REQUIRE(velia::ietf_hardware::sysfs::onieEeprom(testsDir / eepromFile) == expected);
+    }
+
+    DOCTEST_SUBCASE("Invalid files")
+    {
+        REQUIRE_THROWS_WITH_AS(velia::ietf_hardware::sysfs::onieEeprom(testsDir / "191_0-0053_eeprom-wrongcrc.bin"), "Failed to parse TlvInfo structure", std::runtime_error);
     }
 }

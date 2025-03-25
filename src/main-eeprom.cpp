@@ -5,6 +5,7 @@
 #include <spdlog/spdlog.h>
 #include "VELIA_VERSION.h"
 #include "ietf-hardware/sysfs/IpmiFruEEPROM.h"
+#include "ietf-hardware/sysfs/OnieEEPROM.h"
 #include "utils/exceptions.h"
 #include "utils/log-init.h"
 #include "utils/log.h"
@@ -12,11 +13,11 @@
 using namespace std::literals;
 
 static const char usage[] =
-    R"(Dump content of an IPMI FRU EEPROM data
+    R"(Dump content of an IPMI FRU or ONIE EEPROM data
 
 Usage:
-  velia-eeprom <i2c_bus> <i2c_address>
-  velia-eeprom <file>
+  velia-eeprom (--ipmi | --onie) <i2c_bus> <i2c_address>
+  velia-eeprom (--ipmi | --onie) <file>
   velia-eeprom (-h | --help)
   velia-eeprom --version
 
@@ -39,6 +40,58 @@ void ipmiFruEeprom(Args&&... args)
     }
 }
 
+std::string tlvType(const velia::ietf_hardware::sysfs::TLV::Type& type) {
+    using velia::ietf_hardware::sysfs::TLV;
+
+    switch(type) {
+        case TLV::Type::ProductName: return "Product name";
+        case TLV::Type::PartNumber: return "P/N";
+        case TLV::Type::SerialNumber: return "S/N";
+        case TLV::Type::ManufactureDate: return "Manufacture date";
+        case TLV::Type::DeviceVersion: return "Device version";
+        case TLV::Type::Vendor: return "Vendor";
+        case TLV::Type::VendorExtension: return "Vendor extension";
+    }
+}
+
+template <class... Args>
+void onieEeprom(Args&&... args)
+{
+    constexpr auto valueVisitor = [](const auto& v) -> std::string {
+        using T = std::decay_t<decltype(v)>;
+        if constexpr (std::is_same_v<T, std::string>) {
+            return v;
+        } else if constexpr (std::is_same_v<T, uint8_t>) {
+            return fmt::format("0x{:02x}", v);
+        } else {
+            return "";
+        }
+    };
+
+    using velia::ietf_hardware::sysfs::TLV;
+    const auto eepromData = velia::ietf_hardware::sysfs::onieEeprom(std::forward<Args>(args)...);
+
+    for (const auto& entry : eepromData) {
+        if (entry.type == TLV::Type::VendorExtension || entry.type == TLV::Type::Vendor || entry.type == TLV::Type::ManufactureDate) {
+            continue;
+        }
+
+        fmt::print("{}: {}\n", tlvType(entry.type), std::visit(valueVisitor, entry.value));
+    }
+}
+
+template <class... Args>
+void readEeprom(const docopt::Options& options, Args&&... args)
+{
+    if (options.at("--ipmi").asBool()) {
+        ipmiFruEeprom(std::forward<Args>(args)...);
+    } else if (options.at("--onie").asBool()) {
+        onieEeprom(std::forward<Args>(args)...);
+    } else {
+        throw std::runtime_error{"EEPROM type not specified"};
+    }
+}
+
 int main(int argc, char* argv[])
 {
     std::shared_ptr<spdlog::sinks::sink> loggingSink = std::make_shared<spdlog::sinks::ansicolor_stderr_sink_mt>();
@@ -50,7 +103,7 @@ int main(int argc, char* argv[])
     try {
         velia::ietf_hardware::sysfs::FRUInformationStorage eepromData;
         if (args["<file>"]) {
-            ipmiFruEeprom(std::filesystem::path{args["<file>"].asString()});
+            readEeprom(args, std::filesystem::path{args["<file>"].asString()});
         } else {
             auto parseAddress = [](const std::string& input, const std::string& thing, const uint8_t min, const uint8_t max) -> uint8_t {
                 namespace x3 = boost::spirit::x3;
@@ -69,8 +122,7 @@ int main(int argc, char* argv[])
 
             auto bus = parseAddress(args["<i2c_bus>"].asString(), "an I2C bus number", 0, 255);
             auto address = parseAddress(args["<i2c_address>"].asString(), "an I2C device address", 0x08, 0x77);
-            ipmiFruEeprom(std::filesystem::path{"/sys"}, bus, address);
-            fmt::print("IPMI FRU EEPROM at I2C bus {}, device {:#04x}:\n", bus, address);
+            readEeprom(args, std::filesystem::path{"/sys"}, bus, address);
         }
 
         return 0;

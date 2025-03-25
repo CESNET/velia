@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3343ee50_caad1f67",
+        "filename": "src/ietf-hardware/sysfs/OnieEEPROM.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-25T09:02:25Z",
+      "side": 1,
+      "message": "nit: in case you\u0027re amending the commit, please add a comment that this is the length field",
+      "range": {
+        "startLine": 138,
+        "startChar": 43,
+        "endLine": 138,
+        "endChar": 72
+      },
+      "revId": "8dfd0905393cdaa058d65cb8d546973e73a78488",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "566cdbf8_71a1dda3",
+        "filename": "src/ietf-hardware/sysfs/OnieEEPROM.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-03-25T09:02:25Z",
+      "side": 1,
+      "message": "it\u0027s a NUL-terminated string:\n\n\u003e The first eight bytes in the EEPROM are the NULL-terminated ASCII string TlvInfo. This identification string can be used as a simple, preliminary check that the EEPROM conforms to the TlvInfo format defined here. \n\nhttps://opencomputeproject.github.io/onie/design-spec/hw_requirements.html",
+      "revId": "8dfd0905393cdaa058d65cb8d546973e73a78488",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

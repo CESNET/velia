@@ -25,6 +25,20 @@ Options:
   --version                         Show version.
 )";
 
+template <class... Args>
+void ipmiFruEeprom(Args&&... args)
+{
+    const auto eepromData = velia::ietf_hardware::sysfs::ipmiFruEeprom(std::forward<Args>(args)...);
+
+    const auto& pi = eepromData.productInfo;
+    fmt::print("Manufacturer: {}\nProduct name: {}\nP/N: {}\nVersion: {}\nS/N: {}\nAsset tag:{}\nFRU file ID: {}\n",
+            pi.manufacturer, pi.name, pi.partNumber, pi.version, pi.serialNumber, pi.assetTag, pi.fruFileId);
+    fmt::print("Custom: \n");
+    for (const auto& custom : eepromData.productInfo.custom) {
+        fmt::print(" * '{}'\n", custom);
+    }
+}
+
 int main(int argc, char* argv[])
 {
     std::shared_ptr<spdlog::sinks::sink> loggingSink = std::make_shared<spdlog::sinks::ansicolor_stderr_sink_mt>();
@@ -36,7 +50,7 @@ int main(int argc, char* argv[])
     try {
         velia::ietf_hardware::sysfs::FRUInformationStorage eepromData;
         if (args["<file>"]) {
-            eepromData = velia::ietf_hardware::sysfs::ipmiFruEeprom(std::filesystem::path{args["<file>"].asString()});
+            ipmiFruEeprom(std::filesystem::path{args["<file>"].asString()});
         } else {
             auto parseAddress = [](const std::string& input, const std::string& thing, const uint8_t min, const uint8_t max) -> uint8_t {
                 namespace x3 = boost::spirit::x3;
@@ -55,16 +69,8 @@ int main(int argc, char* argv[])
 
             auto bus = parseAddress(args["<i2c_bus>"].asString(), "an I2C bus number", 0, 255);
             auto address = parseAddress(args["<i2c_address>"].asString(), "an I2C device address", 0x08, 0x77);
-            eepromData = velia::ietf_hardware::sysfs::ipmiFruEeprom(std::filesystem::path{"/sys"}, bus, address);
+            ipmiFruEeprom(std::filesystem::path{"/sys"}, bus, address);
             fmt::print("IPMI FRU EEPROM at I2C bus {}, device {:#04x}:\n", bus, address);
-        }
-
-        const auto& pi = eepromData.productInfo;
-        fmt::print("Manufacturer: {}\nProduct name: {}\nP/N: {}\nVersion: {}\nS/N: {}\nAsset tag:{}\nFRU file ID: {}\n",
-                pi.manufacturer, pi.name, pi.partNumber, pi.version, pi.serialNumber, pi.assetTag, pi.fruFileId);
-        fmt::print("Custom: \n");
-        for (const auto& custom : eepromData.productInfo.custom) {
-            fmt::print(" * '{}'\n", custom);
         }
 
         return 0;

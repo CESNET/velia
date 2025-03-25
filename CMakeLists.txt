@@ -327,11 +327,11 @@ target_link_libraries(veliad-hardware
 add_dependencies(veliad-hardware target-VELIA_VERSION)
 target_include_directories(veliad-hardware PUBLIC ${CMAKE_BINARY_DIR})
 
-add_executable(velia-ipmi-fru-eeprom
-    src/main-ipmi-fru-eeprom.cpp
+add_executable(velia-eeprom
+    src/main-eeprom.cpp
     )
-add_dependencies(velia-ipmi-fru-eeprom target-VELIA_VERSION)
-target_link_libraries(velia-ipmi-fru-eeprom
+add_dependencies(velia-eeprom target-VELIA_VERSION)
+target_link_libraries(velia-eeprom
     PUBLIC
         velia-ietf-hardware
         PkgConfig::DOCOPT
@@ -557,7 +557,7 @@ install(TARGETS
     veliad-system
     veliad-hardware
     veliad-firewall
-    velia-ipmi-fru-eeprom
+    velia-eeprom
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
 
 set(JQ_SRCS)

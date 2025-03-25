@@ -15,10 +15,10 @@ static const char usage[] =
     R"(Dump content of an IPMI FRU EEPROM data
 
 Usage:
-  velia-ipmi-fru-eeprom <i2c_bus> <i2c_address>
-  velia-ipmi-fru-eeprom <file>
-  velia-ipmi-fru-eeprom (-h | --help)
-  velia-ipmi-fru-eeprom --version
+  velia-eeprom <i2c_bus> <i2c_address>
+  velia-eeprom <file>
+  velia-eeprom (-h | --help)
+  velia-eeprom --version
 
 Options:
   -h --help                         Show this screen.
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     velia::utils::initLogs(loggingSink);
     spdlog::set_level(spdlog::level::info);
 
-    auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "velia-ipmi-fru-eeprom" VELIA_VERSION, true);
+    auto args = docopt::docopt(usage, {argv + 1, argv + argc}, true, "velia-eeprom" VELIA_VERSION, true);
 
     try {
         velia::ietf_hardware::sysfs::FRUInformationStorage eepromData;

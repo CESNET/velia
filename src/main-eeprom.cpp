@@ -16,8 +16,8 @@ static const char usage[] =
     R"(Dump content of an IPMI FRU or ONIE EEPROM data
 
 Usage:
-  velia-eeprom (--ipmi | --onie) <i2c_bus> <i2c_address>
-  velia-eeprom (--ipmi | --onie) <file>
+  velia-eeprom [--ipmi | --onie] <i2c_bus> <i2c_address>
+  velia-eeprom [--ipmi | --onie] <file>
   velia-eeprom (-h | --help)
   velia-eeprom --version
 
@@ -98,7 +98,21 @@ void readEeprom(const docopt::Options& options, Args&&... args)
     } else if (options.at("--onie").asBool()) {
         onieEeprom(std::forward<Args>(args)...);
     } else {
-        throw std::runtime_error{"EEPROM type not specified"};
+        try {
+            ipmiFruEeprom(std::forward<Args>(args)...);
+            return;
+        } catch (const std::exception& e) {
+            spdlog::get("main")->debug("Failed to read IPMI FRU EEPROM: {}", e.what());
+        }
+
+        try {
+            onieEeprom(std::forward<Args>(args)...);
+            return;
+        } catch (const std::exception& e) {
+            spdlog::get("main")->debug("Failed to read ONIE EEPROM: {}", e.what());
+        }
+
+        throw std::runtime_error{"Failed to read any EEPROM"};
     }
 }
 

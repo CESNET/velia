@@ -82,7 +82,7 @@ void onieEeprom(Args&&... args)
     const auto eepromData = velia::ietf_hardware::sysfs::onieEeprom(std::forward<Args>(args)...);
 
     for (const auto& entry : eepromData) {
-        if (entry.type == TLV::Type::VendorExtension || entry.type == TLV::Type::Vendor || entry.type == TLV::Type::ManufactureDate) {
+        if (entry.type == TLV::Type::VendorExtension) {
             continue;
         }
 

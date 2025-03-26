@@ -101,6 +101,13 @@ void valuesToYang(const YANGData& values, const std::vector<std::string>& foreig
             log->trace("Cannot remove {} from stored ops edit: not found", xpath);
         }
     }
+
+    /* We could have added a new node to the parent which is a sibling to the left. This could be a problem because
+       libyang's printing the tree with WithSiblings flag does not print the left siblings, and so does sysrepo's editBatch.
+    */
+    if (parent) {
+        parent = parent->firstSibling();
+    }
 }
 
 /** @brief Update the operational DS

@@ -43,7 +43,7 @@ For building, one needs:
 - [`nlohmann_json`](https://json.nlohmann.me/) - C++ JSON library
 - [`docopt`](https://github.com/docopt/docopt.cpp) for CLI option parsing
 - [`nft`](https://www.netfilter.org/projects/nftables/index.html) - the netfilter tool
-- optionally, [Doctest](https://github.com/onqtam/doctest/) as a C++ unit test framework
+- optionally, [Doctest](https://github.com/doctest/doctest/) as a C++ unit test framework
 - optionally, [trompeloeil](https://github.com/rollbear/trompeloeil) for mock objects in C++
 - optionally, [`iproute2`](https://wiki.linuxfoundation.org/networking/iproute2) - the `ip` tool for testing
 - optionally, [`jq`](https://jqlang.github.io/jq/) to run [some CLI utilities](./cli) and for testing them

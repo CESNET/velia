@@ -96,6 +96,8 @@ std::string tlvTypeJSON(const velia::ietf_hardware::sysfs::TLV::Type& type)
         return "vendor";
     case TLV::Type::VendorExtension:
         return "vendor-ext";
+    case TLV::Type::MAC1Base:
+        return "mac1-base";
     default:
         return fmt::format("unknown-{:#04x}", static_cast<uint8_t>(type));
     }

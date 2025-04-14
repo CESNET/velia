@@ -18,6 +18,7 @@ struct TLV {
         ProductName = 0x21,
         PartNumber = 0x22,
         SerialNumber = 0x23,
+        MAC1Base = 0x24,
         ManufactureDate = 0x25,
         DeviceVersion = 0x26,
         Vendor = 0x2d,

@@ -129,10 +129,23 @@ auto typeCode(TLV::Type type)
     return x3::rule<class byteWithValue, TLV::Type>{"typeCode"} = x3::byte_[mustEqual];
 }
 
+auto fixedLengthBlob(size_t len)
+{
+    namespace x3 = boost::spirit::x3;
+
+    auto checkLength = [len](auto& ctx) {
+        spdlog::info("checkLength: _attr(ctx).size() == {}, expected = {}", x3::_attr(ctx).size(), len);
+        x3::_pass(ctx) = x3::_attr(ctx).size() == len;
+        x3::_val(ctx) = x3::_attr(ctx);
+    };
+    return x3::rule<class blob, std::vector<uint8_t>>{"fixedLengthBlob"} = ByteVector<>{}[checkLength];
+}
+
 auto TLVEntry = x3::rule<struct TLVEntry, TLV>{"TLVEntry"} = //
     (typeCode(TLV::Type::ProductName) >> string) |
     (typeCode(TLV::Type::PartNumber) >> string) |
     (typeCode(TLV::Type::SerialNumber) >> string) |
+    (typeCode(TLV::Type::MAC1Base) >> fixedLengthBlob(6)) |
     (typeCode(TLV::Type::ManufactureDate) >> string) |
     (typeCode(TLV::Type::Vendor) >> string) |
     (typeCode(TLV::Type::DeviceVersion) >> x3::omit[byteWithValue(0x01)] /* length field */ >> x3::byte_) |

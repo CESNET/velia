@@ -604,6 +604,20 @@ function(add_jq_test UTILITY_NAME TESTCASE_NAME)
                 | diff -u ${test_input_prefix}.expected -")
 endfunction()
 
+function(add_velia_eeprom_json_test TESTCASE_NAME)
+    set(test_name velia-eeprom-json-${TESTCASE_NAME})
+    if(JQ_EXECUTABLE STREQUAL "JQ_EXECUTABLE-NOTFOUND")
+        message(WARNING "Cannot find the `jq` program, skipping test \"${test_name}\"")
+        return()
+    endif()
+    set(test_input_prefix ${CMAKE_CURRENT_SOURCE_DIR}/tests/jq/${UTILITY_NAME}/${TESTCASE_NAME})
+    add_test(NAME ${test_name}
+        COMMAND sh -c
+        "$<TARGET_FILE:velia-eeprom> --onie --json \
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysfs/eeprom/${TESTCASE_NAME}.bin \
+            | jq | diff -u ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysfs/eeprom/${TESTCASE_NAME}.json -")
+endfunction()
+
 add_jq_utility(velia-list-alarms)
 add_jq_test(velia-list-alarms EDFA-LINE-SDN-ID210512)
 add_jq_test(velia-list-alarms active-since)
@@ -612,3 +626,4 @@ add_jq_test(velia-list-alarms history)
 add_jq_test(velia-list-alarms PGCL25033)
 add_jq_utility(velia-list-hardware)
 add_jq_test(velia-list-hardware EDFA-LINE-SDN-ID210512)
+add_velia_eeprom_json_test(188_0-0052_eeprom)

@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "type": "product-name",
+      "value": "Clearfog Base"
+    },
+    {
+      "type": "part-number",
+      "value": "SRCFCBE000CV14"
+    },
+    {
+      "type": "serial-number",
+      "value": "IP01195230800010"
+    },
+    {
+      "type": "mfg-date",
+      "value": "2023-02-23 06:12:51"
+    },
+    {
+      "type": "device-version",
+      "value": 20
+    },
+    {
+      "type": "vendor",
+      "value": "SolidRun"
+    },
+    {
+      "type": "vendor-ext",
+      "value": "/////4EE"
+    }
+  ]
+}

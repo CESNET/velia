@@ -1,3 +1,8 @@
+#define BOOST_CONTAINER_NO_LIB
+#define BOOST_JSON_NO_LIB
+#include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
+#include <boost/json/src.hpp>
 #include <boost/spirit/home/x3.hpp>
 #include <docopt.h>
 #include <fmt/format.h>
@@ -16,8 +21,8 @@ static const char usage[] =
     R"(Dump content of an IPMI FRU or ONIE EEPROM data
 
 Usage:
-  velia-eeprom [--ipmi | --onie] <i2c_bus> <i2c_address>
-  velia-eeprom [--ipmi | --onie] <file>
+  velia-eeprom [--ipmi | --onie] [--json] <i2c_bus> <i2c_address>
+  velia-eeprom [--ipmi | --onie] [--json] <file>
   velia-eeprom (-h | --help)
   velia-eeprom --version
 
@@ -26,9 +31,17 @@ Options:
   --version                         Show version.
 )";
 
+enum class OutputFormat {
+    HumanReadable,
+    JSON,
+};
+
 template <class... Args>
-void ipmiFruEeprom(Args&&... args)
+void ipmiFruEeprom(const OutputFormat format, Args&&... args)
 {
+    if (format != OutputFormat::HumanReadable) {
+        throw std::runtime_error{"JSON printing for IPMI EEPROMs is not implemented yet"};
+    }
     const auto eepromData = velia::ietf_hardware::sysfs::ipmiFruEeprom(std::forward<Args>(args)...);
 
     const auto& pi = eepromData.productInfo;
@@ -64,49 +77,109 @@ std::string tlvType(const velia::ietf_hardware::sysfs::TLV::Type& type)
     }
 }
 
-template <class... Args>
-void onieEeprom(Args&&... args)
+std::string tlvTypeJSON(const velia::ietf_hardware::sysfs::TLV::Type& type)
 {
-    constexpr auto valueVisitor = [](const auto& v) -> std::string {
+    using velia::ietf_hardware::sysfs::TLV;
+
+    switch (type) {
+    case TLV::Type::ProductName:
+        return "product-name";
+    case TLV::Type::PartNumber:
+        return "part-number";
+    case TLV::Type::SerialNumber:
+        return "serial-number";
+    case TLV::Type::ManufactureDate:
+        return "mfg-date";
+    case TLV::Type::DeviceVersion:
+        return "device-version";
+    case TLV::Type::Vendor:
+        return "vendor";
+    case TLV::Type::VendorExtension:
+        return "vendor-ext";
+    default:
+        return fmt::format("unknown-{:#04x}", static_cast<uint8_t>(type));
+    }
+}
+
+template <class... Args>
+void onieEeprom(const OutputFormat format, Args&&... args)
+{
+    constexpr auto prettyValueVisitor = [](const auto& v) -> std::string {
         using T = std::decay_t<decltype(v)>;
         if constexpr (std::is_same_v<T, std::string>) {
             return v;
         } else if constexpr (std::is_same_v<T, uint8_t>) {
             return fmt::format("{:#04x}", v);
-        } else {
+        } else if constexpr (std::is_same_v<T, uint16_t>) {
+            return fmt::format("{:d}", v);
+        } else if constexpr (std::is_same_v<T, std::vector<uint8_t>>) {
             return "";
+        }
+    };
+
+    constexpr auto jsonValueVisitor = [](const auto& v) -> boost::json::value {
+        using T = std::decay_t<decltype(v)>;
+        if constexpr (std::is_same_v<T, std::string>) {
+            return boost::json::string{v};
+        } else if constexpr (std::is_same_v<T, uint8_t>) {
+            return v;
+        } else if constexpr (std::is_same_v<T, uint16_t>) {
+            return v;
+        } else if constexpr (std::is_same_v<T, std::vector<uint8_t>>) {
+            using namespace boost::archive::iterators;
+            using It = base64_from_binary<transform_width<typename T::const_iterator, 6, 8>>;
+            auto tmp = std::string(It(std::begin(v)), It(std::end(v)));
+            return boost::json::string{tmp.append((3 - v.size() % 3) % 3, '=')};
         }
     };
 
     using velia::ietf_hardware::sysfs::TLV;
     const auto eepromData = velia::ietf_hardware::sysfs::onieEeprom(std::forward<Args>(args)...);
 
-    for (const auto& entry : eepromData) {
-        if (entry.type == TLV::Type::VendorExtension) {
-            continue;
-        }
+    switch (format) {
+    case OutputFormat::HumanReadable:
+        for (const auto& entry : eepromData) {
+            if (entry.type == TLV::Type::VendorExtension) {
+                continue;
+            }
 
-        fmt::print("{}: {}\n", tlvType(entry.type), std::visit(valueVisitor, entry.value));
+            fmt::print("{}: {}\n", tlvType(entry.type), std::visit(prettyValueVisitor, entry.value));
+        }
+        break;
+    case OutputFormat::JSON:
+        {
+            boost::json::array fields;
+            for (const auto& entry : eepromData) {
+                fields.emplace_back(boost::json::object{
+                    {"type", tlvTypeJSON(entry.type)},
+                    {"value", std::visit(jsonValueVisitor, entry.value)},
+                });
+            }
+            fmt::print("{}", boost::json::serialize(boost::json::object{{"fields", fields},}));
+        }
+        break;
     }
 }
 
 template <class... Args>
 void readEeprom(const docopt::Options& options, Args&&... args)
 {
+    auto format = options.at("--json").asBool() ? OutputFormat::JSON : OutputFormat::HumanReadable;
+
     if (options.at("--ipmi").asBool()) {
-        ipmiFruEeprom(std::forward<Args>(args)...);
+        ipmiFruEeprom(format, std::forward<Args>(args)...);
     } else if (options.at("--onie").asBool()) {
-        onieEeprom(std::forward<Args>(args)...);
+        onieEeprom(format, std::forward<Args>(args)...);
     } else {
         try {
-            ipmiFruEeprom(std::forward<Args>(args)...);
+            ipmiFruEeprom(format, std::forward<Args>(args)...);
             return;
         } catch (const std::exception& e) {
             spdlog::get("main")->debug("Failed to read IPMI FRU EEPROM: {}", e.what());
         }
 
         try {
-            onieEeprom(std::forward<Args>(args)...);
+            onieEeprom(format, std::forward<Args>(args)...);
             return;
         } catch (const std::exception& e) {
             spdlog::get("main")->debug("Failed to read ONIE EEPROM: {}", e.what());

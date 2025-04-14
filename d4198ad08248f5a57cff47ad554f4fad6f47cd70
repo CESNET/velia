@@ -16,6 +16,29 @@
       "message": "I\u0027d like to have a nice resulting type, but I simply cannot figure out how to make this work:\n \n--- a/src/ietf-hardware/sysfs/OnieEEPROM.cpp\n+++ b/src/ietf-hardware/sysfs/OnieEEPROM.cpp\n@@ -6,6 +6,7 @@\n  */\n #include \u003cboost/crc.hpp\u003e\n #include \u003cboost/fusion/adapted/struct/adapt_struct.hpp\u003e\n+#include \u003cboost/fusion/adapted/std_array.hpp\u003e\n #include \u003cboost/spirit/home/x3.hpp\u003e\n #include \u003cboost/spirit/home/x3/binary.hpp\u003e\n #include \u003cfilesystem\u003e\n@@ -141,11 +142,17 @@ auto fixedLengthBlob(size_t len)\n     return x3::rule\u003cclass blob, std::vector\u003cuint8_t\u003e\u003e{\"fixedLengthBlob\"} \u003d ByteVector\u003c\u003e{}[checkLength];\n }\n \n+auto macAddress()\n+{\n+    return x3::rule\u003cclass macAddress, TLV::mac_addr_t\u003e{\"macAddress\"} \u003d fixedLengthBlob(6);\n+}\n+\n auto TLVEntry \u003d x3::rule\u003cstruct TLVEntry, TLV\u003e{\"TLVEntry\"} \u003d //\n     (typeCode(TLV::Type::ProductName) \u003e\u003e string) |\n     (typeCode(TLV::Type::PartNumber) \u003e\u003e string) |\n     (typeCode(TLV::Type::SerialNumber) \u003e\u003e string) |\n+    (typeCode(TLV::Type::MAC1Base) \u003e\u003e macAddress) |\n     (typeCode(TLV::Type::ManufactureDate) \u003e\u003e string) |\n     (typeCode(TLV::Type::Vendor) \u003e\u003e string) |\n     (typeCode(TLV::Type::DeviceVersion) \u003e\u003e x3::omit[byteWithValue(0x01)] /* length field */ \u003e\u003e x3::byte_) |\ndiff --git a/src/ietf-hardware/sysfs/OnieEEPROM.h b/src/ietf-hardware/sysfs/OnieEEPROM.h\nindex a5f835fb..0424e12e 100644\n--- a/src/ietf-hardware/sysfs/OnieEEPROM.h\n+++ b/src/ietf-hardware/sysfs/OnieEEPROM.h\n@@ -5,6 +5,7 @@\n  *\n  */\n #pragma once\n+#include \u003carray\u003e\n #include \u003ccstdint\u003e\n #include \u003cfilesystem\u003e\n #include \u003cstring\u003e\n@@ -21,12 +22,16 @@ struct TLV {\n         MAC1Base \u003d 0x24,\n         ManufactureDate \u003d 0x25,\n         DeviceVersion \u003d 0x26,\n         Vendor \u003d 0x2d,\n         VendorExtension \u003d 0xfd,\n     };\n \n     Type type;\n-    using Value \u003d std::variant\u003cstd::string, uint8_t, std::vector\u003cuint8_t\u003e\u003e;\n+    using mac_addr_t \u003d std::array\u003cuint8_t, 6\u003e;\n+    using Value \u003d std::variant\u003cstd::string, uint8_t, std::vector\u003cuint8_t\u003e, mac_addr_t\u003e;\n     Value value;\n \n     bool operator\u003d\u003d(const TLV\u0026) const \u003d default;",
       "revId": "d4198ad08248f5a57cff47ad554f4fad6f47cd70",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78f050df_552ad935",
+        "filename": "src/ietf-hardware/sysfs/OnieEEPROM.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-04-14T18:27:49Z",
+      "side": 1,
+      "message": "Do we need to log this?",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 137,
+        "endChar": 3
+      },
+      "revId": "d4198ad08248f5a57cff47ad554f4fad6f47cd70",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

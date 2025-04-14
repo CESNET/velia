@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c07014cc_86cbb2fc",
+        "filename": "src/main-eeprom.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-04-14T17:06:02Z",
+      "side": 1,
+      "message": "I had to play around with it (https://godbolt.org/z/WTqTG7Esf, https://fmt.dev/10.2.0/syntax.html) to fully comprehend the beauty.",
+      "range": {
+        "startLine": 75,
+        "startChar": 32,
+        "endLine": 75,
+        "endChar": 39
+      },
+      "revId": "62e2db23dc846e60d8dfff3f89bebc407d14871f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -96,6 +96,8 @@ std::string tlvTypeJSON(const velia::ietf_hardware::sysfs::TLV::Type& type)
         return "vendor";
     case TLV::Type::VendorExtension:
         return "vendor-ext";
+    case TLV::Type::MAC1Base:
+        return "mac1-base";
     default:
         return fmt::format("unknown-{:#04x}", static_cast<uint8_t>(type));
     }
@@ -104,6 +106,8 @@ std::string tlvTypeJSON(const velia::ietf_hardware::sysfs::TLV::Type& type)
 template <class... Args>
 void onieEeprom(const OutputFormat format, Args&&... args)
 {
+    using velia::ietf_hardware::sysfs::TLV;
+
     constexpr auto prettyValueVisitor = [](const auto& v) -> std::string {
         using T = std::decay_t<decltype(v)>;
         if constexpr (std::is_same_v<T, std::string>) {
@@ -114,6 +118,8 @@ void onieEeprom(const OutputFormat format, Args&&... args)
             return fmt::format("{:d}", v);
         } else if constexpr (std::is_same_v<T, std::vector<uint8_t>>) {
             return "";
+        } else if constexpr (std::is_same_v<T, TLV::mac_addr_t>) {
+            return fmt::format("{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}", v[0], v[1], v[2], v[3], v[4], v[5]);
         }
     };
 
@@ -130,6 +136,8 @@ void onieEeprom(const OutputFormat format, Args&&... args)
             using It = base64_from_binary<transform_width<typename T::const_iterator, 6, 8>>;
             auto tmp = std::string(It(std::begin(v)), It(std::end(v)));
             return boost::json::string{tmp.append((3 - v.size() % 3) % 3, '=')};
+        } else if constexpr (std::is_same_v<T, TLV::mac_addr_t>) {
+            return boost::json::string{fmt::format("{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}", v[0], v[1], v[2], v[3], v[4], v[5])};
         }
     };
 

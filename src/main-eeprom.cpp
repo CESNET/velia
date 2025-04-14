@@ -72,7 +72,7 @@ void onieEeprom(Args&&... args)
         if constexpr (std::is_same_v<T, std::string>) {
             return v;
         } else if constexpr (std::is_same_v<T, uint8_t>) {
-            return fmt::format("0x{:02x}", v);
+            return fmt::format("{:#04x}", v);
         } else {
             return "";
         }

@@ -1,0 +1,24 @@
+{
+  "fields": [
+    {
+      "type": "vendor",
+      "value": "Marvell"
+    },
+    {
+      "type": "product-name",
+      "value": "et6448m"
+    },
+    {
+      "type": "serial-number",
+      "value": "201908150001"
+    },
+    {
+      "type": "part-number",
+      "value": "3164483"
+    },
+    {
+      "type": "mac1-base",
+      "value": "00:50:43:EE:FF:FF"
+    }
+  ]
+}

@@ -5,6 +5,7 @@
  *
  */
 #pragma once
+#include <array>
 #include <cstdint>
 #include <filesystem>
 #include <string>
@@ -18,6 +19,7 @@ struct TLV {
         ProductName = 0x21,
         PartNumber = 0x22,
         SerialNumber = 0x23,
+        MAC1Base = 0x24,
         ManufactureDate = 0x25,
         DeviceVersion = 0x26,
         Vendor = 0x2d,
@@ -25,7 +27,8 @@ struct TLV {
     };
 
     Type type;
-    using Value = std::variant<std::string, uint8_t, std::vector<uint8_t>>;
+    using mac_addr_t = std::array<uint8_t, 6>;
+    using Value = std::variant<std::string, uint8_t, std::vector<uint8_t>, mac_addr_t>;
     Value value;
 
     bool operator==(const TLV&) const = default;

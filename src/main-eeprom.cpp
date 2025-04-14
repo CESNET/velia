@@ -64,6 +64,8 @@ std::string tlvType(const velia::ietf_hardware::sysfs::TLV::Type& type)
         return "P/N";
     case TLV::Type::SerialNumber:
         return "S/N";
+    case TLV::Type::MAC1Base:
+        return "Base MAC address";
     case TLV::Type::ManufactureDate:
         return "Manufacture date";
     case TLV::Type::DeviceVersion:
@@ -88,6 +90,8 @@ std::string tlvTypeJSON(const velia::ietf_hardware::sysfs::TLV::Type& type)
         return "part-number";
     case TLV::Type::SerialNumber:
         return "serial-number";
+    case TLV::Type::MAC1Base:
+        return "mac1-base";
     case TLV::Type::ManufactureDate:
         return "mfg-date";
     case TLV::Type::DeviceVersion:
@@ -104,6 +108,8 @@ std::string tlvTypeJSON(const velia::ietf_hardware::sysfs::TLV::Type& type)
 template <class... Args>
 void onieEeprom(const OutputFormat format, Args&&... args)
 {
+    using velia::ietf_hardware::sysfs::TLV;
+
     constexpr auto prettyValueVisitor = [](const auto& v) -> std::string {
         using T = std::decay_t<decltype(v)>;
         if constexpr (std::is_same_v<T, std::string>) {
@@ -114,10 +120,12 @@ void onieEeprom(const OutputFormat format, Args&&... args)
             return fmt::format("{:d}", v);
         } else if constexpr (std::is_same_v<T, std::vector<uint8_t>>) {
             return "";
+        } else if constexpr (std::is_same_v<T, TLV::mac_addr_t>) {
+            return fmt::format("{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}", v[0], v[1], v[2], v[3], v[4], v[5]);
         }
     };
 
-    constexpr auto jsonValueVisitor = [](const auto& v) -> boost::json::value {
+    constexpr auto jsonValueVisitor = [prettyValueVisitor](const auto& v) -> boost::json::value {
         using T = std::decay_t<decltype(v)>;
         if constexpr (std::is_same_v<T, std::string>) {
             return boost::json::string{v};
@@ -130,6 +138,8 @@ void onieEeprom(const OutputFormat format, Args&&... args)
             using It = base64_from_binary<transform_width<typename T::const_iterator, 6, 8>>;
             auto tmp = std::string(It(std::begin(v)), It(std::end(v)));
             return boost::json::string{tmp.append((3 - v.size() % 3) % 3, '=')};
+        } else if constexpr (std::is_same_v<T, TLV::mac_addr_t>) {
+            return boost::json::string{prettyValueVisitor(v)};
         }
     };
 

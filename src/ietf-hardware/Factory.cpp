@@ -157,6 +157,9 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                         case TLV::Type::Vendor:
                             target["mfg-name"] = std::get<std::string>(tlv.value);
                             break;
+                        case TLV::Type::MAC1Base:
+                            // not used on Clearfog, unfortunately
+                            break;
                         case TLV::Type::VendorExtension:
                             // ignore this one; there doesn't appear to be anything relevant in that field on our boards
                             break;

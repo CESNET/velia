@@ -129,10 +129,25 @@ auto typeCode(TLV::Type type)
     return x3::rule<class byteWithValue, TLV::Type>{"typeCode"} = x3::byte_[mustEqual];
 }
 
+auto vector2mac = [](auto& ctx)
+{
+    const auto& blob = x3::_attr(ctx);
+    if (blob.size() != TLV::mac_addr_t{}.size()) {
+        x3::_pass(ctx) = false;
+        return;
+    }
+    static_assert(TLV::mac_addr_t{}.size() == 6);
+    x3::_val(ctx) = TLV::mac_addr_t({
+        blob[0], blob[1], blob[2], blob[3], blob[4], blob[5],
+    });
+};
+auto macAddress = x3::rule<class macAddress, TLV::mac_addr_t>{"macAddress"} = blob[vector2mac];
+
 auto TLVEntry = x3::rule<struct TLVEntry, TLV>{"TLVEntry"} = //
     (typeCode(TLV::Type::ProductName) >> string) |
     (typeCode(TLV::Type::PartNumber) >> string) |
     (typeCode(TLV::Type::SerialNumber) >> string) |
+    (typeCode(TLV::Type::MAC1Base) >> macAddress) |
     (typeCode(TLV::Type::ManufactureDate) >> string) |
     (typeCode(TLV::Type::Vendor) >> string) |
     (typeCode(TLV::Type::DeviceVersion) >> x3::omit[byteWithValue(0x01)] /* length field */ >> x3::byte_) |

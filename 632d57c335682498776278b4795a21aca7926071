@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d9ae82f_5090aa58",
+        "filename": "src/ietf-hardware/sysfs/OnieEEPROM.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-04-15T18:02:24Z",
+      "side": 1,
+      "message": "Just wondering, these are bytes in ASCII encoding. Is it possible to use x3::string(\"TlvInfo\") \u003e\u003e x3::byte_(0x00)?",
+      "revId": "632d57c335682498776278b4795a21aca7926071",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

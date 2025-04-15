@@ -287,6 +287,122 @@ TEST_CASE("ONIE EEPROM reader")
         REQUIRE(velia::ietf_hardware::sysfs::onieEeprom(testsDir / eepromFile) == expected);
     }
 
+    DOCTEST_SUBCASE("czechlight")
+    {
+        TlvInfo tlvs;
+        std::string ftdiSN = "DQ000MPW";
+        std::vector<uint8_t> opticalData {
+                // version
+                0x00,
+                // eight bytes
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            };
+
+        SECTION("one field")
+        {
+            tlvs = {
+                {
+                    .type = TLV::Type::VendorExtension,
+                    .value = std::vector<uint8_t>{
+                        // CESNET enterprise number
+                        0x00, 0x00, 0x1f, 0x79,
+                        // CzechLight version
+                        0x00,
+
+                        // length of the FTDI S/N
+                        0x08,
+                        // ...followed by the actual string
+                        0x44, 0x51, 0x30, 0x30, 0x30, 0x4d, 0x50, 0x57,
+
+                        // length of the optical calibration block
+                        0x00, 0x09,
+                        // ...which begins with a version magic byte
+                        0x00,
+
+                        // eight bytes of payload
+                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+
+                        // CRC32
+                        0x02, 0x60, 0x51, 0x4b,
+                    },
+                },
+            };
+        }
+
+        SECTION("two fields")
+        {
+            tlvs = {
+                {
+                    .type = TLV::Type::VendorExtension,
+                    .value = std::vector<uint8_t>{
+                        // CESNET enterprise number
+                        0x00, 0x00, 0x1f, 0x79,
+                        // CzechLight version
+                        0x00,
+
+                        // first part of the useful payload follows
+
+                        // length of the FTDI S/N
+                        0x08,
+                        // ...followed by the actual string
+                        0x44, 0x51, 0x30, 0x30, 0x30, 0x4d, 0x50, 0x57,
+
+                        // length of the optical calibration block
+                        0x00, 0x09,
+                        // ...which begins with a version magic byte
+                        0x00,
+
+                        // eight bytes of payload
+                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+
+                        // CRC32 -- just first three bytes
+                        0x02, 0x60, 0x51,
+                    },
+                },
+                {
+                    .type = TLV::Type::VendorExtension,
+                    .value = std::vector<uint8_t>{
+                        // CESNET enterprise number
+                        0x00, 0x00, 0x1f, 0x79,
+                        // CzechLight version
+                        0x00,
+
+                        // second part of the useful payload follows
+                        0x4b
+                    },
+                }
+            };
+        }
+
+        auto res = velia::ietf_hardware::sysfs::czechLightData(tlvs);
+        REQUIRE(!!res);
+        REQUIRE(res->ftdiSN == ftdiSN);
+        REQUIRE(res->opticalData == opticalData);
+
+        REQUIRE(!velia::ietf_hardware::sysfs::czechLightData(TlvInfo{}));
+        REQUIRE(!velia::ietf_hardware::sysfs::czechLightData(TlvInfo{
+            TLV{
+                .type = TLV::Type::VendorExtension,
+                .value = std::vector<uint8_t>{},
+            },
+            TLV{
+                .type = TLV::Type::VendorExtension,
+                .value = std::vector<uint8_t>{
+                    // CESNET enterprise number
+                    0x00, 0x00, 0x1f, 0x79,
+                    // ... but no CzechLight version marker.
+                },
+            },
+            TLV{
+                .type = TLV::Type::VendorExtension,
+                .value = std::vector<uint8_t>{
+                    // some other party
+                    0x01, 0x02, 0x03, 0x04,
+                },
+            },
+        }));
+    }
+
     DOCTEST_SUBCASE("Invalid files")
     {
         REQUIRE_THROWS_WITH_AS(velia::ietf_hardware::sysfs::onieEeprom(testsDir / "191_0-0053_eeprom-wrongcrc.bin"), "Failed to parse TlvInfo structure", std::runtime_error);

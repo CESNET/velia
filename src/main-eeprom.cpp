@@ -195,6 +195,30 @@ void onieEeprom(const OutputFormat format, Args&&... args)
                     {"value", std::visit(jsonValueVisitor, entry.value)},
                 });
             }
+            try {
+                if (auto czechlight = czechLightData(eepromData)) {
+                    fields.emplace_back(boost::json::object{
+                        {"type", "czechlight-ftdi-sn"},
+                        {"value", czechlight->ftdiSN},
+                    });
+                    auto it = czechlight->opticalData.begin();
+                    if (it == czechlight->opticalData.end()) {
+                        throw std::runtime_error{"optical data version not found"};
+                    }
+                    fields.emplace_back(boost::json::object{
+                        {"type", "czechlight-optical-version"},
+                        {"value", *it++},
+                    });
+                    boost::json::array calibration;
+                    std::copy(it, czechlight->opticalData.end(), std::back_inserter(calibration));
+                    fields.emplace_back(boost::json::object{
+                        {"type", "czechlight-optical-calibration-data"},
+                        {"value", calibration},
+                    });
+                }
+            } catch (std::runtime_error& e) {
+                spdlog::error("Cannot parse CzechLight-specific data: {}", e.what());
+            }
             fmt::print("{}", boost::json::serialize(boost::json::object{{"fields", fields},}));
         }
         break;

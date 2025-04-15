@@ -38,8 +38,7 @@ struct WithCRC32_directive : boost::spirit::x3::unary_parser<Subject, WithCRC32_
         // store the iterator to the beginning of the data so we can calculate the crc32 later
         const auto originalBegin = begin;
 
-        const auto grammar = this->subject >> x3::omit[x3::byte_(0xFE) >> x3::omit[x3::byte_(0x04)]]; // parse up to the checksum length
-        if (!grammar.parse(begin, end, ctx, rctx, attr)) {
+        if (!this->subject.parse(begin, end, ctx, rctx, attr)) {
             return false;
         }
 
@@ -162,7 +161,11 @@ auto TlvInfoImpl = x3::rule<struct TlvInfoImpl, TlvInfo>{"TlvInfoImpl"} = //
     x3::omit[TlvInfoString] >> //
     x3::omit[x3::byte_(0x01)] >> // format version, required 0x01
     x3::omit[x3::big_word] >> // total length, not used by us, CRC would fail if something went wrong
-    *TLVEntry;
+    *TLVEntry >>
+    x3::omit[ // checksum TLV
+        x3::byte_(0xFE) >> // magic type number
+        x3::byte_(0x04) // checksum field width
+    ];
 const auto TlvInfoParser = x3::rule<struct TlvInfoParser, TlvInfo>{"TlvInfo"} = WithCRC32[TlvInfoImpl];
 
 TlvInfo parse(std::vector<uint8_t>::const_iterator begin, std::vector<uint8_t>::const_iterator end)

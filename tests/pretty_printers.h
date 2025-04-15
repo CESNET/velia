@@ -35,7 +35,11 @@ struct StringMaker<std::vector<T>> {
         std::ostringstream os;
         os << "{" << std::endl;
         for (const auto& value : v) {
-            os << "  \"" << StringMaker<T>::convert(value) << "\"," << std::endl;
+            if constexpr (std::is_same_v<T, uint8_t>) {
+                os << fmt::format("  {:#04x}\n", value);
+            } else {
+                os << "  \"" << StringMaker<T>::convert(value) << "\"," << std::endl;
+            }
         }
         os << "}";
         return os.str().c_str();

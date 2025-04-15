@@ -19,6 +19,7 @@ namespace {
 
 using velia::ietf_hardware::sysfs::TLV;
 using velia::ietf_hardware::sysfs::TlvInfo;
+using velia::ietf_hardware::sysfs::CzechLightData;
 
 namespace x3 = boost::spirit::x3;
 
@@ -72,24 +73,32 @@ constexpr auto WithCRC32 = WithCRC32_gen{};
  *
  * @tparam T The type of the data to be constructed from the byte vector
  * */
-template <class T = std::vector<uint8_t>>
+template <class T, class SizeType = uint8_t>
 struct ByteVector : x3::parser<ByteVector<T>> {
     using attribute_type = T;
 
     template <typename It, typename Ctx, typename RCtx>
     bool parse(It& begin, It end, Ctx const& ctx, RCtx& rctx, attribute_type& attr) const
     {
-        uint8_t length;
+        SizeType length;
         struct _length { };
 
-        auto lengthByte = [](auto& ctx) {
+        auto lengthField = [](auto& ctx) {
             get<_length>(ctx).get() = _attr(ctx);
         };
         auto more = [](auto& ctx) { _pass(ctx) = static_cast<unsigned>(get<_length>(ctx)) > _val(ctx).size(); };
 
+        auto lengthReader = [&lengthField]() {
+            if constexpr (std::is_same_v<SizeType, uint16_t>) {
+                return x3::omit[x3::big_word[lengthField]];
+            } else if constexpr (std::is_same_v<SizeType, uint8_t>) {
+                return x3::omit[x3::byte_[lengthField]];
+            }
+        };
+
         auto grammar = x3::rule<struct _StringField, std::vector<uint8_t>>{} %= //
             x3::with<_length>(std::ref(length))[ // pass string length into the context
-                    x3::omit[x3::byte_[lengthByte]] >> // read the length byte
+                    lengthReader() >> // read the length byte
                     *(x3::byte_[more])]; // keep parsing the data until we have enough bytes
 
         std::vector<uint8_t> stringData;
@@ -103,8 +112,9 @@ struct ByteVector : x3::parser<ByteVector<T>> {
     }
 };
 
-auto string = x3::rule<struct string, std::string>{"string"} = ByteVector<std::string>{};
-auto blob = x3::rule<struct string, std::vector<uint8_t>>{"blob"} = ByteVector<>{};
+auto string = x3::rule<struct string, std::string>{"string"} = ByteVector<std::string, uint8_t>{};
+auto blob = x3::rule<struct string, std::vector<uint8_t>>{"blob"} = ByteVector<std::vector<uint8_t>, uint8_t>{};
+auto blob16 = x3::rule<struct string, std::vector<uint8_t>>{"blob"} = ByteVector<std::vector<uint8_t>, uint16_t>{};
 
 constexpr auto typeCode(const TLV::Type type)
 {
@@ -168,6 +178,18 @@ auto TlvInfoImpl = x3::rule<struct TlvInfoImpl, TlvInfo>{"TlvInfoImpl"} = //
     ];
 const auto TlvInfoParser = x3::rule<struct TlvInfoParser, TlvInfo>{"TlvInfo"} = WithCRC32[TlvInfoImpl];
 
+auto CzechLightPartialBlob = x3::rule<struct CzechLightPartialBlob, std::string>{"CzechLightPartialBlob"} =
+    x3::omit[x3::byte_(0x00) >> x3::byte_(0x00) >> x3::byte_(0x1f) >> x3::byte_(0x79)] >> /* CESNET enterprise number */
+    x3::omit[x3::byte_(0x00)] /* CESNET/CzechLight block identifier */ >>
+    *x3::byte_;
+
+auto CzechLightBlobImpl = x3::rule<struct CzechLightBlobImpl, CzechLightData>{"CzechLightBlobImpl"} =
+    string >> // ASCII serial number of the FTDI chip which connects the host's serial console over USB
+    blob16 // optical calibration data
+    ;
+
+const auto CzechLightBlobParser = x3::rule<struct CzechLightBlobParser, CzechLightData>{"CzechLightData"} = WithCRC32[CzechLightBlobImpl];
+
 TlvInfo parse(std::vector<uint8_t>::const_iterator begin, std::vector<uint8_t>::const_iterator end)
 {
     TlvInfo tlvinfo;
@@ -192,6 +214,31 @@ TlvInfo onieEeprom(const std::filesystem::path& sysfsPrefix, const uint8_t bus, 
 {
     return onieEeprom(sysfsPrefix / "bus" / "i2c" / "devices" / fmt::format("{}-{:04x}", bus, address) / "eeprom");
 }
+
+std::optional<CzechLightData> czechLightData(const TlvInfo& tlvs)
+{
+    std::vector<uint8_t> blob;
+    for (const auto& entry : tlvs) {
+        if (entry.type != TLV::Type::VendorExtension) {
+            continue;
+        }
+        const auto& buf = std::get<std::vector<uint8_t>>(entry.value);
+        std::vector<uint8_t> oneBlob;
+        if (!x3::parse(buf.begin(), buf.end(), CzechLightPartialBlob, oneBlob)) {
+            continue;
+        }
+        std::copy(oneBlob.begin(), oneBlob.end(), std::back_inserter(blob));
+    }
+    if (blob.empty()) {
+        return std::nullopt;
+    }
+    CzechLightData data;
+    if (!x3::parse(blob.begin(), blob.end(), CzechLightBlobParser, data)) {
+        throw std::runtime_error{"Cannot parse CzechLight blob"};
+    }
+    return data;
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT(velia::ietf_hardware::sysfs::TLV, type, value);
+BOOST_FUSION_ADAPT_STRUCT(velia::ietf_hardware::sysfs::CzechLightData, ftdiSN, opticalData);

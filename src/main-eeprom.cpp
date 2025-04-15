@@ -70,6 +70,22 @@ std::string tlvType(const velia::ietf_hardware::sysfs::TLV::Type& type)
         return "Manufacture date";
     case TLV::Type::DeviceVersion:
         return "Device version";
+    case TLV::Type::LabelRevision:
+        return "Label revision";
+    case TLV::Type::PlatformName:
+        return "Platform name";
+    case TLV::Type::ONIEVersion:
+        return "ONIE version";
+    case TLV::Type::NumberOfMAC:
+        return "No. of MAC addresses";
+    case TLV::Type::Manufacturer:
+        return "Manufacturer";
+    case TLV::Type::CountryCode:
+        return "Country code";
+    case TLV::Type::DiagnosticVersion:
+        return "Diagnostic version";
+    case TLV::Type::ServiceTag:
+        return "Service tag";
     case TLV::Type::Vendor:
         return "Vendor";
     case TLV::Type::VendorExtension:
@@ -95,6 +111,22 @@ std::string tlvTypeJSON(const velia::ietf_hardware::sysfs::TLV::Type& type)
         return "mfg-date";
     case TLV::Type::DeviceVersion:
         return "device-version";
+    case TLV::Type::LabelRevision:
+        return "label-revision";
+    case TLV::Type::PlatformName:
+        return "platform-name";
+    case TLV::Type::ONIEVersion:
+        return "onie-version";
+    case TLV::Type::NumberOfMAC:
+        return "no-of-mac";
+    case TLV::Type::Manufacturer:
+        return "manufacturer";
+    case TLV::Type::CountryCode:
+        return "country-code";
+    case TLV::Type::DiagnosticVersion:
+        return "diagnostic-version";
+    case TLV::Type::ServiceTag:
+        return "service-tag";
     case TLV::Type::Vendor:
         return "vendor";
     case TLV::Type::VendorExtension:

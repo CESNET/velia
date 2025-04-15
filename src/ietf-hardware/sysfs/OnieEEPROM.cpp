@@ -151,6 +151,14 @@ auto TLVEntry = x3::rule<struct TLVEntry, TLV>{"TLVEntry"} = //
     (typeCode(TLV::Type::ManufactureDate) >> string) |
     (typeCode(TLV::Type::Vendor) >> string) |
     (typeCode(TLV::Type::DeviceVersion) >> x3::omit[byteWithValue(0x01)] /* length field */ >> x3::byte_) |
+    (typeCode(TLV::Type::LabelRevision) >> string) |
+    (typeCode(TLV::Type::PlatformName) >> string) |
+    (typeCode(TLV::Type::ONIEVersion) >> string) |
+    (typeCode(TLV::Type::NumberOfMAC) >> x3::omit[byteWithValue(0x02)] /* length field */ >> x3::big_word) |
+    (typeCode(TLV::Type::Manufacturer) >> string) |
+    (typeCode(TLV::Type::CountryCode) >> &byteWithValue(0x02) /* check for length field */ >> string) |
+    (typeCode(TLV::Type::DiagnosticVersion) >> string) |
+    (typeCode(TLV::Type::ServiceTag) >> string) |
     (typeCode(TLV::Type::VendorExtension) >> blob);
 
 auto TlvInfoString = x3::rule<struct TlvInfoString, std::string>{"TlvInfoString"} = //

@@ -22,13 +22,21 @@ struct TLV {
         MAC1Base = 0x24,
         ManufactureDate = 0x25,
         DeviceVersion = 0x26,
+        LabelRevision = 0x27,
+        PlatformName = 0x28,
+        ONIEVersion = 0x29,
+        NumberOfMAC = 0x2a,
+        Manufacturer = 0x2b,
+        CountryCode = 0x2c,
         Vendor = 0x2d,
+        DiagnosticVersion = 0x2e,
+        ServiceTag = 0x2f,
         VendorExtension = 0xfd,
     };
 
     Type type;
     using mac_addr_t = std::array<uint8_t, 6>;
-    using Value = std::variant<std::string, uint8_t, std::vector<uint8_t>, mac_addr_t>;
+    using Value = std::variant<std::string, uint8_t, uint16_t, std::vector<uint8_t>, mac_addr_t>;
     Value value;
 
     bool operator==(const TLV&) const = default;

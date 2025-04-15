@@ -8,6 +8,7 @@
 #include <array>
 #include <cstdint>
 #include <filesystem>
+#include <optional>
 #include <string>
 #include <variant>
 #include <vector>
@@ -46,4 +47,11 @@ using TlvInfo = std::vector<TLV>;
 
 TlvInfo onieEeprom(const std::filesystem::path& eepromPath);
 TlvInfo onieEeprom(const std::filesystem::path& sysfsPrefix, const uint8_t bus, const uint8_t address);
+
+struct CzechLightData {
+    std::string ftdiSN;
+    std::vector<uint8_t> opticalData;
+};
+
+std::optional<CzechLightData> czechLightData(const TlvInfo& tlvs);
 }

@@ -1,0 +1,65 @@
+{
+  "fields": [
+    {
+      "type": "vendor",
+      "value": "PEI-Genesis"
+    },
+    {
+      "type": "product-name",
+      "value": "PG-CL-SDN_dualBiDi-C-L"
+    },
+    {
+      "type": "part-number",
+      "value": "sdn-bidi-cplus1572-g2"
+    },
+    {
+      "type": "vendor-ext",
+      "value": "AAAfeQAIRFEwMDBNUFcACQAAAAAAAAAAAAJgUUs="
+    },
+    {
+      "type": "serial-number",
+      "value": "PGCL250303"
+    },
+    {
+      "type": "mac1-base",
+      "value": "00:11:17:01:01:06"
+    },
+    {
+      "type": "no-of-mac",
+      "value": 3
+    },
+    {
+      "type": "mfg-date",
+      "value": "01/15/2025 14:15:43"
+    },
+    {
+      "type": "manufacturer",
+      "value": "PEI-Genesis"
+    },
+    {
+      "type": "country-code",
+      "value": "CZ"
+    },
+    {
+      "type": "czechlight-ftdi-sn",
+      "value": "DQ000MPW"
+    },
+    {
+      "type": "czechlight-optical-version",
+      "value": 0
+    },
+    {
+      "type": "czechlight-optical-calibration-data",
+      "value": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

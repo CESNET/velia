@@ -16,6 +16,24 @@
       "message": "Just wondering, these are bytes in ASCII encoding. Is it possible to use x3::string(\"TlvInfo\") \u003e\u003e x3::byte_(0x00)?",
       "revId": "632d57c335682498776278b4795a21aca7926071",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aee4b2f5_2bd7e7a2",
+        "filename": "src/ietf-hardware/sysfs/OnieEEPROM.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-04-15T23:18:29Z",
+      "side": 1,
+      "message": "I gave it a try but I kept hitting build errors (either string casting, or char signedness). Feel free to fix that, I suspect that making the parser not provide any attribute might help, but I don\u0027t care that much.",
+      "parentUuid": "1d9ae82f_5090aa58",
+      "revId": "632d57c335682498776278b4795a21aca7926071",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

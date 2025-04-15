@@ -22,17 +22,6 @@ using velia::ietf_hardware::sysfs::TlvInfo;
 
 namespace x3 = boost::spirit::x3;
 
-auto byteWithValue(auto value)
-{
-    namespace x3 = boost::spirit::x3;
-
-    auto mustEqual = [value](auto& ctx) {
-        x3::_pass(ctx) = x3::_attr(ctx) == value;
-        x3::_val(ctx) = x3::_attr(ctx);
-    };
-    return x3::rule<class byteWithValue, uint8_t>{"byteWithValue"} = x3::byte_[mustEqual];
-}
-
 template <typename Subject>
 struct WithCRC32_directive : boost::spirit::x3::unary_parser<Subject, WithCRC32_directive<Subject>> {
     using attribute_type = typename boost::spirit::x3::traits::attribute_of<Subject, void>::type;
@@ -49,7 +38,7 @@ struct WithCRC32_directive : boost::spirit::x3::unary_parser<Subject, WithCRC32_
         // store the iterator to the beginning of the data so we can calculate the crc32 later
         const auto originalBegin = begin;
 
-        const auto grammar = this->subject >> x3::omit[byteWithValue(0xFE) >> x3::omit[byteWithValue(0x04)]]; // parse up to the checksum length
+        const auto grammar = this->subject >> x3::omit[x3::byte_(0xFE) >> x3::omit[x3::byte_(0x04)]]; // parse up to the checksum length
         if (!grammar.parse(begin, end, ctx, rctx, attr)) {
             return false;
         }
@@ -118,15 +107,13 @@ struct ByteVector : x3::parser<ByteVector<T>> {
 auto string = x3::rule<struct string, std::string>{"string"} = ByteVector<std::string>{};
 auto blob = x3::rule<struct string, std::vector<uint8_t>>{"blob"} = ByteVector<>{};
 
-auto typeCode(TLV::Type type)
+constexpr auto typeCode(const TLV::Type type)
 {
-    namespace x3 = boost::spirit::x3;
-
     auto mustEqual = [type](auto& ctx) {
         x3::_pass(ctx) = x3::_attr(ctx) == static_cast<std::underlying_type_t<TLV::Type>>(type);
         x3::_val(ctx) = static_cast<TLV::Type>(x3::_attr(ctx));
     };
-    return x3::rule<class byteWithValue, TLV::Type>{"typeCode"} = x3::byte_[mustEqual];
+    return x3::rule<TLV::Type, TLV::Type>{"typeCode"} = x3::byte_[mustEqual];
 }
 
 auto vector2mac = [](auto& ctx)
@@ -150,30 +137,30 @@ auto TLVEntry = x3::rule<struct TLVEntry, TLV>{"TLVEntry"} = //
     (typeCode(TLV::Type::MAC1Base) >> macAddress) |
     (typeCode(TLV::Type::ManufactureDate) >> string) |
     (typeCode(TLV::Type::Vendor) >> string) |
-    (typeCode(TLV::Type::DeviceVersion) >> x3::omit[byteWithValue(0x01)] /* length field */ >> x3::byte_) |
+    (typeCode(TLV::Type::DeviceVersion) >> x3::omit[x3::byte_(0x01)] /* length field */ >> x3::byte_) |
     (typeCode(TLV::Type::LabelRevision) >> string) |
     (typeCode(TLV::Type::PlatformName) >> string) |
     (typeCode(TLV::Type::ONIEVersion) >> string) |
-    (typeCode(TLV::Type::NumberOfMAC) >> x3::omit[byteWithValue(0x02)] /* length field */ >> x3::big_word) |
+    (typeCode(TLV::Type::NumberOfMAC) >> x3::omit[x3::byte_(0x02)] /* length field */ >> x3::big_word) |
     (typeCode(TLV::Type::Manufacturer) >> string) |
-    (typeCode(TLV::Type::CountryCode) >> &byteWithValue(0x02) /* check for length field */ >> string) |
+    (typeCode(TLV::Type::CountryCode) >> &x3::byte_(0x02) /* check for length field */ >> string) |
     (typeCode(TLV::Type::DiagnosticVersion) >> string) |
     (typeCode(TLV::Type::ServiceTag) >> string) |
     (typeCode(TLV::Type::VendorExtension) >> blob);
 
 auto TlvInfoString = x3::rule<struct TlvInfoString, std::string>{"TlvInfoString"} = //
-    byteWithValue('T') >> // this literally spells "TlvInfo" in ASCIIZ.
-    byteWithValue('l') >>
-    byteWithValue('v') >>
-    byteWithValue('I') >>
-    byteWithValue('n') >>
-    byteWithValue('f') >>
-    byteWithValue('o') >>
-    byteWithValue(0x00);
+    x3::byte_('T') >> // this literally spells "TlvInfo" in ASCIIZ.
+    x3::byte_('l') >>
+    x3::byte_('v') >>
+    x3::byte_('I') >>
+    x3::byte_('n') >>
+    x3::byte_('f') >>
+    x3::byte_('o') >>
+    x3::byte_(0x00);
 
 auto TlvInfoImpl = x3::rule<struct TlvInfoImpl, TlvInfo>{"TlvInfoImpl"} = //
     x3::omit[TlvInfoString] >> //
-    x3::omit[byteWithValue(0x01)] >> // format version, required 0x01
+    x3::omit[x3::byte_(0x01)] >> // format version, required 0x01
     x3::omit[x3::big_word] >> // total length, not used by us, CRC would fail if something went wrong
     *TLVEntry;
 const auto TlvInfoParser = x3::rule<struct TlvInfoParser, TlvInfo>{"TlvInfo"} = WithCRC32[TlvInfoImpl];

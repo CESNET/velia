@@ -15,7 +15,7 @@
 namespace velia::ietf_hardware::sysfs {
 
 struct TLV {
-    enum class Type {
+    enum class Type : uint8_t {
         ProductName = 0x21,
         PartNumber = 0x22,
         SerialNumber = 0x23,

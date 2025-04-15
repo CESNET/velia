@@ -74,9 +74,8 @@ std::string tlvType(const velia::ietf_hardware::sysfs::TLV::Type& type)
         return "Vendor";
     case TLV::Type::VendorExtension:
         return "Vendor extension";
-    default:
-        return "Unknown field";
     }
+    return fmt::format("Unknown field {:#04x}", static_cast<uint8_t>(type));
 }
 
 std::string tlvTypeJSON(const velia::ietf_hardware::sysfs::TLV::Type& type)
@@ -100,9 +99,8 @@ std::string tlvTypeJSON(const velia::ietf_hardware::sysfs::TLV::Type& type)
         return "vendor";
     case TLV::Type::VendorExtension:
         return "vendor-ext";
-    default:
-        return fmt::format("unknown-{:#04x}", static_cast<uint8_t>(type));
     }
+    return fmt::format("unknown-{:#04x}", static_cast<uint8_t>(type));
 }
 
 template <class... Args>

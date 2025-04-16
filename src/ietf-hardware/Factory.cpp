@@ -9,8 +9,95 @@
 #include "utils/log.h"
 
 namespace {
-// ONIE says that it should be "MM/DD/YYYY HH:NN:SS", it is actually "2023-02-23 06:12:51" on our HW
+// ONIE says that it should be "MM/DD/YYYY HH:NN:SS"
+const auto ONIE_MFG_DATE = std::regex{R"(\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2})"};
+// but on ClearFog, it is actually "2023-02-23 06:12:51" on our HW
 const auto SOLIDRUN_ONIE_MFG_DATE = std::regex{R"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})"};
+
+std::string onie_read_any_date(std::string date)
+{
+    std::smatch match;
+    if (std::regex_match(date, SOLIDRUN_ONIE_MFG_DATE)) {
+        date[10] = 'T';
+        return date + "-00:00";
+    }
+    if (std::regex_match(date, match, ONIE_MFG_DATE)) {
+        return fmt::format("{}-{}-{} {}:{}:{}-00:00",
+                           std::string{match[3]},
+                           std::string{match[1]},
+                           std::string{match[2]},
+                           std::string{match[4]},
+                           std::string{match[5]},
+                           std::string{match[6]});
+    }
+    throw std::runtime_error{"Cannot parse ONIE EEPROM date " + date};
+}
+
+std::string prettyName(const std::string& a, const std::string& b)
+{
+    if (a.empty()) {
+        return b;
+    }
+    if (b.empty()) {
+        return a;
+    }
+    if (a == b) {
+        return a;
+    }
+    return fmt::format("{} ({})", a, b);
+}
+
+void storeValues(velia::ietf_hardware::DataTree& target, const velia::ietf_hardware::sysfs::TlvInfo& tlvs)
+{
+    using velia::ietf_hardware::sysfs::TLV;
+    std::string modelNamePN, modelNamePretty;
+    std::string vendor, manufacturer;
+    for (const auto& tlv : tlvs) {
+        try {
+            switch (tlv.type) {
+            case TLV::Type::DeviceVersion:
+                target["hardware-rev"] = fmt::format("{:d}", std::get<uint8_t>(tlv.value));
+                break;
+            case TLV::Type::ManufactureDate:
+                target["mfg-date"] = onie_read_any_date(std::get<std::string>(tlv.value));
+                break;
+            case TLV::Type::PartNumber:
+                modelNamePN = std::get<std::string>(tlv.value);
+                break;
+            case TLV::Type::ProductName:
+                modelNamePretty = std::get<std::string>(tlv.value);
+                break;
+            case TLV::Type::SerialNumber:
+                target["serial-num"] = std::get<std::string>(tlv.value);
+                break;
+            case TLV::Type::Vendor:
+                vendor = std::get<std::string>(tlv.value);
+                break;
+            case TLV::Type::Manufacturer:
+                manufacturer = std::get<std::string>(tlv.value);
+                break;
+            case TLV::Type::MAC1Base:
+            case TLV::Type::NumberOfMAC:
+            case TLV::Type::LabelRevision:
+            case TLV::Type::PlatformName:
+            case TLV::Type::ONIEVersion:
+            case TLV::Type::CountryCode:
+            case TLV::Type::DiagnosticVersion:
+            case TLV::Type::ServiceTag:
+            case TLV::Type::VendorExtension:
+                // unused, irrelevant, etc
+                break;
+            }
+        } catch (std::exception& e) {
+            spdlog::get("hardware")->warn(
+                    "Cannot store ONIE EEPROM TLV type {:#04x}: {}",
+                    static_cast<int>(tlv.type),
+                    e.what());
+        }
+    }
+    target["model-name"] = prettyName(modelNamePretty, modelNamePN);
+    target["mfg-name"] = prettyName(vendor, manufacturer);
+}
 }
 
 namespace velia::ietf_hardware {
@@ -76,7 +163,24 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         auto tempMII1 = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/devices/platform/soc/soc:internal-regs/f1072004.mdio/mdio_bus/f1072004.mdio-mii/f1072004.mdio-mii:01/hwmon/");
         auto emmc = std::make_shared<velia::ietf_hardware::sysfs::EMMC>("/sys/block/mmcblk0/device/");
 
-        ietfHardware->registerDataReader(StaticData("ne", std::nullopt, {{"class", "iana-hardware:chassis"}}));
+        DataTree neData{
+            {"class", "iana-hardware:chassis"},
+        };
+        DataTree ftdiData{
+            {"class", "iana-hardware:module"},
+            {"description", "USB serial console"},
+        };
+        try {
+            const auto& tlvs = sysfs::onieEeprom("/sys", 1, 0x53);
+            storeValues(neData, tlvs);
+            if (auto czechLightData = sysfs::czechLightData(tlvs)) {
+                ftdiData["serial-num"] = czechLightData->ftdiSN;
+            }
+        } catch (std::exception& e) {
+            spdlog::get("hardware")->warn("Cannot parse SDN_IFACE EEPROM: {}", e.what());
+        }
+        ietfHardware->registerDataReader(StaticData("ne", std::nullopt, neData));
+        ietfHardware->registerDataReader(StaticData("ne:console", "ne", ftdiData));
 
         ietfHardware->registerDataReader(StaticData{"ne:ctrl",
                                                     "ne",
@@ -125,8 +229,9 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
              })) {
             using namespace velia::ietf_hardware::sysfs;
             try {
-                std::string modelNamePN, modelNamePretty;
-                for (const auto& tlv : sysfs::onieEeprom("/sys", 0, address)) {
+                const auto& tlvs = sysfs::onieEeprom("/sys", 0, address);
+                storeValues(target, tlvs);
+                for (const auto& tlv : tlvs) {
                     try {
                         switch (tlv.type) {
                         case TLV::Type::DeviceVersion:
@@ -135,43 +240,8 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                                 target["hardware-rev"] = fmt::format("{}.{}", version >> 4, version & 0x0f);
                             }
                             break;
-                        case TLV::Type::ManufactureDate:
-                            {
-                                auto date = std::get<std::string>(tlv.value);
-                                if (!std::regex_match(date, SOLIDRUN_ONIE_MFG_DATE)) {
-                                    throw std::runtime_error{"Cannot parse ONIE EEPROM date " + date};
-                                }
-                                date[10] = 'T';
-                                target["mfg-date"] = date + "-00:00";
-                            }
-                            break;
-                        case TLV::Type::PartNumber:
-                            modelNamePN = std::get<std::string>(tlv.value);
-                            break;
-                        case TLV::Type::ProductName:
-                            modelNamePretty = std::get<std::string>(tlv.value);
-                            break;
-                        case TLV::Type::SerialNumber:
-                            target["serial-num"] = std::get<std::string>(tlv.value);
-                            break;
-                        case TLV::Type::Vendor:
-                            target["mfg-name"] = std::get<std::string>(tlv.value);
-                            break;
-                        case TLV::Type::MAC1Base:
-                        case TLV::Type::NumberOfMAC:
-                            // not used on Clearfog, unfortunately
-                            break;
-                        case TLV::Type::LabelRevision:
-                        case TLV::Type::PlatformName:
-                        case TLV::Type::ONIEVersion:
-                        case TLV::Type::Manufacturer:
-                        case TLV::Type::CountryCode:
-                        case TLV::Type::DiagnosticVersion:
-                        case TLV::Type::ServiceTag:
-                            // unused, irrelevant for our purposes
-                            break;
-                        case TLV::Type::VendorExtension:
-                            // ignore this one; there doesn't appear to be anything relevant in that field on our boards
+                        default:
+                            // ignore them, it's already handled elsewhere
                             break;
                         }
                     } catch (std::exception& e) {
@@ -181,13 +251,6 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                                 static_cast<int>(address),
                                 e.what());
                     }
-                }
-                if (!modelNamePN.empty() && !modelNamePretty.empty()) {
-                    target["model-name"] = fmt::format("{} ({})", modelNamePretty, modelNamePN);
-                } else if (!modelNamePN.empty()) {
-                    target["model-name"] = modelNamePN;
-                } else if (!modelNamePretty.empty()) {
-                    target["model-name"] = modelNamePretty;
                 }
             } catch (std::exception& e) {
                 spdlog::get("hardware")->warn("Cannot parse ONIE EEPROM at {:#04x}: {}", static_cast<int>(address), e.what());

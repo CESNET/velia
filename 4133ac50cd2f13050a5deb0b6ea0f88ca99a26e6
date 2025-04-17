@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29452c74_32ec6fe5",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-04-17T06:41:33Z",
+      "side": 1,
+      "message": "That is a different naming style (case) than we use throughout the project.",
+      "range": {
+        "startLine": 17,
+        "startChar": 12,
+        "endLine": 17,
+        "endChar": 30
+      },
+      "revId": "4133ac50cd2f13050a5deb0b6ea0f88ca99a26e6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71239aa3_2e81c216",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-04-17T06:41:33Z",
+      "side": 1,
+      "message": "nit: we can use const here",
+      "range": {
+        "startLine": 91,
+        "startChar": 17,
+        "endLine": 91,
+        "endChar": 35
+      },
+      "revId": "4133ac50cd2f13050a5deb0b6ea0f88ca99a26e6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

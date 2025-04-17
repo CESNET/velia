@@ -21,6 +21,10 @@ module czechlight-system {
     prefix "sys";
   }
 
+  import ietf-hardware {
+    prefix "hw";
+  }
+
   organization "CESNET";
   contact "photonic@cesnet.cz";
   description
@@ -305,6 +309,26 @@ module czechlight-system {
   }
 
   deviation /sys:system/sys:dns-resolver {
+    deviate add {
+      config false;
+    }
+  }
+
+  deviation /hw:hardware/hw:component/hw:parent {
+    deviate add {
+      config false;
+    }
+  }
+
+  deviation /hw:hardware/hw:component/hw:parent-rel-pos {
+    deviate not-supported;
+  }
+
+  deviation /hw:hardware/hw:component/hw:uri {
+    deviate not-supported;
+  }
+
+  deviation /hw:hardware/hw:component/hw:state {
     deviate add {
       config false;
     }

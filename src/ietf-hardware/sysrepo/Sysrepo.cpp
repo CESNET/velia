@@ -249,6 +249,11 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
             std::this_thread::sleep_for(m_pollInterval);
             }
     });
+
+    // FIXME: add a subscriber for startup/running DS modification of ietf-hardware
+    // - changing parent, parent-rel-pos, uri and state/admin-state is blocked at the YANG level by a deviation
+    // - the goal is to only support `asset-id` and `alias`, that requires `name` and `class` as well; we should limit that to static values
+    // - maybe it's sufficient to only set these for `/ietf-hardware:hardware/component[name='ne']`?
 }
 
 Sysrepo::~Sysrepo()

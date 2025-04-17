@@ -300,6 +300,13 @@ module czechlight-system {
     }
   }
 
-  deviation /sys:system-shutdown { deviate not-supported; }
-  deviation /sys:system/sys:dns-resolver { deviate add { config false; } }
+  deviation /sys:system-shutdown {
+    deviate not-supported;
+  }
+
+  deviation /sys:system/sys:dns-resolver {
+    deviate add {
+      config false;
+    }
+  }
 }

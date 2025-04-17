@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
 
         DBUS_EVENTLOOP_END
         return 0;
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         velia::utils::fatalException(spdlog::get("main"), e, "main");
     }
 }

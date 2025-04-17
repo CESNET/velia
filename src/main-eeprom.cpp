@@ -216,7 +216,7 @@ void onieEeprom(const OutputFormat format, Args&&... args)
                         {"value", calibration},
                     });
                 }
-            } catch (std::runtime_error& e) {
+            } catch (const std::runtime_error& e) {
                 spdlog::error("Cannot parse CzechLight-specific data: {}", e.what());
             }
             fmt::print("{}", boost::json::serialize(boost::json::object{{"fields", fields},}));
@@ -287,7 +287,7 @@ int main(int argc, char* argv[])
         }
 
         return 0;
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         velia::utils::fatalException(spdlog::get("main"), e, "main");
     }
 }

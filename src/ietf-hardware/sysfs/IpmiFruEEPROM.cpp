@@ -318,7 +318,7 @@ FRUInformationStorage ipmiFruEeprom(const std::filesystem::path& eepromPath)
     auto data = velia::utils::readFileToBytes(eepromPath);
     try {
         return parse(data.begin(), data.end());
-    } catch (std::runtime_error& e) {
+    } catch (const std::runtime_error& e) {
         constexpr auto IDX_CHASSISINFO_LENGTH = 0x09;
         constexpr auto IDX_CHASSISINFO_CSUM = 0x5f;
         if (data.size() == 256 && data[IDX_CHASSISINFO_LENGTH] == 0x0a) {

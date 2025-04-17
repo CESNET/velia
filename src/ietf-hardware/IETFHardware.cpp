@@ -444,7 +444,7 @@ std::optional<std::string> hexEEPROM(const std::string& sysfsPrefix,
         boost::algorithm::hex(buf.begin() + offset, buf.begin() + offset + length, std::back_inserter(res));
         log->trace("I2C EEPROM at bus {} address {:#04x}: UID/EUI {}", bus, address, res);
         return res;
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         log->error("EEPROM: cannot read from {}: {}", filename.string(), e.what());
     }
     return std::nullopt;

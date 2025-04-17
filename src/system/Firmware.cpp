@@ -84,7 +84,7 @@ Firmware::Firmware(::sysrepo::Connection srConn, sdbus::IConnection& dbusConnect
         try {
             auto source = utils::asString(*input.findPath("url"));
             m_rauc->install(source);
-        } catch (sdbus::Error& e) {
+        } catch (const sdbus::Error& e) {
             m_log->warn("RAUC install error: '{}'", e.what());
             utils::setErrors(session, e.getMessage());
             return ::sysrepo::ErrorCode::OperationFailed;
@@ -160,7 +160,7 @@ std::unique_lock<std::mutex> Firmware::updateSlotStatus()
     try {
         slotStatus = m_rauc->slotStatus();
         primarySlot = m_rauc->primarySlot();
-    } catch (sdbus::Error& e) {
+    } catch (const sdbus::Error& e) {
         m_log->warn("Could not fetch RAUC slot status data: {}", e.getMessage());
     }
 

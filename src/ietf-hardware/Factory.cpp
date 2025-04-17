@@ -88,7 +88,7 @@ void storeValues(velia::ietf_hardware::DataTree& target, const velia::ietf_hardw
                 // unused, irrelevant, etc
                 break;
             }
-        } catch (std::exception& e) {
+        } catch (const std::exception& e) {
             spdlog::get("hardware")->warn(
                     "Cannot store ONIE EEPROM TLV type {:#04x}: {}",
                     static_cast<int>(tlv.type),
@@ -176,7 +176,7 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
             if (auto czechLightData = sysfs::czechLightData(tlvs)) {
                 ftdiData["serial-num"] = czechLightData->ftdiSN;
             }
-        } catch (std::exception& e) {
+        } catch (const std::exception& e) {
             spdlog::get("hardware")->warn("Cannot parse SDN_IFACE EEPROM: {}", e.what());
         }
         ietfHardware->registerDataReader(StaticData("ne", std::nullopt, neData));
@@ -196,7 +196,7 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                                                             {"class", "iana-hardware:module"},
                                                             {"serial-num", *eeprom},
                                                         }});
-        } catch (std::runtime_error& e) {
+        } catch (const std::runtime_error& e) {
             // this EEPROM is only present on regular inline amplifiers and on ROADM line/degree boxes
             // -> silently ignore any failures
         }
@@ -244,7 +244,7 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                             // ignore them, it's already handled elsewhere
                             break;
                         }
-                    } catch (std::exception& e) {
+                    } catch (const std::exception& e) {
                         spdlog::get("hardware")->warn(
                                 "Cannot store ONIE EEPROM TLV type {:#04x} from address {:#04x}: {}",
                                 static_cast<int>(tlv.type),
@@ -252,7 +252,7 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                                 e.what());
                     }
                 }
-            } catch (std::exception& e) {
+            } catch (const std::exception& e) {
                 spdlog::get("hardware")->warn("Cannot parse ONIE EEPROM at {:#04x}: {}", static_cast<int>(address), e.what());
             }
         }

@@ -208,7 +208,7 @@ void Authentication::addKey(const std::string& username, const std::string& key)
 {
     try {
         utils::execAndWait(spdlog::get("system"), SSH_KEYGEN_EXECUTABLE, {"-l", "-f", "-"}, key, {utils::ExecOptions::DropRoot});
-    } catch (std::runtime_error& ex) {
+    } catch (const std::runtime_error& ex) {
         using namespace fmt::literals;
         throw AuthException(fmt::format("Key is not a valid SSH public key: {stderr}\n{key}", "stderr"_a=ex.what(), "key"_a=key));
     }
@@ -288,7 +288,7 @@ velia::system::Authentication::Authentication(
             changePassword(name, password, m_etc_shadow);
             output.newPath("result", "success", libyang::CreationOptions::Output);
             m_log->info("Changed password for {}", name);
-        } catch (std::runtime_error& ex) {
+        } catch (const std::runtime_error& ex) {
             output.newPath("result", "failure", libyang::CreationOptions::Output);
             output.newPath("message", ex.what(), libyang::CreationOptions::Output);
             m_log->info("Failed to change password for {}: {}", name, ex.what());
@@ -307,7 +307,7 @@ velia::system::Authentication::Authentication(
             addKey(name, key);
             output.newPath("result", "success", libyang::CreationOptions::Output);
             m_log->info("Added a key for {}", name);
-        } catch (AuthException& ex) {
+        } catch (const AuthException& ex) {
             output.newPath("result", "failure", libyang::CreationOptions::Output);
             output.newPath("message", ex.what(), libyang::CreationOptions::Output);
             m_log->warn("Failed to add a key for {}: {}", name, ex.what());
@@ -325,7 +325,7 @@ velia::system::Authentication::Authentication(
             removeKey(name, key);
             output.newPath("result", "success", libyang::CreationOptions::Output);
             m_log->info("Removed key for {}", name);
-        } catch (AuthException& ex) {
+        } catch (const AuthException& ex) {
             output.newPath("result", "failure", libyang::CreationOptions::Output);
             output.newPath("message", ex.what(), libyang::CreationOptions::Output);
             m_log->warn("Failed to remove a key for {}: {}", name, ex.what());

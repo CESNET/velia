@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
         waitUntilSignaled();
 
         return 0;
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         velia::utils::fatalException(spdlog::get("main"), e, "main");
     }
 }

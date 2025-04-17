@@ -133,7 +133,7 @@ void discoverIpmiFru(const std::string& name, const std::filesystem::path& sysfs
         };
         spdlog::get("hardware")->info("{}: {} {} (HW {}, SW {}, FW {}) S/N {}", name, field("mfg-name"), field("model-name"),
                 field("hardware-rev"), field("software-rev"), field("firmware-rev"), field("serial-num"));
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         spdlog::get("hardware")->error("{}: IPMI FRU EEPROM unreadable: {}", name, e.what());
     }
 
@@ -219,7 +219,7 @@ SensorPollData FspYh::readValues()
     for (auto& reader : m_properties) {
         try {
             res.merge(reader());
-        } catch (std::logic_error& ex) {
+        } catch (const std::logic_error& ex) {
             // The PSU or PDU might get disconnected before the watcher thread is able to react. Because of this, the sysfs
             // read can fail. We must react to this and catch the exception from readFileInt64. If we cannot get all
             // data, we'll consider the data we got as invalid, so we'll return an empty map.

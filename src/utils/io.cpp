@@ -121,7 +121,7 @@ void safeWriteFile(const std::string& filename, const std::string_view& contents
 
     try {
         std::filesystem::rename(tempFileName.c_str(), filename.c_str());
-    } catch (std::filesystem::filesystem_error&) {
+    } catch (const std::filesystem::filesystem_error&) {
         throwErr("rename");
     }
 

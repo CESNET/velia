@@ -13,7 +13,7 @@ spdlog::level::level_enum parseLogLevel(const std::string& name, const docopt::v
     long x;
     try {
         x = option.asLong();
-    } catch (std::runtime_error&) {
+    } catch (const std::runtime_error&) {
         throw std::runtime_error(name + " log level: expecting integer");
     }
     static_assert(spdlog::level::trace < spdlog::level::off, "spdlog::level levels have changed");

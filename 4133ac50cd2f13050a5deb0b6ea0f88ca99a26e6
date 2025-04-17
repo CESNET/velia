@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "2e67d43b_80a41d8e",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-04-17T11:22:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29452c74_32ec6fe5",
+      "range": {
+        "startLine": 17,
+        "startChar": 12,
+        "endLine": 17,
+        "endChar": 30
+      },
+      "revId": "4133ac50cd2f13050a5deb0b6ea0f88ca99a26e6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "71239aa3_2e81c216",
         "filename": "src/ietf-hardware/Factory.cpp",
         "patchSetId": 3
@@ -43,6 +67,47 @@
         "endLine": 91,
         "endChar": 35
       },
+      "revId": "4133ac50cd2f13050a5deb0b6ea0f88ca99a26e6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "662d1e2e_8776050e",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-04-17T11:22:30Z",
+      "side": 1,
+      "message": "done everywhere as a follow-up commit",
+      "parentUuid": "71239aa3_2e81c216",
+      "range": {
+        "startLine": 91,
+        "startChar": 17,
+        "endLine": 91,
+        "endChar": 35
+      },
+      "revId": "4133ac50cd2f13050a5deb0b6ea0f88ca99a26e6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c3b8a97_b84f8746",
+        "filename": "src/ietf-hardware/Factory.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-04-17T11:22:30Z",
+      "side": 1,
+      "message": "FYI, I changed this to `ne:ctrl:carrier:console` to better reflect the internal structure of the HW",
       "revId": "4133ac50cd2f13050a5deb0b6ea0f88ca99a26e6",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

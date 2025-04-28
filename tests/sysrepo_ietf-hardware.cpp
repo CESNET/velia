@@ -27,6 +27,8 @@ using namespace std::literals;
 #define REQUIRE_ALARM_RPC(ALARM_TYPE, RESOURCE, SEVERITY, TEXT) \
     REQUIRE_NEW_ALARM(alarmWatcher, ALARM_TYPE, COMPONENT(RESOURCE), SEVERITY, TEXT)
 
+constexpr auto ASSET_NE = "/ietf-hardware:hardware/component[name='ne']/asset-id";
+
 TEST_CASE("IETF Hardware with sysrepo")
 {
     TEST_SYSREPO_INIT_LOGS;
@@ -62,6 +64,9 @@ TEST_CASE("IETF Hardware with sysrepo")
     std::atomic<int64_t> psuSensorValue;
     std::atomic<int64_t> cpuTempValue;
     std::atomic<int64_t> powerValue;
+
+    auto assetSession = srConn.sessionStart(sysrepo::Datastore::Running);
+    auto opsSession = srConn.sessionStart(sysrepo::Datastore::Operational);
 
     // register components into hw state
     auto ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
@@ -199,7 +204,17 @@ TEST_CASE("IETF Hardware with sysrepo")
         REQUIRE_ALARM_INVENTORY_ADD_RESOURCES(ALARMS("velia-alarms:sensor-missing-alarm"), COMPONENTS(COMPONENT("ne:psu"))).TIMES(1);
         REQUIRE_ALARM_RPC("velia-alarms:sensor-low-value-alarm", "ne:power", "critical", "Sensor value crossed low threshold (0 < 8000000).").IN_SEQUENCE(seq1);
 
+        // setting the asset-id naively...
+        assetSession.setItem(ASSET_NE, "foo bar");
+        // ...fails because the "class" node is mandatory.
+        REQUIRE_THROWS(assetSession.applyChanges());
+        assetSession.setItem("/ietf-hardware:hardware/component[name='ne']/class", "iana-hardware:chassis");
+        assetSession.applyChanges();
+        // our subscriptions are not yet in place
+        REQUIRE_THROWS(opsSession.getOneNode(ASSET_NE));
+
         auto ietfHardwareSysrepo = std::make_shared<velia::ietf_hardware::sysrepo::Sysrepo>(srSess, ietfHardware, 150ms);
+        REQUIRE(opsSession.getOneNode(ASSET_NE).asTerm().valueStr() == "foo bar");
         std::this_thread::sleep_for(400ms); // let's wait until the bg polling thread is spawned; 400 ms is probably enough to spawn the thread and poll 2 or 3 times
 
         std::string lastChange = directLeafNodeQuery(modulePrefix + "/last-change");
@@ -254,6 +269,10 @@ TEST_CASE("IETF Hardware with sysrepo")
         psuActive = true;
 
         waitForCompletionAndBitMore(seq1);
+
+        assetSession.setItem(ASSET_NE, "blah blah blah");
+        assetSession.applyChanges();
+        REQUIRE(opsSession.getOneNode(ASSET_NE).asTerm().valueStr() == "blah blah blah");
 
         // fourth round. We unplug with a warning
         REQUIRE_DATASTORE_CHANGE(dsChangeHardware, (ValueChanges{

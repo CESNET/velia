@@ -30,6 +30,7 @@ private:
     velia::Log m_log;
     std::chrono::microseconds m_pollInterval;
     ::sysrepo::Session m_session;
+    std::optional<::sysrepo::Subscription> m_assetSub;
     std::shared_ptr<IETFHardware> m_hwState;
     std::atomic<bool> m_quit;
     std::thread m_pollThread;

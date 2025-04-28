@@ -333,4 +333,14 @@ module czechlight-system {
       config false;
     }
   }
+
+  deviation /hw:hardware/hw:component {
+    deviate add {
+      must "(name = 'ne') and (class = 'iana-hardware:chassis')" {
+        error-message "Only asset-id is configurable, and only for /ietf-hardware:hardware/component[name='ne'],
+        which must be of the iana-hardware:chassis class. Other hardware entities will appear exclusively in the
+        `operational` datastore. These components do not support any configuration.";
+      }
+    }
+  }
 }

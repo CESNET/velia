@@ -167,7 +167,7 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
             {"class", "iana-hardware:chassis"},
         };
         DataTree ftdiData{
-            {"class", "iana-hardware:module"},
+            {"class", "iana-hardware:port"},
             {"description", "USB serial console"},
         };
         try {

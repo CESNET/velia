@@ -5,16 +5,36 @@
  *
 */
 
-#define BOOST_PROCESS_VERSION 1
 #include <boost/algorithm/string/join.hpp>
-#include <boost/process/v1/args.hpp>
-#include <boost/process/v1/child.hpp>
-#include <boost/process/v1/extend.hpp>
-#include <boost/process/v1/io.hpp>
-#include <boost/process/v1/pipe.hpp>
+#include <boost/asio.hpp>
+
+#if BOOST_VERSION >= 108800
+#include <boost/process.hpp>
+namespace bp = boost::process;
+#else
+#include <boost/process/v2/process.hpp>
+namespace bp = boost::process::v2;
+#endif
+
 #include "exec.h"
 #include "log.h"
 #include "system_vars.h"
+
+namespace {
+std::string readPipe(velia::Log logger, boost::asio::readable_pipe& pipe)
+{
+    boost::system::error_code ec;
+    std::string str;
+
+    auto sz = boost::asio::read(pipe, boost::asio::dynamic_buffer(str), ec);
+    if (ec && ec != boost::asio::error::eof) {
+        throw std::runtime_error("Failed to read from pipe: " + ec.message());
+    }
+
+    logger->trace("read {} bytes from pipe", sz);
+    return str;
+}
+}
 
 std::string velia::utils::execAndWait(
         velia::Log logger,
@@ -23,11 +43,6 @@ std::string velia::utils::execAndWait(
         std::string_view std_in,
         const std::set<ExecOptions> opts)
 {
-    namespace bp = boost::process;
-    bp::pipe stdinPipe;
-    bp::ipstream stdoutStream;
-    bp::ipstream stderrStream;
-
     auto onExecSetup = [opts] (const auto&) {
         if (opts.count(ExecOptions::DropRoot) == 1) {
             if (getuid() == 0) {
@@ -45,26 +60,32 @@ std::string velia::utils::execAndWait(
     };
 
     logger->trace("exec: {} {}", absolutePath, boost::algorithm::join(args, " "));
-    bp::child c(
+
+    boost::asio::io_context io;
+    boost::asio::writable_pipe stdinPipe{io};
+    boost::asio::readable_pipe stdoutPipe{io};
+    boost::asio::readable_pipe stderrPipe{io};
+
+    bp::process proc(
+            io,
             absolutePath,
-            boost::process::args=args,
-            bp::std_in < stdinPipe, bp::std_out > stdoutStream, bp::std_err > stderrStream,
-            bp::extend::on_exec_setup=onExecSetup);
+            args,
+            bp::process_stdio{stdinPipe, stdoutPipe, stderrPipe},
+            onExecSetup);
 
-    stdinPipe.write(std_in.data(), std_in.size());
-    stdinPipe.close();
+    boost::system::error_code ec;
+    boost::asio::write(stdinPipe, boost::asio::buffer(std_in.data(), std_in.size()), ec);
 
-    c.wait();
+    auto stdoutContent = readPipe(logger, stdoutPipe);
+    auto stderrContent = readPipe(logger, stderrPipe);
+
+    proc.wait();
     logger->trace("{} exited", absolutePath);
 
-    if (c.exit_code()) {
-        std::istreambuf_iterator<char> begin(stderrStream), end;
-        std::string stderrOutput(begin, end);
-        logger->critical("{} ended with a non-zero exit code. stderr: {}", absolutePath, stderrOutput);
-
-        throw std::runtime_error(absolutePath + " returned non-zero exit code " + std::to_string(c.exit_code()));
+    if (proc.exit_code()) {
+        logger->critical("{} ended with a non-zero exit code. stderr: {}", absolutePath, stderrContent);
+        throw std::runtime_error(absolutePath + " returned non-zero exit code " + std::to_string(proc.exit_code()));
     }
 
-    std::istreambuf_iterator<char> begin(stdoutStream), end;
-    return {begin, end};
+    return stdoutContent;
 }

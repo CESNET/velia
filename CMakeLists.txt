@@ -30,7 +30,7 @@ find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})
 
 find_package(date REQUIRED) # FIXME: Remove when we have STL with __cpp_lib_chrono >= 201907 (gcc 14)
-find_package(Boost REQUIRED CONFIG)
+find_package(Boost "1.80.0" REQUIRED CONFIG COMPONENTS process)
 find_package(spdlog REQUIRED)
 find_package(sdbus-c++ "1.0.0" REQUIRED)
 find_package(PkgConfig)
@@ -111,7 +111,7 @@ add_library(velia-utils STATIC
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )
-target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::LIBYANG PkgConfig::SYSREPO fmt::fmt PkgConfig::DOCOPT)
+target_link_libraries(velia-utils PUBLIC spdlog::spdlog PRIVATE PkgConfig::SYSTEMD PkgConfig::LIBYANG PkgConfig::SYSREPO fmt::fmt PkgConfig::DOCOPT Boost::process)
 
 # - health
 add_library(velia-health STATIC

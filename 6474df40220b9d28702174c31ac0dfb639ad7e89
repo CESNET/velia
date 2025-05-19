@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fbcf216_2181d011",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-19T20:51:42Z",
+      "side": 1,
+      "message": "It was marked experimental up to and including [Boost 1.85](https://www.boost.org/doc/libs/1_85_0/doc/html/process.html), and only became \"non-experimental\" in [1.86](https://www.boost.org/doc/libs/1_86_0/doc/html/process.html).",
+      "revId": "6474df40220b9d28702174c31ac0dfb639ad7e89",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

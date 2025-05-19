@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9c4067f_64585d4a",
+        "filename": "tests/sysrepo_interfaces-libnl.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-19T20:42:07Z",
+      "side": 1,
+      "message": "what\u0027s this for?",
+      "range": {
+        "startLine": 35,
+        "startChar": 83,
+        "endLine": 35,
+        "endChar": 85
+      },
+      "revId": "938b63d087cf0be285edd8cb7410dc5d303b5573",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

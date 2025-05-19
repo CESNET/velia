@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c146fd8a_287aacd7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-19T20:47:12Z",
+      "side": 1,
+      "message": "did you mean \"deprecated\"? I see that their docs say \"Version 2 is now the defauled\" (sic), but it reads a bit strange to me.\n\n(*Also, lol at \"In order to discourage usage of the deprecated v1, it’s documentation has been removed\".*)",
+      "range": {
+        "startLine": 9,
+        "startChar": 42,
+        "endLine": 9,
+        "endChar": 51
+      },
+      "revId": "dd726ecd62a3085bf3dbf33d01240bc93f491f1b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "514f0f20_e9f9d5ca",
+        "filename": "src/utils/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-19T20:47:12Z",
+      "side": 1,
+      "message": "yuck that one requires so many includes...",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 36
+      },
+      "revId": "dd726ecd62a3085bf3dbf33d01240bc93f491f1b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

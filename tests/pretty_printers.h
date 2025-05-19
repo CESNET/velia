@@ -8,6 +8,7 @@
 #pragma once
 
 #include <doctest/doctest.h>
+#include <experimental/iterator>
 #include <map>
 #include <set>
 #include <sstream>
@@ -16,6 +17,7 @@
 #include "ietf-hardware/sysfs/OnieEEPROM.h"
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/thresholds.h"
+#include "system/IETFInterfacesConfig.h"
 #include "tests/sysrepo-helpers/common.h"
 
 namespace doctest {
@@ -186,6 +188,18 @@ struct printer<ValueChanges> {
                << "\"," << std::endl;
         }
         os << "}";
+    }
+};
+
+template <>
+struct printer<velia::system::IETFInterfacesConfig::ChangedUnits> {
+    static void print(std::ostream& os, const velia::system::IETFInterfacesConfig::ChangedUnits& x)
+    {
+        os << "ChangedUnits{.deleted = {";
+        std::copy(std::begin(x.deleted), std::end(x.deleted), std::experimental::make_ostream_joiner(os, ", "));
+        os << "}, .changedOrNew = {";
+        std::copy(std::begin(x.changedOrNew), std::end(x.changedOrNew), std::experimental::make_ostream_joiner(os, ", "));
+        os << "}}";
     }
 };
 }

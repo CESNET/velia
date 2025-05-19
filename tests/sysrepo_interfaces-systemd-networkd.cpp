@@ -18,10 +18,11 @@
 #include "utils/io.h"
 
 using namespace std::string_literals;
+using ChangedUnits = velia::system::IETFInterfacesConfig::ChangedUnits;
 
 struct FakeNetworkReload {
 public:
-    MAKE_CONST_MOCK1(cb, void(const std::vector<std::string>&));
+    MAKE_CONST_MOCK1(cb, void(const ChangedUnits&));
 };
 
 TEST_CASE("Config data in ietf-interfaces")
@@ -39,8 +40,8 @@ TEST_CASE("Config data in ietf-interfaces")
     std::filesystem::remove_all(fakeConfigDir);
     std::filesystem::create_directories(fakeConfigDir);
 
-    REQUIRE_CALL(fake, cb(std::vector<std::string>{})).IN_SEQUENCE(seq1);
-    auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const std::vector<std::string>& updatedInterfaces) { fake.cb(updatedInterfaces); });
+    REQUIRE_CALL(fake, cb(ChangedUnits{})).IN_SEQUENCE(seq1);
+    auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const ChangedUnits& update) { fake.cb(update); });
 
     SECTION("Link changes disabled")
     {
@@ -57,7 +58,7 @@ TEST_CASE("Config data in ietf-interfaces")
                 client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/enabled", "false");
             }
 
-            REQUIRE_CALL(fake, cb(std::vector<std::string>{"br0", "eth0", "eth1"})).IN_SEQUENCE(seq1); // only these are monitored by the test
+            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0", "eth1"}})).IN_SEQUENCE(seq1); // only these are monitored by the test
             client.applyChanges();
         }
 
@@ -92,7 +93,7 @@ TEST_CASE("Config data in ietf-interfaces")
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
-            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
             client.applyChanges();
         }
 
@@ -102,7 +103,7 @@ TEST_CASE("Config data in ietf-interfaces")
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
-            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
             client.applyChanges();
         }
     }
@@ -111,7 +112,7 @@ TEST_CASE("Config data in ietf-interfaces")
     {
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "false");
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1).TIMES(AT_MOST(1));
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1).TIMES(AT_MOST(1));
         client.applyChanges();
 
         SECTION("Enabled IPv4 protocol with some IPs assigned is valid")
@@ -121,7 +122,7 @@ TEST_CASE("Config data in ietf-interfaces")
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.2']/ietf-ip:prefix-length", "24");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
-            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
             client.applyChanges();
         }
 
@@ -131,7 +132,7 @@ TEST_CASE("Config data in ietf-interfaces")
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
-            REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
             client.applyChanges();
         }
 
@@ -238,14 +239,14 @@ EmitLLDP=nearest-bridge
 )";
         }
 
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(std::filesystem::exists(expectedFilePath));
         REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
 
         // reset the contents
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(!std::filesystem::exists(expectedFilePath));
     }
@@ -283,7 +284,7 @@ EmitLLDP=nearest-bridge
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
 
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0", "eth1"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(std::filesystem::exists(expectedFilePathEth0));
         REQUIRE(std::filesystem::exists(expectedFilePathEth1));
@@ -293,7 +294,7 @@ EmitLLDP=nearest-bridge
         // reset the contents
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']");
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0", "eth1"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0", "eth1"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
         REQUIRE(!std::filesystem::exists(expectedFilePathEth1));
@@ -352,7 +353,7 @@ EmitLLDP=nearest-bridge
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv4/ietf-ip:enabled", "false");
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6");
 
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"br0", "eth0", "eth1"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0", "eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(std::filesystem::exists(expectedFilePathBr0));
         REQUIRE(std::filesystem::exists(expectedFilePathEth0));
@@ -377,7 +378,7 @@ LLDP=true
 EmitLLDP=nearest-bridge
 )";
 
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"br0"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(std::filesystem::exists(expectedFilePathBr0));
         REQUIRE(std::filesystem::exists(expectedFilePathEth0));
@@ -400,7 +401,7 @@ LLDP=true
 EmitLLDP=nearest-bridge
 )";
 
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"br0"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(std::filesystem::exists(expectedFilePathBr0));
         REQUIRE(std::filesystem::exists(expectedFilePathEth0));
@@ -424,7 +425,7 @@ LLDP=true
 EmitLLDP=nearest-bridge
 )";
 
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth1"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(std::filesystem::exists(expectedFilePathBr0));
         REQUIRE(std::filesystem::exists(expectedFilePathEth0));
@@ -437,7 +438,7 @@ EmitLLDP=nearest-bridge
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='br0']");
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']");
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"br0", "eth0", "eth1"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"br0", "eth0", "eth1"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(!std::filesystem::exists(expectedFilePathBr0));
         REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
@@ -478,13 +479,13 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/enabled", "false");
 
-            REQUIRE_CALL(fake, cb(std::vector<std::string>{"br0", "eth0"})).IN_SEQUENCE(seq1);
+            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0"}})).IN_SEQUENCE(seq1);
             client.applyChanges();
 
             // reset the contents
             client.deleteItem("/ietf-interfaces:interfaces/interface[name='br0']");
             client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
-            REQUIRE_CALL(fake, cb(std::vector<std::string>{"br0", "eth0"})).IN_SEQUENCE(seq1);
+            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"br0", "eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
             client.applyChanges();
             REQUIRE(!std::filesystem::exists(expectedFilePathBr0));
             REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
@@ -611,14 +612,14 @@ EmitLLDP=nearest-bridge
 )";
         }
 
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(std::filesystem::exists(expectedFilePath));
         REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
 
         // reset the contents
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
-        REQUIRE_CALL(fake, cb(std::vector<std::string>{"eth0"})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE(!std::filesystem::exists(expectedFilePath));
     }

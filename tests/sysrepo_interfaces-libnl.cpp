@@ -7,8 +7,6 @@
 
 #include "trompeloeil_doctest.h"
 #include <boost/algorithm/string/join.hpp>
-#include <boost/process.hpp>
-#include <boost/process/extend.hpp>
 #include <cstdlib>
 #include <netlink/route/addr.h>
 #include <regex>
@@ -32,34 +30,9 @@ const auto WAIT = 500ms;
 const auto WAIT_BRIDGE = 2500ms;
 
 template <class... Args>
-void iproute2_run(const Args... args_)
+void iproute2_exec_and_wait(const auto& wait, const Args... args)
 {
-    namespace bp = boost::process;
-    auto logger = spdlog::get("main");
-
-    bp::ipstream stdoutStream;
-    bp::ipstream stderrStream;
-
-    std::vector<std::string> args = {IPROUTE2_EXECUTABLE, args_...};
-
-    logger->trace("exec: {}", boost::algorithm::join(args, " "));
-    bp::child c(boost::process::args = std::move(args), bp::std_out > stdoutStream, bp::std_err > stderrStream);
-    c.wait();
-    logger->trace("{} exited", IPROUTE2_EXECUTABLE);
-
-    if (c.exit_code() != 0) {
-        std::istreambuf_iterator<char> begin(stderrStream), end;
-        std::string stderrOutput(begin, end);
-        logger->critical("{} ended with a non-zero exit code. stderr: {}", IPROUTE2_EXECUTABLE, stderrOutput);
-
-        throw std::runtime_error(IPROUTE2_EXECUTABLE + " returned non-zero exit code "s + std::to_string(c.exit_code()));
-    }
-}
-
-template <class... Args>
-void iproute2_exec_and_wait(const auto& wait, const Args... args_)
-{
-    iproute2_run(args_...);
+    velia::utils::execAndWait(spdlog::get("main"), IPROUTE2_EXECUTABLE, {args...}, "");
     std::this_thread::sleep_for(wait); // wait for velia to process and publish the change
 }
 

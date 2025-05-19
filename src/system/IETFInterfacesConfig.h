@@ -17,7 +17,13 @@ class Rtnetlink;
 
 class IETFInterfacesConfig {
 public:
-    using reload_cb_t = std::function<void(const std::vector<std::string>&)>;
+    struct ChangedUnits {
+        using Vector = std::vector<std::string>;
+        Vector deleted;
+        Vector changedOrNew;
+        bool operator==(const ChangedUnits& other) const noexcept = default;
+    };
+    using reload_cb_t = std::function<void(const ChangedUnits&)>;
     explicit IETFInterfacesConfig(::sysrepo::Session srSess, std::filesystem::path configDirectory, std::vector<std::string> managedLinks, reload_cb_t reloadCallback);
 
 private:
@@ -29,6 +35,6 @@ private:
     std::optional<::sysrepo::Subscription> m_srSubscribe;
 
     sysrepo::ErrorCode moduleChange(::sysrepo::Session session) const;
-    std::vector<std::string> updateNetworkFiles(const std::map<std::string, std::string>& networkConfig, const std::filesystem::path& configDir) const;
+    ChangedUnits updateNetworkFiles(const std::map<std::string, std::string>& networkConfig, const std::filesystem::path& configDir) const;
 };
 }

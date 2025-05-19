@@ -6,8 +6,18 @@
 */
 
 #include <boost/algorithm/string/join.hpp>
+#include <boost/version.hpp>
+#if BOOST_VERSION < 108800
 #include <boost/process.hpp>
-#include <boost/process/extend.hpp>
+#else
+#define BOOST_PROCESS_VERSION 1
+#include <boost/process/v1/args.hpp>
+#include <boost/process/v1/child.hpp>
+#include <boost/process/v1/extend.hpp>
+#include <boost/process/v1/io.hpp>
+#include <boost/process/v1/pipe.hpp>
+#endif
+
 #include "exec.h"
 #include "log.h"
 #include "system_vars.h"

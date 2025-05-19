@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "334de071_2d2e94ac",
+        "filename": "src/system/IETFInterfacesConfig.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-05-19T18:19:09Z",
+      "side": 1,
+      "message": "Does this compile? For defaulted operator\u003c\u003d\u003e you are expected to return auto. For operator\u003d\u003d (which should be enough here?) the return type is bool. I think equality operator should be enough here.",
+      "range": {
+        "startLine": 24,
+        "startChar": 8,
+        "endLine": 24,
+        "endChar": 24
+      },
+      "revId": "21e429871cd09f350e812875ae4dc1ef20142467",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

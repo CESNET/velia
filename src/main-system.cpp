@@ -96,21 +96,28 @@ int main(int argc, char* argv[])
         auto sysrepoIETFInterfacesRunning = velia::system::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto& reconfiguredInterfaces) {
             auto log = spdlog::get("system");
 
-            /* Bring all the updated interfaces down (they will later be brought up by executing `networkctl reload`).
+            /* Bring all the updated interfaces down
              *
-             * This is required when transitioning from bridge to DHCP configuration. systemd-networkd apparently does not reset many
+             * This is required at least when transitioning from bridge to DHCP configuration. systemd-networkd apparently does not reset many
              * interface properties when reconfiguring the interface into new "bridge-less" configuration (the interface stays in the
              * bridge and it also does not obtain link local address).
-             *
-             * This doesn't seem to be required when transitioning from DHCP to bridge configuration. It's just a "precaution" because
-             * there might be hidden some caveats that I am unable to see now (some leftover setting). Bringing the interface
-             * down seems to reset the interface (and it is something we can afford in the interface reconfiguration process).
              */
-            for (const auto& interfaceName : reconfiguredInterfaces) {
+            for (const auto& interfaceName : reconfiguredInterfaces.deleted) {
+                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+            }
+            for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
                 velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
             }
 
             velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
+
+            // Let's also explicitly bring all interfaces which are expected to have "some" configuration back up again.
+            // This was needed at least on the "oscW" and "oscE" interfaces on in-line amplifiers in May 2025.
+            // I have no idea how come that this affects this pair of interfaces, but it has no effect on the "osc"
+            // one on ROADM Line Degree boxes. Let's just bring them up explicitly.
+            for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
+                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"up", interfaceName}, "");
+            }
         });
 
         auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);

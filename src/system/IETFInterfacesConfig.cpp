@@ -156,9 +156,9 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
     return sysrepo::ErrorCode::Ok;
 }
 
-std::vector<std::string> IETFInterfacesConfig::updateNetworkFiles(const std::map<std::string, std::string>& networkConfig, const std::filesystem::path& configDir) const
+IETFInterfacesConfig::ChangedUnits IETFInterfacesConfig::updateNetworkFiles(const std::map<std::string, std::string>& networkConfig, const std::filesystem::path& configDir) const
 {
-    std::vector<std::string> changedLinks;
+    ChangedUnits ret;
 
     for (const auto& link : m_managedLinks) {
         const auto targetFile = configDir / (link + ".network");
@@ -177,14 +177,14 @@ std::vector<std::string> IETFInterfacesConfig::updateNetworkFiles(const std::map
 
         if (updateExists) {
             velia::utils::safeWriteFile(targetFile, networkConfig.at(link));
+            ret.changedOrNew.push_back(link);
         } else { // configuration removed
             std::filesystem::remove(targetFile);
+            ret.deleted.push_back(link);
         }
-
-        changedLinks.push_back(link);
     }
 
-    return changedLinks;
+    return ret;
 }
 
 }

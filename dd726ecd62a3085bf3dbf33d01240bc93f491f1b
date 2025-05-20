@@ -26,6 +26,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "38e65a03_9b98fd07",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-05-20T08:47:24Z",
+      "side": 1,
+      "message": "I am putting this on hold until our CI has newer version of boost. Currently there is 1.78 but this and the following change requires at least 1.81.\n(Our Buildroot currently has 1.83.)",
+      "revId": "dd726ecd62a3085bf3dbf33d01240bc93f491f1b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "514f0f20_e9f9d5ca",
         "filename": "src/utils/exec.cpp",
         "patchSetId": 1

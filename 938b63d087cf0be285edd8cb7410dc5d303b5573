@@ -22,6 +22,30 @@
       },
       "revId": "938b63d087cf0be285edd8cb7410dc5d303b5573",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5132fd0_8172322e",
+        "filename": "tests/sysrepo_interfaces-libnl.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-05-20T06:49:53Z",
+      "side": 1,
+      "message": "That is empty input for stdin, the execAndWait expects a string_view here",
+      "parentUuid": "a9c4067f_64585d4a",
+      "range": {
+        "startLine": 35,
+        "startChar": 83,
+        "endLine": 35,
+        "endChar": 85
+      },
+      "revId": "938b63d087cf0be285edd8cb7410dc5d303b5573",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

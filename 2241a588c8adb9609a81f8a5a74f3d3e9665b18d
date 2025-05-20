@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "440da0e7_b15cc748",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-20T11:14:44Z",
+      "side": 1,
+      "message": "recheck (Our CI is currently degreaded, which means that job artifact promotion doesn\u0027t work ATM. I\u0027ve copied these files manually.)",
+      "revId": "2241a588c8adb9609a81f8a5a74f3d3e9665b18d",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

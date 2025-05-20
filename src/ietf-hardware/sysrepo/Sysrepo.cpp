@@ -5,7 +5,6 @@
  *
  */
 
-#include <boost/algorithm/string.hpp>
 #include <regex>
 #include <sysrepo-cpp/Connection.hpp>
 #include "Sysrepo.h"
@@ -183,7 +182,7 @@ Sysrepo::Sysrepo(::sysrepo::Session session, std::shared_ptr<IETFHardware> hwSta
 
             /* Look for nonoperational sensors to set alarms */
             for (const auto& [leaf, value] : hwStateValues) {
-                if (boost::ends_with(leaf, "/sensor-data/oper-status")) {
+                if (leaf.ends_with("/sensor-data/oper-status")) {
                     std::optional<std::string> oldValue;
 
                     if (auto it = prevValues.find(leaf); it != prevValues.end()) {

@@ -6,7 +6,6 @@
  */
 
 #include <arpa/inet.h>
-#include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
 #include <libyang-cpp/Time.hpp>
 #include <optional>
@@ -38,7 +37,7 @@ std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path
     std::string line;
     while (std::getline(ifs, line)) {
         // man os-release: Lines beginning with "#" shall be ignored as comments. Blank lines are permitted and ignored.
-        if (line.empty() || boost::algorithm::starts_with(line, "#")) {
+        if (line.empty() || line.starts_with("#")) {
             continue;
         }
 

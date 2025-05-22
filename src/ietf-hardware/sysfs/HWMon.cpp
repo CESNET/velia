@@ -6,7 +6,6 @@
  *
 */
 #include <algorithm>
-#include <boost/algorithm/string/predicate.hpp>
 #include <filesystem>
 #include "HWMon.h"
 #include "utils/io.h"
@@ -53,7 +52,7 @@ HWMon::HWMon(std::filesystem::path hwmonDir)
     if (std::filesystem::exists(hwmonDir)) {
         for (const auto& e : std::filesystem::directory_iterator(hwmonDir)) {
             // only directories hwmon<int> with a file named 'name' (required by kernel docs) are valid
-            if (e.is_directory() && boost::algorithm::starts_with(std::string(e.path().filename()), "hwmon") && std::filesystem::exists(e.path() / "name"s)) {
+            if (e.is_directory() && std::string(e.path().filename()).starts_with("hwmon") && std::filesystem::exists(e.path() / "name"s)) {
                 rootCandidates.push_back(e.path());
                 m_log->trace("hwmon: Found a candidate: {}", std::string(e.path()));
             }
@@ -72,7 +71,7 @@ HWMon::HWMon(std::filesystem::path hwmonDir)
             continue;
         }
 
-        if (std::any_of(ACCEPTED_FILE_ENDINGS.cbegin(), ACCEPTED_FILE_ENDINGS.cend(), [&entry](const auto& ending) { return boost::algorithm::ends_with(std::string(entry.path().filename()), ending); })) {
+        if (std::any_of(ACCEPTED_FILE_ENDINGS.cbegin(), ACCEPTED_FILE_ENDINGS.cend(), [&entry](const auto& ending) { return std::string(entry.path().filename()).ends_with(ending); })) {
             m_properties.push_back(entry.path().filename());
         }
     }

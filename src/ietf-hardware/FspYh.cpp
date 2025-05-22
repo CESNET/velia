@@ -1,5 +1,4 @@
 #include <boost/algorithm/string/join.hpp>
-#include <boost/algorithm/string/predicate.hpp>
 #include <cstring>
 #include <fcntl.h>
 #include <fmt/os.h>
@@ -264,7 +263,7 @@ void FspYhPsu::createPower()
     discoverIpmiFru(m_namePrefix, m_eeprom->sysfsEntry() / "eeprom", m_eepromData);
     bool isDcModule = false;
     if (auto it = m_eepromData.find(xpathFor(m_namePrefix, "model-name")); it != m_eepromData.end()) {
-        if (boost::algorithm::starts_with(it->second, "YM-2151F")) {
+        if (it->second.starts_with("YM-2151F")) {
             isDcModule = true;
         }
     }

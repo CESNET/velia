@@ -6,7 +6,6 @@
  */
 
 #include "trompeloeil_doctest.h"
-#include <boost/algorithm/string/predicate.hpp>
 #include <map>
 #include <sysrepo-cpp/Connection.hpp>
 #include "common.h"
@@ -39,7 +38,7 @@ Values dataFromSysrepo(const sysrepo::Session& session, const std::string& xpath
     REQUIRE(data.has_value());
     for (const auto& sibling : data->findXPath(xpath)) { // Use findXPath here in case the xpath is list without keys.
         for (const auto& node : sibling.childrenDfs()) {
-            const auto briefXPath = std::string(node.path()).substr(boost::algorithm::ends_with(xpath, ":*") ? xpath.size() - 1 : xpath.size());
+            const auto briefXPath = std::string(node.path()).substr(xpath.ends_with(":*") ? xpath.size() - 1 : xpath.size());
 
             // We ignore the thing that's exactly the xpath we're retrieving to avoid having {"": ""} entries.
             if (briefXPath.empty()) {

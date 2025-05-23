@@ -13,6 +13,7 @@
 
 namespace velia::utils {
 
+std::ifstream openStream(const std::filesystem::path& path);
 std::string readFileString(const std::filesystem::path& path);
 int64_t readFileInt64(const std::filesystem::path& path);
 std::vector<uint32_t> readFileWords(const std::filesystem::path& path, int valuesCount);

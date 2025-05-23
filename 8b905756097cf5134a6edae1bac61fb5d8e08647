@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2acd9513_94d7953d",
+        "filename": "tests/sysrepo_system-ietfsystem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-23T13:16:27Z",
+      "side": 1,
+      "message": "`CMAKE_CURRENT_SOURCE_DIR` (also everywhere else)",
+      "range": {
+        "startLine": 100,
+        "startChar": 42,
+        "endLine": 100,
+        "endChar": 75
+      },
+      "revId": "8b905756097cf5134a6edae1bac61fb5d8e08647",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bd08054_7f679369",
+        "filename": "yang/czechlight-system@2022-07-08.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-23T13:16:27Z",
+      "side": 1,
+      "message": "I was thinking which one is better:\n- `/ietf-system:system-state/platform/czechlight-system:machine-id`\n- `/czechlight-system:firmware/machine-id`\n\n...but I\u0027m OK with your choice.",
+      "revId": "8b905756097cf5134a6edae1bac61fb5d8e08647",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

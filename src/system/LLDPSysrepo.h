@@ -17,7 +17,7 @@ namespace velia::system {
 
 class LLDPSysrepo {
 public:
-    explicit LLDPSysrepo(std::shared_ptr<LLDPDataProvider> lldp);
+    explicit LLDPSysrepo(sysrepo::Session& session, std::shared_ptr<LLDPDataProvider> lldp);
     sysrepo::ErrorCode operator()(sysrepo::Session session, uint32_t subscriptionId, const std::string& moduleName, const std::optional<std::string>& subXPath, const std::optional<std::string>& requestXPath, uint32_t, std::optional<libyang::DataNode>& output);
 
 private:

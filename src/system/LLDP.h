@@ -25,12 +25,20 @@ std::ostream& operator<<(std::ostream& os, const NeighborEntry& entry);
 
 class LLDPDataProvider {
 public:
-    explicit LLDPDataProvider(std::function<std::string()> dataCallback);
+    /** @brief Static data containing information that are sent by the LLDP protocol about local machine. */
+    struct LocalData {
+        std::string chassisId;
+        std::string chassisSubtype;
+    };
+
+    explicit LLDPDataProvider(std::function<std::string()> dataCallback, const LocalData& localData);
     std::vector<NeighborEntry> getNeighbors() const;
+    std::map<std::string, std::string> localProperties() const;
 
 private:
     velia::Log m_log;
     std::function<std::string()> m_dataCallback;
+    LocalData m_localData;
 };
 
 }

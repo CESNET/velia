@@ -55,9 +55,10 @@ std::string toBitsYANG(const int caps)
 }
 }
 
-LLDPDataProvider::LLDPDataProvider(std::function<std::string()> dataCallback)
+LLDPDataProvider::LLDPDataProvider(std::function<std::string()> dataCallback, const LLDPDataProvider::LocalData& localData)
     : m_log(spdlog::get("system"))
     , m_dataCallback(std::move(dataCallback))
+    , m_localData(localData)
 {
 }
 
@@ -93,6 +94,14 @@ std::vector<NeighborEntry> LLDPDataProvider::getNeighbors() const
     }
 
     return res;
+}
+
+std::map<std::string, std::string> LLDPDataProvider::localProperties() const
+{
+    return {
+        {"chassisId", m_localData.chassisId},
+        {"chassisSubtype", m_localData.chassisSubtype},
+    };
 }
 
 std::ostream& operator<<(std::ostream& os, const NeighborEntry& entry)

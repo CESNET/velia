@@ -192,6 +192,23 @@ module czechlight-lldp {
     }
   }
 
+  container local {
+    config false;
+    description "Information which are sent from the local system via LLDP.";
+
+    leaf chassisId {
+      type string;
+      description "Identification of the chassis in the local system, as sent via LLDP.";
+      reference "IEEE 802.1AB-2016, section 8.5.2.3";
+    }
+
+    leaf chassisSubtype {
+      type cla-lldp:chassisSubtype;
+      description "The basis on which the local chassisId is defined";
+      reference "IEEE 802.1AB-2016, section 8.5.2.2";
+    }
+  }
+
   container nbr-list {
     config false;
     description

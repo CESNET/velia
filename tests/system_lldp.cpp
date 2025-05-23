@@ -85,8 +85,11 @@ TEST_CASE("Parsing with the mock")
         };
     }
 
-    auto lldp = std::make_shared<velia::system::LLDPDataProvider>([&]() { return json; });
+    auto lldp = std::make_shared<velia::system::LLDPDataProvider>(
+        [&]() { return json; },
+        velia::system::LLDPDataProvider::LocalData{.chassisId = "blabla", .chassisSubtype = "local"});
     REQUIRE(lldp->getNeighbors() == expected);
+    REQUIRE(lldp->localProperties() == std::map<std::string, std::string>{{"chassisId", "blabla"}, {"chassisSubtype", "local"}});
 }
 
 #if LIST_NEIGHBORS_RUN

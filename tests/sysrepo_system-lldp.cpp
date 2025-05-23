@@ -1,9 +1,12 @@
 #include "trompeloeil_doctest.h"
+#include "tests/configure.cmake.h"
 #include "system/LLDP.h"
 #include "system/LLDPSysrepo.h"
 #include "tests/pretty_printers.h"
 #include "tests/sysrepo-helpers/common.h"
 #include "tests/test_log_setup.h"
+
+using namespace std::string_literals;
 
 TEST_CASE("Sysrepo opsdata callback")
 {
@@ -81,9 +84,20 @@ TEST_CASE("Sysrepo opsdata callback")
         };
     }
 
-    auto lldp = std::make_shared<velia::system::LLDPDataProvider>([&]() { return json; });
-    auto sub = srSess.onOperGet("czechlight-lldp", velia::system::LLDPSysrepo(lldp), "/czechlight-lldp:nbr-list");
+    auto lldp = velia::system::LLDPSysrepo(
+        srSess,
+        std::make_shared<velia::system::LLDPDataProvider>(
+            [&]() { return json; },
+            velia::system::LLDPDataProvider::LocalData{
+                .chassisId = "abcdef0123456deadc0ffeebeefcafe1",
+                .chassisSubtype = "local",
+            }));
+    auto sub = srSess.onOperGet("czechlight-lldp", lldp, "/czechlight-lldp:nbr-list");
 
     client.switchDatastore(sysrepo::Datastore::Operational);
     REQUIRE(dataFromSysrepo(client, "/czechlight-lldp:nbr-list") == expected);
+    REQUIRE(dataFromSysrepo(client, "/czechlight-lldp:local", sysrepo::Datastore::Operational) == (std::map<std::string, std::string>{
+                {"/chassisId", "abcdef0123456deadc0ffeebeefcafe1"},
+                {"/chassisSubtype", "local"},
+            }));
 }

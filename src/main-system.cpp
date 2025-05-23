@@ -17,6 +17,7 @@
 #include "system/LLDPSysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
+#include "utils/io.h"
 #include "utils/journal.h"
 #include "utils/log-init.h"
 #include "utils/sysrepo.h"
@@ -115,8 +116,14 @@ int main(int argc, char* argv[])
 
     auto leds = velia::system::LED(srConn, "/sys/class/leds");
 
-    auto lldp = std::make_shared<velia::system::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
-    auto srSubs = srSess.onOperGet("czechlight-lldp", velia::system::LLDPSysrepo(lldp), "/czechlight-lldp:nbr-list");
+    auto lldp = velia::system::LLDPSysrepo(
+        srSess,
+        std::make_shared<velia::system::LLDPDataProvider>(
+            []() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
+            velia::system::LLDPDataProvider::LocalData{
+                .chassisId = velia::utils::readFileString("/etc/machine-id"),
+                .chassisSubtype = "local"}));
+    auto srSubs = srSess.onOperGet("czechlight-lldp", lldp, "/czechlight-lldp:nbr-list");
 
     DBUS_EVENTLOOP_END
     return 0;

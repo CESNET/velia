@@ -15,14 +15,14 @@ namespace velia::system {
 
 class IETFSystem {
 public:
-    IETFSystem(::sysrepo::Session srSession, const std::filesystem::path& osRelease, sdbus::IConnection& dbusConnection, const std::string& dbusName);
+    IETFSystem(::sysrepo::Session srSession, const std::filesystem::path& osRelease, const std::filesystem::path& procStat, sdbus::IConnection& dbusConnection, const std::string& dbusName);
 
 private:
     void initStaticProperties(const std::filesystem::path& osRelease);
     void initSystemRestart();
     void initHostname();
     void initDummies();
-    void initClock();
+    void initClock(const std::filesystem::path& procStatPath);
     void initDNS(sdbus::IConnection& connection, const std::string& dbusName);
 
     ::sysrepo::Session m_srSession;

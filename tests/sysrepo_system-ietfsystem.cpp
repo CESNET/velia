@@ -71,7 +71,9 @@ TEST_CASE("Sysrepo ietf-system")
 
         SECTION("Invalid data (missing VERSION and NAME keys)")
         {
-            REQUIRE_THROWS_AS(std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys", *dbusConnClient, dbusConnServer->getUniqueName()), std::out_of_range);
+            REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys", *dbusConnClient, dbusConnServer->getUniqueName()),
+                                   ("Could not read key NAME from file "s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys").c_str(),
+                                   std::out_of_range);
         }
     }
 

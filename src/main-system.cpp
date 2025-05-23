@@ -14,7 +14,7 @@
 #include "system/JournalUpload.h"
 #include "system/LED.h"
 #include "system/LLDP.h"
-#include "system/LLDPCallback.h"
+#include "system/LLDPSysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
 #include "utils/journal.h"
@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
     auto leds = velia::system::LED(srConn, "/sys/class/leds");
 
     auto lldp = std::make_shared<velia::system::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
-    auto srSubs = srSess.onOperGet("czechlight-lldp", velia::system::LLDPCallback(lldp), "/czechlight-lldp:nbr-list");
+    auto srSubs = srSess.onOperGet("czechlight-lldp", velia::system::LLDPSysrepo(lldp), "/czechlight-lldp:nbr-list");
 
     DBUS_EVENTLOOP_END
     return 0;

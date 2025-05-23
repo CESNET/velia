@@ -248,8 +248,8 @@ add_library(velia-system STATIC
         src/system/LED.h
         src/system/LLDP.cpp
         src/system/LLDP.h
-        src/system/LLDPCallback.cpp
-        src/system/LLDPCallback.h
+        src/system/LLDPSysrepo.cpp
+        src/system/LLDPSysrepo.h
         )
 target_link_libraries(velia-system
     PUBLIC

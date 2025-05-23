@@ -108,10 +108,18 @@ int main(int argc, char* argv[])
          * bridge and it also does not obtain link local address).
          */
         for (const auto& interfaceName : reconfiguredInterfaces.deleted) {
-            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+            try {
+                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+            } catch (std::runtime_error& e) {
+                log->warn("velia-system: IETFInterfacesConfig: cannot bring down {}: {}", interfaceName, e.what());
+            }
         }
         for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
-            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+            try {
+                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+            } catch (std::runtime_error& e) {
+                log->warn("velia-system: IETFInterfacesConfig: cannot bring down {}: {}", interfaceName, e.what());
+            }
         }
 
         velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");

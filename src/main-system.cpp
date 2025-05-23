@@ -61,78 +61,74 @@ int main(int argc, char* argv[])
     velia::utils::initLogsSysrepo();
     spdlog::set_level(spdlog::level::info);
 
-    try {
-        spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
-        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
-        spdlog::get("system")->set_level(parseLogLevel("System logging", args["--system-log-level"]));
+    spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
+    spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
+    spdlog::get("system")->set_level(parseLogLevel("System logging", args["--system-log-level"]));
 
-        auto srConn = sysrepo::Connection{};
-        auto srSess = srConn.sessionStart();
+    auto srConn = sysrepo::Connection{};
+    auto srSess = srConn.sessionStart();
 
-        DBUS_EVENTLOOP_START
+    DBUS_EVENTLOOP_START
 
-        auto journalUploadStartup = velia::system::JournalUpload(srConn.sessionStart(sysrepo::Datastore::Startup), "/cfg/journald-remote", [](auto) {});
-        auto journalUploadRunning = velia::system::JournalUpload(srConn.sessionStart(sysrepo::Datastore::Running), "/run/journald-remote", [dbusConn = g_dbusConnection.get()](auto log) {
-            log->debug("Restarting systemd-journal-upload.service");
-            auto sdManager = sdbus::createProxy(*dbusConn, "org.freedesktop.systemd1", "/org/freedesktop/systemd1");
-            sdManager->callMethod("RestartUnit").onInterface("org.freedesktop.systemd1.Manager").withArguments("systemd-journal-upload.service"s, "replace"s);
-        });
+    auto journalUploadStartup = velia::system::JournalUpload(srConn.sessionStart(sysrepo::Datastore::Startup), "/cfg/journald-remote", [](auto) {});
+    auto journalUploadRunning = velia::system::JournalUpload(srConn.sessionStart(sysrepo::Datastore::Running), "/run/journald-remote", [dbusConn = g_dbusConnection.get()](auto log) {
+        log->debug("Restarting systemd-journal-upload.service");
+        auto sdManager = sdbus::createProxy(*dbusConn, "org.freedesktop.systemd1", "/org/freedesktop/systemd1");
+        sdManager->callMethod("RestartUnit").onInterface("org.freedesktop.systemd1.Manager").withArguments("systemd-journal-upload.service"s, "replace"s);
+    });
 
-        // initialize ietf-system
-        auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release", *g_dbusConnection, "org.freedesktop.resolve1");
+    // initialize ietf-system
+    auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release", *g_dbusConnection, "org.freedesktop.resolve1");
 
-        auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
-        dbusConnection->enterEventLoopAsync();
+    auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
+    dbusConnection->enterEventLoopAsync();
 
-        // implements ietf-interfaces and ietf-routing
-        const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network"), persistentNetworkDirectory("/cfg/network/");
-        std::filesystem::create_directories(runtimeNetworkDirectory);
-        std::filesystem::create_directories(persistentNetworkDirectory);
-        auto srSessStartup = srConn.sessionStart(sysrepo::Datastore::Startup);
-        std::vector<std::string> managedLinks = {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW"};
+    // implements ietf-interfaces and ietf-routing
+    const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network"), persistentNetworkDirectory("/cfg/network/");
+    std::filesystem::create_directories(runtimeNetworkDirectory);
+    std::filesystem::create_directories(persistentNetworkDirectory);
+    auto srSessStartup = srConn.sessionStart(sysrepo::Datastore::Startup);
+    std::vector<std::string> managedLinks = {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW"};
 
-        auto sysrepoIETFInterfacesOperational = std::make_shared<velia::system::IETFInterfaces>(srSess);
-        auto sysrepoIETFInterfacesStartup = velia::system::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, managedLinks, [](const auto&) {});
-        auto sysrepoIETFInterfacesRunning = velia::system::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto& reconfiguredInterfaces) {
-            auto log = spdlog::get("system");
+    auto sysrepoIETFInterfacesOperational = std::make_shared<velia::system::IETFInterfaces>(srSess);
+    auto sysrepoIETFInterfacesStartup = velia::system::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, managedLinks, [](const auto&) {});
+    auto sysrepoIETFInterfacesRunning = velia::system::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto& reconfiguredInterfaces) {
+        auto log = spdlog::get("system");
 
-            /* Bring all the updated interfaces down
-             *
-             * This is required at least when transitioning from bridge to DHCP configuration. systemd-networkd apparently does not reset many
-             * interface properties when reconfiguring the interface into new "bridge-less" configuration (the interface stays in the
-             * bridge and it also does not obtain link local address).
-             */
-            for (const auto& interfaceName : reconfiguredInterfaces.deleted) {
-                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
-            }
-            for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
-                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
-            }
+        /* Bring all the updated interfaces down
+         *
+         * This is required at least when transitioning from bridge to DHCP configuration. systemd-networkd apparently does not reset many
+         * interface properties when reconfiguring the interface into new "bridge-less" configuration (the interface stays in the
+         * bridge and it also does not obtain link local address).
+         */
+        for (const auto& interfaceName : reconfiguredInterfaces.deleted) {
+            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+        }
+        for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
+            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
+        }
 
-            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
+        velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
 
-            // Let's also explicitly bring all interfaces which are expected to have "some" configuration back up again.
-            // This was needed at least on the "oscW" and "oscE" interfaces on in-line amplifiers in May 2025.
-            // I have no idea how come that this affects this pair of interfaces, but it has no effect on the "osc"
-            // one on ROADM Line Degree boxes. Let's just bring them up explicitly.
-            for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
-                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"up", interfaceName}, "");
-            }
-        });
+        // Let's also explicitly bring all interfaces which are expected to have "some" configuration back up again.
+        // This was needed at least on the "oscW" and "oscE" interfaces on in-line amplifiers in May 2025.
+        // I have no idea how come that this affects this pair of interfaces, but it has no effect on the "osc"
+        // one on ROADM Line Degree boxes. Let's just bring them up explicitly.
+        for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
+            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"up", interfaceName}, "");
+        }
+    });
 
-        auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
+    auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 
-        auto srSess2 = srConn.sessionStart();
-        auto authentication = velia::system::Authentication(srSess2, REAL_ETC_PASSWD_FILE, REAL_ETC_SHADOW_FILE, AUTHORIZED_KEYS_FORMAT, velia::system::impl::changePassword);
+    auto srSess2 = srConn.sessionStart();
+    auto authentication = velia::system::Authentication(srSess2, REAL_ETC_PASSWD_FILE, REAL_ETC_SHADOW_FILE, AUTHORIZED_KEYS_FORMAT, velia::system::impl::changePassword);
 
-        auto leds = velia::system::LED(srConn, "/sys/class/leds");
+    auto leds = velia::system::LED(srConn, "/sys/class/leds");
 
-        auto lldp = std::make_shared<velia::system::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
-        auto srSubs = srSess.onOperGet("czechlight-lldp", velia::system::LLDPCallback(lldp), "/czechlight-lldp:nbr-list");
+    auto lldp = std::make_shared<velia::system::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
+    auto srSubs = srSess.onOperGet("czechlight-lldp", velia::system::LLDPCallback(lldp), "/czechlight-lldp:nbr-list");
 
-        DBUS_EVENTLOOP_END
-        return 0;
-    } catch (const std::exception& e) {
-        velia::utils::fatalException(spdlog::get("main"), e, "main");
-    }
+    DBUS_EVENTLOOP_END
+    return 0;
 }

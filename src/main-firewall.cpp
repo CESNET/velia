@@ -52,29 +52,25 @@ int main(int argc, char* argv[])
     velia::utils::initLogsSysrepo();
     spdlog::set_level(spdlog::level::info);
 
-    try {
-        spdlog::get("firewall")->set_level(parseLogLevel("Firewall logging", args["--firewall-log-level"]));
-        spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
-        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
+    spdlog::get("firewall")->set_level(parseLogLevel("Firewall logging", args["--firewall-log-level"]));
+    spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
+    spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
-        std::vector<std::filesystem::path> nftIncludeFiles;
-        for (const auto& path : args["--nftables-include-file"].asStringList()) {
-            nftIncludeFiles.emplace_back(path);
-        }
-
-        auto srConn = sysrepo::Connection{};
-        auto srSess = srConn.sessionStart();
-        velia::firewall::SysrepoFirewall firewall(srSess, [] (const auto& config) {
-            spdlog::get("firewall")->debug("running nft...");
-            velia::utils::execAndWait(spdlog::get("firewall"), NFT_EXECUTABLE, {"-f", "-"}, config);
-
-            spdlog::get("firewall")->debug("nft config applied.");
-        }, nftIncludeFiles);
-
-        waitUntilSignaled();
-
-        return 0;
-    } catch (const std::exception& e) {
-        velia::utils::fatalException(spdlog::get("main"), e, "main");
+    std::vector<std::filesystem::path> nftIncludeFiles;
+    for (const auto& path : args["--nftables-include-file"].asStringList()) {
+        nftIncludeFiles.emplace_back(path);
     }
+
+    auto srConn = sysrepo::Connection{};
+    auto srSess = srConn.sessionStart();
+    velia::firewall::SysrepoFirewall firewall(srSess, [] (const auto& config) {
+        spdlog::get("firewall")->debug("running nft...");
+        velia::utils::execAndWait(spdlog::get("firewall"), NFT_EXECUTABLE, {"-f", "-"}, config);
+
+        spdlog::get("firewall")->debug("nft config applied.");
+    }, nftIncludeFiles);
+
+    waitUntilSignaled();
+
+    return 0;
 }

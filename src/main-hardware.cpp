@@ -52,28 +52,24 @@ int main(int argc, char* argv[])
     velia::utils::initLogsSysrepo();
     spdlog::set_level(spdlog::level::info);
 
-    try {
-        spdlog::get("hardware")->set_level(parseLogLevel("Hardware loggers", args["--hardware-log-level"]));
-        spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
-        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
+    spdlog::get("hardware")->set_level(parseLogLevel("Hardware loggers", args["--hardware-log-level"]));
+    spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
+    spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
-        auto srConn = sysrepo::Connection{};
-        auto srSess = srConn.sessionStart();
+    auto srConn = sysrepo::Connection{};
+    auto srSess = srConn.sessionStart();
 
-        // initialize ietf-hardware
-        std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware;
-        if (const auto& appliance = args["--appliance"]) {
-            ietfHardware = velia::ietf_hardware::create(appliance.asString());
-        } else {
-            ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
-        }
-
-        auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSess, ietfHardware, std::chrono::milliseconds{1500});
-
-        waitUntilSignaled();
-
-        return 0;
-    } catch (const std::exception& e) {
-        velia::utils::fatalException(spdlog::get("main"), e, "main");
+    // initialize ietf-hardware
+    std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardware;
+    if (const auto& appliance = args["--appliance"]) {
+        ietfHardware = velia::ietf_hardware::create(appliance.asString());
+    } else {
+        ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
     }
+
+    auto sysrepoIETFHardware = velia::ietf_hardware::sysrepo::Sysrepo(srSess, ietfHardware, std::chrono::milliseconds{1500});
+
+    waitUntilSignaled();
+
+    return 0;
 }

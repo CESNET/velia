@@ -53,35 +53,31 @@ int main(int argc, char* argv[])
     velia::utils::initLogs(loggingSink);
     spdlog::set_level(spdlog::level::info);
 
-    try {
-        spdlog::get("health")->set_level(parseLogLevel("Health checker logger", args["--health-log-level"]));
-        spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
-        spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
+    spdlog::get("health")->set_level(parseLogLevel("Health checker logger", args["--health-log-level"]));
+    spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
+    spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
 
-        DBUS_EVENTLOOP_START
+    DBUS_EVENTLOOP_START
 
-        auto srSessionAlarms = sysrepo::Connection{}.sessionStart();
-        srSessionAlarms.switchDatastore(sysrepo::Datastore::Operational);
+    auto srSessionAlarms = sysrepo::Connection{}.sessionStart();
+    srSessionAlarms.switchDatastore(sysrepo::Datastore::Operational);
 
-        // output configuration
-        std::vector<std::function<void(velia::health::State)>> outputHandlers;
-        if (const auto& appliance = args["--appliance"]) {
-            spdlog::get("health")->debug("Initializing LED drivers");
-            outputHandlers.emplace_back(velia::health::createOutput(appliance.asString()));
-        }
-        velia::health::AlarmsOutputs alarms(srSessionAlarms, outputHandlers);
-
-        spdlog::get("health")->debug("All outputs initialized.");
-
-        // input configuration
-        spdlog::get("health")->debug("Starting DBus systemd units watcher");
-        auto srSessionSystemdUnits = sysrepo::Connection{}.sessionStart();
-        auto inputSystemdDbus = std::make_shared<velia::health::SystemdUnits>(srSessionSystemdUnits, *g_dbusConnection);
-
-        DBUS_EVENTLOOP_END;
-
-        return 0;
-    } catch (const std::exception& e) {
-        velia::utils::fatalException(spdlog::get("main"), e, "main");
+    // output configuration
+    std::vector<std::function<void(velia::health::State)>> outputHandlers;
+    if (const auto& appliance = args["--appliance"]) {
+        spdlog::get("health")->debug("Initializing LED drivers");
+        outputHandlers.emplace_back(velia::health::createOutput(appliance.asString()));
     }
+    velia::health::AlarmsOutputs alarms(srSessionAlarms, outputHandlers);
+
+    spdlog::get("health")->debug("All outputs initialized.");
+
+    // input configuration
+    spdlog::get("health")->debug("Starting DBus systemd units watcher");
+    auto srSessionSystemdUnits = sysrepo::Connection{}.sessionStart();
+    auto inputSystemdDbus = std::make_shared<velia::health::SystemdUnits>(srSessionSystemdUnits, *g_dbusConnection);
+
+    DBUS_EVENTLOOP_END;
+
+    return 0;
 }

@@ -7,14 +7,20 @@
 
 #include <numeric>
 #include "LLDPSysrepo.h"
+#include "utils/io.h"
 #include "utils/log.h"
+#include "utils/sysrepo.h"
 
 namespace velia::system {
 
-LLDPSysrepo::LLDPSysrepo(std::shared_ptr<LLDPDataProvider> lldp)
+LLDPSysrepo::LLDPSysrepo(sysrepo::Session& session, const std::filesystem::path& machineIdPath, std::shared_ptr<LLDPDataProvider> lldp)
     : m_log(spdlog::get("system"))
     , m_lldp(std::move(lldp))
 {
+    utils::ScopedDatastoreSwitch sw(session, sysrepo::Datastore::Operational);
+    session.setItem("/czechlight-lldp:local/chassisId", utils::readFileString(machineIdPath));
+    session.setItem("/czechlight-lldp:local/chassisSubtype", "local");
+    session.applyChanges();
 }
 
 sysrepo::ErrorCode LLDPSysrepo::operator()(sysrepo::Session session, uint32_t, const std::string&, const std::optional<std::string>& subXPath, const std::optional<std::string>& requestXPath, uint32_t, std::optional<libyang::DataNode>& output)

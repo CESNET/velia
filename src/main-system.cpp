@@ -140,8 +140,11 @@ int main(int argc, char* argv[])
 
     auto leds = velia::system::LED(srConn, "/sys/class/leds");
 
-    auto lldp = std::make_shared<velia::system::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
-    auto srSubs = srSess.onOperGet("czechlight-lldp", velia::system::LLDPSysrepo(lldp), "/czechlight-lldp:nbr-list");
+    auto lldp = velia::system::LLDPSysrepo(
+        srSess,
+        "/etc/machine-id",
+        std::make_shared<velia::system::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); }));
+    auto srSubs = srSess.onOperGet("czechlight-lldp", lldp, "/czechlight-lldp:nbr-list");
 
     DBUS_EVENTLOOP_END
     return 0;

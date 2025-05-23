@@ -1,5 +1,6 @@
 #include "trompeloeil_doctest.h"
 #include <arpa/inet.h>
+#include <libyang-cpp/Time.hpp>
 #include <sdbus-c++/sdbus-c++.h>
 #include "dbus-helpers/dbus_resolve1_server.h"
 #include "pretty_printers.h"
@@ -34,6 +35,7 @@ TEST_CASE("Sysrepo ietf-system")
         {
             std::filesystem::path osReleaseFile;
             std::filesystem::path machineIdFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id";
+            std::filesystem::path procStatFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok";
             std::map<std::string, std::string> expected;
 
             SECTION("os-release")
@@ -75,6 +77,7 @@ TEST_CASE("Sysrepo ietf-system")
             auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                        osReleaseFile,
                                                                        machineIdFile,
+                                                                       procStatFile,
                                                                        *dbusConnClient,
                                                                        dbusConnServer->getUniqueName());
             REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", sysrepo::Datastore::Operational) == expected);
@@ -86,6 +89,7 @@ TEST_CASE("Sysrepo ietf-system")
             REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys",
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                                *dbusConnClient,
                                                                                dbusConnServer->getUniqueName()),
                                    "Could not read key NAME from file /home/tomas/zdrojaky/cesnet/velia/tests/system/missing-keys",
@@ -95,6 +99,7 @@ TEST_CASE("Sysrepo ietf-system")
             REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/does_this_file_exist?",
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                                *dbusConnClient,
                                                                                dbusConnServer->getUniqueName()),
                                    "File '/home/tomas/zdrojaky/cesnet/velia/tests/system/does_this_file_exist?' does not exist.",
@@ -104,6 +109,7 @@ TEST_CASE("Sysrepo ietf-system")
             REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id.invalid-length",
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                                *dbusConnClient,
                                                                                dbusConnServer->getUniqueName()),
                                    "Couldn't create a node with path '/ietf-system:system-state/platform/czechlight-system:machine-id': LY_EVALID",
@@ -111,6 +117,7 @@ TEST_CASE("Sysrepo ietf-system")
             REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id.invalid-format",
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                                *dbusConnClient,
                                                                                dbusConnServer->getUniqueName()),
                                    "Couldn't create a node with path '/ietf-system:system-state/platform/czechlight-system:machine-id': LY_EVALID",
@@ -123,6 +130,7 @@ TEST_CASE("Sysrepo ietf-system")
         auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                *dbusConnClient,
                                                                dbusConnServer->getUniqueName());
         const char* xpath;
@@ -146,13 +154,52 @@ TEST_CASE("Sysrepo ietf-system")
 
     SECTION("clock")
     {
-        auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
-                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
-                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
-                                                               *dbusConnClient,
-                                                               dbusConnServer->getUniqueName());
-        client.switchDatastore(sysrepo::Datastore::Operational);
-        REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
+        // in own scope, otherwise the tests below this will fail with something like:
+        // Couldn't create RPC/action subscription: RPC subscription for "/ietf-system:system-restart" with priority 0 already exists.
+        {
+            auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
+                                                                   *dbusConnClient,
+                                                                   dbusConnServer->getUniqueName());
+            client.switchDatastore(sysrepo::Datastore::Operational);
+            REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
+
+            auto data = client.getData("/ietf-system:system-state/clock/boot-datetime");
+            REQUIRE(data);
+            auto bootTs = data->findPath("/ietf-system:system-state/clock/boot-datetime");
+            REQUIRE(bootTs);
+            auto expected = std::chrono::utc_time(std::chrono::seconds(1747993639));
+            REQUIRE(libyang::fromYangTimeFormat<std::chrono::utc_clock>(bootTs->asTerm().valueStr()) == expected);
+        }
+
+        REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound",
+                                                                           *dbusConnClient,
+                                                                           dbusConnServer->getUniqueName()),
+                               "File '/home/tomas/zdrojaky/cesnet/velia/tests/system/proc_stat.notfound' does not exist.",
+                               std::invalid_argument);
+
+        REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime",
+                                                                           *dbusConnClient,
+                                                                           dbusConnServer->getUniqueName()),
+                               "btime value not found in /home/tomas/zdrojaky/cesnet/velia/tests/system/proc_stat.no-btime",
+                               std::runtime_error);
+
+        REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime",
+                                                                           *dbusConnClient,
+                                                                           dbusConnServer->getUniqueName()),
+                               "btime found in /home/tomas/zdrojaky/cesnet/velia/tests/system/proc_stat.invalid-btime but could not be parsed (line was 'btime asd')",
+                               std::runtime_error);
     }
 
     SECTION("DNS resolvers")
@@ -160,6 +207,7 @@ TEST_CASE("Sysrepo ietf-system")
         auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
                                                                    dbusConnServer->getUniqueName());
         std::map<std::string, std::string> expected;

@@ -115,6 +115,27 @@ std::vector<std::string> getDNSResolvers(sdbus::IConnection& connection, const s
 
     return {};
 }
+
+uint64_t readBootTimestamp(const std::filesystem::path& procStatFile) {
+    auto ifs = velia::utils::openStream(procStatFile);
+
+    std::string line;
+    while (std::getline(ifs, line)) {
+        if (line.starts_with("btime")) {
+            std::istringstream iss(line);
+            std::string key;
+            uint64_t btime;
+
+            if (iss >> key >> btime) {
+                return btime;
+            } else {
+                throw std::runtime_error("btime found in " + std::string(procStatFile) + " but could not be parsed (line was '" + line + "')");
+            }
+        }
+    }
+
+    throw std::runtime_error("btime value not found in " + std::string(procStatFile));
+}
 }
 
 namespace velia::system {
@@ -209,7 +230,7 @@ void IETFSystem::initDummies()
 }
 
 /** @short Time and clock callbacks */
-void IETFSystem::initClock()
+void IETFSystem::initClock(const std::filesystem::path& procStatPath)
 {
     sysrepo::OperGetCb cb = [] (auto, auto, auto, auto, auto, auto, auto& parent) {
         parent->newPath(IETF_SYSTEM_STATE_CLOCK_PATH + "/current-datetime"s, libyang::yangTimeFormat(std::chrono::system_clock::now(), libyang::TimezoneInterpretation::Local));
@@ -217,6 +238,9 @@ void IETFSystem::initClock()
     };
 
     m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME, cb, IETF_SYSTEM_STATE_CLOCK_PATH, sysrepo::SubscribeOptions::OperMerge);
+
+    auto bootTimestamp = std::chrono::utc_time(std::chrono::seconds(readBootTimestamp(procStatPath)));
+    utils::valuesPush(m_srSession, {{IETF_SYSTEM_STATE_CLOCK_PATH + "/boot-datetime"s, libyang::yangTimeFormat(bootTimestamp)}}, {}, {});
 }
 
 /** @short DNS resolver callbacks */
@@ -244,11 +268,16 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
 }
 
 /** This class handles multiple system properties and publishes them via the ietf-system model:
- * - OS-identification data from osRelease file
+ * - OS-identification data from osRelease file and systemd machine-id
  * - Rebooting
  * - Hostname
  */
-IETFSystem::IETFSystem(::sysrepo::Session srSession, const std::filesystem::path& osRelease, const std::filesystem::path& machineIdPath, sdbus::IConnection& connection, const std::string& dbusName)
+IETFSystem::IETFSystem(::sysrepo::Session srSession,
+                       const std::filesystem::path& osRelease,
+                       const std::filesystem::path& machineIdPath,
+                       const std::filesystem::path& procStatPath,
+                       sdbus::IConnection& connection,
+                       const std::string& dbusName)
     : m_srSession(srSession)
     , m_srSubscribe()
     , m_log(spdlog::get("system"))
@@ -257,7 +286,7 @@ IETFSystem::IETFSystem(::sysrepo::Session srSession, const std::filesystem::path
     initSystemRestart();
     initHostname();
     initDummies();
-    initClock();
+    initClock(procStatPath);
     initDNS(connection, dbusName);
 }
 }

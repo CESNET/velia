@@ -314,6 +314,15 @@ module czechlight-system {
     }
   }
 
+  augment /sys:system-state/sys:platform {
+    leaf machine-id {
+      type string {
+        pattern '[a-f0-9]{32}';
+      }
+      description "The machine-id as a unique identifier for the system that is set during installation or boot.";
+    }
+  }
+
   deviation /hw:hardware/hw:component/hw:parent {
     deviate add {
       config false;

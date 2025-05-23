@@ -119,12 +119,13 @@ std::vector<std::string> getDNSResolvers(sdbus::IConnection& connection, const s
 
 namespace velia::system {
 
-void IETFSystem::initStaticProperties(const std::filesystem::path& osRelease)
+void IETFSystem::initStaticProperties(const std::filesystem::path& osRelease, const std::filesystem::path& machineIdPath)
 {
     utils::ensureModuleImplemented(m_srSession, IETF_SYSTEM_MODULE_NAME, "2014-08-06");
 
     utils::YANGData opsSystemStateData;
     std::map<std::string, std::string> osReleaseContents = parseKeyValueFile(osRelease);
+    auto machineId = utils::readFileString(machineIdPath);
 
     for (const auto& [key, leaf] : {
              std::pair<std::string, std::string>{"NAME", "platform/os-name"},
@@ -137,6 +138,8 @@ void IETFSystem::initStaticProperties(const std::filesystem::path& osRelease)
 
         opsSystemStateData.emplace_back(IETF_SYSTEM_STATE_MODULE_PREFIX + leaf, it->second);
     }
+
+    opsSystemStateData.emplace_back(IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/czechlight-system:machine-id", machineId);
 
     utils::valuesPush(m_srSession, opsSystemStateData, {}, {});
 }
@@ -245,12 +248,12 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
  * - Rebooting
  * - Hostname
  */
-IETFSystem::IETFSystem(::sysrepo::Session srSession, const std::filesystem::path& osRelease, sdbus::IConnection& connection, const std::string& dbusName)
+IETFSystem::IETFSystem(::sysrepo::Session srSession, const std::filesystem::path& osRelease, const std::filesystem::path& machineIdPath, sdbus::IConnection& connection, const std::string& dbusName)
     : m_srSession(srSession)
     , m_srSubscribe()
     , m_log(spdlog::get("system"))
 {
-    initStaticProperties(osRelease);
+    initStaticProperties(osRelease, machineIdPath);
     initSystemRestart();
     initHostname();
     initDummies();

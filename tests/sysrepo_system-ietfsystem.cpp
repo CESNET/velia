@@ -32,54 +32,99 @@ TEST_CASE("Sysrepo ietf-system")
 
         SECTION("Valid data")
         {
-            std::filesystem::path file;
+            std::filesystem::path osReleaseFile;
+            std::filesystem::path machineIdFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id";
             std::map<std::string, std::string> expected;
 
-            SECTION("Real data")
+            SECTION("os-release")
             {
-                file = CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release";
-                expected = {
-                    {"/os-name", "CzechLight"},
-                    {"/os-release", "v4-105-g8294175-dirty"},
-                    {"/os-version", "v4-105-g8294175-dirty"},
-                };
+                SECTION("Real data")
+                {
+                    osReleaseFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release";
+                    expected = {
+                        {"/os-name", "CzechLight"},
+                        {"/os-release", "v4-105-g8294175-dirty"},
+                        {"/os-version", "v4-105-g8294175-dirty"},
+                        {"/czechlight-system:machine-id", "abcdef0123456deadc0ffeebeefcafe1"},
+                    };
+                }
+
+                SECTION("Missing =")
+                {
+                    osReleaseFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-equal";
+                    expected = {
+                        {"/os-name", ""},
+                        {"/os-release", ""},
+                        {"/os-version", ""},
+                        {"/czechlight-system:machine-id", "abcdef0123456deadc0ffeebeefcafe1"},
+                    };
+                }
+
+                SECTION("Empty values")
+                {
+                    osReleaseFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/empty-values";
+                    expected = {
+                        {"/os-name", ""},
+                        {"/os-release", ""},
+                        {"/os-version", ""},
+                        {"/czechlight-system:machine-id", "abcdef0123456deadc0ffeebeefcafe1"},
+                    };
+                }
             }
 
-            SECTION("Missing =")
-            {
-                file = CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-equal";
-                expected = {
-                    {"/os-name", ""},
-                    {"/os-release", ""},
-                    {"/os-version", ""},
-                };
-            }
-
-            SECTION("Empty values")
-            {
-                file = CMAKE_CURRENT_SOURCE_DIR "/tests/system/empty-values";
-                expected = {
-                    {"/os-name", ""},
-                    {"/os-release", ""},
-                    {"/os-version", ""},
-                };
-            }
-
-            auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, file, *dbusConnClient, dbusConnServer->getUniqueName());
+            auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                       osReleaseFile,
+                                                                       machineIdFile,
+                                                                       *dbusConnClient,
+                                                                       dbusConnServer->getUniqueName());
             REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", sysrepo::Datastore::Operational) == expected);
         }
 
-        SECTION("Invalid data (missing VERSION and NAME keys)")
+        SECTION("Invalid data")
         {
-            REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys", *dbusConnClient, dbusConnServer->getUniqueName()),
+            // missing VERSION and NAME keys in os-release
+            REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys",
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                                               *dbusConnClient,
+                                                                               dbusConnServer->getUniqueName()),
                                    "Could not read key NAME from file /home/tomas/zdrojaky/cesnet/velia/tests/system/missing-keys",
                                    std::out_of_range);
+
+            // missing machine-id file
+            REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/does_this_file_exist?",
+                                                                               *dbusConnClient,
+                                                                               dbusConnServer->getUniqueName()),
+                                   "File '/home/tomas/zdrojaky/cesnet/velia/tests/system/does_this_file_exist?' does not exist.",
+                                   std::invalid_argument);
+
+            // machine-id contains garbage
+            REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id.invalid-length",
+                                                                               *dbusConnClient,
+                                                                               dbusConnServer->getUniqueName()),
+                                   "Couldn't create a node with path '/ietf-system:system-state/platform/czechlight-system:machine-id': LY_EVALID",
+                                   std::runtime_error);
+            REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id.invalid-format",
+                                                                               *dbusConnClient,
+                                                                               dbusConnServer->getUniqueName()),
+                                   "Couldn't create a node with path '/ietf-system:system-state/platform/czechlight-system:machine-id': LY_EVALID",
+                                   std::runtime_error);
         }
     }
 
     SECTION("dummy values")
     {
-        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
+        auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                               *dbusConnClient,
+                                                               dbusConnServer->getUniqueName());
         const char* xpath;
 
         SECTION("location") {
@@ -101,14 +146,22 @@ TEST_CASE("Sysrepo ietf-system")
 
     SECTION("clock")
     {
-        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
+        auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                               *dbusConnClient,
+                                                               dbusConnServer->getUniqueName());
         client.switchDatastore(sysrepo::Datastore::Operational);
         REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
     }
 
     SECTION("DNS resolvers")
     {
-        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
+        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/machine-id",
+                                                                   *dbusConnClient,
+                                                                   dbusConnServer->getUniqueName());
         std::map<std::string, std::string> expected;
 
         dbusServer.setFallbackDNSEx({

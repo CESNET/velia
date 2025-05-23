@@ -13,15 +13,12 @@
 
 namespace velia::utils {
 
-namespace {
-
 std::ifstream openStream(const std::filesystem::path& path)
 {
     std::ifstream ifs(path);
     if (!ifs.is_open())
         throw std::invalid_argument("File '" + std::string(path) + "' does not exist.");
     return ifs;
-}
 }
 
 /** @brief Reads a string from a file */

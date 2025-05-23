@@ -1,5 +1,6 @@
 #include "trompeloeil_doctest.h"
 #include <arpa/inet.h>
+#include <libyang-cpp/Time.hpp>
 #include <sdbus-c++/sdbus-c++.h>
 #include "dbus-helpers/dbus_resolve1_server.h"
 #include "pretty_printers.h"
@@ -32,12 +33,13 @@ TEST_CASE("Sysrepo ietf-system")
 
         SECTION("Valid data")
         {
-            std::filesystem::path file;
+            std::filesystem::path osReleaseFile;
+            std::filesystem::path procStatFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok";
             std::map<std::string, std::string> expected;
 
             SECTION("Real data")
             {
-                file = CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release";
+                osReleaseFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release";
                 expected = {
                     {"/os-name", "CzechLight"},
                     {"/os-release", "v4-105-g8294175-dirty"},
@@ -47,7 +49,7 @@ TEST_CASE("Sysrepo ietf-system")
 
             SECTION("Missing =")
             {
-                file = CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-equal";
+                osReleaseFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-equal";
                 expected = {
                     {"/os-name", ""},
                     {"/os-release", ""},
@@ -57,7 +59,7 @@ TEST_CASE("Sysrepo ietf-system")
 
             SECTION("Empty values")
             {
-                file = CMAKE_CURRENT_SOURCE_DIR "/tests/system/empty-values";
+                osReleaseFile = CMAKE_CURRENT_SOURCE_DIR "/tests/system/empty-values";
                 expected = {
                     {"/os-name", ""},
                     {"/os-release", ""},
@@ -65,13 +67,22 @@ TEST_CASE("Sysrepo ietf-system")
                 };
             }
 
-            auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, file, *dbusConnClient, dbusConnServer->getUniqueName());
+            auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                       osReleaseFile,
+                                                                       procStatFile,
+                                                                       *dbusConnClient,
+                                                                       dbusConnServer->getUniqueName());
             REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", sysrepo::Datastore::Operational) == expected);
         }
 
         SECTION("Invalid data (missing VERSION and NAME keys)")
         {
-            REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys", *dbusConnClient, dbusConnServer->getUniqueName()),
+            // missing VERSION and NAME keys in os-release
+            REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys",
+                                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
+                                                                               *dbusConnClient,
+                                                                               dbusConnServer->getUniqueName()),
                                    ("Could not read key NAME from file "s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys").c_str(),
                                    std::out_of_range);
         }
@@ -79,7 +90,11 @@ TEST_CASE("Sysrepo ietf-system")
 
     SECTION("dummy values")
     {
-        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
+        auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                               CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
+                                                               *dbusConnClient,
+                                                               dbusConnServer->getUniqueName());
         const char* xpath;
 
         SECTION("location") {
@@ -101,14 +116,59 @@ TEST_CASE("Sysrepo ietf-system")
 
     SECTION("clock")
     {
-        auto sys = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
-        client.switchDatastore(sysrepo::Datastore::Operational);
-        REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
+        // in its own scope, otherwise the tests below this will fail with something like:
+        // Couldn't create RPC/action subscription: RPC subscription for "/ietf-system:system-restart" with priority 0 already exists.
+        {
+            auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
+                                                                   *dbusConnClient,
+                                                                   dbusConnServer->getUniqueName());
+            client.switchDatastore(sysrepo::Datastore::Operational);
+            REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
+
+            auto data = client.getData("/ietf-system:system-state/clock/boot-datetime");
+            REQUIRE(data);
+            auto bootTsNode = data->findPath("/ietf-system:system-state/clock/boot-datetime");
+            REQUIRE(bootTsNode);
+
+            // FIXME: HowardHinant/date unfortunately can't parse into utc_clock time_point, only full C++20 can do that
+            auto bootTimePoint = std::chrono::clock_cast<std::chrono::utc_clock>(libyang::fromYangTimeFormat<std::chrono::system_clock>(bootTsNode->asTerm().valueStr()));
+            REQUIRE(bootTimePoint == std::chrono::utc_time(std::chrono::seconds(1747993639)));
+        }
+
+        REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound",
+                                                                           *dbusConnClient,
+                                                                           dbusConnServer->getUniqueName()),
+                               ("File '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound' does not exist.").c_str(),
+                               std::invalid_argument);
+
+        REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime",
+                                                                           *dbusConnClient,
+                                                                           dbusConnServer->getUniqueName()),
+                               ("btime value not found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime'").c_str(),
+                               std::runtime_error);
+
+        REQUIRE_THROWS_WITH_AS(std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                           CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime",
+                                                                           *dbusConnClient,
+                                                                           dbusConnServer->getUniqueName()),
+                               ("btime found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime' but could not be parsed (line was 'btime asd')").c_str(),
+                               std::runtime_error);
     }
 
     SECTION("DNS resolvers")
     {
-        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", *dbusConnClient, dbusConnServer->getUniqueName());
+        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
+                                                                   *dbusConnClient,
+                                                                   dbusConnServer->getUniqueName());
         std::map<std::string, std::string> expected;
 
         dbusServer.setFallbackDNSEx({

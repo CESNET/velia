@@ -123,13 +123,20 @@ void IETFSystem::initStaticProperties(const std::filesystem::path& osRelease)
 {
     utils::ensureModuleImplemented(m_srSession, IETF_SYSTEM_MODULE_NAME, "2014-08-06");
 
+    utils::YANGData opsSystemStateData;
     std::map<std::string, std::string> osReleaseContents = parseKeyValueFile(osRelease);
 
-    utils::YANGData opsSystemStateData {
-        {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-name", osReleaseContents.at("NAME")},
-        {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-release", osReleaseContents.at("VERSION")},
-        {IETF_SYSTEM_STATE_MODULE_PREFIX + "platform/os-version", osReleaseContents.at("VERSION")},
-    };
+    for (const auto& [key, leaf] : {
+             std::pair<std::string, std::string>{"NAME", "platform/os-name"},
+             {"VERSION", "platform/os-release"},
+             {"VERSION", "platform/os-version"}}) {
+        auto it = osReleaseContents.find(key);
+        if (it == osReleaseContents.end()) {
+            throw std::out_of_range("Could not read key " + key + " from file " + osRelease.string());
+        }
+
+        opsSystemStateData.emplace_back(IETF_SYSTEM_STATE_MODULE_PREFIX + leaf, it->second);
+    }
 
     utils::valuesPush(m_srSession, opsSystemStateData, {}, {});
 }

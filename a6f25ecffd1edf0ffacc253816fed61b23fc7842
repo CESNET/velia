@@ -22,6 +22,30 @@
       },
       "revId": "a6f25ecffd1edf0ffacc253816fed61b23fc7842",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cf98ca6_e691c95f",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-26T09:04:31Z",
+      "side": 1,
+      "message": "That\u0027s, sadly, not possible because that `must` is done in some \"open code\":\n```yang\n// User should not create new links or reconfigure link types\ndeviation /if:interfaces/if:interface/if:name {\n    deviate add {\n        must \u0027. \u003d \"br0\" or . \u003d \"eth0\" or . \u003d \"eth1\" or . \u003d \"eth2\" or . \u003d \"osc\" or . \u003d \"oscW\" or . \u003d \"oscE\" or . \u003d \"sfp3\"\u0027 {\n            error-message \"Link name must be chosen from the following options: {br0, eth0, eth1, osc, oscW, oscE, sfp3}.\";\n        }\n    }\n}\n```",
+      "parentUuid": "71e1f43a_08c68ce0",
+      "range": {
+        "startLine": 92,
+        "startChar": 28,
+        "endLine": 92,
+        "endChar": 53
+      },
+      "revId": "a6f25ecffd1edf0ffacc253816fed61b23fc7842",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

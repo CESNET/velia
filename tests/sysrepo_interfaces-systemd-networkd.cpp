@@ -59,7 +59,8 @@ TEST_CASE("Config data in ietf-interfaces")
                                              {"br0", "iana-if-type:bridge"},
                                              {"osc", "iana-if-type:ethernetCsmacd"},
                                              {"oscW", "iana-if-type:ethernetCsmacd"},
-                                             {"oscE", "iana-if-type:ethernetCsmacd"}}) {
+                                             {"oscE", "iana-if-type:ethernetCsmacd"},
+                                             {"sfp3", "iana-if-type:ethernetCsmacd"}}) {
                 client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/type", type);
                 client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/enabled", "false");
             }

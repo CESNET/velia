@@ -109,7 +109,7 @@ void safeWriteFile(const std::string& filename, const std::string_view& contents
     if (!f) {
         throwErr("fopen");
     }
-    if (std::fwrite(contents.data(), contents.size(), 1, f) != 1) {
+    if (contents.size() > 0 && std::fwrite(contents.data(), contents.size(), 1, f) != 1) {
         throwErr("fwrite");
     }
     if (fsync(fileno(f)) == -1) {

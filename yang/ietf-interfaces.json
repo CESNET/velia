@@ -1,0 +1,48 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "br0",
+        "type": "iana-if-type:bridge",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0"
+      },
+      {
+        "name": "eth1",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0"
+      },
+      {
+        "name": "eth2",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0"
+      },
+      {
+        "name": "osc",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0"
+      },
+      {
+        "name": "oscE",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0"
+      },
+      {
+        "name": "oscW",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0"
+      },
+      {
+        "name": "sfp3",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0"
+      }
+    ]
+  }
+}

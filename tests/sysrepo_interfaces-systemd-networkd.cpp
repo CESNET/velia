@@ -24,6 +24,8 @@ const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "te
 #define REQUIRE_NETWORK_CONFIGURATION(LINK_NAME, CONTENTS) \
     REQUIRE(std::filesystem::exists(NETWORK_FILE(LINK_NAME))); \
     REQUIRE(velia::utils::readFileToString(NETWORK_FILE(LINK_NAME)) == CONTENTS);
+#define REQUIRE_NETWORK_EMPTY_CONFIGURATION(LINK_NAME) \
+    REQUIRE_NETWORK_CONFIGURATION(LINK_NAME, "");
 
 struct FakeNetworkReload {
 public:
@@ -46,7 +48,7 @@ TEST_CASE("Config data in ietf-interfaces")
     std::filesystem::remove_all(fakeConfigDir);
     std::filesystem::create_directories(fakeConfigDir);
 
-    REQUIRE_CALL(fake, cb(ChangedUnits{})).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"br0", "eth0", "eth1"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
     auto network = std::make_shared<velia::network::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const ChangedUnits& update) { fake.cb(update); });
 
     SECTION("Link changes disabled")
@@ -69,7 +71,7 @@ TEST_CASE("Config data in ietf-interfaces")
                 }
             }
 
-            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0", "eth1"}})).IN_SEQUENCE(seq1); // only these are monitored by the test
+            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
             client.applyChanges();
         }
 
@@ -141,7 +143,7 @@ TEST_CASE("Config data in ietf-interfaces")
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
-            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
+            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
             client.applyChanges();
         }
 
@@ -160,7 +162,7 @@ TEST_CASE("Config data in ietf-interfaces")
     {
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "false");
-        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1).TIMES(AT_MOST(1));
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {}})).IN_SEQUENCE(seq1).TIMES(AT_MOST(1));
         client.applyChanges();
 
         SECTION("Enabled IPv4 protocol with some IPs assigned is valid")
@@ -334,7 +336,7 @@ EmitLLDP=nearest-bridge
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
         client.applyChanges();
 
-        REQUIRE(!std::filesystem::exists(NETWORK_FILE("eth0")));
+        REQUIRE_NETWORK_EMPTY_CONFIGURATION("eth0");
         REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
     }
 
@@ -387,9 +389,9 @@ EmitLLDP=nearest-bridge
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv4/ietf-ip:enabled", "false");
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6");
 
-        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0", "eth1"}})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0", "eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
+        REQUIRE_NETWORK_EMPTY_CONFIGURATION("br0");
         REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
         REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
 

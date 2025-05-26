@@ -31,6 +31,8 @@ TEST_CASE("Config data in ietf-interfaces")
     TEST_SYSREPO_INIT_CLIENT;
     trompeloeil::sequence seq1;
 
+    srSess.sendRPC(srSess.getContext().newPath("/ietf-factory-default:factory-reset"));
+
     sysrepo::Connection{}.sessionStart(sysrepo::Datastore::Running).copyConfig(sysrepo::Datastore::Startup, "ietf-interfaces");
 
     auto fake = FakeNetworkReload();
@@ -242,12 +244,6 @@ EmitLLDP=nearest-bridge
         client.applyChanges();
         REQUIRE(std::filesystem::exists(expectedFilePath));
         REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
-
-        // reset the contents
-        client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
-        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
-        client.applyChanges();
-        REQUIRE(!std::filesystem::exists(expectedFilePath));
     }
 
     SECTION("Two links")
@@ -290,13 +286,14 @@ EmitLLDP=nearest-bridge
         REQUIRE(velia::utils::readFileToString(expectedFilePathEth0) == expectedContentsEth0);
         REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
 
-        // reset the contents
+        // Test removing link configuration
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
-        client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']");
-        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0", "eth1"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
         client.applyChanges();
+
         REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
-        REQUIRE(!std::filesystem::exists(expectedFilePathEth1));
+        REQUIRE(std::filesystem::exists(expectedFilePathEth1));
+        REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
     }
 
     SECTION("Setup a bridge br0 over eth0 and eth1")
@@ -432,16 +429,6 @@ EmitLLDP=nearest-bridge
         REQUIRE(velia::utils::readFileToString(expectedFilePathBr0) == expectedContentsBr0);
         REQUIRE(velia::utils::readFileToString(expectedFilePathEth0) == expectedContentsEth0);
         REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
-
-        // reset the contents
-        client.deleteItem("/ietf-interfaces:interfaces/interface[name='br0']");
-        client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
-        client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']");
-        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"br0", "eth0", "eth1"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
-        client.applyChanges();
-        REQUIRE(!std::filesystem::exists(expectedFilePathBr0));
-        REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
-        REQUIRE(!std::filesystem::exists(expectedFilePathEth1));
     }
 
     SECTION("Slave interface and enabled/disabled IP protocols")
@@ -480,14 +467,6 @@ EmitLLDP=nearest-bridge
 
             REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0"}})).IN_SEQUENCE(seq1);
             client.applyChanges();
-
-            // reset the contents
-            client.deleteItem("/ietf-interfaces:interfaces/interface[name='br0']");
-            client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
-            REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"br0", "eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
-            client.applyChanges();
-            REQUIRE(!std::filesystem::exists(expectedFilePathBr0));
-            REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
         }
     }
 
@@ -615,11 +594,5 @@ EmitLLDP=nearest-bridge
         client.applyChanges();
         REQUIRE(std::filesystem::exists(expectedFilePath));
         REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
-
-        // reset the contents
-        client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
-        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
-        client.applyChanges();
-        REQUIRE(!std::filesystem::exists(expectedFilePath));
     }
 }

@@ -86,69 +86,79 @@ IETFInterfacesConfig::IETFInterfacesConfig(::sysrepo::Session srSess, std::files
 
 sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session) const
 {
-    std::map<std::string, std::string> networkConfigFiles;
+    std::map<std::string, std::optional<std::string>> networkConfigFiles;
 
-    if (auto data = session.getData("/ietf-interfaces:interfaces/interface")) {
-        auto linkEntries = data->findXPath("/ietf-interfaces:interfaces/interface");
-        for (const auto& linkEntry : linkEntries) {
-            std::map<std::string, std::vector<std::string>> configValues;
-
-            auto linkName = utils::asString(utils::getUniqueSubtree(linkEntry, "name").value());
-
-            if (auto node = utils::getUniqueSubtree(linkEntry, "description")) {
-                configValues["Network"].push_back("Description="s + utils::asString(node.value()));
-            }
-
-            // if addresses present, generate them...
-            for (const auto& ipProto : {"ipv4", "ipv6"}) {
-                // ...but only if the protocol is enabled
-                if (!protocolEnabled(linkEntry, ipProto)) {
-                    continue;
-                }
-
-                const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
-                const auto addresses = linkEntry.findXPath(IPAddressListXPath);
-
-                for (const auto& ipEntry : addresses) {
-                    auto ipAddress = utils::asString(utils::getUniqueSubtree(ipEntry, "ip").value());
-                    auto prefixLen = utils::asString(utils::getUniqueSubtree(ipEntry, "prefix-length").value());
-
-                    spdlog::get("network")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
-                    configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
-                }
-            }
-
-            // systemd-networkd auto-generates IPv6 link-layer addresses https://www.freedesktop.org/software/systemd/man/systemd.network.html#LinkLocalAddressing=
-            // disable this behaviour when IPv6 is disabled or when link enslaved
-            bool isSlave = false;
-
-            if (auto node = utils::getUniqueSubtree(linkEntry, "czechlight-network:bridge")) {
-                configValues["Network"].push_back("Bridge="s + utils::asString(node.value()));
-                isSlave = true;
-            }
-
-            if (!protocolEnabled(linkEntry, "ipv6") && !isSlave) {
-                configValues["Network"].push_back("LinkLocalAddressing=no");
-            }
-
-            // network autoconfiguration
-            if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses"); protocolEnabled(linkEntry, "ipv6") && utils::asString(node.value()) == "true"s) {
-                configValues["Network"].push_back("IPv6AcceptRA=true");
-            } else {
-                configValues["Network"].push_back("IPv6AcceptRA=false");
-            }
-
-            if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client"); protocolEnabled(linkEntry, "ipv4") && utils::asString(node.value()) == "true"s) {
-                configValues["Network"].push_back("DHCP=ipv4");
-            } else {
-                configValues["Network"].push_back("DHCP=no");
-            }
-
-            configValues["Network"].push_back("LLDP=true");
-            configValues["Network"].push_back("EmitLLDP=nearest-bridge");
-
-            networkConfigFiles[linkName] = generateNetworkConfigFile(linkName, configValues);
+    for (const auto& linkName : m_managedLinks) {
+        auto data = session.getData("/ietf-interfaces:interfaces/interface[name='" + linkName + "']");
+        if (!data) {
+            m_log->debug("Link {} not configured", linkName);
+            networkConfigFiles[linkName] = std::nullopt;
+            continue;
         }
+
+        auto linkEntry = *data->findPath("/ietf-interfaces:interfaces/interface[name='" + linkName + "']");
+
+        if (auto node = utils::getUniqueSubtree(linkEntry, "enabled"); !node || utils::asString(node.value()) != "true"s) {
+            m_log->debug("Link {} disabled", linkName);
+            networkConfigFiles[linkName] = std::nullopt;
+            continue;
+        }
+
+        std::map<std::string, std::vector<std::string>> configValues;
+
+        if (auto node = utils::getUniqueSubtree(linkEntry, "description")) {
+            configValues["Network"].push_back("Description="s + utils::asString(node.value()));
+        }
+
+        // if addresses present, generate them...
+        for (const auto& ipProto : {"ipv4", "ipv6"}) {
+            // ...but only if the protocol is enabled
+            if (!protocolEnabled(linkEntry, ipProto)) {
+                continue;
+            }
+
+            const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
+            const auto addresses = linkEntry.findXPath(IPAddressListXPath);
+
+            for (const auto& ipEntry : addresses) {
+                auto ipAddress = utils::asString(utils::getUniqueSubtree(ipEntry, "ip").value());
+                auto prefixLen = utils::asString(utils::getUniqueSubtree(ipEntry, "prefix-length").value());
+
+                spdlog::get("system")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
+                configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
+            }
+        }
+
+        // systemd-networkd auto-generates IPv6 link-layer addresses https://www.freedesktop.org/software/systemd/man/systemd.network.html#LinkLocalAddressing=
+        // disable this behaviour when IPv6 is disabled or when link enslaved
+        bool isSlave = false;
+
+        if (auto node = utils::getUniqueSubtree(linkEntry, "czechlight-network:bridge")) {
+            configValues["Network"].push_back("Bridge="s + utils::asString(node.value()));
+            isSlave = true;
+        }
+
+        if (!protocolEnabled(linkEntry, "ipv6") && !isSlave) {
+            configValues["Network"].push_back("LinkLocalAddressing=no");
+        }
+
+        // network autoconfiguration
+        if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses"); protocolEnabled(linkEntry, "ipv6") && utils::asString(node.value()) == "true"s) {
+            configValues["Network"].push_back("IPv6AcceptRA=true");
+        } else {
+            configValues["Network"].push_back("IPv6AcceptRA=false");
+        }
+
+        if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client"); protocolEnabled(linkEntry, "ipv4") && utils::asString(node.value()) == "true"s) {
+            configValues["Network"].push_back("DHCP=ipv4");
+        } else {
+            configValues["Network"].push_back("DHCP=no");
+        }
+
+        configValues["Network"].push_back("LLDP=true");
+        configValues["Network"].push_back("EmitLLDP=nearest-bridge");
+
+        networkConfigFiles[linkName] = generateNetworkConfigFile(linkName, configValues);
     }
 
     auto changedLinks = updateNetworkFiles(networkConfigFiles, m_configDirectory);
@@ -156,30 +166,26 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
     return sysrepo::ErrorCode::Ok;
 }
 
-IETFInterfacesConfig::ChangedUnits IETFInterfacesConfig::updateNetworkFiles(const std::map<std::string, std::string>& networkConfig, const std::filesystem::path& configDir) const
+IETFInterfacesConfig::ChangedUnits IETFInterfacesConfig::updateNetworkFiles(const std::map<std::string, std::optional<std::string>>& networkConfig, const std::filesystem::path& configDir) const
 {
     ChangedUnits ret;
 
     for (const auto& link : m_managedLinks) {
         const auto targetFile = configDir / (link + ".network");
         const bool fileExists = std::filesystem::exists(targetFile);
-        const bool updateExists = networkConfig.contains(link);
+        const auto& configuration = networkConfig.at(link);
 
-        // no configuration for link present and the file doesn't even exist -> keep default configuration
-        if (!fileExists && !updateExists) {
+        // If the file exists and the content is the same as configuration, no need to change anything
+        if (fileExists && velia::utils::readFileToString(targetFile) == networkConfig.at(link).value_or("")) {
             continue;
         }
 
-        // configuration for link present, file exists, but it has the same content as the new one -> keep current configuration, no need to rewrite
-        if (fileExists && updateExists && velia::utils::readFileToString(targetFile) == networkConfig.at(link)) {
-            continue;
-        }
-
-        if (updateExists) {
-            velia::utils::safeWriteFile(targetFile, networkConfig.at(link));
+        if (configuration) {
+            velia::utils::safeWriteFile(targetFile, *configuration);
             ret.changedOrNew.push_back(link);
-        } else { // configuration removed
-            std::filesystem::remove(targetFile);
+        } else {
+            // configuration removed: write empty file which replaces the default configuration, effectively disabling the link
+            velia::utils::safeWriteFile(targetFile, "");
             ret.deleted.push_back(link);
         }
     }

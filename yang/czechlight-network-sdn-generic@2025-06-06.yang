@@ -27,4 +27,12 @@ module czechlight-network-sdn-generic {
             }
         }
     }
+
+    deviation /if:interfaces {
+        deviate add {
+            must 'interface[name = "br0"] and interface[name = "eth0"] and interface[name = "eth1"] and interface[name = "eth2"]' {
+                error-message "The following interfaces must be defined: br0, eth0, eth1, eth2.";
+            }
+        }
+    }
 }

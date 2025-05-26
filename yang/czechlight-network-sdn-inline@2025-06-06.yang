@@ -27,4 +27,12 @@ module czechlight-network-sdn-inline {
             }
         }
     }
+
+    deviation /if:interfaces {
+        deviate add {
+            must 'interface[name = "br0"] and interface[name = "eth0"] and interface[name = "eth1"] and interface[name = "oscW"] and interface[name = "oscE"] and interface[name = "sfp3"]' {
+                error-message "The following interfaces must be defined: br0, eth0, oscW, oscE, sfp3.";
+            }
+        }
+    }
 }

@@ -33,7 +33,7 @@ Options:
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
   --main-log-level=<N>              Log level for other messages [default: 2]
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
   --nftables-include-file=<Path>    Files to include in the nftables config file.
 )";
 

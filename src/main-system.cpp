@@ -40,7 +40,7 @@ Options:
   --main-log-level=<N>              Log level for other messages [default: 2]
                                     (0 -> critical, 1 -> error, 2 -> warning, 3 -> info,
                                     4 -> debug, 5 -> trace)
-  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 2]
+  --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
   --system-log-level=<N>            Log level for the system stuff [default: 3]
 )";
 

@@ -1,0 +1,1 @@
+libyang err : At least one interface must be enabled. (/ietf-interfaces:interfaces)

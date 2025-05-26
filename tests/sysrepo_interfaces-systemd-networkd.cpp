@@ -24,6 +24,15 @@ const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "te
 #define REQUIRE_NETWORK_CONFIGURATION(LINK_NAME, CONTENTS) \
     REQUIRE(std::filesystem::exists(NETWORK_FILE(LINK_NAME))); \
     REQUIRE(velia::utils::readFileToString(NETWORK_FILE(LINK_NAME)) == CONTENTS);
+#define REQUIRE_NETWORK_EMPTY_CONFIGURATION(LINK_NAME) \
+    REQUIRE(std::filesystem::exists(NETWORK_FILE(LINK_NAME))); \
+    REQUIRE(velia::utils::readFileToString(NETWORK_FILE(LINK_NAME)) == R"([Match]
+Name=)" LINK_NAME R"(
+[Network]
+DHCP=no
+LinkLocalAddressing=no
+IPv6AcceptRA=no
+)");
 
 struct FakeNetworkReload {
 public:
@@ -46,14 +55,15 @@ TEST_CASE("Config data in ietf-interfaces")
     std::filesystem::remove_all(fakeConfigDir);
     std::filesystem::create_directories(fakeConfigDir);
 
-    REQUIRE_CALL(fake, cb(ChangedUnits{})).IN_SEQUENCE(seq1);
-    auto network = std::make_shared<velia::network::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const ChangedUnits& update) { fake.cb(update); });
+    REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0", "eth1"}, .changedOrNew = {"br0", "eth2"}})).IN_SEQUENCE(seq1);
+    auto network = std::make_shared<velia::network::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1", "eth2"}, [&fake](const ChangedUnits& update) { fake.cb(update); });
 
     std::string expectedContents;
 
     SECTION("Setting IPs to eth0")
     {
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
 
         SECTION("Single IPv4 address")
         {
@@ -160,9 +170,11 @@ LLDP=true
 EmitLLDP=nearest-bridge
 )";
 
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/enabled", "true");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
 
@@ -176,7 +188,7 @@ EmitLLDP=nearest-bridge
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
         client.applyChanges();
 
-        REQUIRE(!std::filesystem::exists(NETWORK_FILE("eth0")));
+        REQUIRE_NETWORK_EMPTY_CONFIGURATION("eth0");
         REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
     }
 
@@ -186,9 +198,8 @@ EmitLLDP=nearest-bridge
 Name=br0
 
 [Network]
-LinkLocalAddressing=no
-IPv6AcceptRA=false
-DHCP=no
+IPv6AcceptRA=true
+DHCP=ipv4
 LLDP=true
 EmitLLDP=nearest-bridge
 )";
@@ -216,20 +227,21 @@ EmitLLDP=nearest-bridge
 )";
 
         // create br0 bridge over eth0 and eth1 with no IP
-        client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/enabled", "false");
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/type", "iana-if-type:bridge");
 
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/czechlight-network:bridge", "br0");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4");
 
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/enabled", "true");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/czechlight-network:bridge", "br0");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv4/ietf-ip:enabled", "false");
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6");
 
-        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0", "eth1"}})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0", "eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
         REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
         REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
@@ -244,8 +256,7 @@ Name=br0
 
 [Network]
 Address=192.0.2.1/24
-LinkLocalAddressing=no
-IPv6AcceptRA=false
+IPv6AcceptRA=true
 DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
@@ -302,6 +313,7 @@ EmitLLDP=nearest-bridge
     SECTION("Network autoconfiguration")
     {
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
 
         SECTION("IPv4 on with address, IPv6 disabled, DHCPv4 off, RA off")
         {

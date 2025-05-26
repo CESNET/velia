@@ -1,0 +1,36 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": true,
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "eth1",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv6": {}
+      },
+      {
+        "name": "eth2",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": false
+      },
+      {
+        "name": "eth3",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {
+          "address": [
+            {
+              "ip": "192.0.2.1",
+              "prefix-length": 24
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": true
+      },
+      {
+        "name": "eth1",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": true
+      },
+      {
+        "name": "eth2",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": false
+      }
+    ]
+  }
+}

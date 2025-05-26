@@ -531,6 +531,25 @@ if(BUILD_TESTING)
           ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network-sdn-generic@2025-06-06.yang
     )
 
+    yangdata_test(NAME "yang/network-data/ietf-interfaces-sdn-inline.json"
+        DATA ${CMAKE_CURRENT_SOURCE_DIR}/yang/network-data/ietf-interfaces-sdn-inline.json
+        SCHEMA
+          ${COMMON_NETWORK_MODELS}
+          ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network-sdn-inline@2025-06-06.yang
+    )
+    yangdata_test(NAME "yang/network-data/ietf-interfaces-sdn-roadm-line.json"
+        DATA ${CMAKE_CURRENT_SOURCE_DIR}/yang/network-data/ietf-interfaces-sdn-roadm-line.json
+        SCHEMA
+          ${COMMON_NETWORK_MODELS}
+          ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network-sdn-roadm-line@2025-06-06.yang
+    )
+    yangdata_test(NAME "yang/network-data/ietf-interfaces-sdn-generic"
+        DATA ${CMAKE_CURRENT_SOURCE_DIR}/yang/network-data/ietf-interfaces-sdn-generic.json
+        SCHEMA
+          ${COMMON_NETWORK_MODELS}
+          ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network-sdn-generic@2025-06-06.yang
+    )
+
     set(fixture_sysrepo-utils
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang

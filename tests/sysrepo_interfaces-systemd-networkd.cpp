@@ -9,7 +9,6 @@
 #include <filesystem>
 #include <sysrepo-cpp/utils/exception.hpp>
 #include "pretty_printers.h"
-#include "system/IETFInterfaces.h"
 #include "system/IETFInterfacesConfig.h"
 #include "test_log_setup.h"
 #include "tests/configure.cmake.h"

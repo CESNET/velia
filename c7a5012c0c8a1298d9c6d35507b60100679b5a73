@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dec09481_604ee7ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-26T15:04:30Z",
+      "side": 1,
+      "message": "recheck (I forgot that I have to re-upload the `CzechLight/dependencies` artifacts manually now that we\u0027re mid-zuul-migration)",
+      "revId": "c7a5012c0c8a1298d9c6d35507b60100679b5a73",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

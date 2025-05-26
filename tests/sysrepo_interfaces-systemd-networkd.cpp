@@ -19,6 +19,12 @@
 using namespace std::string_literals;
 using ChangedUnits = velia::system::IETFInterfacesConfig::ChangedUnits;
 
+const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
+#define NETWORK_FILE(LINK_NAME) fakeConfigDir / LINK_NAME ".network"
+#define REQUIRE_NETWORK_CONFIGURATION(LINK_NAME, CONTENTS) \
+    REQUIRE(std::filesystem::exists(NETWORK_FILE(LINK_NAME))); \
+    REQUIRE(velia::utils::readFileToString(NETWORK_FILE(LINK_NAME)) == CONTENTS);
+
 struct FakeNetworkReload {
 public:
     MAKE_CONST_MOCK1(cb, void(const ChangedUnits&));
@@ -37,7 +43,6 @@ TEST_CASE("Config data in ietf-interfaces")
 
     auto fake = FakeNetworkReload();
 
-    const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
     std::filesystem::remove_all(fakeConfigDir);
     std::filesystem::create_directories(fakeConfigDir);
 
@@ -160,8 +165,6 @@ TEST_CASE("Config data in ietf-interfaces")
 
     SECTION("Setting IPs to eth0")
     {
-        const auto expectedFilePath = fakeConfigDir / "eth0.network";
-
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
 
         SECTION("Single IPv4 address")
@@ -242,15 +245,11 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE(std::filesystem::exists(expectedFilePath));
-        REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents);
     }
 
     SECTION("Two links")
     {
-        const auto expectedFilePathEth0 = fakeConfigDir / "eth0.network";
-        const auto expectedFilePathEth1 = fakeConfigDir / "eth1.network";
-
         std::string expectedContentsEth0 = R"([Match]
 Name=eth0
 
@@ -281,27 +280,20 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0", "eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE(std::filesystem::exists(expectedFilePathEth0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth1));
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth0) == expectedContentsEth0);
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
 
         // Remove eth0 configuration
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
         client.applyChanges();
 
-        REQUIRE(!std::filesystem::exists(expectedFilePathEth0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth1));
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
+        REQUIRE(!std::filesystem::exists(NETWORK_FILE("eth0")));
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
     }
 
     SECTION("Setup a bridge br0 over eth0 and eth1")
     {
-        const auto expectedFilePathBr0 = fakeConfigDir / "br0.network";
-        const auto expectedFilePathEth0 = fakeConfigDir / "eth0.network";
-        const auto expectedFilePathEth1 = fakeConfigDir / "eth1.network";
-
         std::string expectedContentsBr0 = R"([Match]
 Name=br0
 
@@ -351,12 +343,9 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0", "eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE(std::filesystem::exists(expectedFilePathBr0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth1));
-        REQUIRE(velia::utils::readFileToString(expectedFilePathBr0) == expectedContentsBr0);
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth0) == expectedContentsEth0);
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
 
         // assign an IPv4 address to br0
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/enabled", "true");
@@ -376,12 +365,9 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE(std::filesystem::exists(expectedFilePathBr0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth1));
-        REQUIRE(velia::utils::readFileToString(expectedFilePathBr0) == expectedContentsBr0);
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth0) == expectedContentsEth0);
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
 
         // assign also an IPv6 address to br0
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
@@ -399,12 +385,9 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE(std::filesystem::exists(expectedFilePathBr0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth1));
-        REQUIRE(velia::utils::readFileToString(expectedFilePathBr0) == expectedContentsBr0);
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth0) == expectedContentsEth0);
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
 
         // remove eth1 from bridge
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']/czechlight-network:bridge");
@@ -423,19 +406,13 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE(std::filesystem::exists(expectedFilePathBr0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth0));
-        REQUIRE(std::filesystem::exists(expectedFilePathEth1));
-        REQUIRE(velia::utils::readFileToString(expectedFilePathBr0) == expectedContentsBr0);
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth0) == expectedContentsEth0);
-        REQUIRE(velia::utils::readFileToString(expectedFilePathEth1) == expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
     }
 
     SECTION("Slave interface and enabled/disabled IP protocols")
     {
-        const auto expectedFilePathBr0 = fakeConfigDir / "br0.network";
-        const auto expectedFilePathEth0 = fakeConfigDir / "eth0.network";
-
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/type", "iana-if-type:bridge");
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
@@ -472,8 +449,6 @@ EmitLLDP=nearest-bridge
 
     SECTION("Network autoconfiguration")
     {
-        const auto expectedFilePath = fakeConfigDir / "eth0.network";
-
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
 
         SECTION("IPv4 on with address, IPv6 disabled, DHCPv4 off, RA off")
@@ -592,7 +567,6 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE(std::filesystem::exists(expectedFilePath));
-        REQUIRE(velia::utils::readFileToString(expectedFilePath) == expectedContents);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents);
     }
 }

@@ -101,6 +101,14 @@ module czechlight-network {
         }
     }
 
+    deviation /if:interfaces {
+        deviate add {
+            must 'count(if:interface[if:enabled = "true"]) > 0' {
+                error-message "At least one interface must be enabled.";
+            }
+        }
+    }
+
     // Make it hard to accidentally lose connection by removing ipv4/ipv6 presence containers or all IP addresses
     deviation /if:interfaces/if:interface {
         deviate add {

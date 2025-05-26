@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71e1f43a_08c68ce0",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-05-26T08:38:56Z",
+      "side": 1,
+      "message": "It would be nice if libyang-cpp could enumerate the links from the YANG model.",
+      "range": {
+        "startLine": 92,
+        "startChar": 28,
+        "endLine": 92,
+        "endChar": 53
+      },
+      "revId": "a6f25ecffd1edf0ffacc253816fed61b23fc7842",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

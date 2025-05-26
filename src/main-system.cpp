@@ -129,7 +129,11 @@ int main(int argc, char* argv[])
         // I have no idea how come that this affects this pair of interfaces, but it has no effect on the "osc"
         // one on ROADM Line Degree boxes. Let's just bring them up explicitly.
         for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
-            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"up", interfaceName}, "");
+            try {
+                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"up", interfaceName}, "");
+            } catch (std::runtime_error& e) {
+                log->warn("velia-system: IETFInterfacesConfig: cannot bring up {}: {}", interfaceName, e.what());
+            }
         }
     });
 

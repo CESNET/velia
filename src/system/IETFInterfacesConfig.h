@@ -35,6 +35,6 @@ private:
     std::optional<::sysrepo::Subscription> m_srSubscribe;
 
     sysrepo::ErrorCode moduleChange(::sysrepo::Session session) const;
-    ChangedUnits updateNetworkFiles(const std::map<std::string, std::string>& networkConfig, const std::filesystem::path& configDir) const;
+    ChangedUnits updateNetworkFiles(const std::map<std::string, std::optional<std::string>>& networkConfig, const std::filesystem::path& configDir) const;
 };
 }

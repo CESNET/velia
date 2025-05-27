@@ -98,39 +98,14 @@ int main(int argc, char* argv[])
 
     auto sysrepoIETFInterfacesOperational = std::make_shared<velia::system::IETFInterfaces>(srSess);
     auto sysrepoIETFInterfacesStartup = velia::system::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, managedLinks, [](const auto&) {});
-    auto sysrepoIETFInterfacesRunning = velia::system::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto& reconfiguredInterfaces) {
+    auto sysrepoIETFInterfacesRunning = velia::system::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto&) {
         auto log = spdlog::get("system");
 
-        /* Bring all the updated interfaces down
-         *
-         * This is required at least when transitioning from bridge to DHCP configuration. systemd-networkd apparently does not reset many
-         * interface properties when reconfiguring the interface into new "bridge-less" configuration (the interface stays in the
-         * bridge and it also does not obtain link local address).
-         */
-        for (const auto& interfaceName : reconfiguredInterfaces.deleted) {
-            try {
-                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
-            } catch (std::runtime_error& e) {
-                log->warn("velia-system: IETFInterfacesConfig: cannot bring down {}: {}", interfaceName, e.what());
-            }
-        }
-        for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
-            try {
-                velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"down", interfaceName}, "");
-            } catch (std::runtime_error& e) {
-                log->warn("velia-system: IETFInterfacesConfig: cannot bring down {}: {}", interfaceName, e.what());
-            }
-        }
-
+        /* In 2021, executing 'networkctl reload' was not enough. For bridge interfaces, we had to also bring the interface down and up.
+         * As of 5/2025, it seems that bare 'networkctl reload' is sufficient.
+         * Manpage of networkctl says that reload should be enough except for few cases (like changing VLANs etc.), but they said that in 2021 too.
+         * */
         velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
-
-        // Let's also explicitly bring all interfaces which are expected to have "some" configuration back up again.
-        // This was needed at least on the "oscW" and "oscE" interfaces on in-line amplifiers in May 2025.
-        // I have no idea how come that this affects this pair of interfaces, but it has no effect on the "osc"
-        // one on ROADM Line Degree boxes. Let's just bring them up explicitly.
-        for (const auto& interfaceName : reconfiguredInterfaces.changedOrNew) {
-            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"up", interfaceName}, "");
-        }
     });
 
     auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);

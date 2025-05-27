@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1705bc84_4701111a",
+        "filename": "tests/sysrepo_system-ietfsystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-27T15:40:07Z",
+      "side": 1,
+      "message": "Isn\u0027t it actually better to test against a string value of the time? It\u0027s a static file, so let\u0027s test that the code does the right thing as opposed to (possibly) making the same mistake in the test suite and in the implementation. That\u0027s why we have a static file with a known value, right?",
+      "range": {
+        "startLine": 135,
+        "startChar": 11,
+        "endLine": 137,
+        "endChar": 128
+      },
+      "revId": "5a4452a5363f3d2b22dbe8c2eabeb92c6ba3f8f1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

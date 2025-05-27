@@ -103,8 +103,8 @@ module czechlight-network {
                   cla-network:bridge' {
                 error-message "Enabled interface must always have at least one protocol active or it must be connected in the bridge.";
             }
-		}
-	}
+        }
+    }
 
     augment /if:interfaces/if:interface/ip:ipv4 {
         description "Add the IPv4 autoconfiguration option (DHCP client).";

@@ -65,13 +65,22 @@ TEST_CASE("Config data in ietf-interfaces")
         SECTION("Invalid type for a valid link")
         {
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:softwareLoopback");
-            REQUIRE_THROWS_AS(client.applyChanges(), sysrepo::ErrorWithCode);
+            REQUIRE_THROWS_WITH(client.applyChanges(),
+                    doctest::Contains("Link type can't be reconfigured."));
         }
 
         SECTION("Invalid name")
         {
             client.setItem("/ietf-interfaces:interfaces/interface[name='blah0']/type", "iana-if-type:ethernetCsmacd");
-            REQUIRE_THROWS_AS(client.applyChanges(), sysrepo::ErrorWithCode);
+            REQUIRE_THROWS_WITH(client.applyChanges(),
+                    doctest::Contains("Link name must be chosen from the following options:"));
+        }
+
+        SECTION("enabled interface with no configuration")
+        {
+            client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+            REQUIRE_THROWS_WITH(client.applyChanges(),
+                    doctest::Contains("Enabled interface must always have at least one protocol active or it must be connected in the bridge."));
         }
     }
 
@@ -84,7 +93,9 @@ TEST_CASE("Config data in ietf-interfaces")
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
-            REQUIRE_THROWS_AS(client.applyChanges(), sysrepo::ErrorWithCode);
+            REQUIRE_THROWS_WITH(client.applyChanges(),
+                    doctest::Contains("Enabled interface must always have at least one protocol active or it must be connected in the bridge. "
+                        "(path \"/ietf-interfaces:interfaces/interface[name='eth0']\")"));
         }
 
         SECTION("Active protocols; disabled link")
@@ -142,7 +153,9 @@ TEST_CASE("Config data in ietf-interfaces")
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
-            REQUIRE_THROWS_AS(client.applyChanges(), sysrepo::ErrorWithCode);
+            REQUIRE_THROWS_WITH(client.applyChanges(),
+                    doctest::Contains("There must always be at least one IPv4 address or the autoconfiguration must be turned on unless the protocol is disabled. "
+                        "(path \"/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4\")"));
         }
 
         SECTION("Enabled IPv6 protocol must have at least one IP or the autoconfiguration must be on")
@@ -151,7 +164,9 @@ TEST_CASE("Config data in ietf-interfaces")
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:enabled", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "false");
-            REQUIRE_THROWS_AS(client.applyChanges(), sysrepo::ErrorWithCode);
+            REQUIRE_THROWS_WITH(client.applyChanges(),
+                    doctest::Contains("There must always be at least one IPv6 address or the autoconfiguration must be turned on unless the protocol is disabled. "
+                        "(path \"/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6\")"));
         }
     }
 
@@ -458,20 +473,21 @@ EmitLLDP=nearest-bridge
         SECTION("Can't be a slave when IPv4 enabled")
         {
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
-            REQUIRE_THROWS_AS(client.applyChanges(), sysrepo::ErrorWithCode);
+            // it's not a `must`, and libyang currently doesn't print out the `when`'s `description` when the condition fails
+            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("When condition "));
         }
 
         SECTION("Can't be a slave when IPv6 enabled")
         {
-            client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
-            REQUIRE_THROWS_AS(client.applyChanges(), sysrepo::ErrorWithCode);
+            client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
+            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("When condition "));
         }
 
         SECTION("Can't be a slave when both IPv4 and IPv6 enabled")
         {
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
-            REQUIRE_THROWS_AS(client.applyChanges(), sysrepo::ErrorWithCode);
+            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("When condition "));
         }
 
         SECTION("Can be a slave when addresses present but protocol is disabled")

@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b21c339_badc2987",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-27T09:05:33Z",
+      "side": 1,
+      "message": "Yeah, this will require a small update to the YANG file with a bunch of `must`s, and a migration.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 45
+      },
+      "revId": "2d663ed04a37f0a1685e28826ab24fae531d561a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c31a9cd_c02eb9dd",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-27T09:05:33Z",
+      "side": 1,
+      "message": "I\u0027d like to check whether this is still needed with the most recent systemd-networkd. I would have hoped that an explicit up/down will not be necessary (and I recall seeing some commits upstream). Also, there\u0027s the https://www.freedesktop.org/software/systemd/man/latest/systemd.network.html#ActivationPolicy\u003d which might be relevant. Let\u0027s test this in the lab.",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 11
+      },
+      "revId": "2d663ed04a37f0a1685e28826ab24fae531d561a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "898b55fd_835783f4",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-27T09:05:33Z",
+      "side": 1,
+      "message": "this should be an error, not a warning",
+      "revId": "2d663ed04a37f0a1685e28826ab24fae531d561a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

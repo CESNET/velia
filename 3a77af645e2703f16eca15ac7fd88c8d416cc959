@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b18f26b_9521a908",
+        "filename": "tests/sysrepo_interfaces-systemd-networkd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-27T07:42:34Z",
+      "side": 1,
+      "message": "let´s also explain “the why” here, please — e.g., “test config remival” or something like that",
+      "revId": "3a77af645e2703f16eca15ac7fd88c8d416cc959",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

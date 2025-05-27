@@ -55,7 +55,11 @@ TEST_CASE("Config data in ietf-interfaces")
                                              {"oscW", "iana-if-type:ethernetCsmacd"},
                                              {"oscE", "iana-if-type:ethernetCsmacd"}}) {
                 client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/type", type);
-                client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/enabled", "false");
+                if (name == "eth0"s) {
+                    client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
+                } else {
+                    client.setItem("/ietf-interfaces:interfaces/interface[name='"s + name + "']/enabled", "false");
+                }
             }
 
             REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0", "eth1"}})).IN_SEQUENCE(seq1); // only these are monitored by the test

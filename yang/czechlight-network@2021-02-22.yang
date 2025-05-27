@@ -104,6 +104,14 @@ module czechlight-network {
                 error-message "Enabled interface must always have at least one protocol active or it must be connected in the bridge.";
             }
         }
+
+        deviate add {
+            must 'if:type != "ianaift:bridge" or
+                  (if:enabled != "true") or
+                  (count(../if:interface[(if:enabled = "true") and (cla-network:bridge = current()/name)]) > 0)' {
+                error-message "All enabled bridges must have at least one enabled enslaved interface";
+            }
+        }
     }
 
     augment /if:interfaces/if:interface/ip:ipv4 {

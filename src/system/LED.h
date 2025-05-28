@@ -9,7 +9,7 @@
 #include <atomic>
 #include <filesystem>
 #include <map>
-#include <sysrepo-cpp/Connection.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include <thread>
 #include "utils/log-fwd.h"
 

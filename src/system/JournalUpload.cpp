@@ -7,7 +7,6 @@
 
 #include <filesystem>
 #include <regex>
-#include <sysrepo-cpp/Enum.hpp>
 #include "JournalUpload.h"
 #include "utils/io.h"
 #include "utils/libyang.h"

@@ -8,7 +8,7 @@
 
 #include <filesystem>
 #include <map>
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include "utils/log-fwd.h"
 
 namespace velia::system {

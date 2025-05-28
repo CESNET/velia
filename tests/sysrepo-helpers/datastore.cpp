@@ -5,6 +5,7 @@
  *
  */
 
+#include <sysrepo-cpp/Changes.hpp>
 #include "datastore.h"
 #include "sysrepo-helpers/common.h"
 

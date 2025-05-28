@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <mutex>
 #include <sdbus-c++/sdbus-c++.h>
-#include <sysrepo-cpp/Connection.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include "system/RAUC.h"
 #include "utils/log-fwd.h"
 

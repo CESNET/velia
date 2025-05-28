@@ -8,7 +8,6 @@
 
 #include <boost/signals2/signal.hpp>
 #include <optional>
-#include <sysrepo-cpp/Session.hpp>
 #include <sysrepo-cpp/Subscription.hpp>
 #include <vector>
 #include "health/State.h"

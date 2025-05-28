@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include "LLDP.h"
 #include "utils/log-fwd.h"
 

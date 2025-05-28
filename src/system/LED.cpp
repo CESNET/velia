@@ -45,8 +45,6 @@ LED::LED(::sysrepo::Connection srConn, std::filesystem::path sysfsLeds)
         m_ledsMaxBrightness[fullPath] = maxBrightness;
     }
 
-    m_thr = std::thread(&LED::poll, this);
-
     const auto uidMaxBrightness = std::to_string(velia::utils::readFileInt64(sysfsLeds / UID_LED / "max_brightness"));
     const auto triggerFile = sysfsLeds / UID_LED / "trigger";
     const auto brightnessFile = sysfsLeds / UID_LED / "brightness";
@@ -75,6 +73,8 @@ LED::LED(::sysrepo::Connection srConn, std::filesystem::path sysfsLeds)
 
             return sysrepo::ErrorCode::Ok;
         });
+
+    m_thr = std::thread(&LED::poll, this);
 }
 
 LED::~LED()

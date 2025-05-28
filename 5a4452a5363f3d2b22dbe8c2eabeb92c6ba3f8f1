@@ -46,6 +46,30 @@
       },
       "revId": "5a4452a5363f3d2b22dbe8c2eabeb92c6ba3f8f1",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59bd714c_f5c4561c",
+        "filename": "tests/sysrepo_system-ietfsystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-28T09:41:22Z",
+      "side": 1,
+      "message": "I misunderstood this code. As you explained during the call, the problem is that the \"boot time\" is a TZ-aware thing (we know that it\u0027s been given in UTC), but we have no control over the TZ that the test is running on (and it\u0027s painful to change that dynamically in C++). So, the current code is really OK, it\u0027s simply performing some std::chrono functions to create an object with a known-good UTC time. It\u0027s doing that via the \"seconds since epoch\", because that\u0027s just way it\u0027s done in C++. I was hoping for something like `sys_days`,  but on a quick glance that would be \"hard\".",
+      "parentUuid": "ba973eb8_ba7da561",
+      "range": {
+        "startLine": 135,
+        "startChar": 11,
+        "endLine": 137,
+        "endChar": 128
+      },
+      "revId": "5a4452a5363f3d2b22dbe8c2eabeb92c6ba3f8f1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

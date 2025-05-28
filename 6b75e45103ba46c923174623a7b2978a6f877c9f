@@ -48,6 +48,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "674effc6_6a42e1fa",
+        "filename": "src/system/LLDPSysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-28T18:21:49Z",
+      "side": 1,
+      "message": "yup, OK",
+      "parentUuid": "0b033ba0_a2071c7f",
+      "range": {
+        "startLine": 16,
+        "startChar": 52,
+        "endLine": 16,
+        "endChar": 94
+      },
+      "revId": "6b75e45103ba46c923174623a7b2978a6f877c9f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "21a4ac4e_92d02e4a",

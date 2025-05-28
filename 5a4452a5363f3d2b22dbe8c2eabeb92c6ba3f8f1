@@ -22,6 +22,30 @@
       },
       "revId": "5a4452a5363f3d2b22dbe8c2eabeb92c6ba3f8f1",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba973eb8_ba7da561",
+        "filename": "tests/sysrepo_system-ietfsystem.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-05-28T07:42:36Z",
+      "side": 1,
+      "message": "Agreed, but if I store timestamp with +00:00 TZ in sysrepo, it gets printed as with timezone +02:00. Running the tests on a machine with a different TZ, things would be broken If i hardcode the string value there.\n\nI can do it a little bit differently by casting the expected UTC time to system time, printing it as if in local TZ and then compare to the sysrepo value:\n\n```\nauto expectedTimestampUtc \u003d std::chrono::utc_time\u003cstd::chrono::utc_clock::duration\u003e(std::chrono::seconds(1747993639));                            \nREQUIRE(bootTsNode-\u003easTerm().valueStr() \u003d\u003d libyang::yangTimeFormat(std::chrono::clock_cast\u003cstd::chrono::system_clock\u003e(expectedTimestampUtc), libyang::TimezoneInterpretation::Local));\n```\n  \n... but the issue you mentioned is still there. It only presents in a different manner.",
+      "parentUuid": "1705bc84_4701111a",
+      "range": {
+        "startLine": 135,
+        "startChar": 11,
+        "endLine": 137,
+        "endChar": 128
+      },
+      "revId": "5a4452a5363f3d2b22dbe8c2eabeb92c6ba3f8f1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

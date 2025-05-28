@@ -248,8 +248,8 @@ add_library(velia-system STATIC
         src/system/LED.h
         src/system/LLDP.cpp
         src/system/LLDP.h
-        src/system/LLDPCallback.cpp
-        src/system/LLDPCallback.h
+        src/system/LLDPSysrepo.cpp
+        src/system/LLDPSysrepo.h
         )
 target_link_libraries(velia-system
     PUBLIC
@@ -432,7 +432,7 @@ if(BUILD_TESTING)
     velia_test(NAME sysrepo_system-lldp LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-czechlight-lldp)
 
     set(fixture_sysrepo-ietf-system --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang)
-    velia_test(NAME sysrepo_system-ietfsystem LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-ietf-system)
+    velia_test(NAME sysrepo_system-ietfsystem LIBRARIES velia-system DbusTesting date::date-tz FIXTURE fixture_sysrepo-ietf-system)
 
     set(fixture_sysrepo-czechlight-system --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2022-07-08.yang --init-data ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-authentication.json)
     velia_test(NAME sysrepo_system-firmware LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-czechlight-system RESOURCE_LOCK dbus-rauc)

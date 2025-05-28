@@ -6,18 +6,18 @@
  */
 
 #include <numeric>
-#include "LLDPCallback.h"
+#include "LLDPSysrepo.h"
 #include "utils/log.h"
 
 namespace velia::system {
 
-LLDPCallback::LLDPCallback(std::shared_ptr<LLDPDataProvider> lldp)
+LLDPSysrepo::LLDPSysrepo(std::shared_ptr<LLDPDataProvider> lldp)
     : m_log(spdlog::get("system"))
     , m_lldp(std::move(lldp))
 {
 }
 
-sysrepo::ErrorCode LLDPCallback::operator()(sysrepo::Session session, uint32_t, const std::string&, const std::optional<std::string>& subXPath, const std::optional<std::string>& requestXPath, uint32_t, std::optional<libyang::DataNode>& output)
+sysrepo::ErrorCode LLDPSysrepo::operator()(sysrepo::Session session, uint32_t, const std::string&, const std::optional<std::string>& subXPath, const std::optional<std::string>& requestXPath, uint32_t, std::optional<libyang::DataNode>& output)
 {
     m_log->trace("operational data callback: subXPath {} request-XPath {}",
             subXPath ? *subXPath : "(none)", requestXPath ? *requestXPath : "(none)");

@@ -43,7 +43,7 @@ if(${SYSTEMD_VERSION} VERSION_LESS 256)
     message(WARNING "LLDP neighbor listing support in systemd <= 255 is not supported and will break at runtime. Upgrade to systemd 256.")
 endif()
 
-pkg_check_modules(SYSREPO REQUIRED IMPORTED_TARGET sysrepo sysrepo-cpp>=5)
+pkg_check_modules(SYSREPO REQUIRED IMPORTED_TARGET sysrepo sysrepo-cpp>=6)
 pkg_check_modules(LIBYANG REQUIRED IMPORTED_TARGET libyang libyang-cpp>=4)
 pkg_check_modules(LIBNL REQUIRED IMPORTED_TARGET libnl-route-3.0)
 

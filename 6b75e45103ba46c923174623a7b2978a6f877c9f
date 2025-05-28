@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dadd3cc3_38932886",
+        "filename": "src/system/LLDPSysrepo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-28T11:20:36Z",
+      "side": 1,
+      "message": "Please change this so that it takes a string with e the final chassis ID. That way, we can call the corresponding systemd function from within main-system.cpp directly, and we won\u0027t have to change this in future if/when systemd switches to using that per-application UUID which is only derived from the machine-id file.",
+      "range": {
+        "startLine": 16,
+        "startChar": 52,
+        "endLine": 16,
+        "endChar": 94
+      },
+      "revId": "6b75e45103ba46c923174623a7b2978a6f877c9f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21a4ac4e_92d02e4a",
+        "filename": "yang/czechlight-lldp@2020-11-04.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-28T11:20:36Z",
+      "side": 1,
+      "message": "`Information which are sent from the local system via LLDP`",
+      "range": {
+        "startLine": 197,
+        "startChar": 17,
+        "endLine": 197,
+        "endChar": 41
+      },
+      "revId": "6b75e45103ba46c923174623a7b2978a6f877c9f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3964c21b_faf550e1",
+        "filename": "yang/czechlight-lldp@2020-11-04.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-28T11:20:36Z",
+      "side": 1,
+      "message": "Let\u0027s put it this way:\n```\ndescription \"Identification of the chassis in the local system, as sent via LLDP.\";\nreference \"IEEE 802.1AB-2016, section 8.5.2.3\";\n```",
+      "range": {
+        "startLine": 201,
+        "startChar": 6,
+        "endLine": 201,
+        "endChar": 45
+      },
+      "revId": "6b75e45103ba46c923174623a7b2978a6f877c9f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81463d9b_372295e6",
+        "filename": "yang/czechlight-lldp@2020-11-04.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-28T11:20:36Z",
+      "side": 1,
+      "message": "I like the idea of exporting this, but I think that the description is not useful. What about:\n```\ndescription \"The basis on which the local chassisId is defined\";\nreference \"IEEE 802.1AB-2016, section 8.5.2.2\";\n```",
+      "range": {
+        "startLine": 206,
+        "startChar": 19,
+        "endLine": 206,
+        "endChar": 63
+      },
+      "revId": "6b75e45103ba46c923174623a7b2978a6f877c9f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

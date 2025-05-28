@@ -5,7 +5,6 @@
  *
  */
 
-#include <numeric>
 #include "LLDPSysrepo.h"
 #include "utils/log.h"
 

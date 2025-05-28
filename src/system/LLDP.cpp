@@ -10,7 +10,6 @@
 #include <spdlog/spdlog.h>
 #include "LLDP.h"
 #include "system_vars.h"
-#include "utils/exec.h"
 #include "utils/log.h"
 
 namespace velia::system {

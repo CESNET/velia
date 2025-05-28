@@ -9,7 +9,6 @@
 #include "trompeloeil_doctest.h"
 #include <map>
 #include <sysrepo-cpp/Session.hpp>
-#include <sysrepo-cpp/Connection.hpp>
 #include "test_log_setup.h"
 
 struct Deleted { };

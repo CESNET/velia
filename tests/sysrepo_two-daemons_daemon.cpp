@@ -3,8 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
-#include <sysrepo-cpp/Connection.hpp>
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include <unistd.h>
 
 using namespace std::string_literals;

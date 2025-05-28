@@ -10,7 +10,7 @@
 #include <map>
 #include <optional>
 #include <string>
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include <vector>
 #include "utils/log-fwd.h"
 

@@ -8,7 +8,7 @@
 
 #include <filesystem>
 #include <sdbus-c++/sdbus-c++.h>
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include "utils/log-fwd.h"
 
 namespace velia::system {

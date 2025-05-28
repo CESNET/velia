@@ -7,7 +7,7 @@
 #pragma once
 
 #include <mutex>
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include "utils/log-fwd.h"
 
 struct rtnl_link;

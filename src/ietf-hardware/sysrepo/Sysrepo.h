@@ -8,7 +8,7 @@
 
 #include <chrono>
 #include <memory>
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include <thread>
 #include "ietf-hardware/IETFHardware.h"
 #include "utils/log-fwd.h"

@@ -14,6 +14,13 @@ namespace velia::network {
 LLDPSysrepo::LLDPSysrepo(sysrepo::Session& session, std::shared_ptr<LLDPDataProvider> lldp)
     : m_log(spdlog::get("network"))
     , m_lldp(std::move(lldp))
+    , m_sub(session.onOperGet(
+          "czechlight-lldp",
+          [this](sysrepo::Session session, auto, auto, auto, auto, auto, std::optional<libyang::DataNode>& output) {
+              fetch(session, output);
+              return sysrepo::ErrorCode::Ok;
+          },
+          "/czechlight-lldp:nbr-list"))
 {
     utils::ScopedDatastoreSwitch sw(session, sysrepo::Datastore::Operational);
     for (const auto& [key, value] : m_lldp->localProperties()) {
@@ -22,11 +29,8 @@ LLDPSysrepo::LLDPSysrepo(sysrepo::Session& session, std::shared_ptr<LLDPDataProv
     session.applyChanges();
 }
 
-sysrepo::ErrorCode LLDPSysrepo::operator()(sysrepo::Session session, uint32_t, const std::string&, const std::optional<std::string>& subXPath, const std::optional<std::string>& requestXPath, uint32_t, std::optional<libyang::DataNode>& output)
+void LLDPSysrepo::fetch(sysrepo::Session session, std::optional<libyang::DataNode>& output)
 {
-    m_log->trace("operational data callback: subXPath {} request-XPath {}",
-            subXPath ? *subXPath : "(none)", requestXPath ? *requestXPath : "(none)");
-
     output = session.getContext().newPath("/czechlight-lldp:nbr-list");
 
     for (const auto& n : m_lldp->getNeighbors()) {
@@ -40,8 +44,6 @@ sysrepo::ErrorCode LLDPSysrepo::operator()(sysrepo::Session session, uint32_t, c
     }
 
     m_log->trace("Pushing to sysrepo (JSON): {}", *output->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
-
-    return sysrepo::ErrorCode::Ok;
 }
 
 }

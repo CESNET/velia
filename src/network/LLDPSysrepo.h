@@ -9,7 +9,7 @@
 
 #include <memory>
 #include <optional>
-#include <sysrepo-cpp/Session.hpp>
+#include <sysrepo-cpp/Subscription.hpp>
 #include "LLDP.h"
 #include "utils/log-fwd.h"
 
@@ -18,11 +18,12 @@ namespace velia::network {
 class LLDPSysrepo {
 public:
     explicit LLDPSysrepo(sysrepo::Session& session, std::shared_ptr<LLDPDataProvider> lldp);
-    sysrepo::ErrorCode operator()(sysrepo::Session session, uint32_t subscriptionId, const std::string& moduleName, const std::optional<std::string>& subXPath, const std::optional<std::string>& requestXPath, uint32_t, std::optional<libyang::DataNode>& output);
+    void fetch(sysrepo::Session session, std::optional<libyang::DataNode>& output);
 
 private:
     velia::Log m_log;
     std::shared_ptr<LLDPDataProvider> m_lldp;
+    sysrepo::Subscription m_sub;
 };
 
 }

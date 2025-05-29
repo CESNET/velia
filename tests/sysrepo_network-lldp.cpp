@@ -92,7 +92,6 @@ TEST_CASE("Sysrepo opsdata callback")
                 .chassisId = "abcdef0123456deadc0ffeebeefcafe1",
                 .chassisSubtype = "local",
             }));
-    auto sub = srSess.onOperGet("czechlight-lldp", lldp, "/czechlight-lldp:nbr-list");
 
     client.switchDatastore(sysrepo::Datastore::Operational);
     REQUIRE(dataFromSysrepo(client, "/czechlight-lldp:nbr-list") == expected);

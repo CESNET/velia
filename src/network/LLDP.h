@@ -31,13 +31,15 @@ public:
         std::string chassisSubtype;
     };
 
-    explicit LLDPDataProvider(std::function<std::string()> dataCallback, const LocalData& localData);
+    using data_callback_t = std::function<std::string()>;
+
+    explicit LLDPDataProvider(data_callback_t dataCallback, const LocalData& localData);
     std::vector<NeighborEntry> getNeighbors() const;
     std::map<std::string, std::string> localProperties() const;
 
 private:
     velia::Log m_log;
-    std::function<std::string()> m_dataCallback;
+    data_callback_t m_dataCallback;
     LocalData m_localData;
 };
 

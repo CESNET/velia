@@ -305,11 +305,21 @@ add_executable(veliad-system
 target_link_libraries(veliad-system
     PUBLIC
         velia-system
-        velia-network
         PkgConfig::DOCOPT
     )
 add_dependencies(veliad-system target-VELIA_VERSION)
 target_include_directories(veliad-system PUBLIC ${CMAKE_BINARY_DIR})
+
+add_executable(veliad-network
+    src/main-network.cpp
+    )
+target_link_libraries(veliad-network
+    PUBLIC
+        velia-network
+        PkgConfig::DOCOPT
+    )
+add_dependencies(veliad-network target-VELIA_VERSION)
+target_include_directories(veliad-network PUBLIC ${CMAKE_BINARY_DIR})
 
 add_executable(veliad-firewall
     src/main-firewall.cpp
@@ -576,6 +586,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-authentication.json DE
 install(TARGETS
     veliad-health
     veliad-system
+    veliad-network
     veliad-hardware
     veliad-firewall
     velia-eeprom

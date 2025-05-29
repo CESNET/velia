@@ -75,9 +75,35 @@ TEST_CASE("Config data in ietf-interfaces")
 
         SECTION("Invalid type for a valid link")
         {
-            client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:softwareLoopback");
-            REQUIRE_THROWS_WITH(client.applyChanges(),
-                    doctest::Contains("Link type can't be reconfigured."));
+            std::string iface;
+            std::optional<doctest::Contains> error;
+            SECTION("eth0") {
+                iface = "eth0";
+                error = doctest::Contains("The if:type of a 'eth*' interface must be set to ianaift:ethernetCsmacd");
+            }
+            SECTION("osc") {
+                iface = "osc";
+                error = doctest::Contains("The if:type of a 'osc*' interface must be set to ianaift:ethernetCsmacd");
+            }
+            SECTION("oscW") {
+                iface = "oscW";
+                error = doctest::Contains("The if:type of a 'osc*' interface must be set to ianaift:ethernetCsmacd");
+            }
+            SECTION("br0") {
+                iface = "br0";
+                error = doctest::Contains("The if:type of a 'br*' interface must be set to ianaift:bridge");
+            }
+            SECTION("sfp") {
+                iface = "sfp";
+                error = doctest::Contains("The if:type of a 'sfp*' interface must be set to ianaift:ethernetCsmacd");
+            }
+            SECTION("sfp3") {
+                iface = "sfp3";
+                error = doctest::Contains("The if:type of a 'sfp*' interface must be set to ianaift:ethernetCsmacd");
+            }
+            REQUIRE(!!error);
+            client.setItem("/ietf-interfaces:interfaces/interface[name='" + iface + "']/type", "iana-if-type:softwareLoopback");
+            REQUIRE_THROWS_WITH(client.applyChanges(), *error);
         }
 
         SECTION("Invalid name")
@@ -441,21 +467,20 @@ EmitLLDP=nearest-bridge
         SECTION("Can't be a slave when IPv4 enabled")
         {
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
-            // it's not a `must`, and libyang currently doesn't print out the `when`'s `description` when the condition fails
-            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("When condition "));
+            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("IP protocols must be disabled for enslaved link"));
         }
 
         SECTION("Can't be a slave when IPv6 enabled")
         {
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
-            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("When condition "));
+            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("IP protocols must be disabled for enslaved link"));
         }
 
         SECTION("Can't be a slave when both IPv4 and IPv6 enabled")
         {
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
-            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("When condition "));
+            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("IP protocols must be disabled for enslaved link"));
         }
 
         SECTION("Can be a slave when addresses present but protocol is disabled")
@@ -465,6 +490,20 @@ EmitLLDP=nearest-bridge
 
             REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0", "eth0"}})).IN_SEQUENCE(seq1);
             client.applyChanges();
+        }
+
+        SECTION("Cannot enslave to an ethernet interface")
+        {
+            client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
+            client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/czechlight-network:bridge", "eth0");
+            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("An interface can be only enslaved to a bridge"));
+        }
+
+        SECTION("Cannot enslave a bridge to another bridge")
+        {
+            client.setItem("/ietf-interfaces:interfaces/interface[name='br1']/type", "iana-if-type:bridge");
+            client.setItem("/ietf-interfaces:interfaces/interface[name='br1']/czechlight-network:bridge", "br0");
+            REQUIRE_THROWS_WITH(client.applyChanges(), doctest::Contains("Only ethernet interfaces can be enslaved to a bridge."));
         }
     }
 

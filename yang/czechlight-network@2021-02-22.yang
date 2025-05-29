@@ -62,15 +62,20 @@ module czechlight-network {
 
     deviation /if:interfaces/if:interface/if:type {
         deviate add {
-            must '(../if:name = "br0" and . = "ianaift:bridge") or
-                  (../if:name = "eth0" and . = "ianaift:ethernetCsmacd") or
-                  (../if:name = "eth1" and . = "ianaift:ethernetCsmacd") or
-                  (../if:name = "eth2" and . = "ianaift:ethernetCsmacd") or
-                  (../if:name = "osc" and . = "ianaift:ethernetCsmacd") or
-                  (../if:name = "oscW" and . = "ianaift:ethernetCsmacd") or
-                  (../if:name = "oscE" and . = "ianaift:ethernetCsmacd") or
-                  (../if:name = "sfp3" and . = "ianaift:ethernetCsmacd")' {
-                error-message "Link type can't be reconfigured.";
+            must 'not(re-match(../if:name, "br\d+")) or . = "ianaift:bridge"' {
+                error-message "The if:type of a 'br*' interface must be set to ianaift:bridge";
+            }
+
+            must 'not(re-match(../if:name, "eth\d+")) or . = "ianaift:ethernetCsmacd"' {
+                error-message "The if:type of a 'eth*' interface must be set to ianaift:ethernetCsmacd";
+            }
+
+            must 'not(re-match(../if:name, "osc.*")) or . = "ianaift:ethernetCsmacd"' {
+                error-message "The if:type of a 'osc*' interface must be set to ianaift:ethernetCsmacd";
+            }
+
+            must 'not(re-match(../if:name, "sfp.*")) or . = "ianaift:ethernetCsmacd"' {
+                error-message "The if:type of a 'sfp*' interface must be set to ianaift:ethernetCsmacd";
             }
         }
     }
@@ -79,13 +84,17 @@ module czechlight-network {
         description "Add the option to add this link to a bridge.";
 
         leaf bridge {
-            must '. = "br0"' {
-                error-message "br0 is the only available bridge interface.";
+            must '../if:type = "ianaift:ethernetCsmacd"' {
+                error-message "Only ethernet interfaces can be enslaved to a bridge.";
             }
 
-            when '(not(../ip:ipv4) or ../ip:ipv4/ip:enabled[.="false"]) and
+            must '/if:interfaces/if:interface[if:name = current()]/if:type = "ianaift:bridge"' {
+                error-message "An interface can be only enslaved to a bridge";
+            }
+
+            must '(not(../ip:ipv4) or ../ip:ipv4/ip:enabled[.="false"]) and
                   (not(../ip:ipv6) or ../ip:ipv6/ip:enabled[.="false"])' {
-                description "IP protocols must be disabled for enslaved link.";
+                error-message "IP protocols must be disabled for enslaved link.";
             }
 
             type if:interface-ref;

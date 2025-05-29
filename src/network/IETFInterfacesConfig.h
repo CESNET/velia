@@ -11,7 +11,7 @@
 #include <sysrepo-cpp/Subscription.hpp>
 #include "utils/log-fwd.h"
 
-namespace velia::system {
+namespace velia::network {
 
 class Rtnetlink;
 

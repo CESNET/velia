@@ -14,7 +14,7 @@
 #include <vector>
 #include "utils/log-fwd.h"
 
-namespace velia::system {
+namespace velia::network {
 
 struct NeighborEntry {
     std::string m_portId;
@@ -44,4 +44,4 @@ private:
 }
 
 template <>
-struct fmt::formatter<velia::system::NeighborEntry> : ostream_formatter { };
+struct fmt::formatter<velia::network::NeighborEntry> : ostream_formatter { };

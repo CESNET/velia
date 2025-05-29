@@ -17,7 +17,7 @@ Creates and registers all required loggers and connect them to the provided sink
 */
 void initLogs(std::shared_ptr<spdlog::sinks::sink> sink)
 {
-    for (const auto& name : {"main", "health", "hardware", "sysrepo", "system", "firewall"}) {
+    for (const auto& name : {"main", "health", "hardware", "sysrepo", "system", "network", "firewall"}) {
         spdlog::register_logger(std::make_shared<spdlog::logger>(name, sink));
     }
     spdlog::set_default_logger(spdlog::get("main"));

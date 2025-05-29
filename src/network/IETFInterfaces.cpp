@@ -125,7 +125,7 @@ std::string getIPVersion(int addrFamily)
 }
 
 /** @brief Returns YANG structure for ietf-ip:ipv(4|6)/neighbours. Set requestedAddrFamily to required ip version (AF_INET for ipv4 or AF_INET6 for ipv6). */
-velia::utils::YANGData collectNeighboursIP(std::shared_ptr<velia::system::Rtnetlink> rtnetlink, int requestedAddrFamily, velia::Log log)
+velia::utils::YANGData collectNeighboursIP(std::shared_ptr<velia::network::Rtnetlink> rtnetlink, int requestedAddrFamily, velia::Log log)
 {
     velia::utils::YANGData values;
 
@@ -171,12 +171,12 @@ bool isBridge(rtnl_link* link)
 }
 }
 
-namespace velia::system {
+namespace velia::network {
 
 IETFInterfaces::IETFInterfaces(::sysrepo::Session srSess)
     : m_srSession(srSess)
     , m_srSubscribe()
-    , m_log(spdlog::get("system"))
+    , m_log(spdlog::get("network"))
     , m_rtnetlink(std::make_shared<Rtnetlink>(
           [this](rtnl_link* link, int action) { onLinkUpdate(link, action); },
           [this](rtnl_addr* addr, int action) { onAddrUpdate(addr, action); },

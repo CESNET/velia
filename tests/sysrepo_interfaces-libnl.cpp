@@ -13,7 +13,7 @@
 #include <sys/wait.h>
 #include <thread>
 #include "pretty_printers.h"
-#include "system/IETFInterfaces.h"
+#include "network/IETFInterfaces.h"
 #include "test_log_setup.h"
 #include "test_vars.h"
 #include "tests/sysrepo-helpers/common.h"
@@ -69,7 +69,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
     TEST_SYSREPO_INIT;
     TEST_SYSREPO_INIT_CLIENT;
 
-    auto network = std::make_shared<velia::system::IETFInterfaces>(srSess);
+    auto network = std::make_shared<velia::network::IETFInterfaces>(srSess);
 
     iproute2_exec_and_wait(WAIT, "link", "add", IFACE, "address", LINK_MAC, "type", "dummy");
 

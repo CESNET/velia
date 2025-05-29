@@ -14,7 +14,7 @@ struct rtnl_link;
 struct rtnl_addr;
 struct rtnl_route;
 
-namespace velia::system {
+namespace velia::network {
 
 class Rtnetlink;
 

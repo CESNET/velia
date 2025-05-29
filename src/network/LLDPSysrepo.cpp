@@ -9,10 +9,10 @@
 #include "utils/log.h"
 #include "utils/sysrepo.h"
 
-namespace velia::system {
+namespace velia::network {
 
 LLDPSysrepo::LLDPSysrepo(sysrepo::Session& session, std::shared_ptr<LLDPDataProvider> lldp)
-    : m_log(spdlog::get("system"))
+    : m_log(spdlog::get("network"))
     , m_lldp(std::move(lldp))
 {
     utils::ScopedDatastoreSwitch sw(session, sysrepo::Datastore::Operational);

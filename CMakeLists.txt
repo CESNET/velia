@@ -236,27 +236,16 @@ add_library(velia-system STATIC
         src/system/IETFSystem.h
         src/system/Authentication.cpp
         src/system/Authentication.h
-        src/system/Rtnetlink.cpp
-        src/system/Rtnetlink.h
-        src/system/IETFInterfaces.cpp
-        src/system/IETFInterfaces.h
-        src/system/IETFInterfacesConfig.cpp
-        src/system/IETFInterfacesConfig.h
         src/system/JournalUpload.cpp
         src/system/JournalUpload.h
         src/system/LED.cpp
         src/system/LED.h
-        src/system/LLDP.cpp
-        src/system/LLDP.h
-        src/system/LLDPSysrepo.cpp
-        src/system/LLDPSysrepo.h
         )
 target_link_libraries(velia-system
     PUBLIC
         velia-utils
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
-        PkgConfig::LIBNL
         SDBusCpp::sdbus-c++
         nlohmann_json::nlohmann_json
     PRIVATE
@@ -273,6 +262,26 @@ target_link_libraries(velia-firewall
     PkgConfig::SYSREPO
     PRIVATE
     PkgConfig::LIBYANG
+    )
+
+add_library(velia-network STATIC
+        src/network/Rtnetlink.cpp
+        src/network/Rtnetlink.h
+        src/network/IETFInterfaces.cpp
+        src/network/IETFInterfaces.h
+        src/network/IETFInterfacesConfig.cpp
+        src/network/IETFInterfacesConfig.h
+        src/network/LLDP.cpp
+        src/network/LLDP.h
+        src/network/LLDPSysrepo.cpp
+        src/network/LLDPSysrepo.h
+)
+target_link_libraries(velia-network
+    PUBLIC
+        velia-utils
+        PkgConfig::SYSREPO
+        PkgConfig::LIBYANG
+        PkgConfig::LIBNL
     )
 
 
@@ -296,6 +305,7 @@ add_executable(veliad-system
 target_link_libraries(veliad-system
     PUBLIC
         velia-system
+        velia-network
         PkgConfig::DOCOPT
     )
 add_dependencies(veliad-system target-VELIA_VERSION)
@@ -419,7 +429,7 @@ if(BUILD_TESTING)
     endforeach()
 
     velia_test(NAME system_rauc LIBRARIES velia-system DbusTesting RESOURCE_LOCK dbus-rauc)
-    velia_test(NAME system_lldp LIBRARIES velia-system DbusTesting)
+    velia_test(NAME network_lldp LIBRARIES velia-network DbusTesting)
 
     velia_test(NAME hardware_thresholds LIBRARIES velia-ietf-hardware)
     velia_test(NAME hardware_eeprom LIBRARIES velia-ietf-hardware)
@@ -429,7 +439,7 @@ if(BUILD_TESTING)
     velia_test(NAME hardware_ietf-hardware LIBRARIES velia-ietf-hardware)
 
     set(fixture_sysrepo-czechlight-lldp --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)
-    velia_test(NAME sysrepo_system-lldp LIBRARIES velia-system DbusTesting FIXTURE fixture_sysrepo-czechlight-lldp)
+    velia_test(NAME sysrepo_network-lldp LIBRARIES velia-network DbusTesting FIXTURE fixture_sysrepo-czechlight-lldp)
 
     set(fixture_sysrepo-ietf-system --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang)
     velia_test(NAME sysrepo_system-ietfsystem LIBRARIES velia-system DbusTesting date::date-tz FIXTURE fixture_sysrepo-ietf-system)
@@ -448,7 +458,7 @@ if(BUILD_TESTING)
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
-    velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network)
+    velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network)
 
     set(fixture_sysrepo-utils
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang
@@ -469,7 +479,7 @@ if(BUILD_TESTING)
     else()
         set(UNSHARE_MAP_GROUP_ARG "")
     endif()
-    velia_test(NAME sysrepo_interfaces-libnl LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-network
+    velia_test(NAME sysrepo_interfaces-libnl LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network
                COMMAND ${UNSHARE_EXECUTABLE} --net --mount --map-root-user ${UNSHARE_MAP_GROUP_ARG} sh -c "set -ex $<SEMICOLON> ${MOUNT_EXECUTABLE} -t sysfs none /sys $<SEMICOLON> $<TARGET_FILE:test-sysrepo_interfaces-libnl>")
 
     set(fixture_sysrepo-ietf-hardware

@@ -1,5 +1,5 @@
 #include "trompeloeil_doctest.h"
-#include "system/LLDP.h"
+#include "network/LLDP.h"
 #include "system_vars.h"
 #include "tests/pretty_printers.h"
 #include "tests/test_log_setup.h"
@@ -10,7 +10,7 @@ TEST_CASE("Parsing with the mock")
 {
     TEST_INIT_LOGS;
 
-    std::vector<velia::system::NeighborEntry> expected;
+    std::vector<velia::network::NeighborEntry> expected;
     std::string json;
 
     SECTION("LLDP active on a single link")
@@ -85,9 +85,9 @@ TEST_CASE("Parsing with the mock")
         };
     }
 
-    auto lldp = std::make_shared<velia::system::LLDPDataProvider>(
+    auto lldp = std::make_shared<velia::network::LLDPDataProvider>(
         [&]() { return json; },
-        velia::system::LLDPDataProvider::LocalData{.chassisId = "blabla", .chassisSubtype = "local"});
+        velia::network::LLDPDataProvider::LocalData{.chassisId = "blabla", .chassisSubtype = "local"});
     REQUIRE(lldp->getNeighbors() == expected);
     REQUIRE(lldp->localProperties() == std::map<std::string, std::string>{{"chassisId", "blabla"}, {"chassisSubtype", "local"}});
 }
@@ -98,7 +98,7 @@ TEST_CASE("Real systemd")
     TEST_INIT_LOGS;
 
     auto dbusConnection = sdbus::createSystemBusConnection();
-    auto lldp = std::make_shared<velia::system::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
+    auto lldp = std::make_shared<velia::network::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
     [[maybe_unused]] auto x = lldp->getNeighbors();
 }
 #endif

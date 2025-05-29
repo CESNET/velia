@@ -5,10 +5,6 @@
 #include <sysrepo-cpp/Session.hpp>
 #include "VELIA_VERSION.h"
 #include "main.h"
-#include "network/IETFInterfaces.h"
-#include "network/IETFInterfacesConfig.h"
-#include "network/LLDP.h"
-#include "network/LLDPSysrepo.h"
 #include "system_vars.h"
 #include "system/Authentication.h"
 #include "system/Firmware.h"
@@ -32,7 +28,6 @@ Usage:
     [--main-log-level=<Level>]
     [--sysrepo-log-level=<Level>]
     [--system-log-level=<Level>]
-    [--network-log-level=<Level>]
   veliad-system (-h | --help)
   veliad-system --version
 
@@ -44,7 +39,6 @@ Options:
                                     4 -> debug, 5 -> trace)
   --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
   --system-log-level=<N>            Log level for the system stuff [default: 3]
-  --network-log-level=<N>           Log level for the network stuff [default: 3]
 )";
 
 DBUS_EVENTLOOP_INIT
@@ -67,7 +61,6 @@ int main(int argc, char* argv[])
     spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
     spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
     spdlog::get("system")->set_level(parseLogLevel("System logging", args["--system-log-level"]));
-    spdlog::get("network")->set_level(parseLogLevel("Network logging", args["--network-log-level"]));
 
     auto srConn = sysrepo::Connection{};
     auto srSess = srConn.sessionStart();
@@ -87,46 +80,12 @@ int main(int argc, char* argv[])
     auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
     dbusConnection->enterEventLoopAsync();
 
-    // implements ietf-interfaces and ietf-routing
-    const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network"), persistentNetworkDirectory("/cfg/network/");
-    std::filesystem::create_directories(runtimeNetworkDirectory);
-    std::filesystem::create_directories(persistentNetworkDirectory);
-    auto srSessStartup = srConn.sessionStart(sysrepo::Datastore::Startup);
-
-    // IMPORTANT: This list MUST be kept aligned with:
-    // - yang/czechlight-network@*.yang
-    // - CzechLight/br2-external's board/czechlight/clearfog/overlay/usr/lib/systemd/network/*.network
-    //
-    // ...otherwise Bad Things™ happen.
-    std::vector<std::string> managedLinks = {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW", "sfp3"};
-
-    auto sysrepoIETFInterfacesOperational = std::make_shared<velia::network::IETFInterfaces>(srSess);
-    auto sysrepoIETFInterfacesStartup = velia::network::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, managedLinks, [](const auto&) {});
-    auto sysrepoIETFInterfacesRunning = velia::network::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto&) {
-        auto log = spdlog::get("network");
-
-        /* In 2021, executing 'networkctl reload' was not enough. For bridge interfaces, we had to also bring the interface down and up.
-         * As of 5/2025, it seems that bare 'networkctl reload' is sufficient.
-         * Manpage of networkctl says that reload should be enough except for few cases (like changing VLANs etc.), but they said that in 2021 too.
-         * */
-        velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
-    });
-
     auto sysrepoFirmware = velia::system::Firmware(srConn, *g_dbusConnection, *dbusConnection);
 
     auto srSess2 = srConn.sessionStart();
     auto authentication = velia::system::Authentication(srSess2, REAL_ETC_PASSWD_FILE, REAL_ETC_SHADOW_FILE, AUTHORIZED_KEYS_FORMAT, velia::system::impl::changePassword);
 
     auto leds = velia::system::LED(srConn, "/sys/class/leds");
-
-    auto lldp = velia::network::LLDPSysrepo(
-        srSess,
-        std::make_shared<velia::network::LLDPDataProvider>(
-            []() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
-            velia::network::LLDPDataProvider::LocalData{
-                .chassisId = velia::utils::readFileString("/etc/machine-id"),
-                .chassisSubtype = "local"}));
-    auto srSubs = srSess.onOperGet("czechlight-lldp", lldp, "/czechlight-lldp:nbr-list");
 
     DBUS_EVENTLOOP_END
     return 0;

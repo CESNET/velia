@@ -4,10 +4,7 @@
 #include <sysrepo-cpp/Session.hpp>
 #include "VELIA_VERSION.h"
 #include "main.h"
-#include "network/IETFInterfaces.h"
-#include "network/IETFInterfacesConfig.h"
-#include "network/LLDP.h"
-#include "network/LLDPSysrepo.h"
+#include "network/Factory.h"
 #include "system_vars.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
@@ -62,41 +59,33 @@ int main(int argc, char* argv[])
     spdlog::get("network")->set_level(parseLogLevel("Network logging", args["--network-log-level"]));
 
     auto srConn = sysrepo::Connection{};
-    auto srSess = srConn.sessionStart();
-
-    // implements ietf-interfaces and ietf-routing
-    const std::filesystem::path runtimeNetworkDirectory("/run/systemd/network"), persistentNetworkDirectory("/cfg/network/");
-    std::filesystem::create_directories(runtimeNetworkDirectory);
-    std::filesystem::create_directories(persistentNetworkDirectory);
-    auto srSessStartup = srConn.sessionStart(sysrepo::Datastore::Startup);
-
-    // IMPORTANT: This list MUST be kept aligned with:
-    // - yang/czechlight-network@*.yang
-    // - CzechLight/br2-external's board/czechlight/clearfog/overlay/usr/lib/systemd/network/*.network
-    //
-    // ...otherwise Bad Things™ happen.
-    std::vector<std::string> managedLinks = {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW", "sfp3"};
-
-    auto sysrepoIETFInterfacesOperational = std::make_shared<velia::network::IETFInterfaces>(srSess);
-    auto sysrepoIETFInterfacesStartup = velia::network::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, managedLinks, [](const auto&) {});
-    auto sysrepoIETFInterfacesRunning = velia::network::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto&) {
-        auto log = spdlog::get("network");
-
-        /* In 2021, executing 'networkctl reload' was not enough. For bridge interfaces, we had to also bring the interface down and up.
-         * As of 5/2025, it seems that bare 'networkctl reload' is sufficient.
-         * Manpage of networkctl says that reload should be enough except for few cases (like changing VLANs etc.), but they said that in 2021 too.
-         * */
-        velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
-    });
-
-    auto lldp = velia::network::LLDPSysrepo(
+    auto srSess = srConn.sessionStart(sysrepo::Datastore::Running);
+    auto daemons = velia::network::create(
+        srConn.sessionStart(sysrepo::Datastore::Startup),
+        "/cfg/network/",
         srSess,
-        std::make_shared<velia::network::LLDPDataProvider>(
-            []() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
-            velia::network::LLDPDataProvider::LocalData{
-                .chassisId = velia::utils::readFileString("/etc/machine-id"),
-                .chassisSubtype = "local"}));
-    auto srSubs = srSess.onOperGet("czechlight-lldp", lldp, "/czechlight-lldp:nbr-list");
+        "/run/systemd/network",
+        // IMPORTANT: This list MUST be kept aligned with:
+        // - yang/czechlight-network@*.yang
+        // - CzechLight/br2-external's board/czechlight/clearfog/overlay/usr/lib/systemd/network/*.network
+        //
+        // ...otherwise Bad Things™ happen.
+        {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW", "sfp3"},
+        [](const auto&) {
+            auto log = spdlog::get("network");
+
+            /* In 2021, executing 'networkctl reload' was not enough. For bridge interfaces, we had to also bring the interface down and up.
+             * As of 5/2025, it seems that bare 'networkctl reload' is sufficient.
+             * Manpage of networkctl says that reload should be enough except for few cases (like changing VLANs etc.), but they said that in 2021 too.
+             * */
+            velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
+        },
+        []() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
+        velia::network::LLDPDataProvider::LocalData{
+            .chassisId = velia::utils::readFileString("/etc/machine-id"),
+            .chassisSubtype = "local"}
+    );
+    auto srSubs = srSess.onOperGet("czechlight-lldp", daemons.lldp, "/czechlight-lldp:nbr-list");
     waitUntilSignaled();
     return 0;
 }

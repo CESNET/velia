@@ -58,11 +58,10 @@ int main(int argc, char* argv[])
     spdlog::get("network")->set_level(parseLogLevel("Network logging", args["--network-log-level"]));
 
     auto srConn = sysrepo::Connection{};
-    auto srSess = srConn.sessionStart(sysrepo::Datastore::Running);
     auto daemons = velia::network::create(
         srConn.sessionStart(sysrepo::Datastore::Startup),
         "/cfg/network/",
-        srSess,
+        srConn.sessionStart(sysrepo::Datastore::Running),
         "/run/systemd/network",
         // IMPORTANT: This list MUST be kept aligned with:
         // - yang/czechlight-network@*.yang
@@ -84,8 +83,6 @@ int main(int argc, char* argv[])
             .chassisId = velia::utils::readFileString("/etc/machine-id"),
             .chassisSubtype = "local"}
     );
-
-    auto srSubs = srSess.onOperGet("czechlight-lldp", daemons.lldp, "/czechlight-lldp:nbr-list");
 
 return 0;
 }

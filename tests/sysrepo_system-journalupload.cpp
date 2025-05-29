@@ -1,5 +1,6 @@
 #include "trompeloeil_doctest.h"
 #include <filesystem>
+#include <fstream>
 #include <sysrepo-cpp/utils/exception.hpp>
 #include "system/JournalUpload.h"
 #include "test_log_setup.h"

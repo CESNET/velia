@@ -18,7 +18,7 @@
 #include <thread>
 #include "utils/log-fwd.h"
 
-namespace velia::system {
+namespace velia::network {
 
 namespace impl {
 class nlCacheMngrWatcher;

@@ -1,7 +1,7 @@
 #include "trompeloeil_doctest.h"
 #include "tests/configure.cmake.h"
-#include "system/LLDP.h"
-#include "system/LLDPSysrepo.h"
+#include "network/LLDP.h"
+#include "network/LLDPSysrepo.h"
 #include "tests/pretty_printers.h"
 #include "tests/sysrepo-helpers/common.h"
 #include "tests/test_log_setup.h"
@@ -84,11 +84,11 @@ TEST_CASE("Sysrepo opsdata callback")
         };
     }
 
-    auto lldp = velia::system::LLDPSysrepo(
+    auto lldp = velia::network::LLDPSysrepo(
         srSess,
-        std::make_shared<velia::system::LLDPDataProvider>(
+        std::make_shared<velia::network::LLDPDataProvider>(
             [&]() { return json; },
-            velia::system::LLDPDataProvider::LocalData{
+            velia::network::LLDPDataProvider::LocalData{
                 .chassisId = "abcdef0123456deadc0ffeebeefcafe1",
                 .chassisSubtype = "local",
             }));

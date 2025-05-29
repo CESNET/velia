@@ -5,16 +5,16 @@
 #include <sysrepo-cpp/Session.hpp>
 #include "VELIA_VERSION.h"
 #include "main.h"
+#include "network/IETFInterfaces.h"
+#include "network/IETFInterfacesConfig.h"
+#include "network/LLDP.h"
+#include "network/LLDPSysrepo.h"
 #include "system_vars.h"
 #include "system/Authentication.h"
 #include "system/Firmware.h"
-#include "system/IETFInterfaces.h"
-#include "system/IETFInterfacesConfig.h"
 #include "system/IETFSystem.h"
 #include "system/JournalUpload.h"
 #include "system/LED.h"
-#include "system/LLDP.h"
-#include "system/LLDPSysrepo.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
 #include "utils/io.h"
@@ -32,6 +32,7 @@ Usage:
     [--main-log-level=<Level>]
     [--sysrepo-log-level=<Level>]
     [--system-log-level=<Level>]
+    [--network-log-level=<Level>]
   veliad-system (-h | --help)
   veliad-system --version
 
@@ -43,6 +44,7 @@ Options:
                                     4 -> debug, 5 -> trace)
   --sysrepo-log-level=<N>           Log level for the sysrepo library [default: 3]
   --system-log-level=<N>            Log level for the system stuff [default: 3]
+  --network-log-level=<N>           Log level for the network stuff [default: 3]
 )";
 
 DBUS_EVENTLOOP_INIT
@@ -65,6 +67,7 @@ int main(int argc, char* argv[])
     spdlog::get("main")->set_level(parseLogLevel("other messages", args["--main-log-level"]));
     spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
     spdlog::get("system")->set_level(parseLogLevel("System logging", args["--system-log-level"]));
+    spdlog::get("network")->set_level(parseLogLevel("Network logging", args["--network-log-level"]));
 
     auto srConn = sysrepo::Connection{};
     auto srSess = srConn.sessionStart();
@@ -97,10 +100,10 @@ int main(int argc, char* argv[])
     // ...otherwise Bad Things™ happen.
     std::vector<std::string> managedLinks = {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW", "sfp3"};
 
-    auto sysrepoIETFInterfacesOperational = std::make_shared<velia::system::IETFInterfaces>(srSess);
-    auto sysrepoIETFInterfacesStartup = velia::system::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, managedLinks, [](const auto&) {});
-    auto sysrepoIETFInterfacesRunning = velia::system::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto&) {
-        auto log = spdlog::get("system");
+    auto sysrepoIETFInterfacesOperational = std::make_shared<velia::network::IETFInterfaces>(srSess);
+    auto sysrepoIETFInterfacesStartup = velia::network::IETFInterfacesConfig(srSessStartup, persistentNetworkDirectory, managedLinks, [](const auto&) {});
+    auto sysrepoIETFInterfacesRunning = velia::network::IETFInterfacesConfig(srSess, runtimeNetworkDirectory, managedLinks, [](const auto&) {
+        auto log = spdlog::get("network");
 
         /* In 2021, executing 'networkctl reload' was not enough. For bridge interfaces, we had to also bring the interface down and up.
          * As of 5/2025, it seems that bare 'networkctl reload' is sufficient.
@@ -116,11 +119,11 @@ int main(int argc, char* argv[])
 
     auto leds = velia::system::LED(srConn, "/sys/class/leds");
 
-    auto lldp = velia::system::LLDPSysrepo(
+    auto lldp = velia::network::LLDPSysrepo(
         srSess,
-        std::make_shared<velia::system::LLDPDataProvider>(
-            []() { return velia::utils::execAndWait(spdlog::get("system"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
-            velia::system::LLDPDataProvider::LocalData{
+        std::make_shared<velia::network::LLDPDataProvider>(
+            []() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
+            velia::network::LLDPDataProvider::LocalData{
                 .chassisId = velia::utils::readFileString("/etc/machine-id"),
                 .chassisSubtype = "local"}));
     auto srSubs = srSess.onOperGet("czechlight-lldp", lldp, "/czechlight-lldp:nbr-list");

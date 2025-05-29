@@ -59,10 +59,10 @@ bool protocolEnabled(const libyang::DataNode& linkEntry, const std::string& prot
 }
 }
 
-namespace velia::system {
+namespace velia::network {
 
 IETFInterfacesConfig::IETFInterfacesConfig(::sysrepo::Session srSess, std::filesystem::path configDirectory, std::vector<std::string> managedLinks, reload_cb_t reloadCallback)
-    : m_log(spdlog::get("system"))
+    : m_log(spdlog::get("network"))
     , m_reloadCb(std::move(reloadCallback))
     , m_configDirectory(std::move(configDirectory))
     , m_managedLinks(std::move(managedLinks))
@@ -113,7 +113,7 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
                     auto ipAddress = utils::asString(utils::getUniqueSubtree(ipEntry, "ip").value());
                     auto prefixLen = utils::asString(utils::getUniqueSubtree(ipEntry, "prefix-length").value());
 
-                    spdlog::get("system")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
+                    spdlog::get("network")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
                     configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
                 }
             }

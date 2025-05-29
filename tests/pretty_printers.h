@@ -17,7 +17,7 @@
 #include "ietf-hardware/sysfs/OnieEEPROM.h"
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/thresholds.h"
-#include "system/IETFInterfacesConfig.h"
+#include "network/IETFInterfacesConfig.h"
 #include "tests/sysrepo-helpers/common.h"
 
 namespace doctest {
@@ -192,8 +192,8 @@ struct printer<ValueChanges> {
 };
 
 template <>
-struct printer<velia::system::IETFInterfacesConfig::ChangedUnits> {
-    static void print(std::ostream& os, const velia::system::IETFInterfacesConfig::ChangedUnits& x)
+struct printer<velia::network::IETFInterfacesConfig::ChangedUnits> {
+    static void print(std::ostream& os, const velia::network::IETFInterfacesConfig::ChangedUnits& x)
     {
         os << "ChangedUnits{.deleted = {";
         std::copy(std::begin(x.deleted), std::end(x.deleted), std::experimental::make_ostream_joiner(os, ", "));

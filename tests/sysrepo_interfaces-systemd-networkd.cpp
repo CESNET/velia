@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <sysrepo-cpp/utils/exception.hpp>
 #include "pretty_printers.h"
-#include "system/IETFInterfacesConfig.h"
+#include "network/IETFInterfacesConfig.h"
 #include "test_log_setup.h"
 #include "tests/configure.cmake.h"
 #include "tests/mock/system.h"
@@ -17,7 +17,7 @@
 #include "utils/io.h"
 
 using namespace std::string_literals;
-using ChangedUnits = velia::system::IETFInterfacesConfig::ChangedUnits;
+using ChangedUnits = velia::network::IETFInterfacesConfig::ChangedUnits;
 
 const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
 #define NETWORK_FILE(LINK_NAME) fakeConfigDir / LINK_NAME ".network"
@@ -47,7 +47,7 @@ TEST_CASE("Config data in ietf-interfaces")
     std::filesystem::create_directories(fakeConfigDir);
 
     REQUIRE_CALL(fake, cb(ChangedUnits{})).IN_SEQUENCE(seq1);
-    auto network = std::make_shared<velia::system::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const ChangedUnits& update) { fake.cb(update); });
+    auto network = std::make_shared<velia::network::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1"}, [&fake](const ChangedUnits& update) { fake.cb(update); });
 
     SECTION("Link changes disabled")
     {

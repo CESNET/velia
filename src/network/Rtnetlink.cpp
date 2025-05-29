@@ -33,16 +33,16 @@ void nlCacheMngrCallbackWrapper(struct nl_cache*, struct nl_object* obj, int act
     auto objType = nl_object_get_type(obj);
 
     if (objType == "route/link"s) {
-        auto* cb = static_cast<velia::system::Rtnetlink::LinkCB*>(data);
+        auto* cb = static_cast<velia::network::Rtnetlink::LinkCB*>(data);
         (*cb)(reinterpret_cast<rtnl_link*>(obj), action);
     } else if (objType == "route/addr"s) {
-        auto* cb = static_cast<velia::system::Rtnetlink::AddrCB*>(data);
+        auto* cb = static_cast<velia::network::Rtnetlink::AddrCB*>(data);
         (*cb)(reinterpret_cast<rtnl_addr*>(obj), action);
     } else if (objType == "route/route"s) {
-        auto* cb = static_cast<velia::system::Rtnetlink::RouteCB*>(data);
+        auto* cb = static_cast<velia::network::Rtnetlink::RouteCB*>(data);
         (*cb)(reinterpret_cast<rtnl_route*>(obj), action);
     } else {
-        throw velia::system::RtnetlinkException("Unknown netlink object type in cache: '"s + objType + "'");
+        throw velia::network::RtnetlinkException("Unknown netlink object type in cache: '"s + objType + "'");
     }
 }
 
@@ -61,7 +61,7 @@ T* nlObjectClone(T* obj)
 
 }
 
-namespace velia::system {
+namespace velia::network {
 
 namespace impl {
 
@@ -71,24 +71,24 @@ class nlCacheMngrWatcher {
     std::thread m_thr;
     static constexpr auto FD_POLL_INTERVAL = 500ms;
 
-    void run(velia::system::Rtnetlink::nlCacheManager manager);
+    void run(velia::network::Rtnetlink::nlCacheManager manager);
 
 public:
-    nlCacheMngrWatcher(velia::system::Rtnetlink::nlCacheManager manager);
+    nlCacheMngrWatcher(velia::network::Rtnetlink::nlCacheManager manager);
     ~nlCacheMngrWatcher();
 };
 
-nlCacheMngrWatcher::nlCacheMngrWatcher(velia::system::Rtnetlink::nlCacheManager manager)
+nlCacheMngrWatcher::nlCacheMngrWatcher(velia::network::Rtnetlink::nlCacheManager manager)
     : m_terminate(false)
     , m_thr(&nlCacheMngrWatcher::run, this, manager)
 {
 }
 
-void nlCacheMngrWatcher::run(velia::system::Rtnetlink::nlCacheManager manager)
+void nlCacheMngrWatcher::run(velia::network::Rtnetlink::nlCacheManager manager)
 {
     while (!m_terminate) {
         if (auto err = nl_cache_mngr_poll(manager.get(), std::chrono::duration_cast<std::chrono::milliseconds>(FD_POLL_INTERVAL).count()); err < 0) {
-            throw velia::system::RtnetlinkException("nl_cache_mngr_poll", err);
+            throw velia::network::RtnetlinkException("nl_cache_mngr_poll", err);
         }
     }
 }
@@ -112,7 +112,7 @@ RtnetlinkException::RtnetlinkException(const std::string& funcName, int error)
 }
 
 Rtnetlink::Rtnetlink(LinkCB cbLink, AddrCB cbAddr, RouteCB cbRoute)
-    : m_log(spdlog::get("system"))
+    : m_log(spdlog::get("network"))
     , m_nlSocket(nl_socket_alloc(), nl_socket_free)
     , m_cbLink(std::move(cbLink))
     , m_cbAddr(std::move(cbAddr))

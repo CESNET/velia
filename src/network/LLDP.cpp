@@ -12,7 +12,7 @@
 #include "system_vars.h"
 #include "utils/log.h"
 
-namespace velia::system {
+namespace velia::network {
 
 namespace {
 
@@ -56,7 +56,7 @@ std::string toBitsYANG(const int caps)
 }
 
 LLDPDataProvider::LLDPDataProvider(std::function<std::string()> dataCallback, const LLDPDataProvider::LocalData& localData)
-    : m_log(spdlog::get("system"))
+    : m_log(spdlog::get("network"))
     , m_dataCallback(std::move(dataCallback))
     , m_localData(localData)
 {

@@ -6,6 +6,7 @@
  */
 
 #include <filesystem>
+#include <fstream>
 #include <regex>
 #include "JournalUpload.h"
 #include "utils/io.h"

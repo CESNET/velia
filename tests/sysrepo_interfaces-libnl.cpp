@@ -13,11 +13,13 @@
 #include <sys/wait.h>
 #include <thread>
 #include "pretty_printers.h"
-#include "network/IETFInterfaces.h"
+#include "network/Factory.h"
 #include "test_log_setup.h"
 #include "test_vars.h"
+#include "tests/configure.cmake.h"
 #include "tests/sysrepo-helpers/common.h"
 #include "utils/exec.h"
+#include "utils/io.h"
 
 using namespace std::chrono_literals;
 using namespace std::string_literals;
@@ -259,4 +261,53 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
     }
 
     iproute2_exec_and_wait(WAIT, "link", "del", IFACE, "type", "dummy"); // Executed later again by ctest fixture cleanup just for sure. It remains here because of doctest sections: The interface needs to be setup again.
+}
+
+TEST_CASE("netlink with systemd-networkd")
+{
+    TEST_SYSREPO_INIT_LOGS;
+    TEST_SYSREPO_INIT;
+    TEST_SYSREPO_INIT_CLIENT;
+
+    iproute2_exec_and_wait(WAIT, "link", "add", "br0", "address", LINK_MAC, "type", "bridge");
+    iproute2_exec_and_wait(WAIT, "addr", "add", "192.0.2.1/24", "dev", "br0"); // from TEST-NET-1 (RFC 5737)
+    iproute2_exec_and_wait(WAIT, "addr", "add", "::ffff:192.0.2.1", "dev", "br0");
+    iproute2_exec_and_wait(WAIT, "link", "add", "eth0", "address", "02:02:02:02:02:03", "type", "veth");
+    iproute2_exec_and_wait(WAIT, "link", "set", "eth0", "master", "br0");
+
+    std::vector<std::string> managedLinks{"eth1", "eth0", "br0"};
+    const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network-libnl-sd-networkd/"s;
+    const auto startupDir = fakeConfigDir / "startup";
+    const auto runningDir = fakeConfigDir / "running";
+    std::filesystem::create_directories(startupDir);
+    std::filesystem::create_directories(runningDir);
+    for (const auto& link : managedLinks) {
+        velia::utils::writeFile(runningDir / std::format("{}.network", link), "just some dummy content so that we can nuke something");
+    }
+
+    int reloaded = 0;
+
+    auto fac = velia::network::create(
+        srConn.sessionStart(sysrepo::Datastore::Startup),
+        fakeConfigDir / "startup",
+        srSess,
+        fakeConfigDir / "running",
+        managedLinks,
+        [&reloaded](const auto&) {
+            // FIXME: uncomment these to see a crash due to parallel access to a single sysrepo session
+            /* spdlog::info("running callback: starting to modify devices..."); */
+            /* iproute2_exec_and_wait(WAIT, "link", "add", "eth1", "address", "02:02:02:02:02:04", "type", "veth"); */
+            /* iproute2_exec_and_wait(WAIT, "link", "set", "eth1", "master", "br0"); */
+            std::this_thread::sleep_for(1s);
+            ++reloaded;
+        },
+        []() { return std::string{}; },
+        velia::network::LLDPDataProvider::LocalData{
+            .chassisId = "xxx",
+            .chassisSubtype = "local",
+        });
+
+    std::this_thread::sleep_for(5s);
+    REQUIRE(reloaded == 1);
+    // we're in a network namespace, and there are no doctest SECTIONs, so we do not have to clean up
 }

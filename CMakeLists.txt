@@ -467,7 +467,8 @@ if(BUILD_TESTING)
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
+            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang
+            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)
     velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network)
 
     set(fixture_sysrepo-utils

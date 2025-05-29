@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
 
     auto srConn = sysrepo::Connection{};
     auto daemons = velia::network::create(
+        srConn.sessionStart(sysrepo::Datastore::Operational),
         srConn.sessionStart(sysrepo::Datastore::Startup),
         "/cfg/network/",
         srConn.sessionStart(sysrepo::Datastore::Running),

@@ -14,6 +14,7 @@ struct Services {
 };
 
 Services create(
+    sysrepo::Session netlinkSess,
     sysrepo::Session startupSess,
     const std::filesystem::path& persistentNetworkDirectory,
     sysrepo::Session runningSess,
@@ -26,7 +27,7 @@ Services create(
     std::filesystem::create_directories(runtimeNetworkDirectory);
     std::filesystem::create_directories(persistentNetworkDirectory);
     return {
-        .opsData = velia::network::IETFInterfaces{runningSess},
+        .opsData = velia::network::IETFInterfaces{netlinkSess},
         .startupConfig = IETFInterfacesConfig{startupSess, persistentNetworkDirectory, managedLinks, [](const auto&) {}},
         .runtimeConfig = IETFInterfacesConfig{runningSess, runtimeNetworkDirectory, managedLinks, std::move(runningNetworkReloadCB)},
         .lldp = LLDPSysrepo{runningSess,

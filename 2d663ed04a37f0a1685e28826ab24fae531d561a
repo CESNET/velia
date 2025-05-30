@@ -47,6 +47,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "542a9390_0101e2d3",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-05-30T15:41:42Z",
+      "side": 1,
+      "message": "https://gerrit.cesnet.cz/c/CzechLight/velia/+/8794",
+      "parentUuid": "1c31a9cd_c02eb9dd",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 11
+      },
+      "revId": "2d663ed04a37f0a1685e28826ab24fae531d561a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "898b55fd_835783f4",
@@ -60,6 +84,24 @@
       "writtenOn": "2025-05-27T09:05:33Z",
       "side": 1,
       "message": "this should be an error, not a warning",
+      "revId": "2d663ed04a37f0a1685e28826ab24fae531d561a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "984c0497_a9d21e12",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-05-30T15:41:42Z",
+      "side": 1,
+      "message": "Not relevant after https://gerrit.cesnet.cz/c/CzechLight/velia/+/8794",
+      "parentUuid": "898b55fd_835783f4",
       "revId": "2d663ed04a37f0a1685e28826ab24fae531d561a",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

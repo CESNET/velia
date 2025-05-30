@@ -16,6 +16,24 @@
       "message": "makes sense, I thought about this when refactoring the sysrepo few days ago, but I did not want to complicate stuff during difficult refactor/bugfixes times",
       "revId": "a45f2dd288f729759233bfe76752ea9df554178e",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f0dd186_884a5cd7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-30T08:53:35Z",
+      "side": 1,
+      "message": "yup, thanks!",
+      "parentUuid": "999d466f_33ab506a",
+      "revId": "a45f2dd288f729759233bfe76752ea9df554178e",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

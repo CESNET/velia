@@ -22,6 +22,30 @@
       },
       "revId": "2dfab5d7ad3c06df5e5171d4085b351070385ef7",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b64344ba_43b40b0d",
+        "filename": "src/main-network.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-30T08:51:47Z",
+      "side": 1,
+      "message": "Good idea. In other tests where I was thinking along similar lines, it turned out that the idea was not feasible because the test required some direct access to the session. I\u0027m sorry I don\u0027t remember the exact details (and it wasn\u0027t about expectations IIRC, so maybe it was some access to uncommitted changes?).\n\nBut here in this case it should work, the tests never access these session directly. I\u0027ll do a follow-up patch later.",
+      "parentUuid": "12b3fd5f_79f1514d",
+      "range": {
+        "startLine": 63,
+        "startChar": 8,
+        "endLine": 63,
+        "endChar": 61
+      },
+      "revId": "2dfab5d7ad3c06df5e5171d4085b351070385ef7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

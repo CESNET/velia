@@ -288,10 +288,8 @@ TEST_CASE("netlink with systemd-networkd")
     int reloaded = 0;
 
     auto fac = velia::network::create(
-        srConn.sessionStart(sysrepo::Datastore::Operational),
-        srConn.sessionStart(sysrepo::Datastore::Startup),
+        srConn,
         fakeConfigDir / "startup",
-        srSess,
         fakeConfigDir / "running",
         managedLinks,
         [&reloaded](const auto&) {

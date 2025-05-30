@@ -58,12 +58,9 @@ int main(int argc, char* argv[])
     spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
     spdlog::get("network")->set_level(parseLogLevel("Network logging", args["--network-log-level"]));
 
-    auto srConn = sysrepo::Connection{};
     auto daemons = velia::network::create(
-        srConn.sessionStart(sysrepo::Datastore::Operational),
-        srConn.sessionStart(sysrepo::Datastore::Startup),
+        sysrepo::Connection{},
         "/cfg/network/",
-        srConn.sessionStart(sysrepo::Datastore::Running),
         "/run/systemd/network",
         // IMPORTANT: This list MUST be kept aligned with:
         // - yang/czechlight-network@*.yang

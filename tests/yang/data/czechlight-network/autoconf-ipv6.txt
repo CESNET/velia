@@ -1,0 +1,2 @@
+libyang err : There must always be at least one IPv6 address or the autoconfiguration must be turned on unless the protocol is disabled. (/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6)
+libyang err : There must always be at least one IPv6 address or the autoconfiguration must be turned on unless the protocol is disabled. (/ietf-interfaces:interfaces/interface[name='oscW']/ietf-ip:ipv6)

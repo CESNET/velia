@@ -1,0 +1,10 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd"
+      }
+    ]
+  }
+}

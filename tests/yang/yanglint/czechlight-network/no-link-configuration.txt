@@ -1,0 +1,1 @@
+libyang err : Enabled interface must always have at least one protocol active or it must be connected in the bridge. (/ietf-interfaces:interfaces/interface[name='eth0'])

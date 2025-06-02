@@ -1,0 +1,8 @@
+libyang err : The if:type of a 'br*' interface must be set to ianaift:bridge (/ietf-interfaces:interfaces/interface[name='br0']/type)
+libyang err : The if:type of a 'eth*' interface must be set to ianaift:ethernetCsmacd (/ietf-interfaces:interfaces/interface[name='eth0']/type)
+libyang err : The if:type of a 'eth*' interface must be set to ianaift:ethernetCsmacd (/ietf-interfaces:interfaces/interface[name='eth1']/type)
+libyang err : The if:type of a 'eth*' interface must be set to ianaift:ethernetCsmacd (/ietf-interfaces:interfaces/interface[name='eth2']/type)
+libyang err : The if:type of a 'osc*' interface must be set to ianaift:ethernetCsmacd (/ietf-interfaces:interfaces/interface[name='osc']/type)
+libyang err : The if:type of a 'osc*' interface must be set to ianaift:ethernetCsmacd (/ietf-interfaces:interfaces/interface[name='oscE']/type)
+libyang err : The if:type of a 'osc*' interface must be set to ianaift:ethernetCsmacd (/ietf-interfaces:interfaces/interface[name='oscW']/type)
+libyang err : The if:type of a 'sfp*' interface must be set to ianaift:ethernetCsmacd (/ietf-interfaces:interfaces/interface[name='sfp3']/type)

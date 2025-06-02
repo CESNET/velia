@@ -1,0 +1,17 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "br0",
+        "type": "iana-if-type:bridge",
+        "ietf-ip:ipv6": {},
+      },
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": false,
+        "czechlight-network:bridge": "br0"
+      }
+    ]
+  }
+}

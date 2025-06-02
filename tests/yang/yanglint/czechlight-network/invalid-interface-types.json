@@ -1,0 +1,62 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "br0",
+        "type": "iana-if-type:softwareLoopback",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "eth0",
+        "type": "iana-if-type:softwareLoopback",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "eth1",
+        "type": "iana-if-type:softwareLoopback",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "eth2",
+        "type": "iana-if-type:softwareLoopback",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "osc",
+        "type": "iana-if-type:softwareLoopback",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "oscW",
+        "type": "iana-if-type:softwareLoopback",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "oscE",
+        "type": "iana-if-type:softwareLoopback",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "sfp3",
+        "type": "iana-if-type:softwareLoopback",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      }
+    ]
+  }
+}

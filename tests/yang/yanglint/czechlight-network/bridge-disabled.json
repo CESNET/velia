@@ -1,0 +1,11 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "br0",
+        "type": "iana-if-type:bridge",
+        "enabled": false
+      }
+    ]
+  }
+}

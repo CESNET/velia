@@ -430,6 +430,32 @@ if(BUILD_TESTING)
         target_link_libraries(test-${TEST_NAME} DoctestIntegration SysrepoTesting)
     endfunction()
 
+    function(yangdata_test)
+        cmake_parse_arguments(TEST "" "NAME;DATA;EXPECTED_ERRORS" "SCHEMA" ${ARGN})
+
+        set(COMMAND_ARGS ${TEST_SCHEMA} ${TEST_DATA})
+        if (TEST_EXPECTED_ERRORS)
+            list(APPEND COMMAND_ARGS --expected-errors ${TEST_EXPECTED_ERRORS})
+        endif()
+
+        add_test(NAME "yang-data:${TEST_NAME}" COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/yanglint_test.sh ${COMMAND_ARGS})
+    endfunction()
+
+    function(collect_yangdata_tests)
+        cmake_parse_arguments(TEST "" "DIRECTORY" "SCHEMA" ${ARGN})
+
+        file(GLOB JSON_FILES "${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/yanglint/${TEST_DIRECTORY}/*.json")
+        foreach(JSON_FILE ${JSON_FILES})
+            string(REPLACE ".json" ".txt" EXPECTED_FILE ${JSON_FILE})
+            get_filename_component(FILENAME ${JSON_FILE} NAME)
+            if(EXISTS ${EXPECTED_FILE})
+                yangdata_test(NAME "${TEST_DIRECTORY}/${FILENAME}" SCHEMA ${TEST_SCHEMA} DATA ${JSON_FILE} EXPECTED_ERRORS ${EXPECTED_FILE})
+            else()
+                yangdata_test(NAME "${TEST_DIRECTORY}/${FILENAME}" SCHEMA ${TEST_SCHEMA} DATA ${JSON_FILE})
+            endif()
+        endforeach()
+    endfunction()
+
     find_program(YANGLINT_PATH yanglint)
     if (NOT YANGLINT_PATH)
         message(FATAL_ERROR "Cannot find libyang's yanglint")
@@ -470,6 +496,15 @@ if(BUILD_TESTING)
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)
     velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network)
+
+    collect_yangdata_tests(
+        DIRECTORY czechlight-network
+        SCHEMA
+          ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
+          ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
+          ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
+          ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang
+    )
 
     set(fixture_sysrepo-utils
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang

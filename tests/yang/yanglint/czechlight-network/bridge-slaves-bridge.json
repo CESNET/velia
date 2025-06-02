@@ -1,0 +1,12 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "description": "Cannot enslave a bridge to another bridge",
+        "name": "br0",
+        "type": "iana-if-type:bridge",
+        "czechlight-network:bridge": "br0"
+      }
+    ]
+  }
+}

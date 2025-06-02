@@ -1,0 +1,1 @@
+libyang err : All enabled bridges must have at least one enabled enslaved interface (/ietf-interfaces:interfaces/interface[name='br0'])

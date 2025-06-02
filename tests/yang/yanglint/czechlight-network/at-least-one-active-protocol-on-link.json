@@ -1,0 +1,76 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "br0",
+        "type": "iana-if-type:bridge",
+        "description": "Active IPv4, OK",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd",
+        "description": "Active IPv6, OK",
+        "ietf-ip:ipv6": {
+           "autoconf": {
+             "create-global-addresses": true,
+           }
+        }
+      },
+      {
+        "name": "eth1",
+        "type": "iana-if-type:ethernetCsmacd",
+        "description": "In bridge, OK",
+        "czechlight-network:bridge": "br0",
+      },
+      {
+        "name": "eth2",
+        "type": "iana-if-type:ethernetCsmacd",
+        "description": "No protocol and not in bridge, FAIL",
+        "ietf-ip:ipv4": {
+            "enabled": false
+        },
+        "ietf-ip:ipv6": {
+            "enabled": false
+        },
+      },
+      {
+        "name": "osc",
+        "type": "iana-if-type:ethernetCsmacd",
+        "description": "No protocol and not in bridge, FAIL",
+      },
+      {
+        "name": "oscW",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": false,
+        "description": "No protocol and not in bridge but disabled, OK",
+      },
+      {
+        "name": "oscE",
+        "type": "iana-if-type:ethernetCsmacd",
+        "description": "Both protocols enabled, IPv6 autoconf is default true, OK",
+        "ietf-ip:ipv4": {
+            "enabled": true
+        },
+        "ietf-ip:ipv6": {
+            "enabled": true
+        },
+      },
+      {
+        "name": "sfp3",
+        "type": "iana-if-type:ethernetCsmacd",
+        "description": "IPv4 enabled (no DHCP), IPv6 enabled but autoconf turned off, FAIL",
+        "ietf-ip:ipv4": {
+            "enabled": true
+        },
+        "ietf-ip:ipv6": {
+           "autoconf": {
+             "create-global-addresses": false
+           }
+        },
+      }
+    ]
+  }
+}

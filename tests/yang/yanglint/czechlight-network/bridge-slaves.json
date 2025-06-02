@@ -1,0 +1,59 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "br0",
+        "type": "iana-if-type:bridge",
+        "ietf-ip:ipv6": {},
+      },
+      {
+        "description": "Enslaved interface can't configure IP protocols",
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0",
+        "ietf-ip:ipv6": {},
+      },
+      {
+        "description": "Enslaved interface can't configure IP protocols",
+        "name": "eth1",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0",
+        "ietf-ip:ipv4": {},
+      },
+      {
+        "description": "Enslaved interface can't configure IP protocols",
+        "name": "eth2",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0",
+        "ietf-ip:ipv4": {},
+        "ietf-ip:ipv6": {}
+      },
+      {
+        "description": "Bridge master must be bridge type",
+        "name": "osc",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "eth0"
+      },
+      {
+        "name": "oscW",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0"
+      },
+      {
+        "description": "Can be a slave when addresses present but protocol is disabled",
+        "name": "oscE",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br0",
+        "ietf-ip:ipv4": {
+          "enabled": false,
+          "address": [
+            {
+              "ip": "192.0.2.1",
+              "prefix-length": 24
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

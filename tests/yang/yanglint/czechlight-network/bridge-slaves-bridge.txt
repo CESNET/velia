@@ -1,0 +1,1 @@
+libyang err : Only ethernet interfaces can be enslaved to a bridge. (/ietf-interfaces:interfaces/interface[name='br0']/czechlight-network:bridge)

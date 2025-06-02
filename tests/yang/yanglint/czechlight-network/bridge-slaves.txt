@@ -1,0 +1,4 @@
+libyang err : IP protocols must be disabled for enslaved link. (/ietf-interfaces:interfaces/interface[name='eth0']/czechlight-network:bridge)
+libyang err : IP protocols must be disabled for enslaved link. (/ietf-interfaces:interfaces/interface[name='eth1']/czechlight-network:bridge)
+libyang err : IP protocols must be disabled for enslaved link. (/ietf-interfaces:interfaces/interface[name='eth2']/czechlight-network:bridge)
+libyang err : An interface can be only enslaved to a bridge (/ietf-interfaces:interfaces/interface[name='osc']/czechlight-network:bridge)

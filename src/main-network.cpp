@@ -5,6 +5,7 @@
 #include "VELIA_VERSION.h"
 #include "main.h"
 #include "network/Factory.h"
+#include "network/NetworkctlUtils.h"
 #include "system_vars.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
@@ -62,12 +63,17 @@ int main(int argc, char* argv[])
         sysrepo::Connection{},
         "/cfg/network/",
         "/run/systemd/network",
-        // IMPORTANT: This list MUST be kept aligned with:
-        // - yang/czechlight-network@*.yang
-        // - CzechLight/br2-external's board/czechlight/clearfog/overlay/usr/lib/systemd/network/*.network
+        // IMPORTANT: veliad-network will only configure those interfaces which are "managed by systemd-networkd"
+        // at the time this code starts up. In practice, this means that this code does not support dynamic hotplug
+        // of interfaces, and that there MUST be exactly one `foo.network` for each of the managed interfaces, and
+        // that it's base name matches the name of the interface exactly.
         //
-        // ...otherwise Bad Things™ happen.
-        {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW", "sfp3"},
+        // On CzechLight devices, this is taken care of by CzechLight/br2-external's "factory defaults" in
+        // board/czechlight/clearfog/overlay/usr/lib/systemd/network/*.network, and by CzechLight/br2-external's
+        // package/czechlight-cfg-fs/cfg-restore-systemd-networkd.service which copies stuff from /usr (with
+        // factory-defaults), and later from /cfg (where we pre-generate them from the startup DS) into /run
+        // (where we store stuff from the running DS).
+        velia::network::systemdNetworkdManagedLinks(velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"list", "--json=short"}, "")),
         [](const auto&) {
             auto log = spdlog::get("network");
 

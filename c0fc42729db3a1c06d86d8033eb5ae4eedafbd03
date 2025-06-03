@@ -1,0 +1,181 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "397f4a15_8f720012",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-03T07:10:13Z",
+      "side": 1,
+      "message": "I\u0027m looking at the diffstat, and even when I skip the infrastructure, the net result is still +300 LoC. That\u0027s not necessarily a problem, and I think you did a lot of work to reduce the noise *a lot*. In particular, I love the way how interface descriptions are used for explaining \"what\u0027s wrong with this interface\", that\u0027s an excellent idea.\n\nI *think* that some tests, like the IPv4/IPv6 autoconf, are split only because you run into the limit of the number of allowed interface names (right?). If so, then maybe these could be squashed together if the rules for interface names are relaxed (or moved to another, HW-specific model). Is that something which sounds reasonable to you? We can do that after this one is merged for sure, I\u0027m just brainstorming when reading a rather big diff.",
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "905dd85b_f6249887",
+        "filename": "tests/yang/yanglint/czechlight-network/autoconf-ipv4.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-03T07:10:13Z",
+      "side": 1,
+      "message": "I really, really like this use of descriptions, good job!",
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "186157b6_92497550",
+        "filename": "tests/yang/yanglint/czechlight-network/autoconf-ipv4.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-03T07:10:13Z",
+      "side": 1,
+      "message": "Hmm, this might be a bug in our validation rules. Is there some harm in allowing a configuration like this (and also its equivalent for IPv6)? If not, let\u0027s implement this in a follow-up commit.\n\n(That future rule for \"at least one interface must be enabled and properly configured\" will need to account for this, too.)",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 8
+      },
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fe6af2e_1e62553c",
+        "filename": "tests/yang/yanglint/czechlight-network/autoconf-ipv6.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-03T07:10:13Z",
+      "side": 1,
+      "message": "it\u0027s really \"autoconfiguration\", not necessarily \"DHCP\" (in all places in this file, please)",
+      "range": {
+        "startLine": 5,
+        "startChar": 36,
+        "endLine": 5,
+        "endChar": 40
+      },
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa632214_8550ff9c",
+        "filename": "tests/yang/yanglint/czechlight-network/bridge-disabled.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-03T07:10:13Z",
+      "side": 1,
+      "message": "please add a description which explains what this is testing",
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3078864a_f262cbaa",
+        "filename": "tests/yang/yanglint/czechlight-network/bridge-no-slaves.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-03T07:10:13Z",
+      "side": 1,
+      "message": "`bridge-no-enabled-slaves`?",
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f25c7cf5_7b7aa8c9",
+        "filename": "tests/yang/yanglint/czechlight-network/invalid-interface-types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-03T07:10:13Z",
+      "side": 1,
+      "message": "Is there some particular reason why you prefer testing all these allowed interface names explicitly? The YANG model has a re-pattern matcher, so I think that testing, say, `eth0`, `osc` and `oscW` should be sufficient. Also, I think it is worth the effort to try assigning them some different if-types rather than just loopback, IMHO.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 8
+      },
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb073471_efcbd4ac",
+        "filename": "tests/yang/yanglint/czechlight-network/no-link-configuration.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-03T07:10:13Z",
+      "side": 1,
+      "message": "How is this different from `tests/yang/yanglint/czechlight-network/at-least-one-active-protocol-on-link.txt`?",
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a12ff7b_3f021a5e",
+        "filename": "tests/yanglint_test.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-03T07:10:13Z",
+      "side": 1,
+      "message": "debugging leftovers?",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

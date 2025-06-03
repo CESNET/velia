@@ -135,16 +135,16 @@ module czechlight-network {
 
     deviation /if:interfaces/if:interface/ip:ipv4 {
         deviate add {
-            must 'ip:enabled = "false" or count(ip:address) > 0 or cla-network:dhcp-client = "true"' {
-                error-message "There must always be at least one IPv4 address or the autoconfiguration must be turned on unless the protocol is disabled.";
+            must 'ip:enabled = "false" or ../if:enabled = "false" or count(ip:address) > 0 or cla-network:dhcp-client = "true"' {
+                error-message "There must always be at least one IPv4 address or the autoconfiguration must be turned on unless the interface or protocol is disabled.";
             }
         }
     }
 
     deviation /if:interfaces/if:interface/ip:ipv6 {
         deviate add {
-            must 'ip:enabled = "false" or count(ip:address) > 0 or ip:autoconf/ip:create-global-addresses = "true"' {
-                error-message "There must always be at least one IPv6 address or the autoconfiguration must be turned on unless the protocol is disabled.";
+            must 'ip:enabled = "false" or ../if:enabled = "false" or count(ip:address) > 0 or ip:autoconf/ip:create-global-addresses = "true"' {
+                error-message "There must always be at least one IPv6 address or the autoconfiguration must be turned on unless the interface or protocol is disabled.";
             }
         }
     }

@@ -9,7 +9,9 @@
 #include <boost/algorithm/string/join.hpp>
 #include <cstdlib>
 #include <netlink/route/addr.h>
+#include <ranges>
 #include <regex>
+#include <sdbus-c++/IConnection.h>
 #include <sys/wait.h>
 #include <thread>
 #include "pretty_printers.h"
@@ -17,6 +19,7 @@
 #include "test_log_setup.h"
 #include "test_vars.h"
 #include "tests/configure.cmake.h"
+#include "tests/dbus-helpers/dbus_network1_server.h"
 #include "tests/sysrepo-helpers/common.h"
 #include "utils/exec.h"
 #include "utils/io.h"
@@ -275,13 +278,20 @@ TEST_CASE("netlink with systemd-networkd")
     iproute2_exec_and_wait(WAIT, "link", "add", "eth0", "address", "02:02:02:02:02:03", "type", "veth");
     iproute2_exec_and_wait(WAIT, "link", "set", "eth0", "master", "br0");
 
-    std::vector<std::string> managedLinks{"eth1", "eth0", "br0"};
+
+    auto dbusConnServer = sdbus::createSessionBusConnection();
+    auto dbusConnClient = sdbus::createSessionBusConnection();
+    dbusConnServer->enterEventLoopAsync();
+    dbusConnClient->enterEventLoopAsync();
+    std::vector<DbusNetwork1Server::LinkState> systemdNetworkdLinkStates{{"lo", "unmanaged"}, {"eth0", "configured"}, {"eth1", "configured"}, {"br0", "configured"}};
+    DbusNetwork1Server dbusServer(*dbusConnServer, systemdNetworkdLinkStates);
+
     const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network-libnl-sd-networkd/"s;
     const auto startupDir = fakeConfigDir / "startup";
     const auto runningDir = fakeConfigDir / "running";
     std::filesystem::create_directories(startupDir);
     std::filesystem::create_directories(runningDir);
-    for (const auto& link : managedLinks) {
+    for (const auto& link : std::views::transform(systemdNetworkdLinkStates, [](const auto& link) { return link.name; })) {
         velia::utils::writeFile(runningDir / std::format("{}.network", link), "just some dummy content so that we can nuke something");
     }
 
@@ -291,7 +301,8 @@ TEST_CASE("netlink with systemd-networkd")
         srConn,
         fakeConfigDir / "startup",
         fakeConfigDir / "running",
-        managedLinks,
+        *dbusConnClient,
+        dbusConnServer->getUniqueName(),
         [&reloaded](const auto&) {
             // FIXME: uncomment these to see a crash due to parallel access to a single sysrepo session
             /* spdlog::info("running callback: starting to modify devices..."); */

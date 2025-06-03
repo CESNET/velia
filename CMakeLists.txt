@@ -265,6 +265,8 @@ target_link_libraries(velia-firewall
     )
 
 add_library(velia-network STATIC
+        src/network/SystemdNetworkdDbusClient.cpp
+        src/network/SystemdNetworkdDbusClient.h
         src/network/Rtnetlink.cpp
         src/network/Rtnetlink.h
         src/network/IETFInterfaces.cpp
@@ -282,6 +284,7 @@ target_link_libraries(velia-network
         PkgConfig::SYSREPO
         PkgConfig::LIBYANG
         PkgConfig::LIBNL
+        SDBusCpp::sdbus-c++
     )
 
 
@@ -395,6 +398,8 @@ if(BUILD_TESTING)
     target_link_libraries(SysrepoTesting DoctestIntegration PkgConfig::SYSREPO)
 
     add_library(DbusTesting STATIC
+        tests/dbus-helpers/dbus_network1_server.cpp
+        tests/dbus-helpers/dbus_network1_server.h
         tests/dbus-helpers/dbus_rauc_server.cpp
         tests/dbus-helpers/dbus_rauc_server.h
         tests/dbus-helpers/dbus_resolve1_server.cpp
@@ -438,6 +443,7 @@ if(BUILD_TESTING)
 
     velia_test(NAME system_rauc LIBRARIES velia-system DbusTesting RESOURCE_LOCK dbus-rauc)
     velia_test(NAME network_lldp LIBRARIES velia-network DbusTesting)
+    velia_test(NAME network_dbus-systemd LIBRARIES velia-network DbusTesting)
 
     velia_test(NAME hardware_thresholds LIBRARIES velia-ietf-hardware)
     velia_test(NAME hardware_eeprom LIBRARIES velia-ietf-hardware)
@@ -488,7 +494,7 @@ if(BUILD_TESTING)
     else()
         set(UNSHARE_MAP_GROUP_ARG "")
     endif()
-    velia_test(NAME sysrepo_interfaces-libnl LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network
+    velia_test(NAME sysrepo_interfaces-libnl LIBRARIES velia-network DbusTesting FIXTURE fixture_sysrepo-czechlight-network
                COMMAND ${UNSHARE_EXECUTABLE} --net --mount --map-root-user ${UNSHARE_MAP_GROUP_ARG} sh -c "set -ex $<SEMICOLON> ${MOUNT_EXECUTABLE} -t sysfs none /sys $<SEMICOLON> $<TARGET_FILE:test-sysrepo_interfaces-libnl>")
 
     set(fixture_sysrepo-ietf-hardware

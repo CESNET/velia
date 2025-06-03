@@ -58,16 +58,14 @@ int main(int argc, char* argv[])
     spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
     spdlog::get("network")->set_level(parseLogLevel("Network logging", args["--network-log-level"]));
 
+    DBUS_EVENTLOOP_START
+
     auto daemons = velia::network::create(
         sysrepo::Connection{},
         "/cfg/network/",
         "/run/systemd/network",
-        // IMPORTANT: This list MUST be kept aligned with:
-        // - yang/czechlight-network@*.yang
-        // - CzechLight/br2-external's board/czechlight/clearfog/overlay/usr/lib/systemd/network/*.network
-        //
-        // ...otherwise Bad Things™ happen.
-        {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW", "sfp3"},
+        *g_dbusConnection,
+        "org.freedesktop.network1",
         [](const auto&) {
             auto log = spdlog::get("network");
 

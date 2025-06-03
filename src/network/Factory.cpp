@@ -1,15 +1,20 @@
 #include "network/Factory.h"
+#include "network/SystemdNetworkdDbusClient.h"
 
 namespace velia::network {
 Services create(
     sysrepo::Connection conn,
     const std::filesystem::path& persistentNetworkDirectory,
     const std::filesystem::path& runtimeNetworkDirectory,
-    const std::vector<std::string>& managedLinks,
+    sdbus::IConnection& dbusConnection,
+    const std::string& network1BusName,
     IETFInterfacesConfig::reload_cb_t runningNetworkReloadCB,
     LLDPDataProvider::data_callback_t lldpCallback,
     LLDPDataProvider::LocalData lldpLocalData)
 {
+    SystemdNetworkdDbusClient networkdDbusClient(dbusConnection, network1BusName, "/org/freedesktop/network1");
+    auto managedLinks = networkdDbusClient.getManagedLinks();
+
     std::filesystem::create_directories(runtimeNetworkDirectory);
     std::filesystem::create_directories(persistentNetworkDirectory);
     auto running = conn.sessionStart(sysrepo::Datastore::Running);

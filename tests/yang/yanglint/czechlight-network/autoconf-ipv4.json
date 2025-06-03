@@ -49,7 +49,7 @@
         }
       },
       {
-        "description": "No address, no DHCP, interface disabled but protocol is not, FAIL",
+        "description": "No address, no DHCP, but interface disabled, OK",
         "name": "oscW",
         "type": "iana-if-type:ethernetCsmacd",
         "enabled": false,

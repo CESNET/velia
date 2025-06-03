@@ -5,6 +5,7 @@
 #include "VELIA_VERSION.h"
 #include "main.h"
 #include "network/Factory.h"
+#include "network/NetworkctlUtils.h"
 #include "system_vars.h"
 #include "utils/exceptions.h"
 #include "utils/exec.h"
@@ -62,12 +63,7 @@ int main(int argc, char* argv[])
         sysrepo::Connection{},
         "/cfg/network/",
         "/run/systemd/network",
-        // IMPORTANT: This list MUST be kept aligned with:
-        // - yang/czechlight-network@*.yang
-        // - CzechLight/br2-external's board/czechlight/clearfog/overlay/usr/lib/systemd/network/*.network
-        //
-        // ...otherwise Bad Things™ happen.
-        {"br0", "eth0", "eth1", "eth2", "osc", "oscE", "oscW", "sfp3"},
+        velia::network::systemdNetworkdManagedLinks(velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"list", "--json=short"}, "")),
         [](const auto&) {
             auto log = spdlog::get("network");
 

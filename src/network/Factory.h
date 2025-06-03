@@ -1,10 +1,12 @@
 #pragma once
 #include <filesystem>
+#include <sdbus-c++/IConnection.h>
 #include <sysrepo-cpp/Connection.hpp>
 #include "network/IETFInterfaces.h"
 #include "network/IETFInterfacesConfig.h"
 #include "network/LLDP.h"
 #include "network/LLDPSysrepo.h"
+#include "network/NetworkctlUtils.h"
 
 namespace velia::network {
 struct Services {

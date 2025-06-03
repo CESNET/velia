@@ -399,8 +399,6 @@ if(BUILD_TESTING)
         tests/dbus-helpers/dbus_rauc_server.h
         tests/dbus-helpers/dbus_resolve1_server.cpp
         tests/dbus-helpers/dbus_resolve1_server.h
-        tests/dbus-helpers/dbus_semaphore_server.cpp
-        tests/dbus-helpers/dbus_semaphore_server.h
         tests/dbus-helpers/dbus_systemd_server.cpp
         tests/dbus-helpers/dbus_systemd_server.h
         )

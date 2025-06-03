@@ -1,2 +1,1 @@
-libyang err : There must always be at least one IPv4 address or the autoconfiguration must be turned on unless the protocol is disabled. (/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv4)
-libyang err : There must always be at least one IPv4 address or the autoconfiguration must be turned on unless the protocol is disabled. (/ietf-interfaces:interfaces/interface[name='oscW']/ietf-ip:ipv4)
+libyang err : There must always be at least one IPv4 address or the autoconfiguration must be turned on unless the interface or protocol is disabled. (/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv4)

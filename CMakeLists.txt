@@ -265,6 +265,8 @@ target_link_libraries(velia-firewall
     )
 
 add_library(velia-network STATIC
+        src/network/Factory.cpp
+        src/network/Factory.h
         src/network/Rtnetlink.cpp
         src/network/Rtnetlink.h
         src/network/IETFInterfaces.cpp

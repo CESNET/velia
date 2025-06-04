@@ -146,6 +146,10 @@ void SystemdUnits::onUnitStateChange(const std::string& name, const UnitState& s
     alarms::push(m_srSession, ALARM_ID, name, alarmSeverity, "systemd unit state: (" + activeState + ", " + subState + ")");
 }
 
-SystemdUnits::~SystemdUnits() = default;
-
+SystemdUnits::~SystemdUnits()
+{
+    std::lock_guard lck(m_mtx);
+    m_proxyManager.reset();
+    m_proxyUnits.clear();
+}
 }

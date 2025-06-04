@@ -41,15 +41,16 @@ private:
 
     std::string m_busName;
     std::string m_unitIface;
-    std::unique_ptr<sdbus::IProxy> m_proxyManager;
 
     std::mutex m_mtx;
 
-    /** List of registered unit watchers */
-    std::map<sdbus::ObjectPath, std::unique_ptr<sdbus::IProxy>> m_proxyUnits;
-
     /** Current unit state. */
     std::map<std::string, UnitState> m_unitState;
+
+    std::unique_ptr<sdbus::IProxy> m_proxyManager;
+
+    /** List of registered unit watchers */
+    std::map<sdbus::ObjectPath, std::unique_ptr<sdbus::IProxy>> m_proxyUnits;
 
     void registerSystemdUnit(sdbus::IConnection& connection, const std::string& unitName, const sdbus::ObjectPath& unitObjectPath, const std::optional<UnitState>& unitState, const RegisterAlarmInventory registerAlarmInventory);
     void onUnitStateChange(const std::string& name, const UnitState& unitState);

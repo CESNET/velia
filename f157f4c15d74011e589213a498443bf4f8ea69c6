@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38075cb8_f431868f",
+        "filename": "src/health/SystemdUnits.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-04T13:28:38Z",
+      "side": 1,
+      "message": "as @Tomas.Pecka@cesnet.cz pointed out, this is not sufficient. There\u0027s still an opportunity to race at the end of the dtor\u0027s body, when the lock goes out of scope and when the slots are still active. Fixed in PS3.",
+      "revId": "f157f4c15d74011e589213a498443bf4f8ea69c6",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

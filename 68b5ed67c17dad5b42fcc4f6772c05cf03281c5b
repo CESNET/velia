@@ -16,6 +16,24 @@
       "message": "during today\u0027s call we agreed to change this to parse `networkctl list --json\u003dshort`",
       "revId": "68b5ed67c17dad5b42fcc4f6772c05cf03281c5b",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84a8959f_59dd2b6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-06-05T07:17:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c684f85_210d3b3e",
+      "revId": "68b5ed67c17dad5b42fcc4f6772c05cf03281c5b",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

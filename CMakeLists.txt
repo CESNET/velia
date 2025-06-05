@@ -24,7 +24,7 @@ add_custom_target(velia-version-cmake-ide
         cmake/ProjectGitVersionRunner.cmake
         )
 include(cmake/ProjectGitVersion.cmake)
-prepare_git_version(VELIA_VERSION "1")
+prepare_git_version(VELIA_VERSION "2")
 
 find_package(Doxygen)
 option(WITH_DOCS "Create and install internal documentation (needs Doxygen)" ${DOXYGEN_FOUND})

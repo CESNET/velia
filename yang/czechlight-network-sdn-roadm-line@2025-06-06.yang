@@ -1,0 +1,30 @@
+module czechlight-network-sdn-roadm-line {
+    yang-version 1.1;
+    namespace "http://czechlight.cesnet.cz/yang/czechlight-network-sdn-roadm-line";
+    prefix cla-network-sdn-roadm-line;
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    import czechlight-network {
+        prefix cla-network;
+        revision-date 2025-06-06;
+    }
+
+    description
+        "This module defines constraints for network interfaces in the
+         CzechLight SDN ROADM Line hardware.";
+
+    revision 2025-06-06 {
+        description "Initial release.";
+    }
+
+    deviation /if:interfaces/if:interface/if:name {
+        deviate add {
+            must '. = "br0" or . = "eth0" or . = "eth1" or . = "osc"' {
+                error-message "Link name must be chosen from the following options: {br0, eth0, eth1, osc}.";
+            }
+        }
+    }
+}

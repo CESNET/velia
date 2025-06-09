@@ -23,6 +23,13 @@ module czechlight-network {
         prefix v6ur;
     }
 
+    revision 2025-06-06 {
+        description
+            "Split into generic parts and hardware-specific parts. This module contains only
+             generic constraints for CzechLight systems, hardware-specific constraints are
+             in their own modules";
+    }
+
     revision 2021-02-22 {
         description
             "Initial version. Removes interface statistics in ietf-interfaces model, removes deprecated container
@@ -50,15 +57,6 @@ module czechlight-network {
     deviation /if:interfaces/if:interface/ip:ipv6/ip:mtu { deviate add { config false; } }
     deviation /if:interfaces/if:interface/ip:ipv6/ip:neighbor { deviate add { config false; } }
     deviation /if:interfaces/if:interface/ip:ipv6/ip:dup-addr-detect-transmits { deviate add { config false; } }
-
-    // User should not create new links or reconfigure link types
-    deviation /if:interfaces/if:interface/if:name {
-        deviate add {
-            must '. = "br0" or . = "eth0" or . = "eth1" or . = "eth2" or . = "osc" or . = "oscW" or . = "oscE" or . = "sfp3"' {
-                error-message "Link name must be chosen from the following options: {br0, eth0, eth1, osc, oscW, oscE, sfp3}.";
-            }
-        }
-    }
 
     deviation /if:interfaces/if:interface/if:type {
         deviate add {

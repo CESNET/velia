@@ -1,0 +1,25 @@
+module czechlight-network-bidi-ocm {
+    yang-version 1.1;
+    namespace "http://czechlight.cesnet.cz/yang/czechlight-network-bidi-ocm";
+    prefix cla-network-bidi-ocm;
+
+    import ietf-interfaces {
+        prefix if;
+    }
+
+    description
+        "This module defines constraints for network interfaces in the
+         CzechLight Bidi OCM (Optical Channel Monitor) hardware.";
+
+    revision 2025-06-06 {
+        description "Initial release.";
+    }
+
+    deviation /if:interfaces/if:interface/if:name {
+        deviate add {
+            must '. = "br0" or . = "eth0" or . = "eth1" or . = "eth2" or . = "sfp3"' {
+                error-message "Link name must be chosen from the following options: {br0, eth0, eth1, eth2, sfp3}.";
+            }
+        }
+    }
+}

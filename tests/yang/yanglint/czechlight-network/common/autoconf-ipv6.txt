@@ -1,1 +1,0 @@
-libyang err : There must always be at least one IPv6 address or the autoconfiguration must be turned on unless the interface or protocol is disabled. (/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6)

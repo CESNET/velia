@@ -1,0 +1,151 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "description": "IPv4: No address, DHCP, OK",
+        "name": "eth00",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "description": "IPv4: No address, no DHCP, FAIL",
+        "name": "eth01",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": false
+        }
+      },
+      {
+        "description": "IPv4: Address, no DHCP, OK",
+        "name": "eth02",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {
+          "address": [
+            {
+              "ip": "192.0.2.1",
+              "prefix-length": 24
+            },
+            {
+              "ip": "192.0.2.2",
+              "prefix-length": 24
+            }
+          ]
+        }
+      },
+      {
+        "description": "IPv4: Address, DHCP, OK",
+        "name": "eth03",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {
+          "address": [
+            {
+              "ip": "192.0.2.1",
+              "prefix-length": 24
+            }
+          ],
+          "czechlight-network:dhcp-client": true
+        }
+      },
+      {
+        "description": "IPv4: No address, no DHCP, but interface disabled, OK",
+        "name": "eth04",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": false,
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": false,
+        }
+      },
+      {
+        "description": "IPv4: No address, no DHCP, but protocol disabled, OK",
+        "name": "eth05",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": true,
+        "ietf-ip:ipv4": {
+          "enabled": false,
+          "czechlight-network:dhcp-client": false,
+        },
+        "ietf-ip:ipv6": {}
+      },
+      {
+        "description": "IPv6: No address, autoconf, OK",
+        "name": "eth06",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv6": {
+           "autoconf": {
+             "create-global-addresses": true,
+           }
+        }
+      },
+      {
+        "description": "IPv6: No address, no autoconf, FAIL",
+        "name": "eth07",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv6": {
+          "autoconf": {
+            "create-global-addresses": false,
+          }
+        }
+      },
+      {
+        "description": "IPv6: Address, no autoconf, OK",
+        "name": "eth08",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv6": {
+          "address": [
+            {
+              "ip": "2001:db8::1",
+              "prefix-length": 32
+            }
+          ],
+          "autoconf": {
+            "create-global-addresses": false,
+          }
+        }
+      },
+      {
+        "description": "IPv6: Address, autoconf, OK",
+        "name": "eth09",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv6": {
+          "address": [
+            {
+              "ip": "2001:db8::1",
+              "prefix-length": 32
+            }
+          ],
+          "autoconf": {
+            "create-global-addresses": true,
+          }
+        }
+      },
+      {
+        "description": "IPv6: No address, no autoconf, but interface disabled, OK",
+        "name": "eth10",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": false,
+        "ietf-ip:ipv6": {
+          "autoconf": {
+            "create-global-addresses": false,
+          }
+        }
+      },
+      {
+        "description": "IPv6: No address, no autoconf, but protocol disabled, OK",
+        "name": "eth11",
+        "type": "iana-if-type:ethernetCsmacd",
+        "enabled": true,
+        "ietf-ip:ipv6": {
+          "enabled": false,
+          "autoconf": {
+            "create-global-addresses": false,
+          }
+        },
+        "ietf-ip:ipv4": {
+          "czechlight-network:dhcp-client": true
+        }
+      }
+    ]
+  }
+}

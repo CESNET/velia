@@ -21,7 +21,7 @@ For a full list, consult the [`yang/` directory](./yang/) in this repository.
 - [`ietf-access-control-list`, RFC 8519](https://tools.ietf.org/html/rfc8519) (with [deviations](./yang/czechlight-firewall@2021-01-25.yang))
 - [`ietf-hardware`, RFC 8348](https://tools.ietf.org/html/rfc8348)
 - [`ietf-system`, RFC 7317](https://tools.ietf.org/html/rfc7317) (partial support)
-- [`ietf-interfaces`, RFC 8343](https://tools.ietf.org/html/rfc8343) (generating config for [`systemd-networkd`](https://www.freedesktop.org/software/systemd/man/systemd.network.html), with [extensions](./yang/czechlight-network@2021-02-22.yang))
+- [`ietf-interfaces`, RFC 8343](https://tools.ietf.org/html/rfc8343) (generating config for [`systemd-networkd`](https://www.freedesktop.org/software/systemd/man/systemd.network.html), with [extensions](./yang/czechlight-network@2025-06-06.yang))
 - [`ietf-routing`, RFC 8349](https://tools.ietf.org/html/rfc8349) (see above)
 - [`czechlight-system`](./yang/czechlight-system@2022-07-08.yang)
 

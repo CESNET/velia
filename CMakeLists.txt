@@ -65,7 +65,7 @@ set(YANG_SRCS
     yang/ietf-packet-fields@2019-03-04.yang
     yang/ietf-access-control-list@2019-03-04.yang
     yang/czechlight-firewall@2021-01-25.yang
-    yang/czechlight-network@2021-02-22.yang
+    yang/czechlight-network@2025-06-06.yang
     yang/iana-if-type@2017-01-19.yang
     yang/ietf-ip@2018-02-22.yang
     yang/ietf-routing@2018-03-13.yang
@@ -493,17 +493,31 @@ if(BUILD_TESTING)
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang
+            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2025-06-06.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)
     velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network)
 
+    set(COMMON_NETWORK_MODELS
+        ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
+        ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
+        ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
+        ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2025-06-06.yang
+    )
     collect_yangdata_tests(
         DIRECTORY czechlight-network/common
-        SCHEMA
-          ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
-          ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
-          ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
-          ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang
+        SCHEMA ${COMMON_NETWORK_MODELS}
+    )
+    collect_yangdata_tests(
+        DIRECTORY czechlight-network/inline-amp
+        SCHEMA ${COMMON_NETWORK_MODELS} ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network-inline-amp@2025-06-06.yang
+    )
+    collect_yangdata_tests(
+        DIRECTORY czechlight-network/roadm
+        SCHEMA ${COMMON_NETWORK_MODELS} ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network-roadm@2025-06-06.yang
+    )
+    collect_yangdata_tests(
+        DIRECTORY czechlight-network/bidi-ocm
+        SCHEMA ${COMMON_NETWORK_MODELS} ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network-bidi-ocm@2025-06-06.yang
     )
 
     set(fixture_sysrepo-utils
@@ -514,7 +528,7 @@ if(BUILD_TESTING)
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2021-02-22.yang)
+            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2025-06-06.yang)
     velia_test(NAME utils_sysrepo LIBRARIES velia-utils SysrepoTesting FIXTURE fixture_sysrepo-utils)
 
     find_program(UNSHARE_EXECUTABLE unshare REQUIRED)

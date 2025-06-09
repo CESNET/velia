@@ -498,7 +498,7 @@ if(BUILD_TESTING)
     velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network)
 
     collect_yangdata_tests(
-        DIRECTORY czechlight-network
+        DIRECTORY czechlight-network/common
         SCHEMA
           ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
           ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang

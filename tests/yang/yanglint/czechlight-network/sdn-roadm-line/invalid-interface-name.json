@@ -1,0 +1,31 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "eth3",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {}
+      },
+      {
+        "name": "oscW",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {}
+      },
+      {
+        "name": "oscE",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {}
+      },
+      {
+        "name": "sfp3",
+        "type": "iana-if-type:ethernetCsmacd",
+        "czechlight-network:bridge": "br1"
+      },
+      {
+        "name": "br1",
+        "type": "iana-if-type:bridge",
+        "ietf-ip:ipv4": {}
+      }
+    ]
+  }
+}

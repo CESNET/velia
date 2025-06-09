@@ -22,7 +22,7 @@ The software runs in production on [CzechLight SDN DWDM devices](https://czechli
         - focus on Ethernet interfaces and basic setup of bridges
         - IPv4 and IPv6 configuration, with DHCP and autoconfiguration
     - real-time status and statistics via [`netlink(7)`](https://man7.org/linux/man-pages/man7/netlink.7.html)
-    - support for most common features from [`ietf-interfaces` (RFC 8343)](https://tools.ietf.org/html/rfc8343), [`ietf-ip` (RFC 8344)](https://datatracker.ietf.org/doc/html/rfc8344) and [`ietf-routing` (RFC 8349)](https://tools.ietf.org/html/rfc8349) with some [extensions](./yang/czechlight-network@2021-02-22.yang)
+    - support for most common features from [`ietf-interfaces` (RFC 8343)](https://tools.ietf.org/html/rfc8343), [`ietf-ip` (RFC 8344)](https://datatracker.ietf.org/doc/html/rfc8344) and [`ietf-routing` (RFC 8349)](https://tools.ietf.org/html/rfc8349) with some [extensions](./yang/czechlight-network@2025-06-06.yang)
     - firewall ([`ietf-access-control-list` (RFC 8519)](https://tools.ietf.org/html/rfc8519) with [deviations](./yang/czechlight-firewall@2021-01-25.yang))
 
 ## Installation

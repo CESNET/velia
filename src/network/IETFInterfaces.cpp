@@ -187,7 +187,7 @@ IETFInterfaces::IETFInterfaces(::sysrepo::Session srSess)
     utils::ensureModuleImplemented(m_srSession, IETF_ROUTING_MODULE_NAME, "2018-03-13");
     utils::ensureModuleImplemented(m_srSession, IETF_IPV4_UNICAST_ROUTING_MODULE_NAME, "2018-03-13");
     utils::ensureModuleImplemented(m_srSession, IETF_IPV6_UNICAST_ROUTING_MODULE_NAME, "2018-03-13");
-    utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_NETWORK_MODULE_NAME, "2021-02-22");
+    utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_NETWORK_MODULE_NAME, "2025-06-06");
 
     m_rtnetlink->invokeInitialCallbacks();
     // TODO: Implement /ietf-routing:routing/interfaces and /ietf-routing:routing/router-id

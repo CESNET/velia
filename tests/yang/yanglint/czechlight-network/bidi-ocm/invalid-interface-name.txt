@@ -1,0 +1,6 @@
+libyang err : Link name must be chosen from the following options: {br0, eth0, eth1, eth2, sfp3}. (/ietf-interfaces:interfaces/interface[name='br1']/name)
+libyang err : Link name must be chosen from the following options: {br0, eth0, eth1, eth2, sfp3}. (/ietf-interfaces:interfaces/interface[name='eth3']/name)
+libyang err : Link name must be chosen from the following options: {br0, eth0, eth1, eth2, sfp3}. (/ietf-interfaces:interfaces/interface[name='osc']/name)
+libyang err : Link name must be chosen from the following options: {br0, eth0, eth1, eth2, sfp3}. (/ietf-interfaces:interfaces/interface[name='oscE']/name)
+libyang err : Link name must be chosen from the following options: {br0, eth0, eth1, eth2, sfp3}. (/ietf-interfaces:interfaces/interface[name='oscW']/name)
+libyang err : Link name must be chosen from the following options: {br0, eth0, eth1, eth2, sfp3}. (/ietf-interfaces:interfaces/interface[name='sfp1']/name)

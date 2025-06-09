@@ -1,1 +1,0 @@
-libyang err : Link name must be chosen from the following options: {br0, eth0, eth1, osc, oscW, oscE, sfp3}. (/ietf-interfaces:interfaces/interface[name='usb0']/name)

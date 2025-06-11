@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b0139e7_9dd4d52b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-11T14:21:37Z",
+      "side": 1,
+      "message": "yeah, this is the usual difference between an \"imported model\" and an \"implemented model\", I suppose.",
+      "range": {
+        "startLine": 33,
+        "startChar": 52,
+        "endLine": 36,
+        "endChar": 61
+      },
+      "revId": "dcc5667891f3474f407bc2bd7b2aa0377689cfcc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9ba793e_73dadcbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-11T14:21:37Z",
+      "side": 1,
+      "message": "Here\u0027s a list of valid interface names, and the czechlight\u003d... /proc/cmdline name mapping for them:\n\n- `sdn-roadm-line-g2`:\n  - `eth0`\n  - `eth1`\n  - `osc`\n- `sdn-roadm-add-drop-g2`, `sdn-roadm-hires-add-drop-g2`, `sdn-roadm-coherent-a-d-g2`, `sdn-bidi-cplus1572-g2`, `sdn-bidi-cplus1572-ocm-g2`:\n  - `eth0`\n  - `eth1`\n  - `eth2` (you can call it `sfp` if you wish to and if you provide a migration)\n- sdn-inline-g2:\n  - `eth0`\n  - `eth1`\n  - `oscW`\n  - `oscE`\n  - `sfp3` (this one is \"not needed\" on the actual HW, but some vendors are using a dual-head NIC, so I wanted to provide a name which doesn\u0027t clash with the eth* namespace)\n\n\nI suggest creating the following models:\n- `czechlight-network-sdn-roadm-line`\n- `czechlight-network-sdn-inline`\n- `czechlgith-network-sdn-generic`\n\n...because these are the actual HW where the naming difference matters. I think that it\u0027s also possible that we have, e.g., a BIDI amp with an OCM and an extra NIC with dual SFP cages, but that\u0027s a mistake and a one-shot exception. Just ignore that; it\u0027s OK if these interfaces cannot be configured.",
+      "revId": "dcc5667891f3474f407bc2bd7b2aa0377689cfcc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "973a36fa_9fd922b0",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-11T14:21:37Z",
+      "side": 1,
+      "message": "Please consider wrapping these like it was before (i.e., \"SCHEMA\", \"COMMON_...\" and \"blah.yang\" all on separate lines). I was wondering where the common models went, and only then I recognized that it\u0027s now one long line. I guess my attention span is rather short today :(.",
+      "range": {
+        "startLine": 513,
+        "startChar": 8,
+        "endLine": 513,
+        "endChar": 118
+      },
+      "revId": "dcc5667891f3474f407bc2bd7b2aa0377689cfcc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

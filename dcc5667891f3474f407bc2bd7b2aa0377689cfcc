@@ -41,6 +41,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d6ffe74_8cc09945",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-06-13T17:56:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9ba793e_73dadcbe",
+      "revId": "dcc5667891f3474f407bc2bd7b2aa0377689cfcc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "973a36fa_9fd922b0",
@@ -64,6 +82,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "99f4eaef_127bfdfa",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-06-13T17:56:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "973a36fa_9fd922b0",
+      "range": {
+        "startLine": 513,
+        "startChar": 8,
+        "endLine": 513,
+        "endChar": 118
+      },
+      "revId": "dcc5667891f3474f407bc2bd7b2aa0377689cfcc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3c30014b_19aaffec",
@@ -77,6 +119,24 @@
       "writtenOn": "2025-06-11T14:24:40Z",
       "side": 1,
       "message": "This requires a change in the br2-external packaging. I suggest commenting out the czechlight-clearfog test in `.zuul.yaml`, and then re-adding it back after you `Depends-on` on a change in br2-external which implements the config migration.",
+      "revId": "dcc5667891f3474f407bc2bd7b2aa0377689cfcc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4cee66d_eebcbc04",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-06-13T17:56:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c30014b_19aaffec",
       "revId": "dcc5667891f3474f407bc2bd7b2aa0377689cfcc",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

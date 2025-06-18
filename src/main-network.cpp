@@ -59,10 +59,14 @@ int main(int argc, char* argv[])
     spdlog::get("sysrepo")->set_level(parseLogLevel("Sysrepo library", args["--sysrepo-log-level"]));
     spdlog::get("network")->set_level(parseLogLevel("Network logging", args["--network-log-level"]));
 
+    const std::filesystem::path runtimeConfigDirectory = "/run/systemd/network";
+    const std::filesystem::path systemdConfigDirectory = "/usr/lib/systemd/network";
+    const auto managedLinks = velia::network::systemdNetworkdManagedLinks(velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"list", "--json=short"}, ""));
+
     auto daemons = velia::network::create(
         sysrepo::Connection{},
         "/cfg/network/",
-        "/run/systemd/network",
+        runtimeConfigDirectory,
         // IMPORTANT: veliad-network will only configure those interfaces which are "managed by systemd-networkd"
         // at the time this code starts up. In practice, this means that this code does not support dynamic hotplug
         // of interfaces, and that there MUST be exactly one `foo.network` for each of the managed interfaces, and
@@ -73,8 +77,8 @@ int main(int argc, char* argv[])
         // package/czechlight-cfg-fs/cfg-restore-systemd-networkd.service which copies stuff from /usr (with
         // factory-defaults), and later from /cfg (where we pre-generate them from the startup DS) into /run
         // (where we store stuff from the running DS).
-        velia::network::systemdNetworkdManagedLinks(velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"list", "--json=short"}, "")),
-        [](const auto&) {
+        managedLinks,
+        [runtimeConfigDirectory, systemdConfigDirectory, managedLinks = std::set<std::string>{managedLinks.begin(), managedLinks.end()}](const auto&) {
             auto log = spdlog::get("network");
 
             /* In 2021, executing 'networkctl reload' was not enough. For bridge interfaces, we had to also bring the interface down and up.
@@ -82,6 +86,21 @@ int main(int argc, char* argv[])
              * Manpage of networkctl says that reload should be enough except for few cases (like changing VLANs etc.), but they said that in 2021 too.
              * */
             velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"reload"}, "");
+
+            const auto statusJson = velia::utils::execAndWait(log, NETWORKCTL_EXECUTABLE, {"status", "--json=short"}, "Reloading systemd-networkd configuration");
+            for (const auto& [linkName, confFiles] : velia::network::linkConfigurationFiles(statusJson, managedLinks)) {
+                const std::string confFilename = "10-"s + linkName + ".network";
+
+                if (!confFiles.networkFile) {
+                    log->error("Did not find a configuration file for systemd-networkd managed link {}", linkName);
+                } else if (confFiles.networkFile != runtimeConfigDirectory / confFilename  && confFiles.networkFile != systemdConfigDirectory / confFilename) {
+                    log->error("Unexpected configuration file for link {}: {}", linkName, confFiles.networkFile->string());
+                }
+
+                if (!confFiles.dropinFiles.empty()) {
+                    log->error("Unexpected drop-in configuration files for link {}", linkName);
+                }
+            }
         },
         []() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
         velia::network::LLDPDataProvider::LocalData{

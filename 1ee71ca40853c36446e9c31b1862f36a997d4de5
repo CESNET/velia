@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc63ab9f_bf456b2e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-06-18T11:24:05Z",
+      "side": 1,
+      "message": "by the way, [docs](https://www.freedesktop.org/software/systemd/man/latest/networkd.conf.html) says that\n\n\u003e To disable a configuration file supplied by the vendor, the recommended way is to place a symlink to /dev/null in the configuration directory in /etc/, with the same filename as the vendor configuration file.\n\nThe effect is the same though.",
+      "revId": "1ee71ca40853c36446e9c31b1862f36a997d4de5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

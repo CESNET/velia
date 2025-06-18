@@ -63,3 +63,41 @@ TEST_CASE("systemd-networkd managed links")
 
     REQUIRE(velia::network::systemdNetworkdManagedLinks(data) == expected);
 }
+
+TEST_CASE("Active network configuration files")
+{
+    TEST_SYSREPO_INIT_LOGS;
+    nlohmann::json data;
+    std::map<std::string, velia::network::NetworkConfFiles> expected;
+    std::set<std::string> managedLinks;
+
+    SECTION("Real device data, no eth2 configuration in /run and /usr/lib")
+    {
+        data = velia::utils::readFileToString(CMAKE_CURRENT_SOURCE_DIR "/tests/networkctl/sdn-bidi-cplus1572-PGCL250303.json");
+        managedLinks = {"eth0", "eth1", "eth2", "br0"};
+        expected = {
+            {"br0", {.networkFile = "/usr/lib/systemd/network/br0.network", .dropinFiles = {}}},
+            {"eth0", {.networkFile = "/usr/lib/systemd/network/eth0.network", .dropinFiles = {}}},
+            {"eth1", {.networkFile = "/usr/lib/systemd/network/eth1.network", .dropinFiles = {}}},
+            {"eth2", {.networkFile = std::nullopt, .dropinFiles = {}}},
+        };
+    }
+
+    SECTION("With dropins and no eth2 conf in /run")
+    {
+        data = velia::utils::readFileToString(CMAKE_CURRENT_SOURCE_DIR "/tests/networkctl/sdn-bidi-cplus1572-PGCL250305-with-dropins.json");
+        managedLinks = {"eth0", "eth1", "eth2", "br0"};
+        expected = {
+            {"br0", {.networkFile = "/run/systemd/network/br0.network", .dropinFiles = {"/run/systemd/network/br0.network.d/lldp.conf"}}},
+            {"eth0", {.networkFile = "/run/systemd/network/eth0.network", .dropinFiles = {}}},
+            {"eth1", {.networkFile = "/run/systemd/network/eth1.network", .dropinFiles = {}}},
+            {"eth2", {.networkFile = "/usr/lib/systemd/network/eth2.network", .dropinFiles = {}}},
+        };
+    }
+
+    REQUIRE(velia::network::linkConfigurationFiles(data, managedLinks) == expected);
+
+    REQUIRE_THROWS_WITH_AS(velia::network::linkConfigurationFiles(R"({"Interfaces": []})", {"eth0"}),
+                           "Link eth0 not found in networkctl JSON data",
+                           std::invalid_argument);
+}

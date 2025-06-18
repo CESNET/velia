@@ -18,6 +18,7 @@
 #include "ietf-hardware/IETFHardware.h"
 #include "ietf-hardware/thresholds.h"
 #include "network/IETFInterfacesConfig.h"
+#include "network/NetworkctlUtils.h"
 #include "tests/sysrepo-helpers/common.h"
 
 namespace doctest {
@@ -167,6 +168,18 @@ struct StringMaker<velia::ietf_hardware::sysfs::TLV> {
         };
 
         return fmt::format("TLV{{type: {}, value: {}}}", static_cast<int>(e.type), std::visit<std::string>(visitor, e.value)).c_str();
+    }
+};
+
+template <>
+struct StringMaker<velia::network::NetworkFilesStatus> {
+    static String convert(const velia::network::NetworkFilesStatus& x)
+    {
+        std::ostringstream oss;
+        oss << "NetworkFiles{.networkFile = " << x.networkFile.value_or("n/a") << ", .dropinFiles = {";
+        std::copy(std::begin(x.dropinFiles), std::end(x.dropinFiles), std::experimental::make_ostream_joiner(oss, ", "));
+        oss << "}}";
+        return oss.str().c_str();
     }
 };
 }

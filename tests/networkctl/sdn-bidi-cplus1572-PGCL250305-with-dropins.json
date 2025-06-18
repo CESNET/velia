@@ -1,0 +1,742 @@
+{
+	"Interfaces" : [
+		{
+			"Index" : 1,
+			"Name" : "lo",
+			"Type" : "loopback",
+			"Flags" : 65609,
+			"FlagsString" : "up,loopback,running,lower-up",
+			"KernelOperationalState" : 0,
+			"KernelOperationalStateString" : "unknown",
+			"MTU" : 65536,
+			"MinimumMTU" : 0,
+			"MaximumMTU" : 4294967295,
+			"AdministrativeState" : "unmanaged",
+			"OperationalState" : "carrier",
+			"CarrierState" : "carrier",
+			"AddressState" : "off",
+			"IPv4AddressState" : "off",
+			"IPv6AddressState" : "off",
+			"OnlineState" : null,
+			"Addresses" : [
+				{
+					"Family" : 10,
+					"Address" : [
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						1
+					],
+					"PrefixLength" : 128,
+					"Scope" : 254,
+					"ScopeString" : "host",
+					"Flags" : 640,
+					"FlagsString" : "permanent,no-prefixroute",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				},
+				{
+					"Family" : 2,
+					"Address" : [
+						127,
+						0,
+						0,
+						1
+					],
+					"PrefixLength" : 8,
+					"Scope" : 254,
+					"ScopeString" : "host",
+					"Flags" : 128,
+					"FlagsString" : "permanent",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				}
+			],
+			"Routes" : [
+				{
+					"Family" : 2,
+					"Destination" : [
+						127,
+						0,
+						0,
+						0
+					],
+					"DestinationPrefixLength" : 8,
+					"PreferredSource" : [
+						127,
+						0,
+						0,
+						1
+					],
+					"Scope" : 254,
+					"ScopeString" : "host",
+					"Protocol" : 2,
+					"ProtocolString" : "kernel",
+					"Type" : 2,
+					"TypeString" : "local",
+					"Priority" : 0,
+					"Table" : 255,
+					"TableString" : "local",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				},
+				{
+					"Family" : 2,
+					"Destination" : [
+						127,
+						0,
+						0,
+						1
+					],
+					"DestinationPrefixLength" : 32,
+					"PreferredSource" : [
+						127,
+						0,
+						0,
+						1
+					],
+					"Scope" : 254,
+					"ScopeString" : "host",
+					"Protocol" : 2,
+					"ProtocolString" : "kernel",
+					"Type" : 2,
+					"TypeString" : "local",
+					"Priority" : 0,
+					"Table" : 255,
+					"TableString" : "local",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				},
+				{
+					"Family" : 10,
+					"Destination" : [
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						1
+					],
+					"DestinationPrefixLength" : 128,
+					"Scope" : 0,
+					"ScopeString" : "global",
+					"Protocol" : 2,
+					"ProtocolString" : "kernel",
+					"Type" : 2,
+					"TypeString" : "local",
+					"Priority" : 0,
+					"Table" : 254,
+					"TableString" : "main",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				},
+				{
+					"Family" : 2,
+					"Destination" : [
+						127,
+						255,
+						255,
+						255
+					],
+					"DestinationPrefixLength" : 32,
+					"PreferredSource" : [
+						127,
+						0,
+						0,
+						1
+					],
+					"Scope" : 253,
+					"ScopeString" : "link",
+					"Protocol" : 2,
+					"ProtocolString" : "kernel",
+					"Type" : 3,
+					"TypeString" : "broadcast",
+					"Priority" : 0,
+					"Table" : 255,
+					"TableString" : "local",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				}
+			]
+		},
+		{
+			"Index" : 2,
+			"Name" : "eth0",
+			"MasterInterfaceIndex" : 5,
+			"Type" : "ether",
+			"Driver" : "mvneta",
+			"Flags" : 69699,
+			"FlagsString" : "up,broadcast,running,multicast,lower-up",
+			"KernelOperationalState" : 6,
+			"KernelOperationalStateString" : "up",
+			"MTU" : 1500,
+			"MinimumMTU" : 68,
+			"MaximumMTU" : 9676,
+			"HardwareAddress" : [
+				0,
+				17,
+				23,
+				1,
+				1,
+				12
+			],
+			"PermanentHardwareAddress" : [
+				0,
+				17,
+				23,
+				1,
+				1,
+				12
+			],
+			"BroadcastAddress" : [
+				255,
+				255,
+				255,
+				255,
+				255,
+				255
+			],
+			"AdministrativeState" : "configured",
+			"OperationalState" : "enslaved",
+			"CarrierState" : "enslaved",
+			"AddressState" : "off",
+			"IPv4AddressState" : "off",
+			"IPv6AddressState" : "off",
+			"OnlineState" : "online",
+			"NetworkFile" : "/run/systemd/network/eth0.network",
+			"NetworkFileDropins" : [],
+			"RequiredForOnline" : true,
+			"RequiredOperationalStateForOnline" : [
+				null,
+				null
+			],
+			"RequiredFamilyForOnline" : "any",
+			"ActivationPolicy" : "up",
+			"LinkFile" : "/run/systemd/network/30-eth0.link",
+			"Path" : "platform-f1070000.ethernet",
+			"DNSSettings" : [
+				{
+					"LLMNR" : "yes",
+					"ConfigSource" : "static"
+				},
+				{
+					"MDNS" : "no",
+					"ConfigSource" : "static"
+				}
+			],
+			"Routes" : [
+				{
+					"Family" : 10,
+					"Destination" : [
+						255,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0,
+						0
+					],
+					"DestinationPrefixLength" : 8,
+					"Scope" : 0,
+					"ScopeString" : "global",
+					"Protocol" : 2,
+					"ProtocolString" : "kernel",
+					"Type" : 5,
+					"TypeString" : "multicast",
+					"Priority" : 256,
+					"Table" : 254,
+					"TableString" : "main",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				}
+			]
+		},
+		{
+			"Index" : 3,
+			"Name" : "eth1",
+			"MasterInterfaceIndex" : 5,
+			"Type" : "ether",
+			"Driver" : "mvneta",
+			"Flags" : 4099,
+			"FlagsString" : "up,broadcast,multicast",
+			"KernelOperationalState" : 2,
+			"KernelOperationalStateString" : "down",
+			"MTU" : 1500,
+			"MinimumMTU" : 68,
+			"MaximumMTU" : 9676,
+			"HardwareAddress" : [
+				0,
+				17,
+				23,
+				1,
+				1,
+				13
+			],
+			"PermanentHardwareAddress" : [
+				0,
+				17,
+				23,
+				1,
+				1,
+				13
+			],
+			"BroadcastAddress" : [
+				255,
+				255,
+				255,
+				255,
+				255,
+				255
+			],
+			"AdministrativeState" : "configured",
+			"OperationalState" : "no-carrier",
+			"CarrierState" : "no-carrier",
+			"AddressState" : "off",
+			"IPv4AddressState" : "off",
+			"IPv6AddressState" : "off",
+			"OnlineState" : "offline",
+			"NetworkFile" : "/run/systemd/network/eth1.network",
+			"NetworkFileDropins" : [],
+			"RequiredForOnline" : true,
+			"RequiredOperationalStateForOnline" : [
+				null,
+				null
+			],
+			"RequiredFamilyForOnline" : "any",
+			"ActivationPolicy" : "up",
+			"LinkFile" : "/run/systemd/network/30-eth1.link",
+			"Path" : "platform-f1030000.ethernet",
+			"DNSSettings" : [
+				{
+					"LLMNR" : "yes",
+					"ConfigSource" : "static"
+				},
+				{
+					"MDNS" : "no",
+					"ConfigSource" : "static"
+				}
+			]
+		},
+		{
+			"Index" : 4,
+			"Name" : "eth2",
+			"MasterInterfaceIndex" : 5,
+			"Type" : "ether",
+			"Driver" : "mvneta",
+			"Flags" : 4099,
+			"FlagsString" : "up,broadcast,multicast",
+			"KernelOperationalState" : 2,
+			"KernelOperationalStateString" : "down",
+			"MTU" : 1500,
+			"MinimumMTU" : 68,
+			"MaximumMTU" : 9676,
+			"HardwareAddress" : [
+				0,
+				17,
+				23,
+				1,
+				1,
+				14
+			],
+			"PermanentHardwareAddress" : [
+				0,
+				17,
+				23,
+				1,
+				1,
+				14
+			],
+			"BroadcastAddress" : [
+				255,
+				255,
+				255,
+				255,
+				255,
+				255
+			],
+			"AdministrativeState" : "configured",
+			"OperationalState" : "no-carrier",
+			"CarrierState" : "no-carrier",
+			"AddressState" : "off",
+			"IPv4AddressState" : "off",
+			"IPv6AddressState" : "off",
+			"OnlineState" : "offline",
+			"NetworkFile" : "/usr/lib/systemd/network/eth2.network",
+			"NetworkFileDropins" : [],
+			"RequiredForOnline" : true,
+			"RequiredOperationalStateForOnline" : [
+				null,
+				null
+			],
+			"RequiredFamilyForOnline" : "any",
+			"ActivationPolicy" : "up",
+			"LinkFile" : "/run/systemd/network/30-eth2.link",
+			"Path" : "platform-f1034000.ethernet",
+			"DNSSettings" : [
+				{
+					"LLMNR" : "yes",
+					"ConfigSource" : "static"
+				},
+				{
+					"MDNS" : "no",
+					"ConfigSource" : "static"
+				}
+			]
+		},
+		{
+			"Index" : 5,
+			"Name" : "br0",
+			"Kind" : "bridge",
+			"Type" : "bridge",
+			"Driver" : "bridge",
+			"Flags" : 69699,
+			"FlagsString" : "up,broadcast,running,multicast,lower-up",
+			"KernelOperationalState" : 6,
+			"KernelOperationalStateString" : "up",
+			"MTU" : 1500,
+			"MinimumMTU" : 68,
+			"MaximumMTU" : 65535,
+			"HardwareAddress" : [
+				0,
+				17,
+				23,
+				1,
+				1,
+				12
+			],
+			"BroadcastAddress" : [
+				255,
+				255,
+				255,
+				255,
+				255,
+				255
+			],
+			"AdministrativeState" : "configured",
+			"OperationalState" : "routable",
+			"CarrierState" : "degraded-carrier",
+			"AddressState" : "routable",
+			"IPv4AddressState" : "routable",
+			"IPv6AddressState" : "off",
+			"OnlineState" : "online",
+			"NetworkFile" : "/run/systemd/network/br0.network",
+			"NetworkFileDropins" : [
+				"/run/systemd/network/br0.network.d/lldp.conf"
+			],
+			"RequiredForOnline" : true,
+			"RequiredOperationalStateForOnline" : [
+				null,
+				null
+			],
+			"RequiredFamilyForOnline" : "any",
+			"ActivationPolicy" : "up",
+			"LinkFile" : "/usr/lib/systemd/network/99-default.link",
+			"DNS" : [
+				{
+					"Family" : 2,
+					"Address" : [
+						10,
+						0,
+						0,
+						254
+					],
+					"ConfigSource" : "DHCPv4",
+					"ConfigProvider" : [
+						10,
+						0,
+						0,
+						254
+					]
+				}
+			],
+			"DNSSettings" : [
+				{
+					"LLMNR" : "yes",
+					"ConfigSource" : "static"
+				},
+				{
+					"MDNS" : "no",
+					"ConfigSource" : "static"
+				}
+			],
+			"Addresses" : [
+				{
+					"Family" : 2,
+					"Address" : [
+						10,
+						0,
+						0,
+						193
+					],
+					"Broadcast" : [
+						10,
+						0,
+						0,
+						255
+					],
+					"PrefixLength" : 24,
+					"Scope" : 0,
+					"ScopeString" : "global",
+					"Flags" : 0,
+					"FlagsString" : null,
+					"PreferredLifetimeUSec" : 1728947492007,
+					"PreferredLifetimeUsec" : 1728947492007,
+					"ValidLifetimeUSec" : 1728947492007,
+					"ValidLifetimeUsec" : 1728947492007,
+					"ConfigSource" : "DHCPv4",
+					"ConfigState" : "configured",
+					"ConfigProvider" : [
+						10,
+						0,
+						0,
+						254
+					]
+				}
+			],
+			"Routes" : [
+				{
+					"Family" : 2,
+					"Destination" : [
+						10,
+						0,
+						0,
+						193
+					],
+					"DestinationPrefixLength" : 32,
+					"PreferredSource" : [
+						10,
+						0,
+						0,
+						193
+					],
+					"Scope" : 254,
+					"ScopeString" : "host",
+					"Protocol" : 2,
+					"ProtocolString" : "kernel",
+					"Type" : 2,
+					"TypeString" : "local",
+					"Priority" : 0,
+					"Table" : 255,
+					"TableString" : "local",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				},
+				{
+					"Family" : 2,
+					"Destination" : [
+						10,
+						0,
+						0,
+						255
+					],
+					"DestinationPrefixLength" : 32,
+					"PreferredSource" : [
+						10,
+						0,
+						0,
+						193
+					],
+					"Scope" : 253,
+					"ScopeString" : "link",
+					"Protocol" : 2,
+					"ProtocolString" : "kernel",
+					"Type" : 3,
+					"TypeString" : "broadcast",
+					"Priority" : 0,
+					"Table" : 255,
+					"TableString" : "local",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				},
+				{
+					"Family" : 2,
+					"Destination" : [
+						0,
+						0,
+						0,
+						0
+					],
+					"DestinationPrefixLength" : 0,
+					"Gateway" : [
+						10,
+						0,
+						0,
+						254
+					],
+					"PreferredSource" : [
+						10,
+						0,
+						0,
+						193
+					],
+					"Scope" : 0,
+					"ScopeString" : "global",
+					"Protocol" : 16,
+					"ProtocolString" : "16",
+					"Type" : 1,
+					"TypeString" : "unicast",
+					"Priority" : 1024,
+					"Table" : 254,
+					"TableString" : "main",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "DHCPv4",
+					"ConfigState" : "configured",
+					"ConfigProvider" : [
+						10,
+						0,
+						0,
+						254
+					]
+				},
+				{
+					"Family" : 2,
+					"Destination" : [
+						10,
+						0,
+						0,
+						0
+					],
+					"DestinationPrefixLength" : 24,
+					"PreferredSource" : [
+						10,
+						0,
+						0,
+						193
+					],
+					"Scope" : 253,
+					"ScopeString" : "link",
+					"Protocol" : 2,
+					"ProtocolString" : "kernel",
+					"Type" : 1,
+					"TypeString" : "unicast",
+					"Priority" : 1024,
+					"Table" : 254,
+					"TableString" : "main",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "foreign",
+					"ConfigState" : "configured"
+				},
+				{
+					"Family" : 2,
+					"Destination" : [
+						10,
+						0,
+						0,
+						254
+					],
+					"DestinationPrefixLength" : 32,
+					"PreferredSource" : [
+						10,
+						0,
+						0,
+						193
+					],
+					"Scope" : 253,
+					"ScopeString" : "link",
+					"Protocol" : 16,
+					"ProtocolString" : "16",
+					"Type" : 1,
+					"TypeString" : "unicast",
+					"Priority" : 1024,
+					"Table" : 254,
+					"TableString" : "main",
+					"Preference" : 0,
+					"Flags" : 0,
+					"FlagsString" : "",
+					"ConfigSource" : "DHCPv4",
+					"ConfigState" : "configured",
+					"ConfigProvider" : [
+						10,
+						0,
+						0,
+						254
+					]
+				}
+			],
+			"DHCPv4Client" : {
+				"Lease" : {
+					"LeaseTimestampUSec" : 1725347459627,
+					"Timeout1USec" : 1727147459627,
+					"Timeout2USec" : 1728497459627
+				},
+				"ClientIdentifier" : [
+					255,
+					202,
+					212,
+					168,
+					175,
+					0,
+					2,
+					0,
+					0,
+					171,
+					17,
+					11,
+					47,
+					197,
+					46,
+					164,
+					58,
+					162,
+					255
+				]
+			}
+		}
+	]
+}

@@ -34,7 +34,7 @@ For building, one needs:
 - [Boost](https://www.boost.org/) (we're testing with `1.78`)
 - [`pkg-config`](https://www.freedesktop.org/wiki/Software/pkg-config/)
 - [`libnl-route`](http://www.infradead.org/~tgr/libnl/) for talking to the Linux kernel
-- [`libsystemd`](https://www.freedesktop.org/software/systemd/man/libsystemd.html) and [`systemd`](https://www.freedesktop.org/wiki/Software/systemd/) at runtime
+- [`libsystemd`](https://www.freedesktop.org/software/systemd/man/libsystemd.html) and [`systemd`](https://www.freedesktop.org/wiki/Software/systemd/) and [`systemd-networkd`](https://www.freedesktop.org/software/systemd/man/systemd.network.html) at runtime
 - [`libyang-cpp`](https://github.com/CESNET/libyang-cpp) - C++ bindings for *libyang*
 - [`sysrepo-cpp`](https://github.com/sysrepo/sysrepo-cpp) - C++ bindings for *sysrepo*
 - [`spdlog`](https://github.com/gabime/spdlog) - a logging library

@@ -5,7 +5,6 @@
 #include "network/IETFInterfacesConfig.h"
 #include "network/LLDP.h"
 #include "network/LLDPSysrepo.h"
-#include "network/NetworkctlUtils.h"
 
 namespace velia::network {
 struct Services {

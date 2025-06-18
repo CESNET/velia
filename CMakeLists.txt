@@ -466,7 +466,7 @@ if(BUILD_TESTING)
 
     velia_test(NAME system_rauc LIBRARIES velia-system DbusTesting RESOURCE_LOCK dbus-rauc)
     velia_test(NAME network_lldp LIBRARIES velia-network DbusTesting)
-    velia_test(NAME network_managed-links LIBRARIES velia-network)
+    velia_test(NAME network_utils LIBRARIES velia-network)
 
     velia_test(NAME hardware_thresholds LIBRARIES velia-ietf-hardware)
     velia_test(NAME hardware_eeprom LIBRARIES velia-ietf-hardware)

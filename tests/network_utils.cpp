@@ -8,7 +8,7 @@
 
 using namespace std::string_literals;
 
-TEST_CASE("Reading data from systemd-networkd")
+TEST_CASE("systemd-networkd managed links")
 {
     TEST_SYSREPO_INIT_LOGS;
 

@@ -38,6 +38,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "4fbb1fea_d3df7cb3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-18T08:16:07Z",
+      "side": 1,
+      "message": "the tests look OK in newer patches",
+      "parentUuid": "b30552e7_17b52f0e",
+      "revId": "c0fc42729db3a1c06d86d8033eb5ae4eedafbd03",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "905dd85b_f6249887",
         "filename": "tests/yang/yanglint/czechlight-network/autoconf-ipv4.json",
         "patchSetId": 2

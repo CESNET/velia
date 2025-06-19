@@ -20,7 +20,7 @@ using namespace std::string_literals;
 using ChangedUnits = velia::network::IETFInterfacesConfig::ChangedUnits;
 
 const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
-#define NETWORK_FILE(LINK_NAME) fakeConfigDir / LINK_NAME ".network"
+#define NETWORK_FILE(LINK_NAME) fakeConfigDir / "10-" LINK_NAME ".network"
 #define REQUIRE_NETWORK_CONFIGURATION(LINK_NAME, CONTENTS) \
     REQUIRE(std::filesystem::exists(NETWORK_FILE(LINK_NAME))); \
     REQUIRE(velia::utils::readFileToString(NETWORK_FILE(LINK_NAME)) == CONTENTS);

@@ -161,7 +161,7 @@ IETFInterfacesConfig::ChangedUnits IETFInterfacesConfig::updateNetworkFiles(cons
     ChangedUnits ret;
 
     for (const auto& link : m_managedLinks) {
-        const auto targetFile = configDir / (link + ".network");
+        const auto targetFile = configDir / ("10-"s + link + ".network");
         const bool fileExists = std::filesystem::exists(targetFile);
         const bool updateExists = networkConfig.contains(link);
 

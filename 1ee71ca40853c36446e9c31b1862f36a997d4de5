@@ -16,6 +16,29 @@
       "message": "by the way, [docs](https://www.freedesktop.org/software/systemd/man/latest/networkd.conf.html) says that\n\n\u003e To disable a configuration file supplied by the vendor, the recommended way is to place a symlink to /dev/null in the configuration directory in /etc/, with the same filename as the vendor configuration file.\n\nThe effect is the same though.",
       "revId": "1ee71ca40853c36446e9c31b1862f36a997d4de5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c80bb87_e97961f0",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-06-19T12:51:52Z",
+      "side": 1,
+      "message": "rather than producing an empty file, writing out a file which sets all supported bits to \"disabled\" is probably better and more robust (if only because we won\u0027t have to check whether any other file in the system matches that link)\n\n(just recording what we agreed to do during today\u0027s call)",
+      "range": {
+        "startLine": 95,
+        "startChar": 43,
+        "endLine": 95,
+        "endChar": 55
+      },
+      "revId": "1ee71ca40853c36446e9c31b1862f36a997d4de5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

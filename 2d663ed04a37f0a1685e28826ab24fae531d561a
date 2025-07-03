@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0e3bde7d_af6d6c71",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-03T13:25:55Z",
+      "side": 1,
+      "message": "The changes in PS5 now require an explicit configuration for all allowed interface names. What I was proposing was a rule to enforce \"at least one interface is configured\", i.e., \"there\u0027s at least one enabled interface with an enabled protocol with either an enabled address or enabled autoconfiguration\".",
+      "parentUuid": "dd7ea6a1_54d3ca94",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 45
+      },
+      "revId": "2d663ed04a37f0a1685e28826ab24fae531d561a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c31a9cd_c02eb9dd",
         "filename": "src/main-system.cpp",
         "patchSetId": 1

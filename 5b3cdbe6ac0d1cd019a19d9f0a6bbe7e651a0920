@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6cfda98_53577482",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-03T13:17:55Z",
+      "side": 1,
+      "message": "This will need some changes in br2-external:\n\n- rename files in /usr and/or in the systemd generator\n- rename files in `/cfg/network` at the time the update is being installed (plus some way, maybe piggybacking on the \"config schema revision number\", to figure out whether it\u0027s been moved or not)",
+      "revId": "5b3cdbe6ac0d1cd019a19d9f0a6bbe7e651a0920",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

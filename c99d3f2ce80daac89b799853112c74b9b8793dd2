@@ -16,6 +16,24 @@
       "message": "This will require a change in br2-external which adds some config to the bidi amps (since all of the 50+ devices have booted already, and they likely have no /ietf-interfaces:interface in their startup config). If the migration is not in place, a SW update will fail to boot.",
       "revId": "c99d3f2ce80daac89b799853112c74b9b8793dd2",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7750bff_1256401d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-08T07:53:58Z",
+      "side": 1,
+      "message": "https://gerrit.cesnet.cz/c/CzechLight/br2-external/+/8875",
+      "parentUuid": "9ce8e465_f7fb0cb9",
+      "revId": "c99d3f2ce80daac89b799853112c74b9b8793dd2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

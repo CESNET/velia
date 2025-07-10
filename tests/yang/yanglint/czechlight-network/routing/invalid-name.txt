@@ -1,0 +1,1 @@
+libyang err : Only one control-plane-protocol named 'static' with type 'ietf-routing:static' is supported. (/ietf-routing:routing/control-plane-protocols/control-plane-protocol[type='ietf-routing:static'][name='static-routing'])

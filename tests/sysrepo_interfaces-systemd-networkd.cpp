@@ -103,6 +103,7 @@ EmitLLDP=nearest-bridge
 
     const std::vector<std::string> managedLinks{"br0", "eth0", "eth1", "eth2"};
     REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0", "eth1"}, .changedOrNew = {"br0", "eth2"}})).IN_SEQUENCE(seq1);
+    REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
     auto network = std::make_shared<velia::network::IETFInterfacesConfig>(srSess, fakeConfigDir, managedLinks, [&](const ChangedUnits& update) {
         fake.cb(update);
 
@@ -471,6 +472,155 @@ EmitLLDP=nearest-bridge
         }
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
+        client.applyChanges();
+    }
+
+    SECTION("Routing")
+    {
+        expectedContents.set("eth0", R"([Match]
+Name=eth0
+
+[Network]
+Address=192.0.2.1/24
+Address=2001:db8::1/32
+IPv6AcceptRA=false
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+
+[Route]
+Destination=0.0.0.0/0
+Gateway=192.0.2.254
+
+[Route]
+Destination=1.1.1.1/32
+Gateway=192.0.2.254
+
+[Route]
+Destination=2001:db8:abcd:1234::/64
+Gateway=2001:db8::2
+)");
+
+        expectedContents.set("eth1", R"([Match]
+Name=eth1
+
+[Network]
+IPv6AcceptRA=true
+DHCP=ipv4
+LLDP=true
+EmitLLDP=nearest-bridge
+
+[Route]
+Destination=8.8.8.8/32
+Gateway=192.0.2.13
+
+[Route]
+Destination=198.51.100.0/24
+Gateway=192.0.2.111
+)");
+
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/enabled", "true");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/prefix-length", "24");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/prefix-length", "32");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "false");
+
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/type", "iana-if-type:ethernetCsmacd");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/enabled", "true");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv4/czechlight-network:dhcp-client", "true");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
+
+        // some random routes
+        constexpr auto yangV4RoutePrefix = "/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name='static'][type='ietf-routing:static']/static-routes/ietf-ipv4-unicast-routing:ipv4";
+        constexpr auto yangV6RoutePrefix = "/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name='static'][type='ietf-routing:static']/static-routes/ietf-ipv6-unicast-routing:ipv6";
+
+        client.setItem(yangV4RoutePrefix + "/route[destination-prefix='0.0.0.0/0']/next-hop/next-hop-address"s, "192.0.2.254");
+        client.setItem(yangV4RoutePrefix + "/route[destination-prefix='0.0.0.0/0']/next-hop/outgoing-interface"s, "eth0");
+
+        client.setItem(yangV4RoutePrefix + "/route[destination-prefix='1.1.1.1/32']/next-hop/next-hop-address"s, "192.0.2.254");
+        client.setItem(yangV4RoutePrefix + "/route[destination-prefix='1.1.1.1/32']/next-hop/outgoing-interface"s, "eth0");
+
+        client.setItem(yangV4RoutePrefix + "/route[destination-prefix='8.8.8.8/32']/next-hop/next-hop-address"s, "192.0.2.13");
+        client.setItem(yangV4RoutePrefix + "/route[destination-prefix='8.8.8.8/32']/next-hop/outgoing-interface"s, "eth1");
+
+        client.setItem(yangV4RoutePrefix + "/route[destination-prefix='198.51.100.0/24']/next-hop/next-hop-address"s, "192.0.2.111");
+        client.setItem(yangV4RoutePrefix + "/route[destination-prefix='198.51.100.0/24']/next-hop/outgoing-interface"s, "eth1");
+
+        client.setItem(yangV6RoutePrefix + "/route[destination-prefix='2001:db8:abcd:1234::/64']/next-hop/next-hop-address"s, "2001:db8::2");
+        client.setItem(yangV6RoutePrefix + "/route[destination-prefix='2001:db8:abcd:1234::/64']/next-hop/outgoing-interface"s, "eth0");
+
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0", "eth1"}})).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
+        client.applyChanges();
+
+        // A change made soloely in the ietf-interfaces should create full config with routing
+        expectedContents.set("eth0", R"([Match]
+Name=eth0
+
+[Network]
+Address=192.0.2.1/24
+Address=192.0.2.100/24
+Address=2001:db8::1/32
+IPv6AcceptRA=false
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+
+[Route]
+Destination=0.0.0.0/0
+Gateway=192.0.2.254
+
+[Route]
+Destination=1.1.1.1/32
+Gateway=192.0.2.254
+
+[Route]
+Destination=2001:db8:abcd:1234::/64
+Gateway=2001:db8::2
+)");
+
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.100']/prefix-length", "24");
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
+        client.applyChanges();
+
+        // Changes made in ietf-routing model only should be reflected in the network config
+        expectedContents.set("eth0", R"([Match]
+Name=eth0
+
+[Network]
+Address=192.0.2.1/24
+Address=192.0.2.100/24
+Address=2001:db8::1/32
+IPv6AcceptRA=false
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+
+[Route]
+Destination=0.0.0.0/0
+Gateway=192.0.2.254
+
+[Route]
+Destination=1.1.1.1/32
+Gateway=192.0.2.254
+)");
+        client.deleteItem(yangV6RoutePrefix + "/route[destination-prefix='2001:db8:abcd:1234::/64']"s);
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
+        client.applyChanges();
+
+        // Disabled interfaces do not produce routes in configs
+        expectedContents.set("eth1", R"([Match]
+Name=eth1
+
+[Network]
+IPv6AcceptRA=true
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)");
+        client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv4/enabled", "false");
+        REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
     }
 }

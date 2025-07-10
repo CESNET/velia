@@ -1,0 +1,57 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {},
+        "ietf-ip:ipv6": {},
+      }
+    ]
+  },
+  "ietf-routing:routing": {
+    "control-plane-protocols": {
+      "control-plane-protocol": [
+        {
+          "type": "ietf-routing:static",
+          "name": "static",
+          "static-routes": {
+            "ietf-ipv4-unicast-routing:ipv4": {
+              "route": [
+                {
+                  "description": "Missing interface",
+                  "destination-prefix": "192.0.2.0/25",
+                  "next-hop": {
+                    "next-hop-address": "192.0.2.1"
+                  }
+                },
+                {
+                  "destination-prefix": "192.0.2.128/25",
+                  "next-hop": {
+                    "outgoing-interface": "eth0"
+                  }
+                }
+              ]
+            },
+            "ietf-ipv6-unicast-routing:ipv6": {
+              "route": [
+                {
+                  "destination-prefix": "2001:db8:1234::/64",
+                  "next-hop": {
+                    "outgoing-interface": "eth0"
+                  }
+                },
+                {
+                  "destination-prefix": "2001:db8:1235::/64",
+                  "next-hop": {
+                    "next-hop-address": "2001:db8:1235::1"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -507,6 +507,9 @@ if(BUILD_TESTING)
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2025-06-06.yang
+        ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
+        ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
+        ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
     )
     collect_yangdata_tests(
         DIRECTORY czechlight-network/common
@@ -530,6 +533,12 @@ if(BUILD_TESTING)
         SCHEMA
           ${COMMON_NETWORK_MODELS}
           ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network-sdn-generic@2025-06-06.yang
+    )
+
+    collect_yangdata_tests(
+        DIRECTORY czechlight-network/routing
+        SCHEMA
+          ${COMMON_NETWORK_MODELS}
     )
 
     yangdata_test(NAME "yang/network-data/ietf-interfaces-sdn-inline.json"

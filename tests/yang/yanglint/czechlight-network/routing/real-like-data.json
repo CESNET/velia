@@ -1,0 +1,70 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {},
+        "ietf-ip:ipv6": {}
+      },
+      {
+        "name": "eth1",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {},
+        "ietf-ip:ipv6": {}
+      }
+    ]
+  },
+  "ietf-routing:routing": {
+    "control-plane-protocols": {
+      "control-plane-protocol": [
+        {
+          "type": "ietf-routing:static",
+          "name": "static",
+          "static-routes": {
+            "ietf-ipv4-unicast-routing:ipv4": {
+              "route": [
+                {
+                  "description": "Default route",
+                  "destination-prefix": "0.0.0.0/0",
+                  "next-hop": {
+                    "outgoing-interface": "eth1",
+                    "next-hop-address": "192.0.2.1"
+                  }
+                },
+                {
+                  "description": "TEST-NET-1",
+                  "destination-prefix": "192.0.2.0/24",
+                  "next-hop": {
+                    "outgoing-interface": "eth0",
+                    "next-hop-address": "192.0.2.1"
+                  }
+                },
+                {
+                  "description": "A single address from TEST-NET-3",
+                  "destination-prefix": "203.0.113.113/32",
+                  "next-hop": {
+                    "outgoing-interface": "eth0",
+                    "next-hop-address": "192.0.2.111"
+                  }
+                }
+              ]
+            },
+            "ietf-ipv6-unicast-routing:ipv6": {
+              "route": [
+                {
+                  "description": "TEST_NET-1",
+                  "destination-prefix": "2001:db8::/32",
+                  "next-hop": {
+                    "outgoing-interface": "eth0",
+                    "next-hop-address": "2001:db8::1"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

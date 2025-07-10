@@ -1,0 +1,1 @@
+libyang err : Invalid leafref value "br0" - no target instance "/if:interfaces/if:interface/if:name" with the same value. (/ietf-routing:routing/control-plane-protocols/control-plane-protocol[type='ietf-routing:static'][name='static']/static-routes/ietf-ipv4-unicast-routing:ipv4/route[destination-prefix='0.0.0.0/0']/next-hop/outgoing-interface)

@@ -118,6 +118,42 @@ void addNetworkConfig(NetworkConfiguration& configValues, const std::string& lin
 
     configValues.emplace("Network", std::move(network));
 }
+
+/** @brief Adds values to [Route] section of systemd.network(5) config file. */
+void addRoutingConfig(NetworkConfiguration& configValues, const std::string& linkName, const libyang::DataNode& linkEntry, const std::optional<libyang::DataNode>& routingEntry)
+{
+    if (!routingEntry) {
+        return;
+    }
+
+    for (const auto& [ipProto, routesContainer] : {std::pair<std::string, std::string>{"ipv4", "ietf-ipv4-unicast-routing:ipv4"}, {"ipv6", "ietf-ipv6-unicast-routing:ipv6"}}) {
+        if (!protocolEnabled(linkEntry, ipProto)) {
+            continue;
+        }
+
+        const auto routes = routingEntry->findXPath("/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name='static'][type='ietf-routing:static']/static-routes/" + routesContainer + "/route");
+        for (const auto& routeEntry : routes) {
+            const auto nextHop = velia::utils::getUniqueSubtree(routeEntry, "next-hop");
+
+            std::vector<std::string> route;
+            route.emplace_back("Destination="s + velia::utils::asString(velia::utils::getUniqueSubtree(routeEntry, "destination-prefix").value()));
+            route.emplace_back("GatewayOnLink=no");
+
+            auto outInterfaceNode = velia::utils::getUniqueSubtree(*nextHop, "outgoing-interface");
+            auto nextHopAddressNode = velia::utils::getUniqueSubtree(*nextHop, "next-hop-address");
+
+            if (outInterfaceNode && velia::utils::asString(*outInterfaceNode) != linkName) {
+                continue;
+            } else if (outInterfaceNode && !nextHopAddressNode) {
+                route.emplace_back("Scope=link");
+            } else if (nextHopAddressNode) {
+                route.emplace_back("Gateway="s + velia::utils::asString(*nextHopAddressNode));
+            }
+
+            configValues.emplace("Route", std::move(route));
+        }
+    }
+}
 }
 
 namespace velia::network {
@@ -149,6 +185,12 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
 {
     std::map<std::string, std::optional<std::string>> networkConfigFiles;
 
+    std::optional<libyang::DataNode> routingEntry;
+    auto routingData = session.getData("/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name='static'][type='ietf-routing:static']");
+    if (routingData) {
+        routingEntry = routingData->findPath("/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name='static'][type='ietf-routing:static']");
+    }
+
     for (const auto& linkName : m_managedLinks) {
         auto data = session.getData("/ietf-interfaces:interfaces/interface[name='" + linkName + "']");
         if (!data) {
@@ -167,6 +209,7 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
 
         NetworkConfiguration configValues;
         addNetworkConfig(configValues, linkName, linkEntry);
+        addRoutingConfig(configValues, linkName, linkEntry, routingEntry);
 
         networkConfigFiles[linkName] = generateNetworkConfigFile(linkName, configValues);
     }

@@ -19,6 +19,10 @@ module czechlight-network {
         prefix ianaift;
     }
 
+    import ietf-ipv4-unicast-routing {
+        prefix v4ur;
+    }
+
     import ietf-ipv6-unicast-routing {
         prefix v6ur;
     }
@@ -39,15 +43,12 @@ module czechlight-network {
     // We don't support discontinuity time (yet)
     deviation /if:interfaces/if:interface/if:statistics/if:discontinuity-time { deviate not-supported; }
 
-    // IPv6 router advertisements is not supported
+    // IPv6 router advertisements is not supported, as per RFC8349 App. B.
     deviation /if:interfaces/if:interface/ip:ipv6/v6ur:ipv6-router-advertisements { deviate not-supported; }
 
     // Remove deprecated ietf-interfaces-state and ietf-routing containers. Beware, rt:routing-state references if:interfaces-state.
     deviation /rt:routing-state { deviate not-supported; }
     deviation /if:interfaces-state { deviate not-supported; }
-
-    // As of now we implement the ietf-routing model to contain operational data only
-    deviation /rt:routing { deviate add { config false; } }
 
     // We do not support configuring some parts of if:interfaces tree
     deviation /if:interfaces/if:interface/ip:ipv4/ip:forwarding { deviate add { config false; } }
@@ -163,4 +164,64 @@ module czechlight-network {
         base rt:routing-protocol;
         description "Identity for route installed by router advertisement.";
     }
+
+    // We do not support user defined RIBs (RFC 8349, App. B)
+    deviation /rt:routing/rt:ribs {
+      deviate add {
+        config false;
+      }
+    }
+
+    deviation /rt:routing/rt:control-plane-protocols/rt:control-plane-protocol {
+        deviate add {
+            must '(./rt:name = "static") and (./rt:type = "rt:static")' {
+                error-message "Only one control-plane-protocol named 'static' with type 'ietf-routing:static' is supported.";
+            }
+        }
+    }
+
+    // Special routing options are not supported
+    deviation /rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes/v4ur:ipv4/v4ur:route/v4ur:next-hop/v4ur:next-hop-options/v4ur:special-next-hop {
+        deviate not-supported;
+    }
+    deviation /rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes/v4ur:ipv4/v4ur:route/v4ur:next-hop/v4ur:next-hop-options/v4ur:next-hop-list {
+        deviate not-supported;
+    }
+    deviation /rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes/v6ur:ipv6/v6ur:route/v6ur:next-hop/v6ur:next-hop-options/v6ur:special-next-hop {
+        deviate not-supported;
+    }
+    deviation /rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes/v6ur:ipv6/v6ur:route/v6ur:next-hop/v6ur:next-hop-options/v6ur:next-hop-list {
+        deviate not-supported;
+    }
+
+    // Our implementation currently requires that the static routes have both interfaces and next hop address specified
+    deviation /rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes/v4ur:ipv4/v4ur:route/v4ur:next-hop/v4ur:next-hop-options/v4ur:simple-next-hop/v4ur:outgoing-interface {
+        deviate add {
+            mandatory true;
+        }
+    }
+    deviation /rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes/v4ur:ipv4/v4ur:route/v4ur:next-hop/v4ur:next-hop-options/v4ur:simple-next-hop/v4ur:next-hop-address {
+        deviate add {
+            mandatory true;
+        }
+    }
+    deviation /rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes/v6ur:ipv6/v6ur:route/v6ur:next-hop/v6ur:next-hop-options/v6ur:simple-next-hop/v6ur:outgoing-interface {
+        deviate add {
+            mandatory true;
+        }
+    }
+    deviation /rt:routing/rt:control-plane-protocols/rt:control-plane-protocol/rt:static-routes/v6ur:ipv6/v6ur:route/v6ur:next-hop/v6ur:next-hop-options/v6ur:simple-next-hop/v6ur:next-hop-address {
+        deviate add {
+            mandatory true;
+        }
+    }
+
+    // Executing active-route is not supported
+    deviation /rt:routing/rt:ribs/rt:rib/rt:active-route {
+        deviate not-supported;
+    }
+
+    // Please note that this model intentionally does not require static routes to be configured when the interface is configured with static IP address.
+    // If the interface is configured with static IP address, the routing protocol will automatically add a route to the network of the interface.
+    // This is done to avoid confusion and to keep the configuration simple. On the other hand, administrators must be careful not to lock themselves out.
 }

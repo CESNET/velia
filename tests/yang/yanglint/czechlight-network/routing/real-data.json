@@ -1,0 +1,65 @@
+{
+  "ietf-interfaces:interfaces": {
+    "interface": [
+      {
+        "name": "eth0",
+        "type": "iana-if-type:ethernetCsmacd",
+        "ietf-ip:ipv4": {}
+      }
+    ]
+  },
+  "ietf-routing:routing": {
+    "control-plane-protocols": {
+      "control-plane-protocol": [
+        {
+          "type": "ietf-routing:static",
+          "name": "static",
+          "static-routes": {
+            "ietf-ipv4-unicast-routing:ipv4": {
+              "route": [
+                {
+                  "destination-prefix": "0.0.0.0/0",
+                  "next-hop": {
+                    "outgoing-interface": "eth0",
+                    "next-hop-address": "10.0.0.254"
+                  }
+                },
+                {
+                  "destination-prefix": "1.1.1.1/32",
+                  "next-hop": {
+                    "outgoing-interface": "eth0",
+                    "next-hop-address": "10.0.0.254"
+                  }
+                },
+                {
+                  "destination-prefix": "10.0.0.0/24",
+                  "next-hop": {
+                    "outgoing-interface": "eth0",
+                    "next-hop-address": "10.0.0.254"
+                  }
+                },
+                {
+                  "destination-prefix": "195.113.144.201/32",
+                  "next-hop": {
+                    "outgoing-interface": "eth0",
+                    "next-hop-address": "10.0.0.254"
+                  }
+                }
+              ]
+            },
+            "ietf-ipv6-unicast-routing:ipv6": {
+              "route": [
+                {
+                  "destination-prefix": "fe80::/64",
+                  "next-hop": {
+                    "outgoing-interface": "eth0",
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

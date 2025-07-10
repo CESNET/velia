@@ -24,7 +24,7 @@ const auto IETF_IPV4_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv4-unicast-routing";
 const auto IETF_IPV6_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv6-unicast-routing";
 const auto IETF_INTERFACES = "/"s + IETF_INTERFACES_MODULE_NAME + ":interfaces"s;
 
-using NetworkConfiguration = std::map<std::string, std::vector<std::string>>;
+using NetworkConfiguration = std::multimap<std::string, std::vector<std::string>>;
 
 std::string generateNetworkConfigFile(const std::string& linkName, const NetworkConfiguration& values)
 {
@@ -62,8 +62,10 @@ bool protocolEnabled(const libyang::DataNode& linkEntry, const std::string& prot
 
 /** @brief Adds values to [Network] section of systemd.network(5) config file. */
 void addNetworkConfig(NetworkConfiguration& configValues, const std::string& linkName, const libyang::DataNode& linkEntry) {
+    std::vector<std::string> network;
+
     if (auto node = velia::utils::getUniqueSubtree(linkEntry, "description")) {
-        configValues["Network"].push_back("Description="s + velia::utils::asString(node.value()));
+        network.push_back("Description="s + velia::utils::asString(node.value()));
     }
 
     // if addresses present, generate them...
@@ -81,7 +83,7 @@ void addNetworkConfig(NetworkConfiguration& configValues, const std::string& lin
             auto prefixLen = velia::utils::asString(velia::utils::getUniqueSubtree(ipEntry, "prefix-length").value());
 
             spdlog::get("system")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
-            configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
+            network.push_back("Address="s + ipAddress + "/" + prefixLen);
         }
     }
 
@@ -90,29 +92,31 @@ void addNetworkConfig(NetworkConfiguration& configValues, const std::string& lin
     bool isSlave = false;
 
     if (auto node = velia::utils::getUniqueSubtree(linkEntry, "czechlight-network:bridge")) {
-        configValues["Network"].push_back("Bridge="s + velia::utils::asString(node.value()));
+        network.push_back("Bridge="s + velia::utils::asString(node.value()));
         isSlave = true;
     }
 
     if (!protocolEnabled(linkEntry, "ipv6") && !isSlave) {
-        configValues["Network"].push_back("LinkLocalAddressing=no");
+        network.push_back("LinkLocalAddressing=no");
     }
 
     // network autoconfiguration
     if (auto node = velia::utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses"); protocolEnabled(linkEntry, "ipv6") && velia::utils::asString(node.value()) == "true"s) {
-        configValues["Network"].push_back("IPv6AcceptRA=true");
+        network.push_back("IPv6AcceptRA=true");
     } else {
-        configValues["Network"].push_back("IPv6AcceptRA=false");
+        network.push_back("IPv6AcceptRA=false");
     }
 
     if (auto node = velia::utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client"); protocolEnabled(linkEntry, "ipv4") && velia::utils::asString(node.value()) == "true"s) {
-        configValues["Network"].push_back("DHCP=ipv4");
+        network.push_back("DHCP=ipv4");
     } else {
-        configValues["Network"].push_back("DHCP=no");
+        network.push_back("DHCP=no");
     }
 
-    configValues["Network"].push_back("LLDP=true");
-    configValues["Network"].push_back("EmitLLDP=nearest-bridge");
+    network.push_back("LLDP=true");
+    network.push_back("EmitLLDP=nearest-bridge");
+
+    configValues.emplace("Network", std::move(network));
 }
 }
 

@@ -23,6 +23,7 @@ const auto IETF_ROUTING_MODULE_NAME = "ietf-routing"s;
 const auto IETF_IPV4_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv4-unicast-routing";
 const auto IETF_IPV6_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv6-unicast-routing";
 const auto IETF_INTERFACES = "/"s + IETF_INTERFACES_MODULE_NAME + ":interfaces"s;
+const auto IETF_ROUTING = "/"s + IETF_ROUTING_MODULE_NAME + ":routing"s;
 
 using NetworkConfiguration = std::multimap<std::string, std::vector<std::string>>;
 
@@ -118,6 +119,42 @@ void addNetworkConfig(NetworkConfiguration& configValues, const std::string& lin
 
     configValues.emplace("Network", std::move(network));
 }
+
+/** @brief Adds values to [Route] section of systemd.network(5) config file. */
+void addRoutingConfig(velia::Log log, NetworkConfiguration& configValues, const std::string& linkName, const libyang::DataNode& linkEntry, const std::optional<libyang::DataNode>& routingEntry)
+{
+    if (!routingEntry) {
+        log->debug("{}.network: no routes specified in ietf-routing", linkName);
+        return;
+    }
+
+    for (const auto& [ipProto, routesContainer] : {std::pair<std::string, std::string>{"ipv4", "ietf-ipv4-unicast-routing:ipv4"}, {"ipv6", "ietf-ipv6-unicast-routing:ipv6"}}) {
+        if (!protocolEnabled(linkEntry, ipProto)) {
+            log->debug("{}.network: {} not enabled, skipping any configured {} routes", linkName, ipProto, ipProto);
+            continue;
+        }
+
+        const auto routes = routingEntry->findXPath("/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name='static'][type='ietf-routing:static']/static-routes/" + routesContainer + "/route");
+        for (const auto& routeEntry : routes) {
+            const auto nextHopNode = velia::utils::getUniqueSubtree(routeEntry, "next-hop");
+            const auto outInterface = velia::utils::asString(*velia::utils::getUniqueSubtree(*nextHopNode, "outgoing-interface"));
+
+            if (outInterface != linkName) {
+                continue;
+            }
+
+            const auto destination = velia::utils::asString(*velia::utils::getUniqueSubtree(routeEntry, "destination-prefix"));
+            const auto nextHopAddress = velia::utils::asString(*velia::utils::getUniqueSubtree(*nextHopNode, "next-hop-address"));
+
+            log->debug("{}.network: adding route {} via {} dev {}", linkName, destination, nextHopAddress, linkName);
+            configValues.emplace("Route", std::vector<std::string>{
+                                              "Destination="s + destination,
+                                              "GatewayOnLink=no",
+                                              "Gateway="s + nextHopAddress,
+                                          });
+        }
+    }
+}
 }
 
 namespace velia::network {
@@ -143,11 +180,24 @@ IETFInterfacesConfig::IETFInterfacesConfig(::sysrepo::Session srSess, std::files
         IETF_INTERFACES,
         0,
         sysrepo::SubscribeOptions::DoneOnly | sysrepo::SubscribeOptions::Enabled);
+
+    m_srSubscribe->onModuleChange(
+        IETF_ROUTING_MODULE_NAME,
+        [this](auto session, auto, auto, auto, auto, auto) { return moduleChange(session); },
+        IETF_ROUTING,
+        0,
+        sysrepo::SubscribeOptions::DoneOnly | sysrepo::SubscribeOptions::Enabled);
 }
 
 sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session) const
 {
     std::map<std::string, std::optional<std::string>> networkConfigFiles;
+
+    std::optional<libyang::DataNode> routingEntry;
+    auto routingData = session.getData("/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name='static'][type='ietf-routing:static']");
+    if (routingData) {
+        routingEntry = routingData->findPath("/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name='static'][type='ietf-routing:static']");
+    }
 
     for (const auto& linkName : m_managedLinks) {
         auto data = session.getData("/ietf-interfaces:interfaces/interface[name='" + linkName + "']");
@@ -167,6 +217,7 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
 
         NetworkConfiguration configValues;
         addNetworkConfig(configValues, linkName, linkEntry);
+        addRoutingConfig(m_log, configValues, linkName, linkEntry, routingEntry);
 
         networkConfigFiles[linkName] = generateNetworkConfigFile(linkName, configValues);
     }

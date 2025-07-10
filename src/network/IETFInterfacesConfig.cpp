@@ -24,7 +24,9 @@ const auto IETF_IPV4_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv4-unicast-routing";
 const auto IETF_IPV6_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv6-unicast-routing";
 const auto IETF_INTERFACES = "/"s + IETF_INTERFACES_MODULE_NAME + ":interfaces"s;
 
-std::string generateNetworkConfigFile(const std::string& linkName, const std::map<std::string, std::vector<std::string>>& values)
+using NetworkConfiguration = std::map<std::string, std::vector<std::string>>;
+
+std::string generateNetworkConfigFile(const std::string& linkName, const NetworkConfiguration& values)
 {
     std::ostringstream oss;
 
@@ -56,6 +58,61 @@ bool protocolEnabled(const libyang::DataNode& linkEntry, const std::string& prot
     }
 
     return false;
+}
+
+/** @brief Adds values to [Network] section of systemd.network(5) config file. */
+void addNetworkConfig(NetworkConfiguration& configValues, const std::string& linkName, const libyang::DataNode& linkEntry) {
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, "description")) {
+        configValues["Network"].push_back("Description="s + velia::utils::asString(node.value()));
+    }
+
+    // if addresses present, generate them...
+    for (const auto& ipProto : {"ipv4", "ipv6"}) {
+        // ...but only if the protocol is enabled
+        if (!protocolEnabled(linkEntry, ipProto)) {
+            continue;
+        }
+
+        const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
+        const auto addresses = linkEntry.findXPath(IPAddressListXPath);
+
+        for (const auto& ipEntry : addresses) {
+            auto ipAddress = velia::utils::asString(velia::utils::getUniqueSubtree(ipEntry, "ip").value());
+            auto prefixLen = velia::utils::asString(velia::utils::getUniqueSubtree(ipEntry, "prefix-length").value());
+
+            spdlog::get("system")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
+            configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
+        }
+    }
+
+    // systemd-networkd auto-generates IPv6 link-layer addresses https://www.freedesktop.org/software/systemd/man/systemd.network.html#LinkLocalAddressing=
+    // disable this behaviour when IPv6 is disabled or when link enslaved
+    bool isSlave = false;
+
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, "czechlight-network:bridge")) {
+        configValues["Network"].push_back("Bridge="s + velia::utils::asString(node.value()));
+        isSlave = true;
+    }
+
+    if (!protocolEnabled(linkEntry, "ipv6") && !isSlave) {
+        configValues["Network"].push_back("LinkLocalAddressing=no");
+    }
+
+    // network autoconfiguration
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses"); protocolEnabled(linkEntry, "ipv6") && velia::utils::asString(node.value()) == "true"s) {
+        configValues["Network"].push_back("IPv6AcceptRA=true");
+    } else {
+        configValues["Network"].push_back("IPv6AcceptRA=false");
+    }
+
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client"); protocolEnabled(linkEntry, "ipv4") && velia::utils::asString(node.value()) == "true"s) {
+        configValues["Network"].push_back("DHCP=ipv4");
+    } else {
+        configValues["Network"].push_back("DHCP=no");
+    }
+
+    configValues["Network"].push_back("LLDP=true");
+    configValues["Network"].push_back("EmitLLDP=nearest-bridge");
 }
 }
 
@@ -104,59 +161,8 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
             continue;
         }
 
-        std::map<std::string, std::vector<std::string>> configValues;
-
-        if (auto node = utils::getUniqueSubtree(linkEntry, "description")) {
-            configValues["Network"].push_back("Description="s + utils::asString(node.value()));
-        }
-
-        // if addresses present, generate them...
-        for (const auto& ipProto : {"ipv4", "ipv6"}) {
-            // ...but only if the protocol is enabled
-            if (!protocolEnabled(linkEntry, ipProto)) {
-                continue;
-            }
-
-            const auto IPAddressListXPath = "ietf-ip:"s + ipProto + "/ietf-ip:address";
-            const auto addresses = linkEntry.findXPath(IPAddressListXPath);
-
-            for (const auto& ipEntry : addresses) {
-                auto ipAddress = utils::asString(utils::getUniqueSubtree(ipEntry, "ip").value());
-                auto prefixLen = utils::asString(utils::getUniqueSubtree(ipEntry, "prefix-length").value());
-
-                spdlog::get("system")->trace("Link {}: address {}/{} configured", linkName, ipAddress, prefixLen);
-                configValues["Network"].push_back("Address="s + ipAddress + "/" + prefixLen);
-            }
-        }
-
-        // systemd-networkd auto-generates IPv6 link-layer addresses https://www.freedesktop.org/software/systemd/man/systemd.network.html#LinkLocalAddressing=
-        // disable this behaviour when IPv6 is disabled or when link enslaved
-        bool isSlave = false;
-
-        if (auto node = utils::getUniqueSubtree(linkEntry, "czechlight-network:bridge")) {
-            configValues["Network"].push_back("Bridge="s + utils::asString(node.value()));
-            isSlave = true;
-        }
-
-        if (!protocolEnabled(linkEntry, "ipv6") && !isSlave) {
-            configValues["Network"].push_back("LinkLocalAddressing=no");
-        }
-
-        // network autoconfiguration
-        if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses"); protocolEnabled(linkEntry, "ipv6") && utils::asString(node.value()) == "true"s) {
-            configValues["Network"].push_back("IPv6AcceptRA=true");
-        } else {
-            configValues["Network"].push_back("IPv6AcceptRA=false");
-        }
-
-        if (auto node = utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client"); protocolEnabled(linkEntry, "ipv4") && utils::asString(node.value()) == "true"s) {
-            configValues["Network"].push_back("DHCP=ipv4");
-        } else {
-            configValues["Network"].push_back("DHCP=no");
-        }
-
-        configValues["Network"].push_back("LLDP=true");
-        configValues["Network"].push_back("EmitLLDP=nearest-bridge");
+        NetworkConfiguration configValues;
+        addNetworkConfig(configValues, linkName, linkEntry);
 
         networkConfigFiles[linkName] = generateNetworkConfigFile(linkName, configValues);
     }

@@ -294,8 +294,14 @@ TEST_CASE("concurrent modifications within a systemd-networkd callback")
         managedLinks,
         [&reloaded](const auto&) {
             spdlog::info("running callback: starting to modify devices...");
-            iproute2_exec_and_wait(WAIT, "link", "add", "eth1", "address", "02:02:02:02:02:04", "type", "veth");
-            iproute2_exec_and_wait(WAIT, "link", "set", "eth1", "master", "br0");
+            if (reloaded == 0) {
+                // first run, no eth1, create it
+                iproute2_exec_and_wait(WAIT, "link", "add", "eth1", "address", "02:02:02:02:02:04", "type", "veth");
+                iproute2_exec_and_wait(WAIT, "link", "set", "eth1", "master", "br0");
+            } else {
+                // second run, eth1 exists, just make some modification so that we do not have to check if it is created and delete it etc.
+                iproute2_exec_and_wait(WAIT, "link", "set", "eth1", "address", "02:02:02:02:02:"s + (reloaded % 2 ? "04" : "05"));
+            }
             std::this_thread::sleep_for(WAIT);
             ++reloaded;
         },
@@ -306,6 +312,6 @@ TEST_CASE("concurrent modifications within a systemd-networkd callback")
         });
 
     std::this_thread::sleep_for(WAIT);
-    REQUIRE(reloaded == 1);
+    REQUIRE(reloaded == 2);
     // we're in a network namespace, and there are no doctest SECTIONs, so we do not have to clean up
 }

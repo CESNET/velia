@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afc6f8b4_9cf6c853",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-14T20:46:07Z",
+      "side": 1,
+      "message": "nit: the fact that you had to add an explicit velia:: NS qualifier to some funciton calls broke my worflow which uses `--ignore-space-change` and `--color-moved-ws\u003dignore-all-space`.",
+      "revId": "1be2c451f2503df7ac2ae50231754cdc7f9802de",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

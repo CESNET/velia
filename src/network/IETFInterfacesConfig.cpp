@@ -172,7 +172,9 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
     }
 
     auto changedLinks = updateNetworkFiles(networkConfigFiles, m_configDirectory);
-    m_reloadCb(changedLinks);
+    if (!changedLinks.changedOrNew.empty() || !changedLinks.deleted.empty()) {
+        m_reloadCb(changedLinks);
+    }
     return sysrepo::ErrorCode::Ok;
 }
 

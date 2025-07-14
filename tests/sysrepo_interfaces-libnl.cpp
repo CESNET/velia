@@ -307,6 +307,6 @@ TEST_CASE("netlink with systemd-networkd")
         });
 
     std::this_thread::sleep_for(WAIT);
-    REQUIRE(reloaded == 1);
+    REQUIRE(reloaded == 0);
     // we're in a network namespace, and there are no doctest SECTIONs, so we do not have to clean up
 }

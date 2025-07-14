@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc1c1f01_4dd37e89",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-14T20:52:46Z",
+      "side": 1,
+      "message": "the commit message doesn\u0027t explain why this change is needed",
+      "revId": "62625828948c3f1490549d3e672e02b970d775e8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45d93ea8_b03f22ce",
+        "filename": "tests/sysrepo_interfaces-libnl.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-14T20:52:46Z",
+      "side": 1,
+      "message": "this means that the test (and the comment on lines 296-299) is no longer true",
+      "revId": "62625828948c3f1490549d3e672e02b970d775e8",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -346,6 +346,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6828681e_e5113183",
+        "filename": "tests/yang/yanglint/czechlight-network/routing/invalid-next-hop-interface.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:16:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "603e8de2_80b508d9",
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99aa8b22_ba000f26",

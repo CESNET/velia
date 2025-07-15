@@ -263,7 +263,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
     iproute2_exec_and_wait(WAIT, "link", "del", IFACE, "type", "dummy"); // Executed later again by ctest fixture cleanup just for sure. It remains here because of doctest sections: The interface needs to be setup again.
 }
 
-TEST_CASE("netlink with systemd-networkd")
+TEST_CASE("concurrent modifications within a systemd-networkd callback")
 {
     TEST_SYSREPO_INIT_LOGS;
     TEST_SYSREPO_INIT;
@@ -293,10 +293,9 @@ TEST_CASE("netlink with systemd-networkd")
         fakeConfigDir / "running",
         managedLinks,
         [&reloaded](const auto&) {
-            // FIXME: uncomment these to see a crash due to parallel access to a single sysrepo session
-            /* spdlog::info("running callback: starting to modify devices..."); */
-            /* iproute2_exec_and_wait(WAIT, "link", "add", "eth1", "address", "02:02:02:02:02:04", "type", "veth"); */
-            /* iproute2_exec_and_wait(WAIT, "link", "set", "eth1", "master", "br0"); */
+            spdlog::info("running callback: starting to modify devices...");
+            iproute2_exec_and_wait(WAIT, "link", "add", "eth1", "address", "02:02:02:02:02:04", "type", "veth");
+            iproute2_exec_and_wait(WAIT, "link", "set", "eth1", "master", "br0");
             std::this_thread::sleep_for(WAIT);
             ++reloaded;
         },

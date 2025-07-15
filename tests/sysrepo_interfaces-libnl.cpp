@@ -282,7 +282,7 @@ TEST_CASE("concurrent modifications within a systemd-networkd callback")
     std::filesystem::create_directories(startupDir);
     std::filesystem::create_directories(runningDir);
     for (const auto& link : managedLinks) {
-        velia::utils::writeFile(runningDir / std::format("{}.network", link), "just some dummy content so that we can nuke something");
+        velia::utils::writeFile(runningDir / std::format("10-{}.network", link), "just some dummy content so that we can nuke something");
     }
 
     int reloaded = 0;

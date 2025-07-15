@@ -41,6 +41,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6429a0c9_e6cda4b5",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "9d52e22b_752354d5",
+      "range": {
+        "startLine": 494,
+        "startChar": 0,
+        "endLine": 501,
+        "endChar": 86
+      },
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d02470dc_2a52e9cf",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-07-14T21:12:35Z",
       "side": 1,
       "message": "trace (and everywhere else at least for these \"nothing to do here\" things)",
+      "range": {
+        "startLine": 127,
+        "startChar": 13,
+        "endLine": 127,
+        "endChar": 18
+      },
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b28a731e_0e349060",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d02470dc_2a52e9cf",
       "range": {
         "startLine": 127,
         "startChar": 13,
@@ -81,6 +129,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "990e6847_6432aa5d",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6d8dea5_b0d2ab7f",
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ebfd2a64_9d5af928",
@@ -98,6 +164,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e32528e_26b65567",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "ebfd2a64_9d5af928",
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5defec11_8863e140",
@@ -111,6 +195,30 @@
       "writtenOn": "2025-07-14T21:12:35Z",
       "side": 1,
       "message": "let\u0027s DRY this code a bit more, please:\n```\nconst auto routingPrefix \u003d \"/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name\u003d\u0027static\u0027][type\u003d\u0027ietf-routing:static\u0027]\"s;\nif (auto routingData \u003d session.getData(routingPrefix)) {\n    routingEntry \u003d routingData-\u003efindPath(routingPrefix);\n}\n```",
+      "range": {
+        "startLine": 206,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 5
+      },
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d93b1d1_7f991012",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5defec11_8863e140",
       "range": {
         "startLine": 206,
         "startChar": 0,
@@ -144,6 +252,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "139f5350_0d2b444e",
+        "filename": "tests/sysrepo_interfaces-systemd-networkd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "Done.\nI do not know how this relates with my consultation with Michal.",
+      "parentUuid": "fb36c473_c58e36cf",
+      "range": {
+        "startLine": 540,
+        "startChar": 0,
+        "endLine": 544,
+        "endChar": 126
+      },
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9632ad34_0234736c",
@@ -157,6 +289,24 @@
       "writtenOn": "2025-07-14T21:12:35Z",
       "side": 1,
       "message": "If this is the same content except the very last route, let\u0027s use some properly named variables along with operator+ to make it immediately obvious to the reader, please.",
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae39de24_9b9cc30c",
+        "filename": "tests/sysrepo_interfaces-systemd-networkd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9632ad34_0234736c",
       "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -180,6 +330,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "603e8de2_80b508d9",
+        "filename": "tests/yang/yanglint/czechlight-network/routing/invalid-next-hop-interface.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "To be honest, I do not care. If you feel we do not need positive tests, let\u0027s remove it",
+      "parentUuid": "6b01efae_1029cc5b",
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "99aa8b22_ba000f26",
         "filename": "yang/czechlight-network@2025-06-06.yang",
         "patchSetId": 2
@@ -191,6 +359,24 @@
       "writtenOn": "2025-07-14T21:12:35Z",
       "side": 1,
       "message": "don\u0027t we need to add an extra `must` which mandates that the `next-hop:outgoing-interface` is always present?",
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2113e0fa_580841a2",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99aa8b22_ba000f26",
       "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
@@ -208,6 +394,30 @@
       "writtenOn": "2025-07-14T21:12:35Z",
       "side": 1,
       "message": "nit: any reason for moving this one? I was surprised during the review that this was removed, and then confused why it was moved.",
+      "range": {
+        "startLine": 179,
+        "startChar": 1,
+        "endLine": 183,
+        "endChar": 5
+      },
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cdbeac5_92f1eed3",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-15T18:15:47Z",
+      "side": 1,
+      "message": "To keep routing stuff together",
+      "parentUuid": "e87641f6_be820c3b",
       "range": {
         "startLine": 179,
         "startChar": 1,

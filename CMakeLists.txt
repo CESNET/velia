@@ -490,18 +490,6 @@ if(BUILD_TESTING)
     velia_test(NAME sysrepo_system-leds LIBRARIES velia-system FsTestUtils FIXTURE fixture_sysrepo-czechlight-system)
     velia_test(NAME sysrepo_system-journalupload LIBRARIES velia-system FIXTURE fixture_sysrepo-czechlight-system)
 
-    set(fixture_sysrepo-czechlight-network
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2025-06-06.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang
-            --init-data ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/ietf-interfaces.json)
-    velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network)
-
     set(COMMON_NETWORK_MODELS
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
@@ -511,6 +499,18 @@ if(BUILD_TESTING)
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
     )
+
+    set(COMMON_NETWORK_MODELS_INSTALL)
+    foreach(model ${COMMON_NETWORK_MODELS})
+        list(APPEND COMMON_NETWORK_MODELS_INSTALL --install ${model})
+    endforeach()
+
+    set(fixture_sysrepo-czechlight-network
+            ${COMMON_NETWORK_MODELS_INSTALL}
+            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang
+            --init-data ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/ietf-interfaces.json)
+    velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network)
+
     collect_yangdata_tests(
         DIRECTORY czechlight-network/common
         SCHEMA

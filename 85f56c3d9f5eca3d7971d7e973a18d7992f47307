@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c66e17c7_7e6b7e01",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-16T14:17:58Z",
+      "side": 1,
+      "message": "8-O",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 43
+      },
+      "revId": "85f56c3d9f5eca3d7971d7e973a18d7992f47307",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b5abcc2_67501665",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-16T14:17:58Z",
+      "side": 1,
+      "message": "How does this work? There\u0027s no default value, the node is not mandatory, and route(8) says that IPv4 and IPv6 have different default values (which are different from the iproute2\u0027s `ip route`). What exactly happens when no value is defined in the configuration, and why is that a correct thing to do here?",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 66
+      },
+      "revId": "85f56c3d9f5eca3d7971d7e973a18d7992f47307",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

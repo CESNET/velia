@@ -211,6 +211,7 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
     {
         iproute2_exec_and_wait(WAIT, "link", "set", "dev", IFACE, "up");
         iproute2_exec_and_wait(WAIT, "route", "add", "198.51.100.0/24", "dev", IFACE);
+        iproute2_exec_and_wait(WAIT, "route", "add", "203.0.113.0/24", "dev", IFACE, "preference", "222");
         std::this_thread::sleep_for(WAIT);
 
         auto data = dataFromSysrepo(client, "/ietf-routing:routing", sysrepo::Datastore::Operational);
@@ -245,12 +246,21 @@ TEST_CASE("Test ietf-interfaces and ietf-routing")
             REQUIRE(routeIdx > 0);
             REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/next-hop/outgoing-interface"] == IFACE);
             REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/source-protocol"] == "ietf-routing:static");
+            REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/route-preference"] == "0"); // default metric
+        }
+        {
+            auto routeIdx = findRouteIndex("203.0.113.0/24");
+            REQUIRE(routeIdx > 0);
+            REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/next-hop/outgoing-interface"] == IFACE);
+            REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/source-protocol"] == "ietf-routing:static");
+            REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/route-preference"] == "222");
         }
         {
             auto routeIdx = findRouteIndex("192.0.2.0/24");
             REQUIRE(routeIdx > 0);
             REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/next-hop/outgoing-interface"] == IFACE);
             REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/source-protocol"] == "ietf-routing:direct");
+            REQUIRE(data["/routes/route["s + std::to_string(routeIdx) + "]/route-preference"] == "0");
         }
 
         data = dataFromSysrepo(client, "/ietf-routing:routing/ribs/rib[name='ipv6-master']", sysrepo::Datastore::Operational);

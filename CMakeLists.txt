@@ -74,6 +74,14 @@ set(YANG_SRCS
     yang/ietf-routing@2018-03-13.yang
     yang/ietf-ipv4-unicast-routing@2018-03-13.yang
     yang/ietf-ipv6-unicast-routing@2018-03-13.yang
+    yang/iana-bfd-types@2021-10-21.yang
+    yang/iana-routing-types@2017-12-04.yang
+    yang/ietf-bfd-types@2022-09-22.yang
+    yang/ietf-isis@2022-10-19.yang
+    yang/ietf-key-chain@2017-06-15.yang
+    yang/ietf-ospf@2022-10-19.yang
+    yang/ietf-rib-extension@2023-11-20.yang
+    yang/ietf-routing-types@2017-12-04.yang
     yang/czechlight-lldp@2020-11-04.yang
     yang/iana-afn-safi@2013-07-04.yang
     yang/ietf-alarms@2019-09-11.yang
@@ -498,6 +506,7 @@ if(BUILD_TESTING)
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
+        ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-rib-extension@2023-11-20.yang
     )
 
     set(COMMON_NETWORK_MODELS_INSTALL)

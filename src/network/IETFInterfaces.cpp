@@ -374,6 +374,9 @@ void IETFInterfaces::onRouteUpdate(rtnl_route*, int)
 
         values.emplace_back(yangPrefix + "source-protocol", protoStr);
 
+        auto routePreference = rtnl_route_get_priority(route.get());
+        values.emplace_back(yangPrefix + "route-preference", std::to_string(routePreference));
+
         const auto hops = rtnl_route_get_nnexthops(route.get());
         const bool multihop = hops > 1;
         for (auto i = 0; i < hops; i++) {

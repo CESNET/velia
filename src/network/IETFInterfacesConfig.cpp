@@ -20,6 +20,7 @@ const auto CZECHLIGHT_NETWORK_MODULE_NAME = "czechlight-network"s;
 const auto IETF_IP_MODULE_NAME = "ietf-ip"s;
 const auto IETF_INTERFACES_MODULE_NAME = "ietf-interfaces"s;
 const auto IETF_ROUTING_MODULE_NAME = "ietf-routing"s;
+const auto IETF_RIB_EXTENSION_MODULE_NAME = "ietf-rib-extension"s;
 const auto IETF_IPV4_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv4-unicast-routing";
 const auto IETF_IPV6_UNICAST_ROUTING_MODULE_NAME = "ietf-ipv6-unicast-routing";
 const auto IETF_INTERFACES = "/"s + IETF_INTERFACES_MODULE_NAME + ":interfaces"s;
@@ -145,11 +146,13 @@ void addRoutingConfig(velia::Log log, NetworkConfiguration& configValues, const 
 
             const auto destination = velia::utils::asString(*velia::utils::getUniqueSubtree(routeEntry, "destination-prefix"));
             const auto nextHopAddress = velia::utils::asString(*velia::utils::getUniqueSubtree(*nextHopNode, "next-hop-address"));
+            const auto metric = velia::utils::asString(*velia::utils::getUniqueSubtree(*nextHopNode, "preference"));
 
-            log->debug("{}.network: adding route {} via {} dev {}", linkName, destination, nextHopAddress, linkName);
+            log->debug("{}.network: adding route {} via {} dev {} metric {}", linkName, destination, nextHopAddress, linkName, metric);
             configValues.emplace("Route", std::vector<std::string>{
                                               "Destination="s + destination,
                                               "Gateway="s + nextHopAddress,
+                                              "Metric="s + metric,
                                           });
         }
     }
@@ -169,6 +172,7 @@ IETFInterfacesConfig::IETFInterfacesConfig(::sysrepo::Session srSess, std::files
     utils::ensureModuleImplemented(m_srSession, IETF_INTERFACES_MODULE_NAME, "2018-02-20");
     utils::ensureModuleImplemented(m_srSession, IETF_IP_MODULE_NAME, "2018-02-22");
     utils::ensureModuleImplemented(m_srSession, IETF_ROUTING_MODULE_NAME, "2018-03-13");
+    utils::ensureModuleImplemented(m_srSession, IETF_RIB_EXTENSION_MODULE_NAME, "2023-11-20");
     utils::ensureModuleImplemented(m_srSession, IETF_IPV4_UNICAST_ROUTING_MODULE_NAME, "2018-03-13");
     utils::ensureModuleImplemented(m_srSession, IETF_IPV6_UNICAST_ROUTING_MODULE_NAME, "2018-03-13");
     utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_NETWORK_MODULE_NAME, "2025-06-06");

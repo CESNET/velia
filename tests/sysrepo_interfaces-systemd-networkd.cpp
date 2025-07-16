@@ -473,14 +473,17 @@ EmitLLDP=nearest-bridge
 [Route]
 Destination=0.0.0.0/0
 Gateway=192.0.2.254
+Metric=666666
 
 [Route]
 Destination=1.1.1.1/32
 Gateway=192.0.2.254
+Metric=1
 
 [Route]
 Destination=2001:db8:abcd:1234::/64
 Gateway=2001:db8::2
+Metric=0
 )";
 
         expectedContents["eth1"] = R"([Match]
@@ -495,10 +498,12 @@ EmitLLDP=nearest-bridge
 [Route]
 Destination=8.8.8.8/32
 Gateway=192.0.2.13
+Metric=1
 
 [Route]
 Destination=198.51.100.0/24
 Gateway=192.0.2.111
+Metric=1
 )";
 
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/type", "iana-if-type:ethernetCsmacd");
@@ -519,6 +524,7 @@ Gateway=192.0.2.111
 
         client.setItem(yangV4RoutePrefix + "/route[destination-prefix='0.0.0.0/0']/next-hop/next-hop-address"s, "192.0.2.254");
         client.setItem(yangV4RoutePrefix + "/route[destination-prefix='0.0.0.0/0']/next-hop/outgoing-interface"s, "eth0");
+        client.setItem(yangV4RoutePrefix + "/route[destination-prefix='0.0.0.0/0']/next-hop/ietf-rib-extension:preference"s, "666666");
 
         client.setItem(yangV4RoutePrefix + "/route[destination-prefix='1.1.1.1/32']/next-hop/next-hop-address"s, "192.0.2.254");
         client.setItem(yangV4RoutePrefix + "/route[destination-prefix='1.1.1.1/32']/next-hop/outgoing-interface"s, "eth0");
@@ -531,6 +537,7 @@ Gateway=192.0.2.111
 
         client.setItem(yangV6RoutePrefix + "/route[destination-prefix='2001:db8:abcd:1234::/64']/next-hop/next-hop-address"s, "2001:db8::2");
         client.setItem(yangV6RoutePrefix + "/route[destination-prefix='2001:db8:abcd:1234::/64']/next-hop/outgoing-interface"s, "eth0");
+        client.setItem(yangV6RoutePrefix + "/route[destination-prefix='2001:db8:abcd:1234::/64']/next-hop/ietf-rib-extension:preference"s, "0");
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0", "eth1"}})).IN_SEQUENCE(seq1);
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
@@ -552,14 +559,17 @@ EmitLLDP=nearest-bridge
 [Route]
 Destination=0.0.0.0/0
 Gateway=192.0.2.254
+Metric=666666
 
 [Route]
 Destination=1.1.1.1/32
 Gateway=192.0.2.254
+Metric=1
 
 [Route]
 Destination=2001:db8:abcd:1234::/64
 Gateway=2001:db8::2
+Metric=0
 )";
 
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.100']/prefix-length", "24");
@@ -582,10 +592,12 @@ EmitLLDP=nearest-bridge
 [Route]
 Destination=0.0.0.0/0
 Gateway=192.0.2.254
+Metric=666666
 
 [Route]
 Destination=1.1.1.1/32
 Gateway=192.0.2.254
+Metric=1
 )";
         client.deleteItem(yangV6RoutePrefix + "/route[destination-prefix='2001:db8:abcd:1234::/64']"s);
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);

@@ -276,6 +276,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "218fc6bb_a04880f4",
+        "filename": "tests/sysrepo_interfaces-systemd-networkd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-16T14:38:09Z",
+      "side": 1,
+      "message": "Well, I was just saying that from the test code, it was not obvious what is being tested. And then I added a speculation that *maybe* there was some reason for testing some extra corner cases that Michal might have suggested.",
+      "parentUuid": "139f5350_0d2b444e",
+      "range": {
+        "startLine": 540,
+        "startChar": 0,
+        "endLine": 544,
+        "endChar": 126
+      },
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9632ad34_0234736c",
@@ -364,6 +388,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb40ec13_87e4fbb8",
+        "filename": "tests/yang/yanglint/czechlight-network/routing/invalid-next-hop-interface.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-16T14:38:09Z",
+      "side": 1,
+      "message": "OK, let\u0027s keep it as-is",
+      "parentUuid": "6828681e_e5113183",
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99aa8b22_ba000f26",
@@ -436,6 +478,30 @@
       "side": 1,
       "message": "To keep routing stuff together",
       "parentUuid": "e87641f6_be820c3b",
+      "range": {
+        "startLine": 179,
+        "startChar": 1,
+        "endLine": 183,
+        "endChar": 5
+      },
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f9f9caa_2e4d730a",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-16T14:38:09Z",
+      "side": 1,
+      "message": "OK, I understand, but since the feature which is controlled by that container is actually about configuring a host which acts as an IPv6 router, and this patch is about configuring a non-routing Linux host with proper static routes, I would prefer to keep the original order.",
+      "parentUuid": "3cdbeac5_92f1eed3",
       "range": {
         "startLine": 179,
         "startChar": 1,

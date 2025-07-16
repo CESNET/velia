@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4280dd06_57000117",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-16T14:37:26Z",
+      "side": 1,
+      "message": "nit: consider using `NetworkConfiguration::mapped_value`",
+      "range": {
+        "startLine": 65,
+        "startChar": 4,
+        "endLine": 65,
+        "endChar": 28
+      },
+      "revId": "dd90b0407e7ca2cce2e13f3339daf453a02282c1",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

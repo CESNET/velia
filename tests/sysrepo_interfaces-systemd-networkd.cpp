@@ -58,7 +58,7 @@ TEST_CASE("Config data in ietf-interfaces")
     REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0", "eth1"}, .changedOrNew = {"br0", "eth2"}})).IN_SEQUENCE(seq1);
     auto network = std::make_shared<velia::network::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1", "eth2"}, [&fake](const ChangedUnits& update) { fake.cb(update); });
 
-    std::string expectedContents;
+    std::map<std::string, std::string> expectedContents;
 
     SECTION("Setting IPs to eth0")
     {
@@ -70,7 +70,7 @@ TEST_CASE("Config data in ietf-interfaces")
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/description", "Hello world");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -90,7 +90,7 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.2']/ietf-ip:prefix-length", "24");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
             client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6");
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -109,7 +109,7 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -128,7 +128,7 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/enabled", "false");
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -143,12 +143,12 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
     }
 
     SECTION("Two links")
     {
-        std::string expectedContentsEth0 = R"([Match]
+        expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -159,7 +159,7 @@ DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
 )";
-        std::string expectedContentsEth1 = R"([Match]
+        expectedContents["eth1"] = R"([Match]
 Name=eth1
 
 [Network]
@@ -180,8 +180,8 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0", "eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
 
         // Test removing link configuration
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
@@ -189,12 +189,12 @@ EmitLLDP=nearest-bridge
         client.applyChanges();
 
         REQUIRE_NETWORK_EMPTY_CONFIGURATION("eth0");
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
     }
 
     SECTION("Setup a bridge br0 over eth0 and eth1")
     {
-        std::string expectedContentsBr0 = R"([Match]
+        expectedContents["br0"] = R"([Match]
 Name=br0
 
 [Network]
@@ -204,7 +204,7 @@ LLDP=true
 EmitLLDP=nearest-bridge
 )";
 
-        std::string expectedContentsEth0 = R"([Match]
+        expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -215,7 +215,7 @@ LLDP=true
 EmitLLDP=nearest-bridge
 )";
 
-        std::string expectedContentsEth1 = R"([Match]
+        expectedContents["eth1"] = R"([Match]
 Name=eth1
 
 [Network]
@@ -243,15 +243,15 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0", "eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContents["br0"]);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
 
         // assign an IPv4 address to br0
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/enabled", "true");
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24");
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
-        expectedContentsBr0 = R"([Match]
+        expectedContents["br0"] = R"([Match]
 Name=br0
 
 [Network]
@@ -264,13 +264,13 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContents["br0"]);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
 
         // assign also an IPv6 address to br0
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
-        expectedContentsBr0 = R"([Match]
+        expectedContents["br0"] = R"([Match]
 Name=br0
 
 [Network]
@@ -284,15 +284,15 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContents["br0"]);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
 
         // remove eth1 from bridge
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']/czechlight-network:bridge");
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::2']/ietf-ip:prefix-length", "32");
 
-        expectedContentsEth1 = R"([Match]
+        expectedContents["eth1"] = R"([Match]
 Name=eth1
 
 [Network]
@@ -305,9 +305,9 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContentsBr0);
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContentsEth0);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContentsEth1);
+        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContents["br0"]);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
+        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
     }
 
     SECTION("Network autoconfiguration")
@@ -320,7 +320,7 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24"); // in case DHCP is disabled an IP must be present
 
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -340,7 +340,7 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
 
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -360,7 +360,7 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
 
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -378,7 +378,7 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
 
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -397,7 +397,7 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
 
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -416,7 +416,7 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/prefix-length", "32");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "false");
 
-            expectedContents = R"([Match]
+            expectedContents["eth0"] = R"([Match]
 Name=eth0
 
 [Network]
@@ -431,6 +431,6 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents);
+        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
     }
 }

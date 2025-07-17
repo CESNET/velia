@@ -45,6 +45,30 @@
       },
       "revId": "85f56c3d9f5eca3d7971d7e973a18d7992f47307",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dde60bfb_a27a23b4",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-17T12:28:02Z",
+      "side": 1,
+      "message": "The preference leaf is defined with default value of 1 for both ipv4 and ipv6. The tests cover case with no preference explicitely defined.\n\nI do not see any default metric in `man ip r`, but it seems that it behaves the same as route for me (ipv4 has 0, ipv6 has 1)",
+      "parentUuid": "1b5abcc2_67501665",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 66
+      },
+      "revId": "85f56c3d9f5eca3d7971d7e973a18d7992f47307",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -33,6 +33,24 @@
       "message": "nit: let\u0027s do it like this:\n```\nREQUIRE(!\"got notification about a changed link which is not in the expectedContent\");\n```",
       "revId": "a3121023d664da0c7f5ab70ef5bfdaafd3879809",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2fc0ad2_27c654c4",
+        "filename": "tests/sysrepo_interfaces-systemd-networkd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T15:27:38Z",
+      "side": 1,
+      "message": "no longer relevant",
+      "parentUuid": "d5f84bdf_ab819c75",
+      "revId": "a3121023d664da0c7f5ab70ef5bfdaafd3879809",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

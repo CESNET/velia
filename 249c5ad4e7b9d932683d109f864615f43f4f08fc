@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df6f612c_1b6b1317",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:53:00Z",
+      "side": 1,
+      "message": "nit: `IETF_ROUTING + \"/`",
+      "range": {
+        "startLine": 27,
+        "startChar": 37,
+        "endLine": 27,
+        "endChar": 60
+      },
+      "revId": "249c5ad4e7b9d932683d109f864615f43f4f08fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7f24009_e9028a28",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:53:00Z",
+      "side": 1,
+      "message": "awesome, thanks",
+      "range": {
+        "startLine": 189,
+        "startChar": 83,
+        "endLine": 189,
+        "endChar": 169
+      },
+      "revId": "249c5ad4e7b9d932683d109f864615f43f4f08fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "909772db_a0b46be5",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 6
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:53:00Z",
+      "side": 1,
+      "message": "nit: I don\u0027t think we\u0027ll ever change that",
+      "range": {
+        "startLine": 197,
+        "startChar": 26,
+        "endLine": 197,
+        "endChar": 35
+      },
+      "revId": "249c5ad4e7b9d932683d109f864615f43f4f08fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ea16196_cc9d4376",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 6
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:53:00Z",
+      "side": 1,
+      "message": "I was thinking if it\u0027s possible to explain the reason via the deviation\u0027s `description` statement, but having to type it four times sounds like a big deal.",
+      "range": {
+        "startLine": 197,
+        "startChar": 0,
+        "endLine": 217,
+        "endChar": 5
+      },
+      "revId": "249c5ad4e7b9d932683d109f864615f43f4f08fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c7f2060_4b95c6af",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 6
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:53:00Z",
+      "side": 1,
+      "message": "This explanation (about the \"direct route\") belongs to the four deviations which make the `next-hop-address` mandatory. Once this line is moved/gone, then the explanation could read like this:\n\n\u003e Please note that even though this model tries to prevent many scenarios of misconfigured networking, it intentionally does not require any static routes  to be configured when the interface is configured with static IP address. The reason for that is that the \"direct routes\" for the subnet itself are auto-created by the kernel (and they actually cannot be added explicitly to the YANG data), and because a scenario with no default route is plausible in real-world deployments.\n\u003e",
+      "range": {
+        "startLine": 225,
+        "startChar": 7,
+        "endLine": 225,
+        "endChar": 146
+      },
+      "revId": "249c5ad4e7b9d932683d109f864615f43f4f08fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

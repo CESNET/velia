@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a9182236_240abe48",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:53:00Z",
+      "side": 1,
+      "message": "I still find this a bit confusing:\n\n\u003e or manual setting of direct routing\n\n...because there\u0027s no way of configuring direct routes manually, and there will never be one, and that there are no augments in the standard which would apply to the `control-plane-protocols` with the `rt:direct` type. Let\u0027s drop that part in that paragraphs.\n\nThen, in the next one, say something like:\n\n\u003e The RFC is a little bit confusing regarding the direct routing, as it says, quote:\n\u003e ...",
+      "parentUuid": "6d7fab7a_c6873403",
+      "range": {
+        "startLine": 15,
+        "startChar": 51,
+        "endLine": 16,
+        "endChar": 13
+      },
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b399c20f_5a05a292",
         "filename": "/COMMIT_MSG",
         "patchSetId": 5
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "So we cleared up that SR_SUBSCR_CHANGE_ALL_MODULES does not apply there (https://github.com/sysrepo/sysrepo/commit/99662294e5a2a6faf243a4314454e0bc20b6b690)\n\nI modified the tests (gerrit.cesnet.cz/c/CzechLight/velia/+/8913) to check for correct file contents at the time of every invoked reload.\n\nI am thinking about ressurecting the old \"do-not-double-reload\" patch later anyway.",
       "parentUuid": "b399c20f_5a05a292",
+      "range": {
+        "startLine": 20,
+        "startChar": 38,
+        "endLine": 22,
+        "endChar": 27
+      },
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15c85a85_4731aaef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:53:00Z",
+      "side": 1,
+      "message": "thanks!",
+      "parentUuid": "88d20f56_9b1a0651",
       "range": {
         "startLine": 20,
         "startChar": 38,
@@ -167,6 +215,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "b82438e9_0b413fe5",
+      "range": {
+        "startLine": 137,
+        "startChar": 53,
+        "endLine": 137,
+        "endChar": 164
+      },
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e01250ce_baf367c4",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:53:00Z",
+      "side": 1,
+      "message": "/me likes this :)",
+      "parentUuid": "5aa90ffa_e2511396",
       "range": {
         "startLine": 137,
         "startChar": 53,

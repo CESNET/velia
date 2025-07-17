@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d7fab7a_c6873403",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-17T11:43:39Z",
+      "side": 1,
+      "message": "I tried to clear this up in the commit message.",
+      "parentUuid": "5ab851e0_b10c0b92",
+      "range": {
+        "startLine": 15,
+        "startChar": 51,
+        "endLine": 16,
+        "endChar": 13
+      },
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b399c20f_5a05a292",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-07-16T14:38:09Z",
       "side": 1,
       "message": "We can also have a single function which is registered twice, once for modifications of the `ietf-interfaces`, and the second time for `ietf-routing` modules, along with the `SR_SUBSCR_CHANGE_ALL_MODULES` flag. This function will then walk all the defined interfaces, and fetch configuration from both of these modules, and generate the config files on disk. Then you can resurrect the other patch which you wrote and which prevented the service restart when there are no changes to on-disk files. So the first invocation of that function will write correct data to disk, and the second one will be effectively a no-op.\n\nHmm, I wonder how the current implementation actually works. When the CB is invoked for the `ietf-interfaces` module, the session should *not* have access to the routing info, and when it\u0027s executed for the `ietf-routing`, the session should not see the interfaces. Except that it *must* see these interfaces because of the leafrefs from the routing module, *but* I still think that the current code probably creates some incomplete configuraiton (without the routing info) first, and then these are updated with the routing info in a second step. Could you maybe check for the \"correct expected content of the .network files\" from within the actual mock callbacks?\n\n*think* that the current implementation (without SR_SUBSCR_CHANGE_ALL_MODULES) might be actually wrong;",
+      "range": {
+        "startLine": 20,
+        "startChar": 38,
+        "endLine": 22,
+        "endChar": 27
+      },
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88d20f56_9b1a0651",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-17T11:43:39Z",
+      "side": 1,
+      "message": "So we cleared up that SR_SUBSCR_CHANGE_ALL_MODULES does not apply there (https://github.com/sysrepo/sysrepo/commit/99662294e5a2a6faf243a4314454e0bc20b6b690)\n\nI modified the tests (gerrit.cesnet.cz/c/CzechLight/velia/+/8913) to check for correct file contents at the time of every invoked reload.\n\nI am thinking about ressurecting the old \"do-not-double-reload\" patch later anyway.",
+      "parentUuid": "b399c20f_5a05a292",
       "range": {
         "startLine": 20,
         "startChar": 38,
@@ -64,6 +112,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5ca9b89_784fec1e",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-17T11:43:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a09f3ad_06d68a51",
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b82438e9_0b413fe5",
@@ -77,6 +143,30 @@
       "writtenOn": "2025-07-16T14:38:09Z",
       "side": 1,
       "message": "please add a constexpr prefix for this, and use it everywhere in this file",
+      "range": {
+        "startLine": 137,
+        "startChar": 53,
+        "endLine": 137,
+        "endChar": 164
+      },
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5aa90ffa_e2511396",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-17T11:43:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b82438e9_0b413fe5",
       "range": {
         "startLine": 137,
         "startChar": 53,
@@ -110,6 +200,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a9e96e4_5b99bb39",
+        "filename": "tests/sysrepo_interfaces-systemd-networkd.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-17T11:43:39Z",
+      "side": 1,
+      "message": "See my response above.",
+      "parentUuid": "5f6d974f_b3a19381",
+      "range": {
+        "startLine": 513,
+        "startChar": 0,
+        "endLine": 514,
+        "endChar": 98
+      },
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b3563de6_623fe050",
@@ -123,6 +237,24 @@
       "writtenOn": "2025-07-16T14:38:09Z",
       "side": 1,
       "message": "Please also `deviate not-supported` the `ietf-routing:routing/ribs/active-route`",
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3ba7b3a_b9a6d810",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-17T11:43:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3563de6_623fe050",
       "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

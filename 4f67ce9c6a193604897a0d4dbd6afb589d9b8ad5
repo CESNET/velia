@@ -510,6 +510,30 @@
       },
       "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "232f0296_32ad420f",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 2
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-17T11:43:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f9f9caa_2e4d730a",
+      "range": {
+        "startLine": 179,
+        "startChar": 1,
+        "endLine": 183,
+        "endChar": 5
+      },
+      "revId": "4f67ce9c6a193604897a0d4dbd6afb589d9b8ad5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

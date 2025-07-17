@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41f1701c_85008e7c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:07:47Z",
+      "side": 1,
+      "message": "the TSAN error is correct, and I guess that the easiest fix is to add some explicit locking to all accesses to the `expectedContents` (it seems that [TSAN has some issues with fences](https://stackoverflow.com/questions/70542993/why-does-the-thread-sanitizer-complain-about-acquire-release-thread-fences))",
+      "revId": "a3121023d664da0c7f5ab70ef5bfdaafd3879809",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5f84bdf_ab819c75",
+        "filename": "tests/sysrepo_interfaces-systemd-networkd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-17T14:07:47Z",
+      "side": 1,
+      "message": "nit: let\u0027s do it like this:\n```\nREQUIRE(!\"got notification about a changed link which is not in the expectedContent\");\n```",
+      "revId": "a3121023d664da0c7f5ab70ef5bfdaafd3879809",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

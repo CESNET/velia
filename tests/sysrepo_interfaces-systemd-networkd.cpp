@@ -20,14 +20,14 @@ using namespace std::string_literals;
 using ChangedUnits = velia::network::IETFInterfacesConfig::ChangedUnits;
 
 const auto fakeConfigDir = std::filesystem::path(CMAKE_CURRENT_BINARY_DIR) / "tests/network/"s;
-#define NETWORK_FILE(LINK_NAME) fakeConfigDir / "10-" LINK_NAME ".network"
+#define NETWORK_FILE(LINK_NAME) fakeConfigDir / ("10-"s + LINK_NAME + ".network")
 #define REQUIRE_NETWORK_CONFIGURATION(LINK_NAME, CONTENTS) \
     REQUIRE(std::filesystem::exists(NETWORK_FILE(LINK_NAME))); \
     REQUIRE(velia::utils::readFileToString(NETWORK_FILE(LINK_NAME)) == CONTENTS);
 #define REQUIRE_NETWORK_EMPTY_CONFIGURATION(LINK_NAME) \
     REQUIRE(std::filesystem::exists(NETWORK_FILE(LINK_NAME))); \
     REQUIRE(velia::utils::readFileToString(NETWORK_FILE(LINK_NAME)) == R"([Match]
-Name=)" LINK_NAME R"(
+Name=)"s + LINK_NAME + R"(
 [Network]
 DHCP=no
 LinkLocalAddressing=no
@@ -55,10 +55,50 @@ TEST_CASE("Config data in ietf-interfaces")
     std::filesystem::remove_all(fakeConfigDir);
     std::filesystem::create_directories(fakeConfigDir);
 
-    REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0", "eth1"}, .changedOrNew = {"br0", "eth2"}})).IN_SEQUENCE(seq1);
-    auto network = std::make_shared<velia::network::IETFInterfacesConfig>(srSess, fakeConfigDir, std::vector<std::string>{"br0", "eth0", "eth1", "eth2"}, [&fake](const ChangedUnits& update) { fake.cb(update); });
+    std::map<std::string, std::optional<std::string>> expectedContents;
 
-    std::map<std::string, std::string> expectedContents;
+    expectedContents["eth0"] = std::nullopt;
+    expectedContents["eth1"] = std::nullopt;
+    expectedContents["br0"] = R"([Match]
+Name=br0
+
+[Network]
+IPv6AcceptRA=true
+DHCP=ipv4
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+    expectedContents["eth2"] = R"([Match]
+Name=eth2
+
+[Network]
+Bridge=br0
+IPv6AcceptRA=false
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)";
+
+    const std::vector<std::string> managedLinks{"br0", "eth0", "eth1", "eth2"};
+    REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0", "eth1"}, .changedOrNew = {"br0", "eth2"}})).IN_SEQUENCE(seq1);
+    auto network = std::make_shared<velia::network::IETFInterfacesConfig>(srSess, fakeConfigDir, managedLinks, [&](const ChangedUnits& update) {
+        fake.cb(update);
+
+        for (const auto& link : managedLinks) {
+            CAPTURE(link);
+
+            if (auto it = expectedContents.find(link); it != expectedContents.end()) {
+                if (it->second) {
+                    REQUIRE_NETWORK_CONFIGURATION(link, it->second.value());
+                } else {
+                    REQUIRE_NETWORK_EMPTY_CONFIGURATION(link);
+                }
+            } else {
+                // Force failure if the link is not in expectedContents
+                REQUIRE(false);
+            }
+        }
+    });
 
     SECTION("Setting IPs to eth0")
     {
@@ -143,7 +183,6 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
     }
 
     SECTION("Two links")
@@ -180,16 +219,12 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0", "eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
 
         // Test removing link configuration
+        expectedContents["eth0"] = std::nullopt;
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth0']");
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0"}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-
-        REQUIRE_NETWORK_EMPTY_CONFIGURATION("eth0");
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
     }
 
     SECTION("Setup a bridge br0 over eth0 and eth1")
@@ -243,9 +278,6 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0", "eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContents["br0"]);
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
 
         // assign an IPv4 address to br0
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/enabled", "true");
@@ -264,9 +296,6 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContents["br0"]);
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
 
         // assign also an IPv6 address to br0
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
@@ -284,9 +313,6 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"br0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContents["br0"]);
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
 
         // remove eth1 from bridge
         client.deleteItem("/ietf-interfaces:interfaces/interface[name='eth1']/czechlight-network:bridge");
@@ -305,9 +331,6 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("br0", expectedContents["br0"]);
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
-        REQUIRE_NETWORK_CONFIGURATION("eth1", expectedContents["eth1"]);
     }
 
     SECTION("Network autoconfiguration")
@@ -431,6 +454,5 @@ EmitLLDP=nearest-bridge
 
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
-        REQUIRE_NETWORK_CONFIGURATION("eth0", expectedContents["eth0"]);
     }
 }

@@ -72,6 +72,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "57a2ef48_82b98c79",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-18T09:00:35Z",
+      "side": 1,
+      "message": "Thanks, I hope I understood your message correctly.",
+      "parentUuid": "a9182236_240abe48",
+      "range": {
+        "startLine": 15,
+        "startChar": 51,
+        "endLine": 16,
+        "endChar": 13
+      },
+      "revId": "1c4fd3f92b7ebeaa0966fcc1728bca1d7836159f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b399c20f_5a05a292",

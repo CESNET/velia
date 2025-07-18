@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "27fcbb3f_7af5bb75",
+        "filename": "src/network/IETFInterfacesConfig.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-18T09:00:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df6f612c_1b6b1317",
+      "range": {
+        "startLine": 27,
+        "startChar": 37,
+        "endLine": 27,
+        "endChar": 60
+      },
+      "revId": "249c5ad4e7b9d932683d109f864615f43f4f08fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "e7f24009_e9028a28",
         "filename": "src/network/IETFInterfacesConfig.cpp",
         "patchSetId": 6
@@ -72,6 +96,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "79eb3c0a_891f4e07",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 6
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-18T09:00:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "909772db_a0b46be5",
+      "range": {
+        "startLine": 197,
+        "startChar": 26,
+        "endLine": 197,
+        "endChar": 35
+      },
+      "revId": "249c5ad4e7b9d932683d109f864615f43f4f08fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "4ea16196_cc9d4376",
         "filename": "yang/czechlight-network@2025-06-06.yang",
         "patchSetId": 6
@@ -106,6 +154,30 @@
       "writtenOn": "2025-07-17T14:53:00Z",
       "side": 1,
       "message": "This explanation (about the \"direct route\") belongs to the four deviations which make the `next-hop-address` mandatory. Once this line is moved/gone, then the explanation could read like this:\n\n\u003e Please note that even though this model tries to prevent many scenarios of misconfigured networking, it intentionally does not require any static routes  to be configured when the interface is configured with static IP address. The reason for that is that the \"direct routes\" for the subnet itself are auto-created by the kernel (and they actually cannot be added explicitly to the YANG data), and because a scenario with no default route is plausible in real-world deployments.\n\u003e",
+      "range": {
+        "startLine": 225,
+        "startChar": 7,
+        "endLine": 225,
+        "endChar": 146
+      },
+      "revId": "249c5ad4e7b9d932683d109f864615f43f4f08fc",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0191344_aa3a0fab",
+        "filename": "yang/czechlight-network@2025-06-06.yang",
+        "patchSetId": 6
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-07-18T09:00:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c7f2060_4b95c6af",
       "range": {
         "startLine": 225,
         "startChar": 7,

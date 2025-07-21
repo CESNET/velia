@@ -561,7 +561,7 @@ Metric=1
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
         client.applyChanges();
 
-        // A change made soloely in the ietf-interfaces should create full config with routing
+        // A change made solely in the ietf-interfaces should create full config with routing
         expectedContents.set("eth0", R"([Match]
 Name=eth0
 
@@ -594,7 +594,7 @@ Metric=0
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
 
-        // Changes made in ietf-routing model only should be reflected in the network config
+        // Changes made just in ietf-routing model only should be reflected in the network config as well
         expectedContents.set("eth0", R"([Match]
 Name=eth0
 
@@ -621,7 +621,7 @@ Metric=1
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth0"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
 
-        // Disabled interfaces do not produce routes in configs
+        // Disabled interfaces do not produce any routes in the generated configuration
         expectedContents.set("eth1", R"([Match]
 Name=eth1
 

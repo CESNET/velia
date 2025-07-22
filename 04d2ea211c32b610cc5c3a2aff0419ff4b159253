@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06e3eb5b_04c88d86",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-07-22T08:35:27Z",
+      "side": 1,
+      "message": "life is too short for this cloud\u0027s IPv6 implementation",
+      "revId": "04d2ea211c32b610cc5c3a2aff0419ff4b159253",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

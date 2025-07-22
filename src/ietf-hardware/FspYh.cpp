@@ -22,12 +22,14 @@ using velia::ietf_hardware::Thresholds;
 template<typename T>
 constexpr auto thresholds_5_percent(const T nominal, const T hysteresis)
 {
-    // assume a 5% allowed tolerance and 5% measurement inaccuracy
+    // Assume a 5% allowed tolerance and 5% measurement inaccuracy, and call than normal.
+    // We've seen, e.g., a 5Vsb rail drop at least to 4.507V (reported), or raise to
+    // at least 5.498 V (reported), and we have (so far) no data about that being a possible problem.
     return Thresholds<T> {
-        .criticalLow = OneThreshold<T>{static_cast<T>(nominal * 0.95 * 0.95), hysteresis},
-        .warningLow = OneThreshold<T>{static_cast<T>(nominal * 0.95), hysteresis},
-        .warningHigh = OneThreshold<T>{static_cast<T>(nominal * 1.05), hysteresis},
-        .criticalHigh = OneThreshold<T>{static_cast<T>(nominal * 1.05 * 1.05), hysteresis},
+        .criticalLow = OneThreshold<T>{static_cast<T>(nominal * 0.95 * 0.95 * 0.95), hysteresis},
+        .warningLow = OneThreshold<T>{static_cast<T>(nominal * 0.95 * 0.95), hysteresis},
+        .warningHigh = OneThreshold<T>{static_cast<T>(nominal * 1.05 * 1.05), hysteresis},
+        .criticalHigh = OneThreshold<T>{static_cast<T>(nominal * 1.05 * 1.05 * 1.05), hysteresis},
     };
 }
 constexpr auto voltage_thresholds(const int64_t nominal, const int64_t hysteresis = 50)
@@ -296,14 +298,19 @@ void FspYhPsu::createPower()
                                                              .criticalHigh = OneThreshold<int64_t>{72'000, 1000},
                                                          }));
     } else {
+        // The rated input at 230V AC is 200-240Vrms, and at 115V AC, it's 100-127V. We don't currently support
+        // "two band" thresholds, so let's take a min/max of that range, which also matches the printed label.
+        // When combined with the 5% measurement inaccuracy, it's 95V to 252V.
+        // The real-world accuracy is currently unknown, but we've seen, e.g., one PSU reporting 242.25V and the
+        // other one 239V, when both are powered from the same extension cord.
         registerReader(SysfsValue<SensorType::VoltageAC>(m_namePrefix + ":voltage-in",
                                                          m_namePrefix,
                                                          m_hwmon,
                                                          1,
                                                          Thresholds<int64_t>{
                                                              .criticalLow = OneThreshold<int64_t>{90000, 3000},
-                                                             .warningLow = OneThreshold<int64_t>{100000, 3000},
-                                                             .warningHigh = OneThreshold<int64_t>{245000, 3000},
+                                                             .warningLow = OneThreshold<int64_t>{95000, 3000},
+                                                             .warningHigh = OneThreshold<int64_t>{252000, 3000},
                                                              .criticalHigh = OneThreshold<int64_t>{264000, 3000},
                                                          }));
     }

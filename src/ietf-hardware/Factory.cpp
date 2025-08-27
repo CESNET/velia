@@ -22,7 +22,7 @@ std::string anyOnieDateToYangish(std::string date)
         return date + "-00:00";
     }
     if (std::regex_match(date, match, ONIE_MFG_DATE)) {
-        return fmt::format("{}-{}-{} {}:{}:{}-00:00",
+        return fmt::format("{}-{}-{}T{}:{}:{}-00:00",
                            match[3].str(),
                            match[1].str(),
                            match[2].str(),

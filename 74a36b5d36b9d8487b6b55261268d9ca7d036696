@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43972609_dff6668e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-08-28T07:47:36Z",
+      "side": 1,
+      "message": "Tested on sdn-bidi-cplus1572-PGCL250333, it works. I\u0027ll be adding proper test coverage in a follow-up patch, but now we need this thing to work.",
+      "revId": "74a36b5d36b9d8487b6b55261268d9ca7d036696",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

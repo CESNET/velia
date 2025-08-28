@@ -150,18 +150,18 @@ void createPower(std::shared_ptr<velia::ietf_hardware::IETFHardware> ietfHardwar
     ietfHardware->registerDataReader(ParallelPDUReader(pdu, psu1, psu2));
 }
 
-std::shared_ptr<IETFHardware> create(const std::string& applianceName)
+std::shared_ptr<IETFHardware> createWithoutPower(const std::string& applianceName, const std::filesystem::path& sysfs)
 {
     auto ietfHardware = std::make_shared<velia::ietf_hardware::IETFHardware>();
 
     if (applianceName == "czechlight-clearfog-g2") {
-        auto fans = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/bus/i2c/devices/1-0020/hwmon/");
-        auto tempMainBoard = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/bus/i2c/devices/1-0048/hwmon/");
-        auto tempFans = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/bus/i2c/devices/1-0049/hwmon/");
-        auto tempCpu = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/devices/virtual/thermal/thermal_zone0/");
-        auto tempMII0 = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/devices/platform/soc/soc:internal-regs/f1072004.mdio/mdio_bus/f1072004.mdio-mii/f1072004.mdio-mii:00/hwmon/");
-        auto tempMII1 = std::make_shared<velia::ietf_hardware::sysfs::HWMon>("/sys/devices/platform/soc/soc:internal-regs/f1072004.mdio/mdio_bus/f1072004.mdio-mii/f1072004.mdio-mii:01/hwmon/");
-        auto emmc = std::make_shared<velia::ietf_hardware::sysfs::EMMC>("/sys/block/mmcblk0/device/");
+        auto fans = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(sysfs / "bus/i2c/devices/1-0020/hwmon/");
+        auto tempMainBoard = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(sysfs / "bus/i2c/devices/1-0048/hwmon/");
+        auto tempFans = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(sysfs / "bus/i2c/devices/1-0049/hwmon/");
+        auto tempCpu = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(sysfs / "devices/virtual/thermal/thermal_zone0/");
+        auto tempMII0 = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(sysfs / "devices/platform/soc/soc:internal-regs/f1072004.mdio/mdio_bus/f1072004.mdio-mii/f1072004.mdio-mii:00/hwmon/");
+        auto tempMII1 = std::make_shared<velia::ietf_hardware::sysfs::HWMon>(sysfs / "devices/platform/soc/soc:internal-regs/f1072004.mdio/mdio_bus/f1072004.mdio-mii/f1072004.mdio-mii:01/hwmon/");
+        auto emmc = std::make_shared<velia::ietf_hardware::sysfs::EMMC>(sysfs / "block/mmcblk0/device/");
 
         DataTree neData{
             {"class", "iana-hardware:chassis"},
@@ -171,7 +171,7 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
             {"description", "USB serial console"},
         };
         try {
-            const auto& tlvs = sysfs::onieEeprom("/sys", 1, 0x53);
+            const auto& tlvs = sysfs::onieEeprom(sysfs, 1, 0x53);
             storeValues(neData, tlvs);
             if (auto czechLightData = sysfs::czechLightData(tlvs)) {
                 ftdiData["serial-num"] = czechLightData->ftdiSN;
@@ -186,10 +186,10 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                                                     "ne",
                                                     {
                                                         {"class", "iana-hardware:module"},
-                                                        {"serial-num", *hexEEPROM("/sys", 1, 0x5b, 16, 0, 16)},
+                                                        {"serial-num", *hexEEPROM(sysfs, 1, 0x5b, 16, 0, 16)},
                                                     }});
         try {
-            auto eeprom = hexEEPROM("/sys", 1, 0x5a, 16, 0, 16);
+            auto eeprom = hexEEPROM(sysfs, 1, 0x5a, 16, 0, 16);
             ietfHardware->registerDataReader(StaticData{"ne:voa-sw",
                                                         "ne",
                                                         {
@@ -211,8 +211,8 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
                                                             .warningHigh = std::nullopt,
                                                             .criticalHigh = std::nullopt,
                                                         },
-                                                        []() {
-                                                            return hexEEPROM("/sys", 1, 0x5c, 16, 0, 16);
+                                                        [sysfs]() {
+                                                            return hexEEPROM(sysfs, 1, 0x5c, 16, 0, 16);
                                                         }));
         DataTree neCtrlSom{
             {"class", "iana-hardware:module"},
@@ -229,7 +229,7 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
              })) {
             using namespace velia::ietf_hardware::sysfs;
             try {
-                const auto& tlvs = sysfs::onieEeprom("/sys", 0, address);
+                const auto& tlvs = sysfs::onieEeprom(sysfs, 0, address);
                 storeValues(target, tlvs);
                 for (const auto& tlv : tlvs) {
                     try {
@@ -259,23 +259,28 @@ std::shared_ptr<IETFHardware> create(const std::string& applianceName)
         ietfHardware->registerDataReader(StaticData{"ne:ctrl:som",
                                                     "ne:ctrl",
                                                     neCtrlSom});
-        ietfHardware->registerDataReader(EepromWithUid{"ne:ctrl:som:eeprom", "ne:ctrl:som", "/sys", 0, 0x53, 256, 256 - 6, 6});
+        ietfHardware->registerDataReader(EepromWithUid{"ne:ctrl:som:eeprom", "ne:ctrl:som", sysfs, 0, 0x53, 256, 256 - 6, 6});
         ietfHardware->registerDataReader(StaticData{"ne:ctrl:carrier",
                                                     "ne:ctrl",
                                                     neCtrlCarrier});
-        ietfHardware->registerDataReader(EepromWithUid{"ne:ctrl:carrier:eeprom", "ne:ctrl:carrier", "/sys", 0, 0x52, 256, 256 - 6, 6});
+        ietfHardware->registerDataReader(EepromWithUid{"ne:ctrl:carrier:eeprom", "ne:ctrl:carrier", sysfs, 0, 0x52, 256, 256 - 6, 6});
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-front", "ne:ctrl", tempMainBoard, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-cpu", "ne:ctrl", tempCpu, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-rear", "ne:ctrl", tempFans, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-0", "ne:ctrl", tempMII0, 1));
         ietfHardware->registerDataReader(SysfsValue<SensorType::Temperature>("ne:ctrl:temperature-internal-1", "ne:ctrl", tempMII1, 1));
         ietfHardware->registerDataReader(EMMC("ne:ctrl:emmc", "ne:ctrl", emmc));
-
-        createPower(ietfHardware);
     } else {
         throw std::runtime_error("Unknown appliance '" + applianceName + "'");
     }
 
+    return ietfHardware;
+}
+
+std::shared_ptr<IETFHardware> create(const std::string& applianceName)
+{
+    auto ietfHardware = createWithoutPower(applianceName, "/sysfs");
+    createPower(ietfHardware);
     return ietfHardware;
 }
 

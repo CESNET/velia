@@ -183,6 +183,15 @@ target_link_libraries(velia-ietf-hardware-sysrepo
         PkgConfig::LIBYANG
     )
 
+add_library(velia-ietf-hardware-factory
+    src/ietf-hardware/Factory.cpp
+    src/ietf-hardware/Factory.h
+    )
+target_link_libraries(velia-ietf-hardware-factory
+    PUBLIC
+        velia-ietf-hardware
+    )
+
 set(NOBODY_UID 65534 CACHE STRING "UID which refers to 'nobody'. Used for dropping root privileges.")
 set(NOBODY_GID 65534 CACHE STRING "GID which refers to 'nobody'. Used for dropping root privileges.")
 
@@ -348,12 +357,11 @@ target_include_directories(veliad-firewall PUBLIC ${CMAKE_BINARY_DIR})
 
 add_executable(veliad-hardware
     src/main-hardware.cpp
-    src/ietf-hardware/Factory.cpp
-    src/ietf-hardware/Factory.h
     )
 target_link_libraries(veliad-hardware
     PUBLIC
         velia-ietf-hardware
+        velia-ietf-hardware-factory
         velia-ietf-hardware-sysrepo
         PkgConfig::DOCOPT
     )
@@ -604,6 +612,7 @@ if(BUILD_TESTING)
         --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/velia-alarms@2022-07-12.yang
         --install ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/sysrepo-ietf-alarms@2022-02-17.yang)
     velia_test(NAME sysrepo_ietf-hardware LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo FsTestUtils FIXTURE fixture_sysrepo-ietf-hardware)
+    velia_test(NAME hardware_appliance LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo velia-ietf-hardware-factory FIXTURE fixture_sysrepo-ietf-hardware)
 
     # ctest dance for sysrepo_two-daemons: compile daemon, create a fixture for test, add the test into the fixture
     add_executable(test-sysrepo_test_merge-daemon ${CMAKE_SOURCE_DIR}/tests/sysrepo_two-daemons_daemon.cpp)

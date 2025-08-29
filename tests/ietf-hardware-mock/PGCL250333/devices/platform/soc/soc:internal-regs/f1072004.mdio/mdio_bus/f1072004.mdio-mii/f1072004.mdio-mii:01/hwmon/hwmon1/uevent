@@ -1,0 +1,3 @@
+OF_NAME=ethernet-phy
+OF_FULLNAME=/soc/internal-regs/mdio@72004/ethernet-phy@1
+OF_COMPATIBLE_N=0

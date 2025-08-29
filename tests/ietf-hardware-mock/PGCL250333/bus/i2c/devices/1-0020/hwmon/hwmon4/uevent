@@ -1,0 +1,4 @@
+OF_NAME=fancontrol
+OF_FULLNAME=/soc/internal-regs/i2c@11100/fancontrol@20
+OF_COMPATIBLE_0=maxim,max31790
+OF_COMPATIBLE_N=1

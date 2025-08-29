@@ -1,0 +1,4 @@
+DRIVER=mmcblk
+MMC_TYPE=MMC
+MMC_NAME=8GTF4R
+MODALIAS=mmc:block

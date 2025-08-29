@@ -1,0 +1,4 @@
+OF_NAME=temperature
+OF_FULLNAME=/soc/internal-regs/i2c@11100/temperature@49
+OF_COMPATIBLE_0=ti,tmp175
+OF_COMPATIBLE_N=1

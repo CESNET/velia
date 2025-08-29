@@ -612,7 +612,7 @@ if(BUILD_TESTING)
         --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/velia-alarms@2022-07-12.yang
         --install ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/sysrepo-ietf-alarms@2022-02-17.yang)
     velia_test(NAME sysrepo_ietf-hardware LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo FsTestUtils FIXTURE fixture_sysrepo-ietf-hardware)
-    velia_test(NAME hardware_appliance LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo velia-ietf-hardware-factory FIXTURE fixture_sysrepo-ietf-hardware)
+    velia_test(NAME hardware_appliance LIBRARIES velia-ietf-hardware velia-ietf-hardware-sysrepo velia-ietf-hardware-factory FsTestUtils FIXTURE fixture_sysrepo-ietf-hardware)
 
     # ctest dance for sysrepo_two-daemons: compile daemon, create a fixture for test, add the test into the fixture
     add_executable(test-sysrepo_test_merge-daemon ${CMAKE_SOURCE_DIR}/tests/sysrepo_two-daemons_daemon.cpp)

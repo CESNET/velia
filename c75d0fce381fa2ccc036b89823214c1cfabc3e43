@@ -22,6 +22,30 @@
       },
       "revId": "c75d0fce381fa2ccc036b89823214c1cfabc3e43",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3ecc460_d1b76267",
+        "filename": "tests/hardware_appliance.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-09-01T07:26:26Z",
+      "side": 1,
+      "message": "I wasn\u0027t sure, either, but it worked, and some searching led me to:\n\nhttps://herbsutter.com/2008/01/01/gotw-88-a-candidate-for-the-most-important-const/\n\nThis adds some context:\n\nhttps://stackoverflow.com/questions/39718268/why-do-const-references-extend-the-lifetime-of-rvalues\n\n...and apparently, it\u0027s \"needed\" because of polymorphism, e.g., to prevent slicing.\n\nWould you like me to change that line to reduce the WTF count of the code?",
+      "parentUuid": "2884fd5c_bcb4c794",
+      "range": {
+        "startLine": 27,
+        "startChar": 14,
+        "endLine": 27,
+        "endChar": 15
+      },
+      "revId": "c75d0fce381fa2ccc036b89823214c1cfabc3e43",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdc7a9e7_3ca0765c",
+        "filename": "tests/hardware_appliance.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-09-01T07:17:43Z",
+      "side": 1,
+      "message": "Why is this a comment?",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 2
+      },
+      "revId": "c8221ae995d14e9784127b42f4c495bfc9ce91e7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3ce85a4_c9b4e07d",
+        "filename": "tests/hardware_appliance.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-09-01T07:17:43Z",
+      "side": 1,
+      "message": "could you please explain what does this do?",
+      "range": {
+        "startLine": 126,
+        "startChar": 16,
+        "endLine": 131,
+        "endChar": 48
+      },
+      "revId": "c8221ae995d14e9784127b42f4c495bfc9ce91e7",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

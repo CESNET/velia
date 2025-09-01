@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2884fd5c_bcb4c794",
+        "filename": "tests/hardware_appliance.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-09-01T06:55:07Z",
+      "side": 1,
+      "message": "I think this reference here is wrong. What does it refer to? Where is the returned std::map stored?",
+      "range": {
+        "startLine": 27,
+        "startChar": 14,
+        "endLine": 27,
+        "endChar": 15
+      },
+      "revId": "c75d0fce381fa2ccc036b89823214c1cfabc3e43",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

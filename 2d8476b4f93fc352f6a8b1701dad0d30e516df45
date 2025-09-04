@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40a13eca_8cc3004a",
+        "filename": "tests/network_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-09-04T13:08:08Z",
+      "side": 1,
+      "message": "Since I don\u0027t have `/usr/lib/systemd` on my machine, it took me a while to realize that this is *not* testing any dummy interfaces, but it\u0027s al about parsing the JSON output. Good :).",
+      "revId": "2d8476b4f93fc352f6a8b1701dad0d30e516df45",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

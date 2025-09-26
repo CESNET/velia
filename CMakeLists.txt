@@ -183,7 +183,7 @@ target_link_libraries(velia-ietf-hardware-sysrepo
         PkgConfig::LIBYANG
     )
 
-add_library(velia-ietf-hardware-factory
+    add_library(velia-ietf-hardware-factory STATIC
     src/ietf-hardware/Factory.cpp
     src/ietf-hardware/Factory.h
     )

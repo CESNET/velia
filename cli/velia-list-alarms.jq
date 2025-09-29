@@ -30,6 +30,8 @@ def formatAlarmType($type;$qualifier):
         "\u23f8" # ⏸ (pause)
     elif($type == "velia-alarms:sensor-missing-alarm") then
         "\u2715" # ✕ (multiplication X)
+    elif($type == "czechlight-roadm-common:hardware-alarm") then
+        "\ud83d\udee0" # 🛠 (hammer and wrench)
     else
         $type + " " + $qualifier
     end;

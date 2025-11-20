@@ -21,7 +21,7 @@ TEST_CASE("sysrepo utils")
 
         auto edit = srSess.operationalChanges();
         REQUIRE(edit);
-        REQUIRE(*edit->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings) == R"({
+        REQUIRE(*edit->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::Siblings) == R"({
   "ietf-system:system-state": {
     "@": {
       "ietf-origin:origin": "ietf-origin:unknown"
@@ -36,7 +36,7 @@ TEST_CASE("sysrepo utils")
         velia::utils::valuesToYang({{"/ietf-interfaces:interfaces/interface[name='eth0']/name", "eth0"}}, {}, {}, srSess, edit);
 
         REQUIRE(edit);
-        REQUIRE(*edit->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings) == R"({
+        REQUIRE(*edit->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::Siblings) == R"({
   "ietf-interfaces:interfaces": {
     "interface": [
       {

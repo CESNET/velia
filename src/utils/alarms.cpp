@@ -54,7 +54,7 @@ void pushInventory(sysrepo::Session session, const std::vector<AlarmInventoryEnt
         }
     }
 
-    spdlog::get("main")->trace("alarms::pushInventory: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
+    spdlog::get("main")->trace("alarms::pushInventory: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::Siblings));
     WITH_TIME_MEASUREMENT{"pushInventory/applyChanges"};
     session.applyChanges();
 }
@@ -71,7 +71,7 @@ void addResourcesToInventory(sysrepo::Session session, const std::map<std::strin
             session.setItem(prefix + "/resource", resource);
         }
     }
-    spdlog::get("main")->trace("alarms::addResourcesToInventory: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
+    spdlog::get("main")->trace("alarms::addResourcesToInventory: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::Siblings));
     WITH_TIME_MEASUREMENT{"addResourcesToInventory/applyChanges"};
     session.applyChanges();
 }

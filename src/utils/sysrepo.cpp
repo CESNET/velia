@@ -126,7 +126,7 @@ void valuesPush(sysrepo::Session session, const YANGData& values, const std::vec
 
     if (edit) {
         session.editBatch(*edit, sysrepo::DefaultOperation::Replace);
-        spdlog::get("main")->trace("valuesPush: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
+        spdlog::get("main")->trace("valuesPush: {}", *session.getPendingChanges()->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::Siblings));
         WITH_TIME_MEASUREMENT("valuesPush/applyChanges");
         session.applyChanges();
     }

@@ -43,7 +43,7 @@ void LLDPSysrepo::fetch(sysrepo::Session session, std::optional<libyang::DataNod
         }
     }
 
-    m_log->trace("Pushing to sysrepo (JSON): {}", *output->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::WithSiblings));
+    m_log->trace("Pushing to sysrepo (JSON): {}", *output->printStr(libyang::DataFormat::JSON, libyang::PrintFlags::Siblings));
 }
 
 }

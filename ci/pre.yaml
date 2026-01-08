@@ -1,7 +1,14 @@
 - hosts: all
   tasks:
-    - name: install docopt-cpp
+    - name: install deps
       package:
-        name: docopt-cpp-devel
+        name: "{{ item }}"
         state: present
       become: true
+      loop:
+        - pcre2-devel
+        - xxhash-devel
+        - libcurl-devel
+        - openssl-perl
+        - pam-devel
+        - docopt-cpp-devel

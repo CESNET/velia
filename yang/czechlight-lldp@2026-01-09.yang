@@ -7,11 +7,9 @@ module czechlight-lldp {
 
   import iana-afn-safi {
     prefix ianaaf;
-    revision-date 2013-07-04;
   }
   import ietf-inet-types {
     prefix inet;
-    revision-date 2013-07-15;
   }
 
   organization "CESNET";
@@ -20,6 +18,9 @@ module czechlight-lldp {
     "Model for listing neighbours discovered via LLDP protocol.
      Based on OpenROADM's org-openroadm-lldp@2020-05-29 model.";
 
+  revision 2026-01-09 {
+    description "Fixed YANG imports";
+  }
   revision 2020-11-04 {
     description "Allow multiple neighbor entries on in interface.";
   }

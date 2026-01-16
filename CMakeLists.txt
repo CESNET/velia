@@ -56,10 +56,10 @@ set(YANG_SRCS
     yang/iana-hardware@2018-03-13.yang
     yang/ietf-hardware@2018-03-13.yang
     yang/iana-crypt-hash@2014-08-06.yang
-    yang/ietf-inet-types@2013-07-15.yang
+    yang/ietf-inet-types@2025-12-22.yang
     yang/ietf-netconf-acm@2018-02-14.yang
     yang/ietf-system@2014-08-06.yang
-    yang/ietf-yang-types@2013-07-15.yang
+    yang/ietf-yang-types@2025-12-22.yang
     yang/ietf-ethertypes@2019-03-04.yang
     yang/ietf-interfaces@2018-02-20.yang
     yang/ietf-packet-fields@2019-03-04.yang
@@ -82,7 +82,7 @@ set(YANG_SRCS
     yang/ietf-ospf@2022-10-19.yang
     yang/ietf-rib-extension@2023-11-20.yang
     yang/ietf-routing-types@2017-12-04.yang
-    yang/czechlight-lldp@2020-11-04.yang
+    yang/czechlight-lldp@2026-01-09.yang
     yang/iana-afn-safi@2013-07-04.yang
     yang/ietf-alarms@2019-09-11.yang
     yang/velia-alarms@2022-07-12.yang
@@ -494,7 +494,7 @@ if(BUILD_TESTING)
     velia_test(NAME hardware_fspyh LIBRARIES velia-ietf-hardware FsTestUtils)
     velia_test(NAME hardware_ietf-hardware LIBRARIES velia-ietf-hardware)
 
-    set(fixture_sysrepo-czechlight-lldp --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang)
+    set(fixture_sysrepo-czechlight-lldp --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2026-01-09.yang)
     velia_test(NAME sysrepo_network-lldp LIBRARIES velia-network DbusTesting FIXTURE fixture_sysrepo-czechlight-lldp)
 
     set(fixture_sysrepo-ietf-system --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang)
@@ -524,7 +524,7 @@ if(BUILD_TESTING)
 
     set(fixture_sysrepo-czechlight-network
             ${COMMON_NETWORK_MODELS_INSTALL}
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2020-11-04.yang
+            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2026-01-09.yang
             --init-data ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/ietf-interfaces.json)
     velia_test(NAME sysrepo_interfaces-systemd-networkd LIBRARIES velia-network FIXTURE fixture_sysrepo-czechlight-network)
 

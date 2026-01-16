@@ -252,7 +252,7 @@ TEST_CASE("HardwareState")
         {COMPONENT("ne:ctrl:emmc") "/parent", "ne:ctrl"},
         {COMPONENT("ne:ctrl:emmc") "/class", "iana-hardware:module"},
         {COMPONENT("ne:ctrl:emmc") "/serial-num", "0x00a8808d"},
-        {COMPONENT("ne:ctrl:emmc") "/mfg-date", "2017-02-01T00:00:00-00:00"},
+        {COMPONENT("ne:ctrl:emmc") "/mfg-date", "2017-02-01T00:00:00Z"},
         {COMPONENT("ne:ctrl:emmc") "/model-name", "8GME4R"},
         {COMPONENT("ne:ctrl:emmc") "/state/oper-state", "enabled"},
         {COMPONENT("ne:ctrl:emmc:lifetime") "/class", "iana-hardware:sensor"},

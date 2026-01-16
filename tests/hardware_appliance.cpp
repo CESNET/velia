@@ -56,18 +56,18 @@ TEST_CASE("factory")
     {
         count = 223;
         expected = {
-            {"/component[name='ne']/mfg-date", "2025-01-15T14:15:43-00:00"},
+            {"/component[name='ne']/mfg-date", "2025-01-15T14:15:43Z"},
             {"/component[name='ne']/model-name", "sdn-bidi-cplus1572-g2 (PG-CL-SDN_dualBiDi-C-L)"},
             {"/component[name='ne']/serial-num", "PGCL250333"},
             {"/component[name='ne:ctrl']/serial-num", "0910C30854100840143BA080A08000F2"},
-            {"/component[name='ne:ctrl:carrier']/mfg-date", "2023-02-23T06:12:51-00:00"},
+            {"/component[name='ne:ctrl:carrier']/mfg-date", "2023-02-23T06:12:51Z"},
             {"/component[name='ne:ctrl:carrier']/model-name", "Clearfog Base (SRCFCBE000CV14)"},
             {"/component[name='ne:ctrl:carrier']/serial-num", "IP01195230800010"},
             {"/component[name='ne:ctrl:carrier:console']/serial-num", "DQ00EBGT"},
             {"/component[name='ne:ctrl:carrier:eeprom']/serial-num", "294100B137D2"},
-            {"/component[name='ne:ctrl:emmc']/mfg-date", "2022-11-01T00:00:00-00:00"},
+            {"/component[name='ne:ctrl:emmc']/mfg-date", "2022-11-01T00:00:00Z"},
             {"/component[name='ne:ctrl:emmc']/serial-num", "0x35c95f36"},
-            {"/component[name='ne:ctrl:som']/mfg-date", "2023-02-23T06:12:51-00:00"},
+            {"/component[name='ne:ctrl:som']/mfg-date", "2023-02-23T06:12:51Z"},
             {"/component[name='ne:ctrl:som']/model-name", "A38x SOM (SRM6828S32D01GE008V21C0)"},
             {"/component[name='ne:ctrl:som']/serial-num", "IP01195230800010"},
             {"/component[name='ne:ctrl:som:eeprom']/serial-num", "80342872BDD7"},

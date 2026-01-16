@@ -1748,7 +1748,7 @@
     }
   },
   "ietf-hardware:hardware": {
-    "last-change": "2025-03-06T13:45:19.996298205-00:00",
+    "last-change": "2025-03-06T13:45:19.996298205Z",
     "component": [
       {
         "name": "ne",
@@ -1790,7 +1790,7 @@
         "parent": "ne:ctrl",
         "serial-num": "0x35c95f36",
         "model-name": "8GTF4R",
-        "mfg-date": "2022-11-01T00:00:00-00:00",
+        "mfg-date": "2022-11-01T00:00:00Z",
         "state": {
           "oper-state": "enabled"
         }

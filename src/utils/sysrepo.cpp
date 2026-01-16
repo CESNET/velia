@@ -36,8 +36,11 @@ static void spdlog_sr_log_cb(sr_log_level_t level, const char* message)
     case SR_LL_INF:
         log->info(message);
         break;
-    case SR_LL_DBG:
+    case SR_LL_VRB:
         log->debug(message);
+        break;
+    case SR_LL_DBG:
+        log->trace(message);
         break;
     }
 }

@@ -5,20 +5,27 @@
 using namespace std::literals;
 
 namespace {
-static const std::string interfaceUnit = "org.freedesktop.systemd1.Unit";
-static const std::string interfaceManager = "org.freedesktop.systemd1.Manager";
-static const std::string objectPathManager = "/org/freedesktop/systemd1";
+constexpr auto ifaceSystemd1Unit = "org.freedesktop.systemd1.Unit";
+constexpr auto ifaceSystemd1Manager = "org.freedesktop.systemd1.Manager";
+constexpr auto ifaceResolve1Manager = "org.freedesktop.resolve1.Manager";
+
+constexpr auto pathSystemd1 = "/org/freedesktop/systemd1";
+constexpr auto pathResolve1 = "/org/freedesktop/resolve1";
 }
 
-/** @brief Create a dbus server on the connection */
+/** @brief Create a DBus server on the connection */
 DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection)
-    : m_manager(sdbus::createObject(connection, objectPathManager))
+    : m_systemd1Manager(sdbus::createObject(connection, pathSystemd1))
+    , m_resolve1Manager(sdbus::createObject(connection, pathResolve1))
 {
-    // create manager object
-    m_manager->registerMethod("Subscribe").onInterface(interfaceManager).implementedAs([] {}).withNoReply(); // no-op for us
-    m_manager->registerMethod("ListUnits").onInterface(interfaceManager).implementedAs([this]() { return ListUnits(); });
-    m_manager->registerSignal("UnitNew").onInterface(interfaceManager).withParameters<std::string, sdbus::ObjectPath>();
-    m_manager->finishRegistration();
+    m_systemd1Manager->registerMethod("Subscribe").onInterface(ifaceSystemd1Manager).implementedAs([] {}).withNoReply(); // no-op for us
+    m_systemd1Manager->registerMethod("ListUnits").onInterface(ifaceSystemd1Manager).implementedAs([this]() { return ListUnits(); });
+    m_systemd1Manager->registerSignal("UnitNew").onInterface(ifaceSystemd1Manager).withParameters<std::string, sdbus::ObjectPath>();
+    m_systemd1Manager->finishRegistration();
+
+    m_resolve1Manager->registerProperty("DNSEx").onInterface(ifaceResolve1Manager).withGetter([this]() { return m_DNSEx; });
+    m_resolve1Manager->registerProperty("FallbackDNSEx").onInterface(ifaceResolve1Manager).withGetter([this]() { return m_FallbackDNSEx; });
+    m_resolve1Manager->finishRegistration();
 }
 
 /** @brief Creates a unit inside the test server. Registers dbus object and emits UnitNew signal. **/
@@ -28,15 +35,15 @@ void DbusSystemdServer::createUnit(sdbus::IConnection& connection, const std::st
 
     Unit& unit = m_units.at(objPath);
 
-    unit.m_object->registerProperty("ActiveState").onInterface(interfaceUnit).withGetter([&unit]() {
+    unit.m_object->registerProperty("ActiveState").onInterface(ifaceSystemd1Unit).withGetter([&unit]() {
         return unit.m_activeState;
     });
-    unit.m_object->registerProperty("SubState").onInterface(interfaceUnit).withGetter([&unit]() {
+    unit.m_object->registerProperty("SubState").onInterface(ifaceSystemd1Unit).withGetter([&unit]() {
         return unit.m_subState;
     });
     unit.m_object->finishRegistration();
 
-    m_manager->emitSignal("UnitNew").onInterface(interfaceManager).withArguments(unitName, objPath);
+    m_systemd1Manager->emitSignal("UnitNew").onInterface(ifaceSystemd1Manager).withArguments(unitName, objPath);
 }
 
 /**
@@ -63,7 +70,7 @@ void DbusSystemdServer::changeUnitState(const sdbus::ObjectPath& objPath, const 
     if (auto it = m_units.find(objPath); it != m_units.end()) {
         it->second.m_activeState = activeState;
         it->second.m_subState = subState;
-        it->second.m_object->emitPropertiesChangedSignal(interfaceUnit, {"ActiveState", "SubState"});
+        it->second.m_object->emitPropertiesChangedSignal(ifaceSystemd1Unit, {"ActiveState", "SubState"});
     }
 }
 
@@ -73,4 +80,14 @@ DbusSystemdServer::Unit::Unit(std::string unitName, std::unique_ptr<sdbus::IObje
     , m_activeState(std::move(activeState))
     , m_subState(std::move(subState))
 {
+}
+
+void DbusSystemdServer::setDNSEx(std::vector<DNSServer> servers)
+{
+    m_DNSEx = std::move(servers);
+}
+
+void DbusSystemdServer::setFallbackDNSEx(std::vector<DNSServer> servers)
+{
+    m_FallbackDNSEx = std::move(servers);
 }

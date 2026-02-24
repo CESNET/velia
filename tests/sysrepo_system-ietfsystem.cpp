@@ -2,7 +2,7 @@
 #include <arpa/inet.h>
 #include <libyang-cpp/Time.hpp>
 #include <sdbus-c++/sdbus-c++.h>
-#include "dbus-helpers/dbus_resolve1_server.h"
+#include "dbus-helpers/dbus_systemd_server.h"
 #include "pretty_printers.h"
 #include "system/IETFSystem.h"
 #include "test_log_setup.h"
@@ -25,7 +25,7 @@ TEST_CASE("Sysrepo ietf-system")
     dbusConnServer->enterEventLoopAsync();
     dbusConnClient->enterEventLoopAsync();
 
-    DbusResolve1Server dbusServer(*dbusConnServer);
+    DbusSystemdServer dbusServer(*dbusConnServer);
 
     SECTION("Test system-state")
     {

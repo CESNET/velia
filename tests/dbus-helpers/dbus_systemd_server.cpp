@@ -8,15 +8,21 @@ namespace {
 constexpr auto ifaceSystemd1Unit = "org.freedesktop.systemd1.Unit";
 constexpr auto ifaceSystemd1Manager = "org.freedesktop.systemd1.Manager";
 constexpr auto ifaceResolve1Manager = "org.freedesktop.resolve1.Manager";
+constexpr auto ifaceTimesync1Manager = "org.freedesktop.timesync1.Manager";
+constexpr auto ifaceTimedate1Manager = "org.freedesktop.timedate1.Manager";
 
 constexpr auto pathSystemd1 = "/org/freedesktop/systemd1";
 constexpr auto pathResolve1 = "/org/freedesktop/resolve1";
+constexpr auto pathTimesync1 = "/org/freedesktop/timesync1";
+constexpr auto pathTimedate1 = "/org/freedesktop/timedate1";
 }
 
 /** @brief Create a DBus server on the connection */
 DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection)
     : m_systemd1Manager(sdbus::createObject(connection, pathSystemd1))
     , m_resolve1Manager(sdbus::createObject(connection, pathResolve1))
+    , m_timesync1Manager(sdbus::createObject(connection, pathTimesync1))
+    , m_timedate1Manager(sdbus::createObject(connection, pathTimedate1))
 {
     m_systemd1Manager->registerMethod("Subscribe").onInterface(ifaceSystemd1Manager).implementedAs([] {}).withNoReply(); // no-op for us
     m_systemd1Manager->registerMethod("ListUnits").onInterface(ifaceSystemd1Manager).implementedAs([this]() { return ListUnits(); });
@@ -26,6 +32,14 @@ DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection)
     m_resolve1Manager->registerProperty("DNSEx").onInterface(ifaceResolve1Manager).withGetter([this]() { return m_DNSEx; });
     m_resolve1Manager->registerProperty("FallbackDNSEx").onInterface(ifaceResolve1Manager).withGetter([this]() { return m_FallbackDNSEx; });
     m_resolve1Manager->finishRegistration();
+
+    m_timesync1Manager->registerProperty("NTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_NTPServers; });
+    m_timesync1Manager->registerProperty("FallbackNTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_FallbackNTPServers; });
+    m_timesync1Manager->finishRegistration();
+
+    m_timedate1Manager->registerProperty("CanNTP").onInterface(ifaceTimedate1Manager).withGetter([this]() { return m_canNTP; });
+    m_timedate1Manager->registerProperty("NTP").onInterface(ifaceTimedate1Manager).withGetter([this]() { return m_NTP; });
+    m_timedate1Manager->finishRegistration();
 }
 
 /** @brief Creates a unit inside the test server. Registers dbus object and emits UnitNew signal. **/
@@ -90,4 +104,20 @@ void DbusSystemdServer::setDNSEx(std::vector<DNSServer> servers)
 void DbusSystemdServer::setFallbackDNSEx(std::vector<DNSServer> servers)
 {
     m_FallbackDNSEx = std::move(servers);
+}
+
+void DbusSystemdServer::setNTP(bool canNTP, bool NTP)
+{
+    m_canNTP = canNTP;
+    m_NTP = NTP;
+}
+
+void DbusSystemdServer::setNTPServers(std::vector<std::string> ntpServers)
+{
+    m_NTPServers = std::move(ntpServers);
+}
+
+void DbusSystemdServer::setFallbackNTPServers(std::vector<std::string> ntpServers)
+{
+    m_FallbackNTPServers = std::move(ntpServers);
 }

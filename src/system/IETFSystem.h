@@ -24,6 +24,7 @@ private:
     void initDummies();
     void initClock(const std::filesystem::path& procStatPath);
     void initDNS(sdbus::IConnection& connection, const std::string& dbusName);
+    void initNTP(sdbus::IConnection& connection, const std::string& dbusName);
 
     ::sysrepo::Session m_srSession;
     std::optional<::sysrepo::Subscription> m_srSubscribe;

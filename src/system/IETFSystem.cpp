@@ -24,6 +24,7 @@ const auto IETF_SYSTEM_MODULE_NAME = "ietf-system"s;
 const auto IETF_SYSTEM_STATE_MODULE_PREFIX = "/"s + IETF_SYSTEM_MODULE_NAME + ":system-state/"s;
 const auto IETF_SYSTEM_HOSTNAME_PATH = "/ietf-system:system/hostname";
 const auto IETF_SYSTEM_DNS_PATH = "/ietf-system:system/dns-resolver";
+const auto IETF_SYSTEM_NTP_PATH = "/ietf-system:system/ntp";
 const auto IETF_SYSTEM_STATE_CLOCK_PATH = "/ietf-system:system-state/clock";
 
 /** @brief Returns key=value pairs from (e.g. /etc/os-release) as a std::map */
@@ -264,6 +265,44 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
     m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME, dnsOper, IETF_SYSTEM_DNS_PATH);
 }
 
+/** @short NTP callbacks */
+void IETFSystem::initNTP(sdbus::IConnection& connection, const std::string& dbusName)
+{
+    sysrepo::OperGetCb operCb = [&connection, dbusName](auto session, auto, auto, auto, auto, auto, auto& parent) {
+        constexpr auto DBUS_TIMESYNC1_MANAGER_PATH = "/org/freedesktop/timesync1";
+        constexpr auto DBUS_TIMESYNC1_MANAGER_INTERFACE = "org.freedesktop.timesync1.Manager";
+        constexpr auto DBUS_TIMEDATE1_MANAGER_PATH = "/org/freedesktop/timedate1";
+        constexpr auto DBUS_TIMEDATE1_MANAGER_INTERFACE = "org.freedesktop.timedate1.Manager";
+
+        utils::YANGData values;
+
+        auto proxy = sdbus::createProxy(connection, dbusName, DBUS_TIMEDATE1_MANAGER_PATH);
+        auto ntpServiceAvailable = proxy->getProperty("CanNTP").onInterface(DBUS_TIMEDATE1_MANAGER_INTERFACE).get<bool>();
+        auto ntpServiceEnabled = proxy->getProperty("NTP").onInterface(DBUS_TIMEDATE1_MANAGER_INTERFACE).get<bool>();
+        values.emplace_back(IETF_SYSTEM_NTP_PATH + "/enabled"s, (ntpServiceAvailable && ntpServiceEnabled) ? "true" : "false");
+
+        proxy = sdbus::createProxy(connection, dbusName, DBUS_TIMESYNC1_MANAGER_PATH);
+        std::vector<std::string> ntpServers;
+        for (const auto& propertyName : {"NTPServers", "FallbackNTPServers"}) {
+            sdbus::Variant store = proxy->getProperty(propertyName).onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE);
+            ntpServers = store.get<std::vector<std::string>>();
+
+            if (!ntpServers.empty()) {
+                break;
+            }
+        }
+
+        for (const auto& server : ntpServers) {
+            values.emplace_back(IETF_SYSTEM_NTP_PATH + "/server[name='"s + server + "']/udp/address", server);
+        }
+
+        utils::valuesToYang(values, {}, {}, session, parent);
+        return sysrepo::ErrorCode::Ok;
+    };
+
+    m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME, operCb, IETF_SYSTEM_NTP_PATH);
+}
+
 /** This class handles multiple system properties and publishes them via the ietf-system model:
  * - OS-identification data from osRelease file
  * - Rebooting
@@ -280,5 +319,6 @@ IETFSystem::IETFSystem(::sysrepo::Session srSession, const std::filesystem::path
     initDummies();
     initClock(procStat);
     initDNS(connection, dbusName);
+    initNTP(connection, dbusName);
 }
 }

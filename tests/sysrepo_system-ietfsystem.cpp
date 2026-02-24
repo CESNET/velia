@@ -219,6 +219,55 @@ TEST_CASE("Sysrepo ietf-system")
         REQUIRE(dataFromSysrepo(client, "/ietf-system:system/dns-resolver", sysrepo::Datastore::Operational) == expected);
     }
 
+    SECTION("NTP")
+    {
+        std::map<std::string, std::string> expected;
+        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
+                                                                   CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
+                                                                   *dbusConnClient,
+                                                                   dbusConnServer->getUniqueName());
+
+        SECTION("NTP enabled and both servers and fallback servers exist")
+        {
+            dbusServer.setNTP(true, true);
+            dbusServer.setNTPServers({"tik.cesnet.cz", "tak.cesnet.cz"});
+            dbusServer.setFallbackNTPServers({"0.arch.pool.ntp.org", "1.arch.pool.ntp.org"});
+
+            expected = {
+                {"/enabled", "true"},
+                {"/server[name='tik.cesnet.cz']", ""},
+                {"/server[name='tik.cesnet.cz']/name", "tik.cesnet.cz"},
+                {"/server[name='tik.cesnet.cz']/udp", ""},
+                {"/server[name='tik.cesnet.cz']/udp/address", "tik.cesnet.cz"},
+                {"/server[name='tak.cesnet.cz']", ""},
+                {"/server[name='tak.cesnet.cz']/name", "tak.cesnet.cz"},
+                {"/server[name='tak.cesnet.cz']/udp", ""},
+                {"/server[name='tak.cesnet.cz']/udp/address", "tak.cesnet.cz"},
+            };
+        }
+
+        SECTION("NTP disabled and only fallback servers set")
+        {
+            dbusServer.setNTP(true, false);
+            dbusServer.setFallbackNTPServers({"0.arch.pool.ntp.org", "1.arch.pool.ntp.org"});
+
+            expected = {
+                {"/enabled", "false"},
+                {"/server[name='0.arch.pool.ntp.org']", ""},
+                {"/server[name='0.arch.pool.ntp.org']/name", "0.arch.pool.ntp.org"},
+                {"/server[name='0.arch.pool.ntp.org']/udp", ""},
+                {"/server[name='0.arch.pool.ntp.org']/udp/address", "0.arch.pool.ntp.org"},
+                {"/server[name='1.arch.pool.ntp.org']", ""},
+                {"/server[name='1.arch.pool.ntp.org']/name", "1.arch.pool.ntp.org"},
+                {"/server[name='1.arch.pool.ntp.org']/udp", ""},
+                {"/server[name='1.arch.pool.ntp.org']/udp/address", "1.arch.pool.ntp.org"},
+            };
+        }
+
+        REQUIRE(dataFromSysrepo(client, "/ietf-system:system/ntp", sysrepo::Datastore::Operational) == expected);
+    }
+
 #ifdef TEST_RPC_SYSTEM_REBOOT
     SECTION("RPC system-restart")
     {

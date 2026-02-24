@@ -314,6 +314,12 @@ module czechlight-system {
     }
   }
 
+  deviation /sys:system/sys:ntp {
+    deviate add {
+      config false;
+    }
+  }
+
   deviation /hw:hardware/hw:component/hw:parent {
     deviate add {
       config false;

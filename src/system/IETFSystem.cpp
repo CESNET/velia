@@ -96,7 +96,7 @@ std::vector<std::string> getDNSResolvers(sdbus::IConnection& connection, const s
         // i.e., <ifindex (0 for system-wide), addrtype, address as a bytearray, port (0 for unspecified), server name>,
         auto replyObjects = store.get<std::vector<sdbus::Struct<int32_t, int32_t, std::vector<uint8_t>, uint16_t, std::string>>>();
 
-        if (!replyObjects.empty() > 0) {
+        if (!replyObjects.empty()) {
             std::vector<std::string> res;
 
             for (const auto& e : replyObjects) {

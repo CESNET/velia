@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8bfa81e6_fc9ecd8a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-02-25T09:31:17Z",
+      "side": 1,
+      "message": "I was hoping to see some history of changing from `foo.count() \u003e 0` to `foo.empty()` in the review, but nope :). Oh well.",
+      "revId": "c24507ae61de7da7ba4a30abf6e52300b176e6dd",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

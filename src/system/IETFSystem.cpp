@@ -268,6 +268,7 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
 /** @short NTP callbacks */
 void IETFSystem::initNTP(sdbus::IConnection& connection, const std::string& dbusName)
 {
+    utils::ensureModuleImplemented(m_srSession, IETF_SYSTEM_MODULE_NAME, "2014-08-06", {{"ntp"}});
     sysrepo::OperGetCb operCb = [&connection, dbusName](auto session, auto, auto, auto, auto, auto, auto& parent) {
         constexpr auto DBUS_TIMESYNC1_MANAGER_PATH = "/org/freedesktop/timesync1";
         constexpr auto DBUS_TIMESYNC1_MANAGER_INTERFACE = "org.freedesktop.timesync1.Manager";

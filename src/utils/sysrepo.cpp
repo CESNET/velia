@@ -136,10 +136,16 @@ void valuesPush(sysrepo::Session session, const YANGData& values, const std::vec
 }
 
 /** @brief Checks whether a module is implemented in Sysrepo and throws if not. */
-void ensureModuleImplemented(::sysrepo::Session session, const std::string& module, const std::string& revision)
+void ensureModuleImplemented(::sysrepo::Session session, const std::string& module, const std::string& revision, const std::vector<std::string>& features)
 {
-    if (auto mod = session.getContext().getModule(module, revision); !mod || !mod->implemented()) {
+    auto mod = session.getContext().getModule(module, revision);
+    if (!mod || !mod->implemented()) {
         throw std::runtime_error(module + "@" + revision + " is not implemented in sysrepo.");
+    }
+    for (const auto& feature : features) {
+        if (!mod->featureEnabled(feature)) {
+            throw std::runtime_error{"Feature '" + feature + "' is not enabled in module " + module};
+        }
     }
 }
 YANGPair::YANGPair(std::string xpath, std::string value)

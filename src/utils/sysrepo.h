@@ -26,7 +26,7 @@ void valuesToYang(const YANGData& values, const std::vector<std::string>& foreig
 void valuesPush(::sysrepo::Session session, const YANGData& values, const std::vector<std::string>& foreignRemovals, const std::vector<std::string>& ourRemovals);
 
 void initLogsSysrepo();
-void ensureModuleImplemented(::sysrepo::Session session, const std::string& module, const std::string& revision);
+void ensureModuleImplemented(::sysrepo::Session session, const std::string& module, const std::string& revision, const std::vector<std::string>& features = {});
 
 void setErrors(::sysrepo::Session session, const std::string& msg);
 

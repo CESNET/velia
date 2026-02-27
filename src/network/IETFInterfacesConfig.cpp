@@ -123,6 +123,29 @@ void addNetworkConfig(NetworkConfiguration& configValues, const std::string& lin
     configValues.emplace("Network", std::move(network));
 }
 
+void addAutoconfConfig(NetworkConfiguration& configValues, const libyang::DataNode& linkEntry)
+{
+    NetworkConfiguration::mapped_type ipv6AcceptRA;
+
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv6/autoconf/czechlight-network:accept-dns-advertisements"); node) {
+        ipv6AcceptRA.push_back("UseDNS="s + velia::utils::asString(node.value()));
+    } else {
+        ipv6AcceptRA.push_back("UseDNS=false");
+    }
+
+    configValues.emplace("IPv6AcceptRA", std::move(ipv6AcceptRA));
+
+    NetworkConfiguration::mapped_type dhcpv4;
+
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client/czechlight-network:use-dns"); node) {
+        dhcpv4.push_back("UseDNS="s + velia::utils::asString(node.value()));
+    } else {
+        dhcpv4.push_back("UseDNS=false");
+    }
+
+    configValues.emplace("DHCPv4", std::move(dhcpv4));
+}
+
 /** @brief Adds values to [Route] section of systemd.network(5) config file. */
 void addRoutingConfig(velia::Log log, NetworkConfiguration& configValues, const std::string& linkName, const libyang::DataNode& linkEntry, const std::optional<libyang::DataNode>& routingEntry)
 {
@@ -223,6 +246,7 @@ sysrepo::ErrorCode IETFInterfacesConfig::moduleChange(::sysrepo::Session session
         NetworkConfiguration configValues;
         addNetworkConfig(configValues, linkName, linkEntry);
         addRoutingConfig(m_log, configValues, linkName, linkEntry, routingEntry);
+        addAutoconfConfig(configValues, linkEntry);
 
         networkConfigFiles[linkName] = generateNetworkConfigFile(linkName, configValues);
     }

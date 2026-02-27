@@ -84,6 +84,12 @@ TEST_CASE("Config data in ietf-interfaces")
     expectedContents.set("br0", R"([Match]
 Name=br0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
+
 [Network]
 IPv6AcceptRA=true
 DHCP=ipv4
@@ -92,6 +98,12 @@ EmitLLDP=nearest-bridge
 )");
     expectedContents.set("eth2", R"([Match]
 Name=eth2
+
+[DHCPv4]
+UseDNS=false
+
+[IPv6AcceptRA]
+UseDNS=false
 
 [Network]
 Bridge=br0
@@ -138,6 +150,12 @@ EmitLLDP=nearest-bridge
             expectedContents.set("eth0", R"([Match]
 Name=eth0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=false
+
 [Network]
 Description=Hello world
 Address=192.0.2.1/24
@@ -158,6 +176,12 @@ EmitLLDP=nearest-bridge
             expectedContents.set("eth0", R"([Match]
 Name=eth0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=false
+
 [Network]
 Address=192.0.2.1/24
 Address=192.0.2.2/24
@@ -176,6 +200,12 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client/enabled", "false");
             expectedContents.set("eth0", R"([Match]
 Name=eth0
+
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 Address=192.0.2.1/24
@@ -196,6 +226,12 @@ EmitLLDP=nearest-bridge
             expectedContents.set("eth0", R"([Match]
 Name=eth0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
+
 [Network]
 Address=192.0.2.1/24
 LinkLocalAddressing=no
@@ -215,6 +251,12 @@ EmitLLDP=nearest-bridge
         expectedContents.set("eth0", R"([Match]
 Name=eth0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=false
+
 [Network]
 Address=192.0.2.1/24
 LinkLocalAddressing=no
@@ -225,6 +267,12 @@ EmitLLDP=nearest-bridge
 )");
         expectedContents.set("eth1", R"([Match]
 Name=eth1
+
+[DHCPv4]
+UseDNS=false
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 Address=2001:db8::1/32
@@ -257,6 +305,12 @@ EmitLLDP=nearest-bridge
         expectedContents.set("br0", R"([Match]
 Name=br0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
+
 [Network]
 IPv6AcceptRA=true
 DHCP=ipv4
@@ -266,6 +320,12 @@ EmitLLDP=nearest-bridge
 
         expectedContents.set("eth0", R"([Match]
 Name=eth0
+
+[DHCPv4]
+UseDNS=false
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 Bridge=br0
@@ -277,6 +337,12 @@ EmitLLDP=nearest-bridge
 
         expectedContents.set("eth1", R"([Match]
 Name=eth1
+
+[DHCPv4]
+UseDNS=false
+
+[IPv6AcceptRA]
+UseDNS=false
 
 [Network]
 Bridge=br0
@@ -311,6 +377,12 @@ EmitLLDP=nearest-bridge
         expectedContents.set("br0", R"([Match]
 Name=br0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
+
 [Network]
 Address=192.0.2.1/24
 IPv6AcceptRA=true
@@ -326,6 +398,12 @@ EmitLLDP=nearest-bridge
         client.setItem("/ietf-interfaces:interfaces/interface[name='br0']/ietf-ip:ipv6/ietf-ip:address[ip='2001:db8::1']/ietf-ip:prefix-length", "32");
         expectedContents.set("br0", R"([Match]
 Name=br0
+
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 Address=192.0.2.1/24
@@ -345,6 +423,12 @@ EmitLLDP=nearest-bridge
 
         expectedContents.set("eth1", R"([Match]
 Name=eth1
+
+[DHCPv4]
+UseDNS=false
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 Address=2001:db8::2/32
@@ -371,6 +455,12 @@ EmitLLDP=nearest-bridge
             expectedContents.set("eth0", R"([Match]
 Name=eth0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=false
+
 [Network]
 Address=192.0.2.1/24
 LinkLocalAddressing=no
@@ -388,8 +478,21 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
 
-            expectedContents.set("eth0", R"([Match]
+            SECTION("Use DNS on")
+            {
+                SECTION("Set up explicitly")
+                {
+                    client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client/czechlight-network:use-dns", "true");
+                }
+
+                expectedContents.set("eth0", R"([Match]
 Name=eth0
+
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 Address=192.0.2.1/24
@@ -399,6 +502,34 @@ DHCP=ipv4
 LLDP=true
 EmitLLDP=nearest-bridge
 )");
+            }
+
+            SECTION("Use DNS off")
+            {
+                client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client/czechlight-network:use-dns", "false");
+                expectedContents.set("eth0", R"([Match]
+Name=eth0
+
+[DHCPv4]
+UseDNS=false
+
+[IPv6AcceptRA]
+UseDNS=true
+
+[Network]
+Address=192.0.2.1/24
+LinkLocalAddressing=no
+IPv6AcceptRA=false
+DHCP=ipv4
+LLDP=true
+EmitLLDP=nearest-bridge
+)");
+            }
+
+            client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/ietf-ip:address[ip='192.0.2.1']/ietf-ip:prefix-length", "24"); // in case DHCP is disabled an IP must be present
+            client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "false");
+            client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
+
         }
 
         SECTION("IPv4 disabled, IPv6 enabled, DHCPv4 on, RA on")
@@ -408,8 +539,21 @@ EmitLLDP=nearest-bridge
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:enabled", "true");
             client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/ietf-ip:autoconf/ietf-ip:create-global-addresses", "true");
 
-            expectedContents.set("eth0", R"([Match]
+            SECTION("Accept DNS advertisements")
+            {
+                SECTION("Set up explicitly")
+                {
+                    client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/autoconf/czechlight-network:accept-dns-advertisements", "true");
+                }
+
+                expectedContents.set("eth0", R"([Match]
 Name=eth0
+
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 IPv6AcceptRA=true
@@ -417,6 +561,28 @@ DHCP=no
 LLDP=true
 EmitLLDP=nearest-bridge
 )");
+            }
+
+            SECTION("Disable DNS advertisements")
+            {
+                client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv6/autoconf/czechlight-network:accept-dns-advertisements", "false");
+
+                expectedContents.set("eth0", R"([Match]
+Name=eth0
+
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=false
+
+[Network]
+IPv6AcceptRA=true
+DHCP=no
+LLDP=true
+EmitLLDP=nearest-bridge
+)");
+            }
         }
 
         SECTION("IPv4 enabled, IPv6 enabled, DHCPv4 on, RA on")
@@ -428,6 +594,12 @@ EmitLLDP=nearest-bridge
 
             expectedContents.set("eth0", R"([Match]
 Name=eth0
+
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 IPv6AcceptRA=true
@@ -448,6 +620,12 @@ EmitLLDP=nearest-bridge
             expectedContents.set("eth0", R"([Match]
 Name=eth0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
+
 [Network]
 Address=192.0.2.1/24
 IPv6AcceptRA=true
@@ -467,6 +645,12 @@ EmitLLDP=nearest-bridge
             expectedContents.set("eth0", R"([Match]
 Name=eth0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
+
 [Network]
 Address=192.0.2.1/24
 Address=2001:db8::1/32
@@ -485,6 +669,12 @@ EmitLLDP=nearest-bridge
     {
         expectedContents.set("eth0", R"([Match]
 Name=eth0
+
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 Address=192.0.2.1/24
@@ -512,6 +702,12 @@ Metric=0
 
         expectedContents.set("eth1", R"([Match]
 Name=eth1
+
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 IPv6AcceptRA=true
@@ -571,6 +767,12 @@ Metric=1
         expectedContents.set("eth0", R"([Match]
 Name=eth0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
+
 [Network]
 Address=192.0.2.1/24
 Address=192.0.2.100/24
@@ -604,6 +806,12 @@ Metric=0
         expectedContents.set("eth0", R"([Match]
 Name=eth0
 
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
+
 [Network]
 Address=192.0.2.1/24
 Address=192.0.2.100/24
@@ -630,6 +838,12 @@ Metric=1
         // Disabled interfaces do not produce any routes in the generated configuration
         expectedContents.set("eth1", R"([Match]
 Name=eth1
+
+[DHCPv4]
+UseDNS=true
+
+[IPv6AcceptRA]
+UseDNS=true
 
 [Network]
 IPv6AcceptRA=true

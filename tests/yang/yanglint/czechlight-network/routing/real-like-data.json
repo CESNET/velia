@@ -4,13 +4,13 @@
       {
         "name": "eth0",
         "type": "iana-if-type:ethernetCsmacd",
-        "ietf-ip:ipv4": {},
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} },
         "ietf-ip:ipv6": {}
       },
       {
         "name": "eth1",
         "type": "iana-if-type:ethernetCsmacd",
-        "ietf-ip:ipv4": {},
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} },
         "ietf-ip:ipv6": {}
       }
     ]

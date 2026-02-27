@@ -6,7 +6,9 @@
         "name": "eth00",
         "type": "iana-if-type:ethernetCsmacd",
         "ietf-ip:ipv4": {
-          "czechlight-network:dhcp-client": true
+          "czechlight-network:dhcp-client": {
+            "enabled": true
+          }
         }
       },
       {
@@ -14,7 +16,9 @@
         "name": "eth01",
         "type": "iana-if-type:ethernetCsmacd",
         "ietf-ip:ipv4": {
-          "czechlight-network:dhcp-client": false
+          "czechlight-network:dhcp-client": {
+            "enabled": false
+          }
         }
       },
       {
@@ -45,7 +49,7 @@
               "prefix-length": 24
             }
           ],
-          "czechlight-network:dhcp-client": true
+          "czechlight-network:dhcp-client": {}
         }
       },
       {
@@ -54,7 +58,9 @@
         "type": "iana-if-type:ethernetCsmacd",
         "enabled": false,
         "ietf-ip:ipv4": {
-          "czechlight-network:dhcp-client": false,
+          "czechlight-network:dhcp-client": {
+            "enabled": false
+          }
         }
       },
       {
@@ -64,7 +70,9 @@
         "enabled": true,
         "ietf-ip:ipv4": {
           "enabled": false,
-          "czechlight-network:dhcp-client": false,
+          "czechlight-network:dhcp-client": {
+            "enabled": false
+          }
         },
         "ietf-ip:ipv6": {}
       },
@@ -143,7 +151,7 @@
           }
         },
         "ietf-ip:ipv4": {
-          "czechlight-network:dhcp-client": true
+          "czechlight-network:dhcp-client": {}
         }
       }
     ]

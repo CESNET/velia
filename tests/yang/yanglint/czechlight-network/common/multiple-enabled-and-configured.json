@@ -6,7 +6,7 @@
         "type": "iana-if-type:ethernetCsmacd",
         "enabled": true,
         "ietf-ip:ipv4": {
-          "czechlight-network:dhcp-client": true
+          "czechlight-network:dhcp-client": {}
         }
       },
       {

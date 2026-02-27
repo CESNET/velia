@@ -5,7 +5,7 @@
         "name": "br0",
         "type": "iana-if-type:bridge",
         "ietf-ip:ipv4": {
-          "czechlight-network:dhcp-client": true
+          "czechlight-network:dhcp-client": {}
         }
       },
       {

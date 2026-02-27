@@ -6,7 +6,7 @@
         "type": "iana-if-type:bridge",
         "description": "Active IPv4, OK",
         "ietf-ip:ipv4": {
-          "czechlight-network:dhcp-client": true
+          "czechlight-network:dhcp-client": {}
         }
       },
       {
@@ -52,7 +52,8 @@
         "type": "iana-if-type:ethernetCsmacd",
         "description": "Both protocols enabled, IPv6 autoconf is default true, OK",
         "ietf-ip:ipv4": {
-            "enabled": true
+            "enabled": true,
+            "czechlight-network:dhcp-client": {}
         },
         "ietf-ip:ipv6": {
             "enabled": true
@@ -63,7 +64,8 @@
         "type": "iana-if-type:ethernetCsmacd",
         "description": "IPv4 enabled (no DHCP), IPv6 enabled but autoconf turned off, FAIL",
         "ietf-ip:ipv4": {
-            "enabled": true
+            "enabled": true,
+            "czechlight-network:dhcp-client": {}
         },
         "ietf-ip:ipv6": {
            "autoconf": {

@@ -4,32 +4,32 @@
       {
         "name": "br0",
         "type": "iana-if-type:softwareLoopback",
-        "ietf-ip:ipv4": {},
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} },
       },
       {
         "name": "eth0",
         "type": "iana-if-type:eon",
-        "ietf-ip:ipv4": {}
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} }
       },
       {
         "name": "eth1",
         "type": "iana-if-type:bridge",
-        "ietf-ip:ipv4": {}
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} }
       },
       {
         "name": "eth2",
         "type": "iana-if-type:ethernet3Mbit",
-        "ietf-ip:ipv4": {}
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} }
       },
       {
         "name": "osc",
         "type": "iana-if-type:hippi",
-        "ietf-ip:ipv4": {}
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} }
       },
       {
         "name": "sfp3",
         "type": "iana-if-type:opticalChannel",
-        "ietf-ip:ipv4": {}
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} }
       }
     ]
   }

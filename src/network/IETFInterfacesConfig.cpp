@@ -110,7 +110,8 @@ void addNetworkConfig(NetworkConfiguration& configValues, const std::string& lin
         network.push_back("IPv6AcceptRA=false");
     }
 
-    if (auto node = velia::utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client"); protocolEnabled(linkEntry, "ipv4") && velia::utils::asString(node.value()) == "true"s) {
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client/czechlight-network:enabled");
+        protocolEnabled(linkEntry, "ipv4") && node && velia::utils::asString(node.value()) == "true"s) {
         network.push_back("DHCP=ipv4");
     } else {
         network.push_back("DHCP=no");

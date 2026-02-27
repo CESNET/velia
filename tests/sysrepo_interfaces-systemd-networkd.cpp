@@ -104,17 +104,23 @@ EmitLLDP=nearest-bridge
     const std::vector<std::string> managedLinks{"br0", "eth0", "eth1", "eth2"};
     REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {"eth0", "eth1"}, .changedOrNew = {"br0", "eth2"}})).IN_SEQUENCE(seq1);
     REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {}})).IN_SEQUENCE(seq1);
+
+    std::exception_ptr exception_ptr;
     auto network = std::make_shared<velia::network::IETFInterfacesConfig>(srSess, fakeConfigDir, managedLinks, [&](const ChangedUnits& update) {
         fake.cb(update);
 
         for (const auto& link : managedLinks) {
             CAPTURE(link);
 
-            auto contents = expectedContents.get(link);
-            if (contents) {
-                REQUIRE_NETWORK_CONFIGURATION(link, *contents);
-            } else {
-                REQUIRE_NETWORK_EMPTY_CONFIGURATION(link);
+            try {
+                auto contents = expectedContents.get(link);
+                if (contents) {
+                    REQUIRE_NETWORK_CONFIGURATION(link, *contents);
+                } else {
+                    REQUIRE_NETWORK_EMPTY_CONFIGURATION(link);
+                }
+            } catch (...) {
+                exception_ptr = std::current_exception();
             }
         }
     });
@@ -634,5 +640,9 @@ EmitLLDP=nearest-bridge
         client.setItem("/ietf-interfaces:interfaces/interface[name='eth1']/ietf-ip:ipv4/enabled", "false");
         REQUIRE_CALL(fake, cb(ChangedUnits{.deleted = {}, .changedOrNew = {"eth1"}})).IN_SEQUENCE(seq1);
         client.applyChanges();
+    }
+
+    if (exception_ptr) {
+        std::rethrow_exception(exception_ptr);
     }
 }

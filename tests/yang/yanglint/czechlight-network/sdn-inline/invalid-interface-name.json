@@ -4,17 +4,17 @@
       {
         "name": "eth2",
         "type": "iana-if-type:ethernetCsmacd",
-        "ietf-ip:ipv4": {}
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} }
       },
       {
         "name": "eth3",
         "type": "iana-if-type:ethernetCsmacd",
-        "ietf-ip:ipv4": {}
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} }
       },
       {
         "name": "osc",
         "type": "iana-if-type:ethernetCsmacd",
-        "ietf-ip:ipv4": {}
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} }
       },
       {
         "name": "sfp1",
@@ -24,7 +24,7 @@
       {
         "name": "br1",
         "type": "iana-if-type:bridge",
-        "ietf-ip:ipv4": {}
+        "ietf-ip:ipv4": { "czechlight-network:dhcp-client": {} }
       }
     ]
   }

@@ -149,6 +149,12 @@ module czechlight-network {
               default true;
               description "Enable DHCP client.";
             }
+
+            leaf use-dns {
+              type boolean;
+              default true;
+              description "Use DNS servers provided by DHCP server.";
+            }
         }
     }
 
@@ -157,6 +163,16 @@ module czechlight-network {
             must 'ip:enabled = "false" or ../if:enabled = "false" or count(ip:address) > 0 or cla-network:dhcp-client/cla-network:enabled = "true"' {
                 error-message "There must always be at least one IPv4 address or the autoconfiguration must be turned on unless the interface or protocol is disabled.";
             }
+        }
+    }
+
+    augment /if:interfaces/if:interface/ip:ipv6/ip:autoconf {
+        description "Add the option to accept DNS advertising from router advertisements.";
+
+        leaf accept-dns-advertisements {
+            type boolean;
+            default true;
+            description "Accept DNS server addresses from router advertisements.";
         }
     }
 

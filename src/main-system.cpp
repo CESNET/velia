@@ -82,6 +82,11 @@ int main(int argc, char* argv[])
                                                        *g_dbusConnection,
                                                        IETFSystem::SystemdConfigData{
                                                            .busName = "org.freedesktop.resolve1",
+                                                           .dropinDir = "/run/systemd/resolved.conf.d",
+                                                           .reload = []() {
+                                                               spdlog::get("system")->debug("Reloading systemd-resolved.service");
+                                                               velia::utils::execAndWait(spdlog::get("system"), SYSTEMCTL_EXECUTABLE, {"reload", "systemd-resolved.service"}, "", {});
+                                                           },
                                                        },
                                                        IETFSystem::SystemdConfigData{
                                                            .busName = "org.freedesktop.timesync1",

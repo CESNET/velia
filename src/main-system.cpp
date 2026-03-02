@@ -75,7 +75,18 @@ int main(int argc, char* argv[])
     });
 
     // initialize ietf-system
-    auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release", "/proc/stat", *g_dbusConnection, "org.freedesktop.resolve1");
+    auto sysrepoIETFSystem = velia::system::IETFSystem(srSess,
+                                                       "/etc/os-release",
+                                                       "/proc/stat",
+                                                       *g_dbusConnection,
+                                                       "org.freedesktop.resolve1",
+                                                       velia::system::IETFSystem::SystemdConfigData{
+                                                           .runtimeDir = "/run/systemd/resolved.conf.d/",
+                                                           .reload = []() {
+                                                               spdlog::get("system")->debug("Reloading systemd-resolved.service");
+                                                               velia::utils::execAndWait(spdlog::get("system"), SYSTEMCTL_EXECUTABLE, {"reload", "systemd-resolved.service"}, "", {});
+                                                           },
+                                                       });
 
     auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
     dbusConnection->enterEventLoopAsync();

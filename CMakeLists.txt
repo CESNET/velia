@@ -243,6 +243,11 @@ if(NOT VELIA_BACKUP_ETC_HOSTNAME )
     message(FATAL_ERROR "VELIA_BACKUP_ETC_HOSTNAME  not set")
 endif()
 
+set(VELIA_BACKUP_ETC_SYSTEMD_RESOLVED_CONF "/etc/systemd/resolved.conf" CACHE STRING "Path to resolved.conf file")
+if(NOT VELIA_BACKUP_ETC_SYSTEMD_RESOLVED_CONF)
+    message(FATAL_ERROR "VELIA_BACKUP_ETC_SYSTEMD_RESOLVED_CONF not set")
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/system/system_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/system_vars.h @ONLY)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -495,7 +500,7 @@ if(BUILD_TESTING)
     set(fixture_sysrepo-czechlight-lldp --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-lldp@2026-01-09.yang)
     velia_test(NAME sysrepo_network-lldp LIBRARIES velia-network DbusTesting FIXTURE fixture_sysrepo-czechlight-lldp)
 
-    set(fixture_sysrepo-ietf-system --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang --enable-feature ntp)
+    set(fixture_sysrepo-ietf-system --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-system@2014-08-06.yang --enable-feature ntp --enable-feature dns-udp-tcp-port)
     velia_test(NAME sysrepo_system-ietfsystem LIBRARIES velia-system DbusTesting date::date-tz FIXTURE fixture_sysrepo-ietf-system)
 
     set(fixture_sysrepo-czechlight-system --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-system@2022-07-08.yang --init-data ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-authentication.json)

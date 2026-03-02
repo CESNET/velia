@@ -116,6 +116,11 @@ std::string createTimesyncdConfig(const sysrepo::Session& session)
     return createSystemdDropinConfig("Time", "NTP", getNTPServersFromChange(IETF_SYSTEM_NTP_PATH + "/server/udp"s, session));
 }
 
+std::string createResolvedConfig(const sysrepo::Session& session)
+{
+    return createSystemdDropinConfig("Resolve", "DNS", getDNSOrNTPServersFromChange(IETF_SYSTEM_DNS_PATH + "/server/udp-and-tcp"s, session));
+}
+
 struct AddressAndPort {
     std::string address;
     std::optional<unsigned> port;
@@ -311,6 +316,23 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const SystemdConfigData
         return sysrepo::ErrorCode::Ok;
     };
 
+    sysrepo::ModuleChangeCb dnsRunning = [resolve] (auto session, auto, auto, auto, auto, auto) {
+        std::filesystem::create_directories(*resolve.dropinDir);
+        utils::safeWriteFile(*resolve.dropinDir / "resolved.conf", createResolvedConfig(session));
+        (*resolve.reload)();
+        return sysrepo::ErrorCode::Ok;
+    };
+
+    sysrepo::ModuleChangeCb dnsStartup = [] (auto session, auto, auto, auto, auto, auto) {
+        utils::safeWriteFile(BACKUP_ETC_SYSTEMD_RESOLVED_CONF_FILE, createResolvedConfig(session));
+        return sysrepo::ErrorCode::Ok;
+    };
+
+    m_srSession.switchDatastore(sysrepo::Datastore::Running);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, dnsRunning, IETF_SYSTEM_DNS_PATH, 0, sysrepo::SubscribeOptions::DoneOnly | sysrepo::SubscribeOptions::Enabled);
+    m_srSession.switchDatastore(sysrepo::Datastore::Startup);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, dnsStartup, IETF_SYSTEM_DNS_PATH, 0, sysrepo::SubscribeOptions::DoneOnly);
+    m_srSession.switchDatastore(sysrepo::Datastore::Operational);
     m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME, dnsOper, IETF_SYSTEM_DNS_PATH);
 }
 

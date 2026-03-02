@@ -102,8 +102,12 @@ std::vector<std::string> getDNSOrNTPServersFromChange(const std::string& serverP
     std::vector<std::string> addresses;
 
     if (auto data = session.getData(serverPath)) {
+        // NTP port leaf is preesnt only if feature is enabled. However as of 2026-03, systemd-timesyncd does not support custom ports, so we do not enable it
+        auto serverPathChildren = session.getContext().findPath(serverPath).childInstantiables();
+        bool hasPort = std::find_if(serverPathChildren.begin(), serverPathChildren.end(), [](const auto& node) { return node.name() == "port"; }) != serverPathChildren.end();
+
         for (const auto& server : data->findXPath(serverPath)) {
-            const auto address = velia::utils::formatHostPort(server, "address", std::nullopt);
+            const auto address = velia::utils::formatHostPort(server, "address", hasPort ? std::make_optional("port") : std::nullopt);
             spdlog::trace("Adding server '{}' from {} {} data", address, serverPath, session.activeDatastore() == sysrepo::Datastore::Running ? "running" : "startup");
             addresses.emplace_back(std::move(address));
         }
@@ -114,6 +118,11 @@ std::vector<std::string> getDNSOrNTPServersFromChange(const std::string& serverP
 std::string createTimesyncdConfig(const sysrepo::Session& session)
 {
     return createSystemdDropinConfig("Time", "NTP", getDNSOrNTPServersFromChange(IETF_SYSTEM_NTP_PATH + "/server/udp"s, session));
+}
+
+std::string createResolvedConfig(const sysrepo::Session& session)
+{
+    return createSystemdDropinConfig("Resolve", "DNS", getDNSOrNTPServersFromChange(IETF_SYSTEM_DNS_PATH + "/server/udp-and-tcp"s, session));
 }
 
 struct AddressAndPort {
@@ -311,6 +320,25 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const SystemdConfigData
         return sysrepo::ErrorCode::Ok;
     };
 
+    sysrepo::ModuleChangeCb dnsRunning = [resolve] (auto session, auto, auto, auto, auto, auto) {
+        std::filesystem::create_directories(*resolve.dropinDir);
+        utils::safeWriteFile(*resolve.dropinDir / "resolved.conf", createResolvedConfig(session));
+        if (resolve.reload) {
+            resolve.reload();
+        }
+        return sysrepo::ErrorCode::Ok;
+    };
+
+    sysrepo::ModuleChangeCb dnsStartup = [] (auto session, auto, auto, auto, auto, auto) {
+        utils::safeWriteFile(BACKUP_ETC_SYSTEMD_RESOLVED_CONF_FILE, createResolvedConfig(session));
+        return sysrepo::ErrorCode::Ok;
+    };
+
+    m_srSession.switchDatastore(sysrepo::Datastore::Running);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, dnsRunning, IETF_SYSTEM_DNS_PATH, 0, sysrepo::SubscribeOptions::DoneOnly | sysrepo::SubscribeOptions::Enabled);
+    m_srSession.switchDatastore(sysrepo::Datastore::Startup);
+    m_srSubscribe->onModuleChange(IETF_SYSTEM_MODULE_NAME, dnsStartup, IETF_SYSTEM_DNS_PATH, 0, sysrepo::SubscribeOptions::DoneOnly);
+    m_srSession.switchDatastore(sysrepo::Datastore::Operational);
     m_srSubscribe->onOperGet(IETF_SYSTEM_MODULE_NAME, dnsOper, IETF_SYSTEM_DNS_PATH);
 }
 

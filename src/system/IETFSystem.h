@@ -15,7 +15,17 @@ namespace velia::system {
 
 class IETFSystem {
 public:
-    IETFSystem(::sysrepo::Session srSession, const std::filesystem::path& osRelease, const std::filesystem::path& procStat, sdbus::IConnection& dbusConnection, const std::string& dbusName);
+    struct SystemdResolvedConfig {
+        std::filesystem::path runtimeDir;
+        std::function<void()> reload;
+    };
+
+    IETFSystem(::sysrepo::Session srSession,
+               const std::filesystem::path& osRelease,
+               const std::filesystem::path& procStat,
+               sdbus::IConnection& dbusConnection,
+               const std::string& dbusName,
+               const SystemdResolvedConfig& resolved);
 
 private:
     void initStaticProperties(const std::filesystem::path& osRelease);
@@ -23,7 +33,7 @@ private:
     void initHostname();
     void initDummies();
     void initClock(const std::filesystem::path& procStatPath);
-    void initDNS(sdbus::IConnection& connection, const std::string& dbusName);
+    void initDNS(sdbus::IConnection& connection, const std::string& dbusName, const SystemdResolvedConfig& resolved);
     void initNTP(sdbus::IConnection& connection, const std::string& dbusName);
 
     ::sysrepo::Session m_srSession;

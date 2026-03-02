@@ -8,8 +8,14 @@
 #include "test_log_setup.h"
 #include "tests/configure.cmake.h"
 #include "tests/sysrepo-helpers/common.h"
+#include "utils/io.h"
 
 using namespace std::literals;
+
+
+struct MockTrigger {
+    MAKE_CONST_MOCK0(trigger, void());
+};
 
 TEST_CASE("Sysrepo ietf-system")
 {
@@ -26,6 +32,12 @@ TEST_CASE("Sysrepo ietf-system")
     dbusConnClient->enterEventLoopAsync();
 
     DbusSystemdServer dbusServer(*dbusConnServer);
+
+    MockTrigger trigger;
+    velia::system::IETFSystem::SystemdResolvedConfig resolvedConfig{
+        .runtimeDir = CMAKE_CURRENT_SOURCE_DIR "/tests/system/resolved-config.d/",
+        .reload = [&trigger]() { trigger.trigger(); },
+    };
 
     SECTION("Test system-state")
     {
@@ -67,11 +79,14 @@ TEST_CASE("Sysrepo ietf-system")
                 };
             }
 
+            REQUIRE_CALL(trigger, trigger()).IN_SEQUENCE(seq1);
             auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                        osReleaseFile,
                                                                        procStatFile,
                                                                        *dbusConnClient,
-                                                                       dbusConnServer->getUniqueName());
+                                                                       dbusConnServer->getUniqueName(),
+                                                                       resolvedConfig);
+
             REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", sysrepo::Datastore::Operational) == expected);
         }
 
@@ -82,7 +97,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys",
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                                *dbusConnClient,
-                                                                               dbusConnServer->getUniqueName()),
+                                                                               dbusConnServer->getUniqueName(),
+                                                                               resolvedConfig),
                                    ("Could not read key NAME from file "s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys").c_str(),
                                    std::out_of_range);
         }
@@ -90,11 +106,13 @@ TEST_CASE("Sysrepo ietf-system")
 
     SECTION("dummy values")
     {
+        REQUIRE_CALL(trigger, trigger()).IN_SEQUENCE(seq1);
         auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                *dbusConnClient,
-                                                               dbusConnServer->getUniqueName());
+                                                               dbusConnServer->getUniqueName(),
+                                                               resolvedConfig);
         const char* xpath;
 
         SECTION("location") {
@@ -119,11 +137,13 @@ TEST_CASE("Sysrepo ietf-system")
         // in its own scope, otherwise the tests below this will fail with something like:
         // Couldn't create RPC/action subscription: RPC subscription for "/ietf-system:system-restart" with priority 0 already exists.
         {
+            REQUIRE_CALL(trigger, trigger()).IN_SEQUENCE(seq1);
             auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
-                                                                   dbusConnServer->getUniqueName());
+                                                                   dbusConnServer->getUniqueName(),
+                                                                   resolvedConfig);
             client.switchDatastore(sysrepo::Datastore::Operational);
             REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
 
@@ -141,7 +161,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound",
                                                                            *dbusConnClient,
-                                                                           dbusConnServer->getUniqueName()),
+                                                                           dbusConnServer->getUniqueName(),
+                                                                           resolvedConfig),
                                ("File '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound' does not exist.").c_str(),
                                std::invalid_argument);
 
@@ -149,7 +170,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime",
                                                                            *dbusConnClient,
-                                                                           dbusConnServer->getUniqueName()),
+                                                                           dbusConnServer->getUniqueName(),
+                                                                           resolvedConfig),
                                ("btime value not found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime'").c_str(),
                                std::runtime_error);
 
@@ -157,76 +179,110 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime",
                                                                            *dbusConnClient,
-                                                                           dbusConnServer->getUniqueName()),
+                                                                           dbusConnServer->getUniqueName(),
+                                                                           resolvedConfig),
                                ("btime found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime' but could not be parsed (line was 'btime asd')").c_str(),
                                std::runtime_error);
     }
 
     SECTION("DNS resolvers")
     {
+        REQUIRE_CALL(trigger, trigger()).IN_SEQUENCE(seq1);
         auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
-                                                                   dbusConnServer->getUniqueName());
-        std::map<std::string, std::string> expected;
+                                                                   dbusConnServer->getUniqueName(),
+                                                                   resolvedConfig);
+        SECTION("Getting data")
+            {
+            std::map<std::string, std::string> expected;
 
-        dbusServer.setFallbackDNSEx({
-            {0, AF_INET, {8, 8, 8, 8}, 0, "prvni.googlovsky.dns"},
-            {0, AF_INET, {8, 8, 4, 4}, 0, "druhy.googlovsky.dns"},
-            {2, AF_INET6, {0x20, 0x01, 0x48, 0x60, 0x48, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x88, 0x88}, 0, "this.was.in.my.resolved"},
-        });
-
-        SECTION("Both DNS and Fallback DNS") {
-            dbusServer.setDNSEx({
-                {0, AF_INET, {127, 0, 0, 1}, 0, "ahoj.com"},
-                {2, AF_INET, {127, 0, 0, 1}, 0, "czech.light"},
-                {2, AF_INET6, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 53, "idk.net"},
+            dbusServer.setFallbackDNSEx({
+                {0, AF_INET, {8, 8, 8, 8}, 0, "prvni.googlovsky.dns"},
+                {0, AF_INET, {8, 8, 4, 4}, 0, "druhy.googlovsky.dns"},
+                {2, AF_INET6, {0x20, 0x01, 0x48, 0x60, 0x48, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x88, 0x88}, 0, "this.was.in.my.resolved"},
             });
 
-            expected = {
-                {"/options", ""},
-                {"/server[name='127.0.0.1']", ""},
-                {"/server[name='127.0.0.1']/name", "127.0.0.1"},
-                {"/server[name='127.0.0.1']/udp-and-tcp", ""},
-                {"/server[name='127.0.0.1']/udp-and-tcp/address", "127.0.0.1"},
-                {"/server[name='::1']", ""},
-                {"/server[name='::1']/name", "::1"},
-                {"/server[name='::1']/udp-and-tcp", ""},
-                {"/server[name='::1']/udp-and-tcp/address", "::1"},
-            };
+            SECTION("Both DNS and Fallback DNS") {
+                dbusServer.setDNSEx({
+                    {0, AF_INET, {127, 0, 0, 1}, 0, "ahoj.com"},
+                    {2, AF_INET, {127, 0, 0, 1}, 0, "czech.light"},
+                    {2, AF_INET6, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 53, "idk.net"},
+                });
+
+                expected = {
+                    {"/options", ""},
+                    {"/server[name='127.0.0.1']", ""},
+                    {"/server[name='127.0.0.1']/name", "127.0.0.1"},
+                    {"/server[name='127.0.0.1']/udp-and-tcp", ""},
+                    {"/server[name='127.0.0.1']/udp-and-tcp/address", "127.0.0.1"},
+                    {"/server[name='::1']", ""},
+                    {"/server[name='::1']/name", "::1"},
+                    {"/server[name='::1']/udp-and-tcp", ""},
+                    {"/server[name='::1']/udp-and-tcp/address", "::1"},
+                };
+            }
+
+            SECTION("FallbackDNS only")
+            {
+                expected = {
+                    {"/options", ""},
+                    {"/server[name='2001:4860:4860::8888']", ""},
+                    {"/server[name='2001:4860:4860::8888']/name", "2001:4860:4860::8888"},
+                    {"/server[name='2001:4860:4860::8888']/udp-and-tcp", ""},
+                    {"/server[name='2001:4860:4860::8888']/udp-and-tcp/address", "2001:4860:4860::8888"},
+                    {"/server[name='8.8.4.4']", ""},
+                    {"/server[name='8.8.4.4']/name", "8.8.4.4"},
+                    {"/server[name='8.8.4.4']/udp-and-tcp", ""},
+                    {"/server[name='8.8.4.4']/udp-and-tcp/address", "8.8.4.4"},
+                    {"/server[name='8.8.8.8']", ""},
+                    {"/server[name='8.8.8.8']/name", "8.8.8.8"},
+                    {"/server[name='8.8.8.8']/udp-and-tcp", ""},
+                    {"/server[name='8.8.8.8']/udp-and-tcp/address", "8.8.8.8"},
+                };
+            }
+
+            REQUIRE(dataFromSysrepo(client, "/ietf-system:system/dns-resolver", sysrepo::Datastore::Operational) == expected);
         }
 
-        SECTION("FallbackDNS only")
+        SECTION("Generating resolved config")
         {
-            expected = {
-                {"/options", ""},
-                {"/server[name='2001:4860:4860::8888']", ""},
-                {"/server[name='2001:4860:4860::8888']/name", "2001:4860:4860::8888"},
-                {"/server[name='2001:4860:4860::8888']/udp-and-tcp", ""},
-                {"/server[name='2001:4860:4860::8888']/udp-and-tcp/address", "2001:4860:4860::8888"},
-                {"/server[name='8.8.4.4']", ""},
-                {"/server[name='8.8.4.4']/name", "8.8.4.4"},
-                {"/server[name='8.8.4.4']/udp-and-tcp", ""},
-                {"/server[name='8.8.4.4']/udp-and-tcp/address", "8.8.4.4"},
-                {"/server[name='8.8.8.8']", ""},
-                {"/server[name='8.8.8.8']/name", "8.8.8.8"},
-                {"/server[name='8.8.8.8']/udp-and-tcp", ""},
-                {"/server[name='8.8.8.8']/udp-and-tcp/address", "8.8.8.8"},
-            };
-        }
+            srSess.switchDatastore(sysrepo::Datastore::Running);
+            srSess.setItem("/ietf-system:system/dns-resolver/server[name='dns4_1']/udp-and-tcp/address", "8.8.8.8");
+            srSess.setItem("/ietf-system:system/dns-resolver/server[name='dns4_2']/udp-and-tcp/address", "8.8.8.8");
+            srSess.setItem("/ietf-system:system/dns-resolver/server[name='dns4_2']/udp-and-tcp/port", "123");
+            srSess.setItem("/ietf-system:system/dns-resolver/server[name='dns6_1']/udp-and-tcp/address", "2606:4700:4700::1111");
+            srSess.setItem("/ietf-system:system/dns-resolver/server[name='dns6_2']/udp-and-tcp/address", "2606:4700:4700::1111");
+            srSess.setItem("/ietf-system:system/dns-resolver/server[name='dns6_2']/udp-and-tcp/port", "123");
 
-        REQUIRE(dataFromSysrepo(client, "/ietf-system:system/dns-resolver", sysrepo::Datastore::Operational) == expected);
+            REQUIRE_CALL(trigger, trigger()).IN_SEQUENCE(seq1);
+            srSess.applyChanges();
+            REQUIRE(velia::utils::readFileToString(resolvedConfig.runtimeDir / "resolved.conf") == R"(# Autogenerated by velia. Do not edit.
+[Resolve]
+DNS=8.8.8.8:53 8.8.8.8:123 [2606:4700:4700::1111]:53 [2606:4700:4700::1111]:123
+)");
+
+            REQUIRE_CALL(trigger, trigger()).IN_SEQUENCE(seq1);
+            srSess.deleteItem("/ietf-system:system/dns-resolver");
+            srSess.applyChanges();
+            REQUIRE(velia::utils::readFileToString(resolvedConfig.runtimeDir / "resolved.conf") == R"(# Autogenerated by velia. Do not edit.
+[Resolve]
+DNS=
+)");
+        }
     }
 
     SECTION("NTP")
     {
         std::map<std::string, std::string> expected;
+        REQUIRE_CALL(trigger, trigger()).IN_SEQUENCE(seq1);
         auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
-                                                                   dbusConnServer->getUniqueName());
+                                                                   dbusConnServer->getUniqueName(),
+                                                                   resolvedConfig);
 
         SECTION("NTP enabled and both servers and fallback servers exist")
         {
@@ -271,7 +327,7 @@ TEST_CASE("Sysrepo ietf-system")
 #ifdef TEST_RPC_SYSTEM_REBOOT
     SECTION("RPC system-restart")
     {
-        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", dbusConnection);
+        auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess, CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release", dbusConnection, resolved);
 
         auto rpcInput = std::make_shared<sysrepo::Vals>(0);
         auto res = client->rpc_send("/ietf-system:system-restart", rpcInput);

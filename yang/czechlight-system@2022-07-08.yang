@@ -308,7 +308,7 @@ module czechlight-system {
     deviate not-supported;
   }
 
-  deviation /sys:system/sys:dns-resolver {
+  deviation /sys:system/sys:dns-resolver/sys:options {
     deviate add {
       config false;
     }

@@ -25,7 +25,8 @@ public:
                const std::filesystem::path& procStat,
                sdbus::IConnection& dbusConnection,
                const std::string& dbusName,
-               const SystemdConfigData& resolved);
+               const SystemdConfigData& resolved,
+               const SystemdConfigData& timesyncd);
 
 private:
     void initStaticProperties(const std::filesystem::path& osRelease);
@@ -34,7 +35,7 @@ private:
     void initDummies();
     void initClock(const std::filesystem::path& procStatPath);
     void initDNS(sdbus::IConnection& connection, const std::string& dbusName, const SystemdConfigData& resolved);
-    void initNTP(sdbus::IConnection& connection, const std::string& dbusName);
+    void initNTP(sdbus::IConnection& connection, const std::string& dbusName, const SystemdConfigData& timesyncd);
 
     ::sysrepo::Session m_srSession;
     std::optional<::sysrepo::Subscription> m_srSubscribe;

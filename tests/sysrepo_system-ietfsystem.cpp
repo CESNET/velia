@@ -15,6 +15,7 @@ using namespace std::literals;
 
 struct MockReload {
     MAKE_CONST_MOCK0(reloadResolved, void());
+    MAKE_CONST_MOCK0(reloadTimesyncd, void());
 };
 
 TEST_CASE("Sysrepo ietf-system")
@@ -37,6 +38,10 @@ TEST_CASE("Sysrepo ietf-system")
     velia::system::IETFSystem::SystemdConfigData resolvedConfig{
         .runtimeDir = CMAKE_CURRENT_BINARY_DIR "/tests/system/resolved-config.d/",
         .reload = [&mockReload]() { mockReload.reloadResolved(); },
+    };
+    velia::system::IETFSystem::SystemdConfigData timesyncdConfig{
+        .runtimeDir = CMAKE_CURRENT_BINARY_DIR "/tests/system/timesyncd-config.d/",
+        .reload = [&mockReload]() { mockReload.reloadTimesyncd(); },
     };
 
     SECTION("Test system-state")
@@ -80,12 +85,14 @@ TEST_CASE("Sysrepo ietf-system")
             }
 
             REQUIRE_CALL(mockReload, reloadResolved()).IN_SEQUENCE(seq1);
+            REQUIRE_CALL(mockReload, reloadTimesyncd()).IN_SEQUENCE(seq1);
             auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                        osReleaseFile,
                                                                        procStatFile,
                                                                        *dbusConnClient,
                                                                        dbusConnServer->getUniqueName(),
-                                                                       resolvedConfig);
+                                                                       resolvedConfig,
+                                                                       timesyncdConfig);
 
             REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", sysrepo::Datastore::Operational) == expected);
         }
@@ -98,7 +105,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                                *dbusConnClient,
                                                                                dbusConnServer->getUniqueName(),
-                                                                               resolvedConfig),
+                                                                               resolvedConfig,
+                                                                               timesyncdConfig),
                                    ("Could not read key NAME from file "s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys").c_str(),
                                    std::out_of_range);
         }
@@ -107,12 +115,14 @@ TEST_CASE("Sysrepo ietf-system")
     SECTION("dummy values")
     {
         REQUIRE_CALL(mockReload, reloadResolved()).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(mockReload, reloadTimesyncd()).IN_SEQUENCE(seq1);
         auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                *dbusConnClient,
                                                                dbusConnServer->getUniqueName(),
-                                                               resolvedConfig);
+                                                               resolvedConfig,
+                                                               timesyncdConfig);
         const char* xpath;
 
         SECTION("location") {
@@ -138,12 +148,14 @@ TEST_CASE("Sysrepo ietf-system")
         // Couldn't create RPC/action subscription: RPC subscription for "/ietf-system:system-restart" with priority 0 already exists.
         {
             REQUIRE_CALL(mockReload, reloadResolved()).IN_SEQUENCE(seq1);
+            REQUIRE_CALL(mockReload, reloadTimesyncd()).IN_SEQUENCE(seq1);
             auto sys = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
                                                                    dbusConnServer->getUniqueName(),
-                                                                   resolvedConfig);
+                                                                   resolvedConfig,
+                                                                   timesyncdConfig);
             client.switchDatastore(sysrepo::Datastore::Operational);
             REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
 
@@ -162,7 +174,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound",
                                                                            *dbusConnClient,
                                                                            dbusConnServer->getUniqueName(),
-                                                                           resolvedConfig),
+                                                                           resolvedConfig,
+                                                                           timesyncdConfig),
                                ("File '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound' does not exist.").c_str(),
                                std::invalid_argument);
 
@@ -171,7 +184,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime",
                                                                            *dbusConnClient,
                                                                            dbusConnServer->getUniqueName(),
-                                                                           resolvedConfig),
+                                                                           resolvedConfig,
+                                                                           timesyncdConfig),
                                ("btime value not found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime'").c_str(),
                                std::runtime_error);
 
@@ -180,7 +194,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime",
                                                                            *dbusConnClient,
                                                                            dbusConnServer->getUniqueName(),
-                                                                           resolvedConfig),
+                                                                           resolvedConfig,
+                                                                           timesyncdConfig),
                                ("btime found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime' but could not be parsed (line was 'btime asd')").c_str(),
                                std::runtime_error);
     }
@@ -188,12 +203,14 @@ TEST_CASE("Sysrepo ietf-system")
     SECTION("DNS resolvers")
     {
         REQUIRE_CALL(mockReload, reloadResolved()).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(mockReload, reloadTimesyncd()).IN_SEQUENCE(seq1);
         auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
                                                                    dbusConnServer->getUniqueName(),
-                                                                   resolvedConfig);
+                                                                   resolvedConfig,
+                                                                   timesyncdConfig);
         SECTION("Getting data")
             {
             std::map<std::string, std::string> expected;
@@ -275,53 +292,87 @@ DNS=
 
     SECTION("NTP")
     {
-        std::map<std::string, std::string> expected;
         REQUIRE_CALL(mockReload, reloadResolved()).IN_SEQUENCE(seq1);
+        REQUIRE_CALL(mockReload, reloadTimesyncd()).IN_SEQUENCE(seq1);
         auto sysrepo = std::make_shared<velia::system::IETFSystem>(srSess,
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
                                                                    dbusConnServer->getUniqueName(),
-                                                                   resolvedConfig);
-
-        SECTION("NTP enabled and both servers and fallback servers exist")
+                                                                   resolvedConfig,
+                                                                   timesyncdConfig);
+        SECTION("Getting data")
         {
-            dbusServer.setNTP(true, true);
-            dbusServer.setNTPServers({"tik.cesnet.cz", "tak.cesnet.cz"});
-            dbusServer.setFallbackNTPServers({"0.arch.pool.ntp.org", "1.arch.pool.ntp.org"});
+            std::map<std::string, std::string> expected;
 
-            expected = {
-                {"/enabled", "true"},
-                {"/server[name='tik.cesnet.cz']", ""},
-                {"/server[name='tik.cesnet.cz']/name", "tik.cesnet.cz"},
-                {"/server[name='tik.cesnet.cz']/udp", ""},
-                {"/server[name='tik.cesnet.cz']/udp/address", "tik.cesnet.cz"},
-                {"/server[name='tak.cesnet.cz']", ""},
-                {"/server[name='tak.cesnet.cz']/name", "tak.cesnet.cz"},
-                {"/server[name='tak.cesnet.cz']/udp", ""},
-                {"/server[name='tak.cesnet.cz']/udp/address", "tak.cesnet.cz"},
-            };
+            SECTION("NTP enabled and both servers and fallback servers exist")
+            {
+                dbusServer.setNTP(true, true);
+                dbusServer.setNTPServers({"tik.cesnet.cz", "tak.cesnet.cz"});
+                dbusServer.setFallbackNTPServers({"0.arch.pool.ntp.org", "1.arch.pool.ntp.org"});
+
+                expected = {
+                    {"/enabled", "true"},
+                    {"/server[name='tik.cesnet.cz']", ""},
+                    {"/server[name='tik.cesnet.cz']/name", "tik.cesnet.cz"},
+                    {"/server[name='tik.cesnet.cz']/udp", ""},
+                    {"/server[name='tik.cesnet.cz']/udp/address", "tik.cesnet.cz"},
+                    {"/server[name='tak.cesnet.cz']", ""},
+                    {"/server[name='tak.cesnet.cz']/name", "tak.cesnet.cz"},
+                    {"/server[name='tak.cesnet.cz']/udp", ""},
+                    {"/server[name='tak.cesnet.cz']/udp/address", "tak.cesnet.cz"},
+                };
+            }
+
+            SECTION("NTP disabled and only fallback servers set")
+            {
+                dbusServer.setNTP(true, false);
+                dbusServer.setFallbackNTPServers({"0.arch.pool.ntp.org", "1.arch.pool.ntp.org"});
+
+                expected = {
+                    {"/enabled", "false"},
+                    {"/server[name='0.arch.pool.ntp.org']", ""},
+                    {"/server[name='0.arch.pool.ntp.org']/name", "0.arch.pool.ntp.org"},
+                    {"/server[name='0.arch.pool.ntp.org']/udp", ""},
+                    {"/server[name='0.arch.pool.ntp.org']/udp/address", "0.arch.pool.ntp.org"},
+                    {"/server[name='1.arch.pool.ntp.org']", ""},
+                    {"/server[name='1.arch.pool.ntp.org']/name", "1.arch.pool.ntp.org"},
+                    {"/server[name='1.arch.pool.ntp.org']/udp", ""},
+                    {"/server[name='1.arch.pool.ntp.org']/udp/address", "1.arch.pool.ntp.org"},
+                };
+            }
+
+            REQUIRE(dataFromSysrepo(client, "/ietf-system:system/ntp", sysrepo::Datastore::Operational) == expected);
         }
 
-        SECTION("NTP disabled and only fallback servers set")
+        SECTION("Generating timesyncd config")
         {
-            dbusServer.setNTP(true, false);
-            dbusServer.setFallbackNTPServers({"0.arch.pool.ntp.org", "1.arch.pool.ntp.org"});
+            const std::string noNTPServers = R"(# Autogenerated by velia. Do not edit.
+[Time]
+NTP=
+)";
 
-            expected = {
-                {"/enabled", "false"},
-                {"/server[name='0.arch.pool.ntp.org']", ""},
-                {"/server[name='0.arch.pool.ntp.org']/name", "0.arch.pool.ntp.org"},
-                {"/server[name='0.arch.pool.ntp.org']/udp", ""},
-                {"/server[name='0.arch.pool.ntp.org']/udp/address", "0.arch.pool.ntp.org"},
-                {"/server[name='1.arch.pool.ntp.org']", ""},
-                {"/server[name='1.arch.pool.ntp.org']/name", "1.arch.pool.ntp.org"},
-                {"/server[name='1.arch.pool.ntp.org']/udp", ""},
-                {"/server[name='1.arch.pool.ntp.org']/udp/address", "1.arch.pool.ntp.org"},
-            };
+            srSess.switchDatastore(sysrepo::Datastore::Running);
+
+            REQUIRE(velia::utils::readFileToString(timesyncdConfig.runtimeDir / "timesyncd.conf") == noNTPServers);
+
+            srSess.setItem("/ietf-system:system/ntp/server[name='1']/udp/address", "tik.cesnet.cz");
+            srSess.setItem("/ietf-system:system/ntp/server[name='2']/udp/address", "195.113.144.201");
+            srSess.setItem("/ietf-system:system/ntp/server[name='2']/udp/port", "1123");
+            srSess.setItem("/ietf-system:system/ntp/server[name='3']/udp/address", "2001:718:1:1::144:201");
+            srSess.setItem("/ietf-system:system/ntp/server[name='3']/udp/port", "1234");
+            REQUIRE_CALL(mockReload, reloadTimesyncd()).IN_SEQUENCE(seq1);
+            srSess.applyChanges();
+            REQUIRE(velia::utils::readFileToString(timesyncdConfig.runtimeDir / "timesyncd.conf") == R"(# Autogenerated by velia. Do not edit.
+[Time]
+NTP=tik.cesnet.cz:123 195.113.144.201:1123 [2001:718:1:1::144:201]:1234
+)");
+
+            REQUIRE_CALL(mockReload, reloadTimesyncd()).IN_SEQUENCE(seq1);
+            srSess.setItem("/ietf-system:system/ntp/enabled", "false");
+            srSess.applyChanges();
+            REQUIRE(velia::utils::readFileToString(timesyncdConfig.runtimeDir / "timesyncd.conf") == noNTPServers);
         }
-
-        REQUIRE(dataFromSysrepo(client, "/ietf-system:system/ntp", sysrepo::Datastore::Operational) == expected);
     }
 
 #ifdef TEST_RPC_SYSTEM_REBOOT

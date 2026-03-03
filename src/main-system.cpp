@@ -86,6 +86,13 @@ int main(int argc, char* argv[])
                                                                spdlog::get("system")->debug("Reloading systemd-resolved.service");
                                                                velia::utils::execAndWait(spdlog::get("system"), SYSTEMCTL_EXECUTABLE, {"reload", "systemd-resolved.service"}, "", {});
                                                            },
+                                                       },
+                                                       velia::system::IETFSystem::SystemdConfigData{
+                                                           .runtimeDir = "/run/systemd/timesyncd.conf.d/",
+                                                           .reload = []() {
+                                                               spdlog::get("system")->debug("Reloading systemd-timesyncd.service");
+                                                               velia::utils::execAndWait(spdlog::get("system"), SYSTEMCTL_EXECUTABLE, {"reload", "systemd-timesyncd.service"}, "", {});
+                                                           },
                                                        });
 
     auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).

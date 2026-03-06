@@ -266,35 +266,45 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
 }
 
 /** @short NTP callbacks */
-void IETFSystem::initNTP(sdbus::IConnection& connection, const std::string& dbusName)
+void IETFSystem::initNTP(sdbus::IConnection& connection, const std::string& dbusNameTimesync, const std::string& dbusNameTimedate)
 {
     utils::ensureModuleImplemented(m_srSession, IETF_SYSTEM_MODULE_NAME, "2014-08-06", {{"ntp"}});
-    sysrepo::OperGetCb operCb = [&connection, dbusName](auto session, auto, auto, auto, auto, auto, auto& parent) {
+    sysrepo::OperGetCb operCb = [&connection, this, dbusNameTimesync, dbusNameTimedate](auto session, auto, auto, auto, auto, auto, auto& parent) {
         constexpr auto DBUS_TIMESYNC1_MANAGER_PATH = "/org/freedesktop/timesync1";
         constexpr auto DBUS_TIMESYNC1_MANAGER_INTERFACE = "org.freedesktop.timesync1.Manager";
         constexpr auto DBUS_TIMEDATE1_MANAGER_PATH = "/org/freedesktop/timedate1";
-        constexpr auto DBUS_TIMEDATE1_MANAGER_INTERFACE = "org.freedesktop.timedate1.Manager";
+        constexpr auto DBUS_TIMEDATE1_MANAGER_INTERFACE = "org.freedesktop.timedate1";
 
         utils::YANGData values;
 
-        auto proxy = sdbus::createProxy(connection, dbusName, DBUS_TIMEDATE1_MANAGER_PATH);
+        auto proxy = sdbus::createProxy(connection, dbusNameTimedate, DBUS_TIMEDATE1_MANAGER_PATH);
         auto ntpServiceAvailable = proxy->getProperty("CanNTP").onInterface(DBUS_TIMEDATE1_MANAGER_INTERFACE).get<bool>();
         auto ntpServiceEnabled = proxy->getProperty("NTP").onInterface(DBUS_TIMEDATE1_MANAGER_INTERFACE).get<bool>();
         values.emplace_back(IETF_SYSTEM_NTP_PATH + "/enabled"s, (ntpServiceAvailable && ntpServiceEnabled) ? "true" : "false");
 
-        proxy = sdbus::createProxy(connection, dbusName, DBUS_TIMESYNC1_MANAGER_PATH);
-        std::vector<std::string> ntpServers;
-        for (const auto& propertyName : {"NTPServers", "FallbackNTPServers"}) {
-            sdbus::Variant store = proxy->getProperty(propertyName).onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE);
-            ntpServers = store.get<std::vector<std::string>>();
+        try {
+            proxy = sdbus::createProxy(connection, dbusNameTimesync, DBUS_TIMESYNC1_MANAGER_PATH);
+            auto runtimeServers = proxy->getProperty("RuntimeNTPServers").onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE).get<std::vector<std::string>>();
+            auto systemServers = proxy->getProperty("SystemNTPServers").onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE).get<std::vector<std::string>>();
+            auto linkServers = proxy->getProperty("LinkNTPServers").onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE).get<std::vector<std::string>>();
 
-            if (!ntpServers.empty()) {
-                break;
+            std::vector<std::string> ntpServers;
+            ntpServers.insert(ntpServers.end(), std::make_move_iterator(runtimeServers.begin()), std::make_move_iterator(runtimeServers.end()));
+            ntpServers.insert(ntpServers.end(), std::make_move_iterator(systemServers.begin()), std::make_move_iterator(systemServers.end()));
+            ntpServers.insert(ntpServers.end(), std::make_move_iterator(linkServers.begin()), std::make_move_iterator(linkServers.end()));
+
+            if (ntpServers.empty()) {
+                ntpServers = proxy->getProperty("FallbackNTPServers").onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE).get<std::vector<std::string>>();
             }
-        }
 
-        for (const auto& server : ntpServers) {
-            values.emplace_back(IETF_SYSTEM_NTP_PATH + "/server[name='"s + server + "']/udp/address", server);
+            auto padWidth = std::to_string(ntpServers.size()).size();
+            for (size_t i = 0; i < ntpServers.size(); i++) {
+                auto name = std::to_string(i + 1);
+                name.insert(0, padWidth - name.size(), '0');
+                values.emplace_back(IETF_SYSTEM_NTP_PATH + "/server[name='"s + name + "']/udp/address", ntpServers[i]);
+            }
+        } catch (const sdbus::Error&) {
+            m_log->debug("Failed to query NTP servers, timesync1 service may not be running. Maybe NTP is disabled?");
         }
 
         utils::valuesToYang(values, {}, {}, session, parent);
@@ -309,7 +319,13 @@ void IETFSystem::initNTP(sdbus::IConnection& connection, const std::string& dbus
  * - Rebooting
  * - Hostname
  */
-IETFSystem::IETFSystem(::sysrepo::Session srSession, const std::filesystem::path& osRelease, const std::filesystem::path& procStat, sdbus::IConnection& connection, const std::string& dbusName)
+IETFSystem::IETFSystem(::sysrepo::Session srSession,
+                       const std::filesystem::path& osRelease,
+                       const std::filesystem::path& procStat,
+                       sdbus::IConnection& connection,
+                       const std::string& dbusNameResolved,
+                       const std::string& dbusNameTimesync,
+                       const std::string& dbusNameTimedate)
     : m_srSession(srSession)
     , m_srSubscribe()
     , m_log(spdlog::get("system"))
@@ -319,7 +335,7 @@ IETFSystem::IETFSystem(::sysrepo::Session srSession, const std::filesystem::path
     initHostname();
     initDummies();
     initClock(procStat);
-    initDNS(connection, dbusName);
-    initNTP(connection, dbusName);
+    initDNS(connection, dbusNameResolved);
+    initNTP(connection, dbusNameTimesync, dbusNameTimedate);
 }
 }

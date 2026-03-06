@@ -19,8 +19,10 @@ public:
     void setDNSEx(std::vector<DNSServer> servers);
     void setFallbackDNSEx(std::vector<DNSServer> servers);
 
-    void setNTP(bool canNTP, bool NTP);
-    void setNTPServers(std::vector<std::string> ntpServers);
+    void setNTP(bool enabled);
+    void setRuntimeNTPServers(std::vector<std::string> ntpServers);
+    void setSystemNTPServers(std::vector<std::string> ntpServers);
+    void setLinkNTPServers(std::vector<std::string> ntpServers);
     void setFallbackNTPServers(std::vector<std::string> ntpServers);
 
 private:
@@ -33,6 +35,7 @@ private:
         std::string m_subState;
     };
 
+    sdbus::IConnection& m_connection;
     std::unique_ptr<sdbus::IObject> m_systemd1Manager;
     std::unique_ptr<sdbus::IObject> m_resolve1Manager;
     std::unique_ptr<sdbus::IObject> m_timesync1Manager;
@@ -41,7 +44,10 @@ private:
     std::map<sdbus::ObjectPath, Unit> m_units;
     std::vector<DNSServer> m_DNSEx, m_FallbackDNSEx;
 
-    std::vector<std::string> m_NTPServers, m_FallbackNTPServers;
+    std::vector<std::string> m_RuntimeNTPServers;
+    std::vector<std::string> m_SystemNTPServers;
+    std::vector<std::string> m_LinkNTPServers;
+    std::vector<std::string> m_FallbackNTPServers;
     bool m_canNTP, m_NTP;
 
     std::vector<UnitStruct> ListUnits();

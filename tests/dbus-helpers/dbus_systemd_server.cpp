@@ -9,7 +9,7 @@ constexpr auto ifaceSystemd1Unit = "org.freedesktop.systemd1.Unit";
 constexpr auto ifaceSystemd1Manager = "org.freedesktop.systemd1.Manager";
 constexpr auto ifaceResolve1Manager = "org.freedesktop.resolve1.Manager";
 constexpr auto ifaceTimesync1Manager = "org.freedesktop.timesync1.Manager";
-constexpr auto ifaceTimedate1Manager = "org.freedesktop.timedate1.Manager";
+constexpr auto ifaceTimedate1Manager = "org.freedesktop.timedate1";
 
 constexpr auto pathSystemd1 = "/org/freedesktop/systemd1";
 constexpr auto pathResolve1 = "/org/freedesktop/resolve1";
@@ -19,9 +19,9 @@ constexpr auto pathTimedate1 = "/org/freedesktop/timedate1";
 
 /** @brief Create a DBus server on the connection */
 DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection)
-    : m_systemd1Manager(sdbus::createObject(connection, pathSystemd1))
+    : m_connection(connection)
+    , m_systemd1Manager(sdbus::createObject(connection, pathSystemd1))
     , m_resolve1Manager(sdbus::createObject(connection, pathResolve1))
-    , m_timesync1Manager(sdbus::createObject(connection, pathTimesync1))
     , m_timedate1Manager(sdbus::createObject(connection, pathTimedate1))
 {
     m_systemd1Manager->registerMethod("Subscribe").onInterface(ifaceSystemd1Manager).implementedAs([] {}).withNoReply(); // no-op for us
@@ -32,10 +32,6 @@ DbusSystemdServer::DbusSystemdServer(sdbus::IConnection& connection)
     m_resolve1Manager->registerProperty("DNSEx").onInterface(ifaceResolve1Manager).withGetter([this]() { return m_DNSEx; });
     m_resolve1Manager->registerProperty("FallbackDNSEx").onInterface(ifaceResolve1Manager).withGetter([this]() { return m_FallbackDNSEx; });
     m_resolve1Manager->finishRegistration();
-
-    m_timesync1Manager->registerProperty("NTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_NTPServers; });
-    m_timesync1Manager->registerProperty("FallbackNTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_FallbackNTPServers; });
-    m_timesync1Manager->finishRegistration();
 
     m_timedate1Manager->registerProperty("CanNTP").onInterface(ifaceTimedate1Manager).withGetter([this]() { return m_canNTP; });
     m_timedate1Manager->registerProperty("NTP").onInterface(ifaceTimedate1Manager).withGetter([this]() { return m_NTP; });
@@ -106,15 +102,36 @@ void DbusSystemdServer::setFallbackDNSEx(std::vector<DNSServer> servers)
     m_FallbackDNSEx = std::move(servers);
 }
 
-void DbusSystemdServer::setNTP(bool canNTP, bool NTP)
+void DbusSystemdServer::setNTP(bool enabled)
 {
-    m_canNTP = canNTP;
-    m_NTP = NTP;
+    m_canNTP = true;
+    m_NTP = enabled;
+
+    if (enabled) {
+        m_timesync1Manager = sdbus::createObject(m_connection, pathTimesync1);
+        m_timesync1Manager->registerProperty("RuntimeNTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_RuntimeNTPServers; });
+        m_timesync1Manager->registerProperty("SystemNTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_SystemNTPServers; });
+        m_timesync1Manager->registerProperty("LinkNTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_LinkNTPServers; });
+        m_timesync1Manager->registerProperty("FallbackNTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_FallbackNTPServers; });
+        m_timesync1Manager->finishRegistration();
+    } else {
+        m_timesync1Manager.reset();
+    }
 }
 
-void DbusSystemdServer::setNTPServers(std::vector<std::string> ntpServers)
+void DbusSystemdServer::setRuntimeNTPServers(std::vector<std::string> ntpServers)
 {
-    m_NTPServers = std::move(ntpServers);
+    m_RuntimeNTPServers = std::move(ntpServers);
+}
+
+void DbusSystemdServer::setSystemNTPServers(std::vector<std::string> ntpServers)
+{
+    m_SystemNTPServers = std::move(ntpServers);
+}
+
+void DbusSystemdServer::setLinkNTPServers(std::vector<std::string> ntpServers)
+{
+    m_LinkNTPServers = std::move(ntpServers);
 }
 
 void DbusSystemdServer::setFallbackNTPServers(std::vector<std::string> ntpServers)

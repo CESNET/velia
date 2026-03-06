@@ -71,6 +71,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                        osReleaseFile,
                                                                        procStatFile,
                                                                        *dbusConnClient,
+                                                                       dbusConnServer->getUniqueName(),
+                                                                       dbusConnServer->getUniqueName(),
                                                                        dbusConnServer->getUniqueName());
             REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", sysrepo::Datastore::Operational) == expected);
         }
@@ -82,6 +84,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys",
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                                *dbusConnClient,
+                                                                               dbusConnServer->getUniqueName(),
+                                                                               dbusConnServer->getUniqueName(),
                                                                                dbusConnServer->getUniqueName()),
                                    ("Could not read key NAME from file "s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys").c_str(),
                                    std::out_of_range);
@@ -94,6 +98,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                *dbusConnClient,
+                                                               dbusConnServer->getUniqueName(),
+                                                               dbusConnServer->getUniqueName(),
                                                                dbusConnServer->getUniqueName());
         const char* xpath;
 
@@ -123,6 +129,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
+                                                                   dbusConnServer->getUniqueName(),
+                                                                   dbusConnServer->getUniqueName(),
                                                                    dbusConnServer->getUniqueName());
             client.switchDatastore(sysrepo::Datastore::Operational);
             REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
@@ -141,6 +149,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound",
                                                                            *dbusConnClient,
+                                                                           dbusConnServer->getUniqueName(),
+                                                                           dbusConnServer->getUniqueName(),
                                                                            dbusConnServer->getUniqueName()),
                                ("File '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound' does not exist.").c_str(),
                                std::invalid_argument);
@@ -149,6 +159,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime",
                                                                            *dbusConnClient,
+                                                                           dbusConnServer->getUniqueName(),
+                                                                           dbusConnServer->getUniqueName(),
                                                                            dbusConnServer->getUniqueName()),
                                ("btime value not found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime'").c_str(),
                                std::runtime_error);
@@ -157,6 +169,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime",
                                                                            *dbusConnClient,
+                                                                           dbusConnServer->getUniqueName(),
+                                                                           dbusConnServer->getUniqueName(),
                                                                            dbusConnServer->getUniqueName()),
                                ("btime found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime' but could not be parsed (line was 'btime asd')").c_str(),
                                std::runtime_error);
@@ -168,6 +182,8 @@ TEST_CASE("Sysrepo ietf-system")
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
+                                                                   dbusConnServer->getUniqueName(),
+                                                                   dbusConnServer->getUniqueName(),
                                                                    dbusConnServer->getUniqueName());
         std::map<std::string, std::string> expected;
 
@@ -226,42 +242,88 @@ TEST_CASE("Sysrepo ietf-system")
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
+                                                                   dbusConnServer->getUniqueName(),
+                                                                   dbusConnServer->getUniqueName(),
                                                                    dbusConnServer->getUniqueName());
 
-        SECTION("NTP enabled and both servers and fallback servers exist")
+        SECTION("NTP enabled with servers")
         {
-            dbusServer.setNTP(true, true);
-            dbusServer.setNTPServers({"tik.cesnet.cz", "tak.cesnet.cz"});
+            dbusServer.setNTP(true);
+            dbusServer.setSystemNTPServers({"tik.cesnet.cz", "tak.cesnet.cz"});
+            dbusServer.setLinkNTPServers({"10.0.0.1", "10.0.0.2", "10.0.0.3", "10.0.0.4", "10.0.0.5", "10.0.0.6", "10.0.0.7", "10.0.0.8"});
             dbusServer.setFallbackNTPServers({"0.arch.pool.ntp.org", "1.arch.pool.ntp.org"});
 
             expected = {
                 {"/enabled", "true"},
-                {"/server[name='tik.cesnet.cz']", ""},
-                {"/server[name='tik.cesnet.cz']/name", "tik.cesnet.cz"},
-                {"/server[name='tik.cesnet.cz']/udp", ""},
-                {"/server[name='tik.cesnet.cz']/udp/address", "tik.cesnet.cz"},
-                {"/server[name='tak.cesnet.cz']", ""},
-                {"/server[name='tak.cesnet.cz']/name", "tak.cesnet.cz"},
-                {"/server[name='tak.cesnet.cz']/udp", ""},
-                {"/server[name='tak.cesnet.cz']/udp/address", "tak.cesnet.cz"},
+                {"/server[name='01']", ""},
+                {"/server[name='01']/name", "01"},
+                {"/server[name='01']/udp", ""},
+                {"/server[name='01']/udp/address", "tik.cesnet.cz"},
+                {"/server[name='02']", ""},
+                {"/server[name='02']/name", "02"},
+                {"/server[name='02']/udp", ""},
+                {"/server[name='02']/udp/address", "tak.cesnet.cz"},
+                {"/server[name='03']", ""},
+                {"/server[name='03']/name", "03"},
+                {"/server[name='03']/udp", ""},
+                {"/server[name='03']/udp/address", "10.0.0.1"},
+                {"/server[name='04']", ""},
+                {"/server[name='04']/name", "04"},
+                {"/server[name='04']/udp", ""},
+                {"/server[name='04']/udp/address", "10.0.0.2"},
+                {"/server[name='05']", ""},
+                {"/server[name='05']/name", "05"},
+                {"/server[name='05']/udp", ""},
+                {"/server[name='05']/udp/address", "10.0.0.3"},
+                {"/server[name='06']", ""},
+                {"/server[name='06']/name", "06"},
+                {"/server[name='06']/udp", ""},
+                {"/server[name='06']/udp/address", "10.0.0.4"},
+                {"/server[name='07']", ""},
+                {"/server[name='07']/name", "07"},
+                {"/server[name='07']/udp", ""},
+                {"/server[name='07']/udp/address", "10.0.0.5"},
+                {"/server[name='08']", ""},
+                {"/server[name='08']/name", "08"},
+                {"/server[name='08']/udp", ""},
+                {"/server[name='08']/udp/address", "10.0.0.6"},
+                {"/server[name='09']", ""},
+                {"/server[name='09']/name", "09"},
+                {"/server[name='09']/udp", ""},
+                {"/server[name='09']/udp/address", "10.0.0.7"},
+                {"/server[name='10']", ""},
+                {"/server[name='10']/name", "10"},
+                {"/server[name='10']/udp", ""},
+                {"/server[name='10']/udp/address", "10.0.0.8"},
             };
         }
 
-        SECTION("NTP disabled and only fallback servers set")
+        SECTION("NTP enabled but only fallback servers available")
         {
-            dbusServer.setNTP(true, false);
+            dbusServer.setNTP(true);
+            dbusServer.setSystemNTPServers({});
+            dbusServer.setLinkNTPServers({});
             dbusServer.setFallbackNTPServers({"0.arch.pool.ntp.org", "1.arch.pool.ntp.org"});
 
             expected = {
+                {"/enabled", "true"},
+                {"/server[name='1']", ""},
+                {"/server[name='1']/name", "1"},
+                {"/server[name='1']/udp", ""},
+                {"/server[name='1']/udp/address", "0.arch.pool.ntp.org"},
+                {"/server[name='2']", ""},
+                {"/server[name='2']/name", "2"},
+                {"/server[name='2']/udp", ""},
+                {"/server[name='2']/udp/address", "1.arch.pool.ntp.org"},
+            };
+        }
+
+        SECTION("NTP disabled")
+        {
+            dbusServer.setNTP(false);
+
+            expected = {
                 {"/enabled", "false"},
-                {"/server[name='0.arch.pool.ntp.org']", ""},
-                {"/server[name='0.arch.pool.ntp.org']/name", "0.arch.pool.ntp.org"},
-                {"/server[name='0.arch.pool.ntp.org']/udp", ""},
-                {"/server[name='0.arch.pool.ntp.org']/udp/address", "0.arch.pool.ntp.org"},
-                {"/server[name='1.arch.pool.ntp.org']", ""},
-                {"/server[name='1.arch.pool.ntp.org']/name", "1.arch.pool.ntp.org"},
-                {"/server[name='1.arch.pool.ntp.org']/udp", ""},
-                {"/server[name='1.arch.pool.ntp.org']/udp/address", "1.arch.pool.ntp.org"},
             };
         }
 

@@ -75,7 +75,14 @@ int main(int argc, char* argv[])
     });
 
     // initialize ietf-system
-    auto sysrepoIETFSystem = velia::system::IETFSystem(srSess, "/etc/os-release", "/proc/stat", *g_dbusConnection, "org.freedesktop.resolve1", "org.freedesktop.timesync1", "org.freedesktop.timedate1");
+    using velia::system::IETFSystem;
+    auto sysrepoIETFSystem = velia::system::IETFSystem(srSess,
+                                                       "/etc/os-release",
+                                                       "/proc/stat",
+                                                       *g_dbusConnection,
+                                                       IETFSystem::SystemdConfigData{.busName = "org.freedesktop.resolve1"},
+                                                       IETFSystem::SystemdConfigData{.busName = "org.freedesktop.timesync1"},
+                                                       IETFSystem::SystemdConfigData{.busName = "org.freedesktop.timedate1"});
 
     auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
     dbusConnection->enterEventLoopAsync();

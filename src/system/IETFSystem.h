@@ -17,6 +17,8 @@ class IETFSystem {
 public:
     struct SystemdConfigData {
         std::string busName;
+        std::optional<std::filesystem::path> dropinDir = std::nullopt;
+        std::function<void()> reload = std::function<void()>{};
     };
 
     IETFSystem(::sysrepo::Session srSession,

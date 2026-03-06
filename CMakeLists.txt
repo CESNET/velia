@@ -243,6 +243,11 @@ if(NOT VELIA_BACKUP_ETC_HOSTNAME )
     message(FATAL_ERROR "VELIA_BACKUP_ETC_HOSTNAME  not set")
 endif()
 
+set(VELIA_BACKUP_ETC_SYSTEMD_TIMESYNCD_CONF "/etc/systemd/timesyncd.conf" CACHE STRING "Path to timesyncd.conf file")
+if(NOT VELIA_BACKUP_ETC_SYSTEMD_TIMESYNCD_CONF)
+    message(FATAL_ERROR "VELIA_BACKUP_ETC_SYSTEMD_TIMESYNCD_CONF not set")
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/system/system_vars.h.in ${CMAKE_CURRENT_BINARY_DIR}/system_vars.h @ONLY)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 

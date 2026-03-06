@@ -218,8 +218,9 @@ TEST_CASE("Sysrepo ietf-system")
         SECTION("Both DNS and Fallback DNS") {
             dbusServer.setDNSEx({
                 {0, AF_INET, {127, 0, 0, 1}, 0, "ahoj.com"},
-                {2, AF_INET, {127, 0, 0, 1}, 0, "czech.light"},
-                {2, AF_INET6, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 53, "idk.net"},
+                {2, AF_INET, {127, 0, 0, 1}, 444, "czech.light"},
+                {2, AF_INET6, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0, "idk.net"},
+                {2, AF_INET6, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 153, "idk.net"},
             });
 
             expected = {
@@ -232,10 +233,16 @@ TEST_CASE("Sysrepo ietf-system")
                 {"/server[name='2']/name", "2"},
                 {"/server[name='2']/udp-and-tcp", ""},
                 {"/server[name='2']/udp-and-tcp/address", "127.0.0.1"},
+                {"/server[name='2']/udp-and-tcp/port", "444"},
                 {"/server[name='3']", ""},
                 {"/server[name='3']/name", "3"},
                 {"/server[name='3']/udp-and-tcp", ""},
                 {"/server[name='3']/udp-and-tcp/address", "::1"},
+                {"/server[name='4']", ""},
+                {"/server[name='4']/name", "4"},
+                {"/server[name='4']/udp-and-tcp", ""},
+                {"/server[name='4']/udp-and-tcp/address", "::1"},
+                {"/server[name='4']/udp-and-tcp/port", "153"},
             };
         }
 

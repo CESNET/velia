@@ -314,7 +314,22 @@ module czechlight-system {
     }
   }
 
-  deviation /sys:system/sys:ntp {
+  deviation /sys:system/sys:ntp/sys:enabled {
+    deviate add {
+      config false;
+    }
+  }
+  deviation /sys:system/sys:ntp/sys:server/sys:association-type {
+    deviate add {
+      config false;
+    }
+  }
+  deviation /sys:system/sys:ntp/sys:server/sys:prefer {
+    deviate add {
+      config false;
+    }
+  }
+  deviation /sys:system/sys:ntp/sys:server/sys:iburst {
     deviate add {
       config false;
     }

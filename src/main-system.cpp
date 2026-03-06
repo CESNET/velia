@@ -79,9 +79,24 @@ int main(int argc, char* argv[])
                                                        "/etc/os-release",
                                                        "/proc/stat",
                                                        *g_dbusConnection,
-                                                       velia::system::IETFSystem::SystemdConfigData{.busName = "org.freedesktop.resolve1"},
-                                                       velia::system::IETFSystem::SystemdConfigData{.busName = "org.freedesktop.timesync1"},
-                                                       velia::system::IETFSystem::SystemdConfigData{.busName = "org.freedesktop.timedate1"});
+                                                       velia::system::IETFSystem::SystemdConfigData{
+                                                           .busName = "org.freedesktop.resolve1",
+                                                           .dropinDir = std::nullopt,
+                                                           .reload = std::nullopt,
+                                                       },
+                                                       velia::system::IETFSystem::SystemdConfigData{
+                                                           .busName = "org.freedesktop.timesync1",
+                                                           .dropinDir = "/run/systemd/timesyncd.conf.d",
+                                                           .reload = [] {
+                                                               spdlog::get("system")->debug("Reloading timesyncd configuration");
+                                                               velia::utils::execAndWait(spdlog::get("system"), SYSTEMCTL_EXECUTABLE, {"restart", "systemd-timesyncd.service"}, "", {});
+                                                           },
+                                                       },
+                                                       velia::system::IETFSystem::SystemdConfigData{
+                                                           .busName = "org.freedesktop.timedate1",
+                                                           .dropinDir = std::nullopt,
+                                                           .reload = std::nullopt,
+                                                       });
 
     auto dbusConnection = sdbus::createConnection(); // second connection for RAUC (for calling methods).
     dbusConnection->enterEventLoopAsync();

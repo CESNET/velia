@@ -224,14 +224,18 @@ TEST_CASE("Sysrepo ietf-system")
 
             expected = {
                 {"/options", ""},
-                {"/server[name='127.0.0.1']", ""},
-                {"/server[name='127.0.0.1']/name", "127.0.0.1"},
-                {"/server[name='127.0.0.1']/udp-and-tcp", ""},
-                {"/server[name='127.0.0.1']/udp-and-tcp/address", "127.0.0.1"},
-                {"/server[name='::1']", ""},
-                {"/server[name='::1']/name", "::1"},
-                {"/server[name='::1']/udp-and-tcp", ""},
-                {"/server[name='::1']/udp-and-tcp/address", "::1"},
+                {"/server[name='1']", ""},
+                {"/server[name='1']/name", "1"},
+                {"/server[name='1']/udp-and-tcp", ""},
+                {"/server[name='1']/udp-and-tcp/address", "127.0.0.1"},
+                {"/server[name='2']", ""},
+                {"/server[name='2']/name", "2"},
+                {"/server[name='2']/udp-and-tcp", ""},
+                {"/server[name='2']/udp-and-tcp/address", "127.0.0.1"},
+                {"/server[name='3']", ""},
+                {"/server[name='3']/name", "3"},
+                {"/server[name='3']/udp-and-tcp", ""},
+                {"/server[name='3']/udp-and-tcp/address", "::1"},
             };
         }
 
@@ -239,18 +243,18 @@ TEST_CASE("Sysrepo ietf-system")
         {
             expected = {
                 {"/options", ""},
-                {"/server[name='2001:4860:4860::8888']", ""},
-                {"/server[name='2001:4860:4860::8888']/name", "2001:4860:4860::8888"},
-                {"/server[name='2001:4860:4860::8888']/udp-and-tcp", ""},
-                {"/server[name='2001:4860:4860::8888']/udp-and-tcp/address", "2001:4860:4860::8888"},
-                {"/server[name='8.8.4.4']", ""},
-                {"/server[name='8.8.4.4']/name", "8.8.4.4"},
-                {"/server[name='8.8.4.4']/udp-and-tcp", ""},
-                {"/server[name='8.8.4.4']/udp-and-tcp/address", "8.8.4.4"},
-                {"/server[name='8.8.8.8']", ""},
-                {"/server[name='8.8.8.8']/name", "8.8.8.8"},
-                {"/server[name='8.8.8.8']/udp-and-tcp", ""},
-                {"/server[name='8.8.8.8']/udp-and-tcp/address", "8.8.8.8"},
+                {"/server[name='1']", ""},
+                {"/server[name='1']/name", "1"},
+                {"/server[name='1']/udp-and-tcp", ""},
+                {"/server[name='1']/udp-and-tcp/address", "8.8.8.8"},
+                {"/server[name='2']", ""},
+                {"/server[name='2']/name", "2"},
+                {"/server[name='2']/udp-and-tcp", ""},
+                {"/server[name='2']/udp-and-tcp/address", "8.8.4.4"},
+                {"/server[name='3']", ""},
+                {"/server[name='3']/name", "3"},
+                {"/server[name='3']/udp-and-tcp", ""},
+                {"/server[name='3']/udp-and-tcp/address", "2001:4860:4860::8888"},
             };
         }
 

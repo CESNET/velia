@@ -134,7 +134,12 @@ std::string createTimesyncdConfig(const sysrepo::Session& session)
     return createSystemdDropinConfig("Time", "NTP", hosts);
 }
 
-/** @brief Returns list of IP addresses (coded as a string) that serve as the DNS servers.
+struct AddressAndPort {
+    std::string address;
+    std::optional<unsigned> port;
+};
+
+/** @brief Returns list of addresses and ports that serve as the DNS servers.
  *
  * We query the addresses from systemd-resolved D-Bus interface (see https://www.freedesktop.org/software/systemd/man/org.freedesktop.resolve1.html#Properties
  * and possibly also https://www.freedesktop.org/software/systemd/man/resolved.conf.html).
@@ -143,7 +148,7 @@ std::string createTimesyncdConfig(const sysrepo::Session& session)
  * Note that the returns not only the system-wide setting, but also the DNS resolvers that are configured per-interface. We chose not to ignore them despite ietf-system
  * YANG model inability to distinguish between system-wide and per-interface type. Hence the resolver is listed as a system-wide one.
  */
-std::vector<std::string> getDNSResolvers(sdbus::IConnection& connection, const std::string& dbusName)
+std::vector<AddressAndPort> getDNSResolvers(sdbus::IConnection& connection, const std::string& dbusName)
 {
     static const auto DBUS_RESOLVE1_MANAGER_PATH = "/org/freedesktop/resolve1";
     static const auto DBUS_RESOLVE1_MANAGER_INTERFACE = "org.freedesktop.resolve1.Manager";
@@ -158,16 +163,17 @@ std::vector<std::string> getDNSResolvers(sdbus::IConnection& connection, const s
         auto replyObjects = store.get<std::vector<sdbus::Struct<int32_t, int32_t, std::vector<uint8_t>, uint16_t, std::string>>>();
 
         if (!replyObjects.empty()) {
-            std::vector<std::string> res;
+            std::vector<AddressAndPort> res;
 
             for (const auto& e : replyObjects) {
                 auto addrType = e.get<1>();
                 auto addrBytes = e.get<2>();
+                auto port = e.get<3>();
 
                 std::array<char, std::max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN)> buf{};
                 inet_ntop(addrType, addrBytes.data(), buf.data(), buf.size());
 
-                res.emplace_back(buf.data());
+                res.emplace_back(buf.data(), port != 0 ? std::make_optional(port) : std::nullopt);
             }
 
             return res;
@@ -304,6 +310,7 @@ void IETFSystem::initClock(const std::filesystem::path& procStat)
 /** @short DNS resolver callbacks */
 void IETFSystem::initDNS(sdbus::IConnection& connection, const SystemdConfigData& resolve)
 {
+    utils::ensureModuleImplemented(m_srSession, IETF_SYSTEM_MODULE_NAME, "2014-08-06", {{"dns-udp-tcp-port"}});
     sysrepo::OperGetCb dnsOper = [&connection, resolve] (auto session, auto, auto, auto, auto, auto, auto& parent) {
         utils::YANGData values;
         std::set<std::string> seen;
@@ -312,7 +319,10 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const SystemdConfigData
         auto padWidth = std::to_string(servers.size()).size();
         for (size_t i = 0; i < servers.size(); i++) {
             auto name = paddedInt(i + 1, padWidth);
-            values.emplace_back(IETF_SYSTEM_DNS_PATH + "/server[name='"s + name + "']/udp-and-tcp/address", servers[i]);
+            values.emplace_back(IETF_SYSTEM_DNS_PATH + "/server[name='"s + name + "']/udp-and-tcp/address", servers[i].address);
+            if (servers[i].port) {
+                values.emplace_back(IETF_SYSTEM_DNS_PATH + "/server[name='"s + name + "']/udp-and-tcp/port", std::to_string(*servers[i].port));
+            }
         }
 
         utils::valuesToYang(values, {}, {}, session, parent);

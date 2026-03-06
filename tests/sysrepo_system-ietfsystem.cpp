@@ -26,6 +26,9 @@ TEST_CASE("Sysrepo ietf-system")
     dbusConnClient->enterEventLoopAsync();
 
     DbusSystemdServer dbusServer(*dbusConnServer);
+    velia::system::IETFSystem::SystemdConfigData resolve{.busName = dbusConnServer->getUniqueName()};
+    velia::system::IETFSystem::SystemdConfigData timesync{.busName = dbusConnServer->getUniqueName()};
+    velia::system::IETFSystem::SystemdConfigData timedate{.busName = dbusConnServer->getUniqueName()};
 
     SECTION("Test system-state")
     {
@@ -71,9 +74,9 @@ TEST_CASE("Sysrepo ietf-system")
                                                                        osReleaseFile,
                                                                        procStatFile,
                                                                        *dbusConnClient,
-                                                                       dbusConnServer->getUniqueName(),
-                                                                       dbusConnServer->getUniqueName(),
-                                                                       dbusConnServer->getUniqueName());
+                                                                       resolve,
+                                                                       timesync,
+                                                                       timedate);
             REQUIRE(dataFromSysrepo(client, modulePrefix + "/platform", sysrepo::Datastore::Operational) == expected);
         }
 
@@ -84,9 +87,9 @@ TEST_CASE("Sysrepo ietf-system")
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys",
                                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                                *dbusConnClient,
-                                                                               dbusConnServer->getUniqueName(),
-                                                                               dbusConnServer->getUniqueName(),
-                                                                               dbusConnServer->getUniqueName()),
+                                                                               resolve,
+                                                                               timesync,
+                                                                               timedate),
                                    ("Could not read key NAME from file "s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/missing-keys").c_str(),
                                    std::out_of_range);
         }
@@ -98,9 +101,9 @@ TEST_CASE("Sysrepo ietf-system")
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                *dbusConnClient,
-                                                               dbusConnServer->getUniqueName(),
-                                                               dbusConnServer->getUniqueName(),
-                                                               dbusConnServer->getUniqueName());
+                                                               resolve,
+                                                               timesync,
+                                                               timedate);
         const char* xpath;
 
         SECTION("location") {
@@ -129,9 +132,9 @@ TEST_CASE("Sysrepo ietf-system")
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
-                                                                   dbusConnServer->getUniqueName(),
-                                                                   dbusConnServer->getUniqueName(),
-                                                                   dbusConnServer->getUniqueName());
+                                                                   resolve,
+                                                                   timesync,
+                                                                   timedate);
             client.switchDatastore(sysrepo::Datastore::Operational);
             REQUIRE(client.getData("/ietf-system:system-state/clock/current-datetime"));
 
@@ -149,9 +152,9 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound",
                                                                            *dbusConnClient,
-                                                                           dbusConnServer->getUniqueName(),
-                                                                           dbusConnServer->getUniqueName(),
-                                                                           dbusConnServer->getUniqueName()),
+                                                                           resolve,
+                                                                           timesync,
+                                                                           timedate),
                                ("File '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.notfound' does not exist.").c_str(),
                                std::invalid_argument);
 
@@ -159,9 +162,9 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime",
                                                                            *dbusConnClient,
-                                                                           dbusConnServer->getUniqueName(),
-                                                                           dbusConnServer->getUniqueName(),
-                                                                           dbusConnServer->getUniqueName()),
+                                                                           resolve,
+                                                                           timesync,
+                                                                           timedate),
                                ("btime value not found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.no-btime'").c_str(),
                                std::runtime_error);
 
@@ -169,9 +172,9 @@ TEST_CASE("Sysrepo ietf-system")
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                            CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime",
                                                                            *dbusConnClient,
-                                                                           dbusConnServer->getUniqueName(),
-                                                                           dbusConnServer->getUniqueName(),
-                                                                           dbusConnServer->getUniqueName()),
+                                                                           resolve,
+                                                                           timesync,
+                                                                           timedate),
                                ("btime found in '"s + CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.invalid-btime' but could not be parsed (line was 'btime asd')").c_str(),
                                std::runtime_error);
     }
@@ -182,9 +185,9 @@ TEST_CASE("Sysrepo ietf-system")
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
-                                                                   dbusConnServer->getUniqueName(),
-                                                                   dbusConnServer->getUniqueName(),
-                                                                   dbusConnServer->getUniqueName());
+                                                                   resolve,
+                                                                   timesync,
+                                                                   timedate);
         std::map<std::string, std::string> expected;
 
         dbusServer.setFallbackDNSEx({
@@ -242,9 +245,9 @@ TEST_CASE("Sysrepo ietf-system")
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/os-release",
                                                                    CMAKE_CURRENT_SOURCE_DIR "/tests/system/proc_stat.ok",
                                                                    *dbusConnClient,
-                                                                   dbusConnServer->getUniqueName(),
-                                                                   dbusConnServer->getUniqueName(),
-                                                                   dbusConnServer->getUniqueName());
+                                                                   resolve,
+                                                                   timesync,
+                                                                   timedate);
 
         SECTION("NTP enabled with servers")
         {

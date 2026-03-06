@@ -242,15 +242,16 @@ void IETFSystem::initClock(const std::filesystem::path& procStat)
 }
 
 /** @short DNS resolver callbacks */
-void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbusName) {
-    sysrepo::OperGetCb dnsOper = [&connection, dbusName] (auto session, auto, auto, auto, auto, auto, auto& parent) {
+void IETFSystem::initDNS(sdbus::IConnection& connection, const SystemdConfigData& resolve)
+{
+    sysrepo::OperGetCb dnsOper = [&connection, resolve] (auto session, auto, auto, auto, auto, auto, auto& parent) {
         utils::YANGData values;
         std::set<std::string> seen;
 
         /* RFC 7317 specifies that key leaf 'name' contains "An arbitrary name for the DNS server".
            We use the IP address which is unique. If the server is returned multiple times (e.g. once as system-wide and once
            for some specific ifindex, it doesn't matter that it is listed only once. */
-        for (const auto& e : getDNSResolvers(connection, dbusName)) {
+        for (const auto& e : getDNSResolvers(connection, resolve.busName)) {
             if (seen.contains(e)) {
                 continue;
             }
@@ -266,10 +267,10 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const std::string& dbus
 }
 
 /** @short NTP callbacks */
-void IETFSystem::initNTP(sdbus::IConnection& connection, const std::string& dbusNameTimesync, const std::string& dbusNameTimedate)
+void IETFSystem::initNTP(sdbus::IConnection& connection, const SystemdConfigData& timesync, const SystemdConfigData& timedate)
 {
     utils::ensureModuleImplemented(m_srSession, IETF_SYSTEM_MODULE_NAME, "2014-08-06", {{"ntp"}});
-    sysrepo::OperGetCb operCb = [&connection, this, dbusNameTimesync, dbusNameTimedate](auto session, auto, auto, auto, auto, auto, auto& parent) {
+    sysrepo::OperGetCb operCb = [&connection, this, timesync, timedate](auto session, auto, auto, auto, auto, auto, auto& parent) {
         constexpr auto DBUS_TIMESYNC1_MANAGER_PATH = "/org/freedesktop/timesync1";
         constexpr auto DBUS_TIMESYNC1_MANAGER_INTERFACE = "org.freedesktop.timesync1.Manager";
         constexpr auto DBUS_TIMEDATE1_MANAGER_PATH = "/org/freedesktop/timedate1";
@@ -277,13 +278,13 @@ void IETFSystem::initNTP(sdbus::IConnection& connection, const std::string& dbus
 
         utils::YANGData values;
 
-        auto proxy = sdbus::createProxy(connection, dbusNameTimedate, DBUS_TIMEDATE1_MANAGER_PATH);
+        auto proxy = sdbus::createProxy(connection, timedate.busName, DBUS_TIMEDATE1_MANAGER_PATH);
         auto ntpServiceAvailable = proxy->getProperty("CanNTP").onInterface(DBUS_TIMEDATE1_MANAGER_INTERFACE).get<bool>();
         auto ntpServiceEnabled = proxy->getProperty("NTP").onInterface(DBUS_TIMEDATE1_MANAGER_INTERFACE).get<bool>();
         values.emplace_back(IETF_SYSTEM_NTP_PATH + "/enabled"s, (ntpServiceAvailable && ntpServiceEnabled) ? "true" : "false");
 
         try {
-            proxy = sdbus::createProxy(connection, dbusNameTimesync, DBUS_TIMESYNC1_MANAGER_PATH);
+            proxy = sdbus::createProxy(connection, timesync.busName, DBUS_TIMESYNC1_MANAGER_PATH);
             auto runtimeServers = proxy->getProperty("RuntimeNTPServers").onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE).get<std::vector<std::string>>();
             auto systemServers = proxy->getProperty("SystemNTPServers").onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE).get<std::vector<std::string>>();
             auto linkServers = proxy->getProperty("LinkNTPServers").onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE).get<std::vector<std::string>>();
@@ -323,9 +324,9 @@ IETFSystem::IETFSystem(::sysrepo::Session srSession,
                        const std::filesystem::path& osRelease,
                        const std::filesystem::path& procStat,
                        sdbus::IConnection& connection,
-                       const std::string& dbusNameResolved,
-                       const std::string& dbusNameTimesync,
-                       const std::string& dbusNameTimedate)
+                       const SystemdConfigData& resolve,
+                       const SystemdConfigData& timesync,
+                       const SystemdConfigData& timedate)
     : m_srSession(srSession)
     , m_srSubscribe()
     , m_log(spdlog::get("system"))
@@ -335,7 +336,7 @@ IETFSystem::IETFSystem(::sysrepo::Session srSession,
     initHostname();
     initDummies();
     initClock(procStat);
-    initDNS(connection, dbusNameResolved);
-    initNTP(connection, dbusNameTimesync, dbusNameTimedate);
+    initDNS(connection, resolve);
+    initNTP(connection, timesync, timedate);
 }
 }

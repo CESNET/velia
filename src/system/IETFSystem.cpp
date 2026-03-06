@@ -30,6 +30,15 @@ const auto IETF_SYSTEM_DNS_PATH = "/ietf-system:system/dns-resolver";
 const auto IETF_SYSTEM_NTP_PATH = "/ietf-system:system/ntp";
 const auto IETF_SYSTEM_STATE_CLOCK_PATH = "/ietf-system:system-state/clock";
 
+std::string paddedInt(size_t num, size_t width)
+{
+    std::string res = std::to_string(num);
+    if (res.size() < width) {
+        res.insert(0, width - res.size(), '0');
+    }
+    return res;
+}
+
 /** @brief Returns key=value pairs from (e.g. /etc/os-release) as a std::map */
 std::map<std::string, std::string> parseKeyValueFile(const std::filesystem::path& path)
 {
@@ -281,15 +290,11 @@ void IETFSystem::initDNS(sdbus::IConnection& connection, const SystemdConfigData
         utils::YANGData values;
         std::set<std::string> seen;
 
-        /* RFC 7317 specifies that key leaf 'name' contains "An arbitrary name for the DNS server".
-           We use the IP address which is unique. If the server is returned multiple times (e.g. once as system-wide and once
-           for some specific ifindex, it doesn't matter that it is listed only once. */
-        for (const auto& e : getDNSResolvers(connection, resolve.busName)) {
-            if (seen.contains(e)) {
-                continue;
-            }
-            seen.insert(e);
-            values.emplace_back(IETF_SYSTEM_DNS_PATH + "/server[name='"s + e + "']/udp-and-tcp/address", e);
+        auto servers = getDNSResolvers(connection, resolve.busName);
+        auto padWidth = std::to_string(servers.size()).size();
+        for (size_t i = 0; i < servers.size(); i++) {
+            auto name = paddedInt(i + 1, padWidth);
+            values.emplace_back(IETF_SYSTEM_DNS_PATH + "/server[name='"s + name + "']/udp-and-tcp/address", servers[i]);
         }
 
         utils::valuesToYang(values, {}, {}, session, parent);

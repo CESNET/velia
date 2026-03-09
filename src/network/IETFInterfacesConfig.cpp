@@ -206,7 +206,7 @@ IETFInterfacesConfig::IETFInterfacesConfig(::sysrepo::Session srSess, std::files
     utils::ensureModuleImplemented(m_srSession, IETF_RIB_EXTENSION_MODULE_NAME, "2023-11-20");
     utils::ensureModuleImplemented(m_srSession, IETF_IPV4_UNICAST_ROUTING_MODULE_NAME, "2018-03-13");
     utils::ensureModuleImplemented(m_srSession, IETF_IPV6_UNICAST_ROUTING_MODULE_NAME, "2018-03-13");
-    utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_NETWORK_MODULE_NAME, "2025-06-06");
+    utils::ensureModuleImplemented(m_srSession, CZECHLIGHT_NETWORK_MODULE_NAME, "2026-03-09");
 
     m_srSubscribe = m_srSession.onModuleChange(
         IETF_INTERFACES_MODULE_NAME,

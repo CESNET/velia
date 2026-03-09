@@ -143,6 +143,12 @@ void addAutoconfConfig(NetworkConfiguration& configValues, const libyang::DataNo
         dhcpv4.push_back("UseDNS=false");
     }
 
+    if (auto node = velia::utils::getUniqueSubtree(linkEntry, "ietf-ip:ipv4/czechlight-network:dhcp-client/czechlight-network:use-ntp"); node) {
+        dhcpv4.push_back("UseNTP="s + velia::utils::asString(node.value()));
+    } else {
+        dhcpv4.push_back("UseNTP=false");
+    }
+
     configValues.emplace("DHCPv4", std::move(dhcpv4));
 }
 

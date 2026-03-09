@@ -86,6 +86,7 @@ Name=br0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -101,6 +102,7 @@ Name=eth2
 
 [DHCPv4]
 UseDNS=false
+UseNTP=false
 
 [IPv6AcceptRA]
 UseDNS=false
@@ -152,6 +154,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=false
@@ -178,6 +181,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=false
@@ -203,6 +207,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -228,6 +233,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -253,6 +259,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=false
@@ -270,6 +277,7 @@ Name=eth1
 
 [DHCPv4]
 UseDNS=false
+UseNTP=false
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -307,6 +315,7 @@ Name=br0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -323,6 +332,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=false
+UseNTP=false
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -340,6 +350,7 @@ Name=eth1
 
 [DHCPv4]
 UseDNS=false
+UseNTP=false
 
 [IPv6AcceptRA]
 UseDNS=false
@@ -379,6 +390,7 @@ Name=br0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -401,6 +413,7 @@ Name=br0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -426,6 +439,7 @@ Name=eth1
 
 [DHCPv4]
 UseDNS=false
+UseNTP=false
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -457,6 +471,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=false
@@ -490,6 +505,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -512,6 +528,30 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=false
+UseNTP=true
+
+[IPv6AcceptRA]
+UseDNS=true
+
+[Network]
+Address=192.0.2.1/24
+LinkLocalAddressing=no
+IPv6AcceptRA=false
+DHCP=ipv4
+LLDP=true
+EmitLLDP=nearest-bridge
+)");
+            }
+
+            SECTION("Use NTP off")
+            {
+                client.setItem("/ietf-interfaces:interfaces/interface[name='eth0']/ietf-ip:ipv4/czechlight-network:dhcp-client/czechlight-network:use-ntp", "false");
+                expectedContents.set("eth0", R"([Match]
+Name=eth0
+
+[DHCPv4]
+UseDNS=true
+UseNTP=false
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -551,6 +591,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -572,6 +613,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=false
@@ -597,6 +639,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -622,6 +665,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -647,6 +691,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -672,6 +717,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -705,6 +751,7 @@ Name=eth1
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -769,6 +816,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -808,6 +856,7 @@ Name=eth0
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true
@@ -841,6 +890,7 @@ Name=eth1
 
 [DHCPv4]
 UseDNS=true
+UseNTP=true
 
 [IPv6AcceptRA]
 UseDNS=true

@@ -155,6 +155,12 @@ module czechlight-network {
               default true;
               description "Use DNS servers provided by DHCP server.";
             }
+
+            leaf use-ntp {
+              type boolean;
+              default true;
+              description "Use NTP servers provided by DHCP server.";
+            }
         }
     }
 

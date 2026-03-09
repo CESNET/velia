@@ -65,7 +65,7 @@ set(YANG_SRCS
     yang/ietf-packet-fields@2019-03-04.yang
     yang/ietf-access-control-list@2019-03-04.yang
     yang/czechlight-firewall@2021-01-25.yang
-    yang/czechlight-network@2025-06-06.yang
+    yang/czechlight-network@2026-03-09.yang
     yang/czechlight-network-sdn-roadm-line@2025-06-06.yang
     yang/czechlight-network-sdn-inline@2025-06-06.yang
     yang/czechlight-network-sdn-generic@2025-06-06.yang
@@ -518,7 +518,7 @@ if(BUILD_TESTING)
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/iana-if-type@2017-01-19.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-interfaces@2018-02-20.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ip@2018-02-22.yang
-        ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2025-06-06.yang
+        ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2026-03-09.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
         ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
@@ -593,7 +593,7 @@ if(BUILD_TESTING)
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv4-unicast-routing@2018-03-13.yang
             --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/ietf-ipv6-unicast-routing@2018-03-13.yang
-            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2025-06-06.yang
+            --install ${CMAKE_CURRENT_SOURCE_DIR}/yang/czechlight-network@2026-03-09.yang
             --init-data ${CMAKE_CURRENT_SOURCE_DIR}/tests/yang/ietf-interfaces.json)
     velia_test(NAME utils_sysrepo LIBRARIES velia-utils SysrepoTesting FIXTURE fixture_sysrepo-utils)
 

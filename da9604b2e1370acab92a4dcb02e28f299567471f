@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc52b728_1b563a98",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:17:23Z",
+      "side": 1,
+      "message": "nit: this is a good candidate for `using`, IMHO",
+      "range": {
+        "startLine": 82,
+        "startChar": 55,
+        "endLine": 82,
+        "endChar": 82
+      },
+      "revId": "da9604b2e1370acab92a4dcb02e28f299567471f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04653463_af55b344",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:36:11Z",
+      "side": 1,
+      "message": "nit: this sounds weird to me",
+      "range": {
+        "startLine": 10,
+        "startChar": 32,
+        "endLine": 10,
+        "endChar": 60
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5464a844_ca3c59dc",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:36:11Z",
+      "side": 1,
+      "message": "nit: would it make sense to use implicit initialization (i.e., skip these)?",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 82
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97e3480c_b74626a4",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:36:11Z",
+      "side": 1,
+      "message": "nit: let\u0027s stop using `std::endl` and instead put a `\\n` to the end of the string, as per https://accu.org/journals/overload/27/149/sharpe_2619/",
+      "range": {
+        "startLine": 82,
+        "startChar": 55,
+        "endLine": 82,
+        "endChar": 64
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5795ca2c_5f6e171b",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:36:11Z",
+      "side": 1,
+      "message": "nit: `velia::utils::asString(*addressNode)` (at least I hope so)",
+      "range": {
+        "startLine": 97,
+        "startChar": 34,
+        "endLine": 97,
+        "endChar": 66
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d3650ce_f855742d",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:36:11Z",
+      "side": 1,
+      "message": "please consider adding a helper, we already have this in `src/system/JournalUpload.cpp`.\n\nAnd maybe that helper could take a `(const libyang::DataNode\u0026 relativeRoot, const std::string\u0026 addressPath, const std::string\u0026 portPath)` and produce a nice string :).",
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de0161a4_8dd68d79",
+        "filename": "src/system/IETFSystem.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:36:11Z",
+      "side": 1,
+      "message": "This leads to invocation which (IMHO) is ugly, like `(*foo.reload)()`. Also, `std::function` [already knowns whether it\u0027s \"valid\"](https://en.cppreference.com/w/cpp/utility/functional/function/operator_bool.html), so let\u0027s use that.",
+      "range": {
+        "startLine": 21,
+        "startChar": 8,
+        "endLine": 21,
+        "endChar": 44
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43da5ae7_ad108c93",
+        "filename": "yang/czechlight-system@2022-07-08.yang",
+        "patchSetId": 4
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:36:11Z",
+      "side": 1,
+      "message": "any reason for not implementing this (I don\u0027t care if it\u0027s in this one or in a followup one)?",
+      "range": {
+        "startLine": 316,
+        "startChar": 1,
+        "endLine": 321,
+        "endChar": 3
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

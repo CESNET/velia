@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0116ed1_d9699d7e",
+        "filename": "tests/sysrepo_system-ietfsystem.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:57:38Z",
+      "side": 1,
+      "message": "I gave up when chasing this through the systemd code -- what is is parameter, and what is it used for?",
+      "range": {
+        "startLine": 320,
+        "startChar": 50,
+        "endLine": 320,
+        "endChar": 63
+      },
+      "revId": "0088930a2d82322c58b3536341445a9ea1a00318",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

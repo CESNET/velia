@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83297412_154f2d46",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:53:59Z",
+      "side": 1,
+      "message": "`uint16_t`",
+      "range": {
+        "startLine": 132,
+        "startChar": 18,
+        "endLine": 132,
+        "endChar": 26
+      },
+      "revId": "568df1bf775605c2e85b2d4e14e130563b0f3602",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e870390c_a405be7c",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:53:59Z",
+      "side": 1,
+      "message": "This will break when one address is used several times with a different port.",
+      "revId": "568df1bf775605c2e85b2d4e14e130563b0f3602",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

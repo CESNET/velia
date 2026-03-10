@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6a034b2_3e0073cd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:13:09Z",
+      "side": 1,
+      "message": "Would it be worth the effort to add some annotation about where that server came from? If so, it could be done either as a YANG augment which adds a leaf, or it could be encoded into the list key.\n\nJust thinking loud here; what do you think?",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 68
+      },
+      "revId": "44171a08d8e8dcf722fed224cc7a4c4428953f63",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "677769fe_284892af",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:13:09Z",
+      "side": 1,
+      "message": "aw, sweet :)",
+      "range": {
+        "startLine": 292,
+        "startChar": 53,
+        "endLine": 292,
+        "endChar": 71
+      },
+      "revId": "44171a08d8e8dcf722fed224cc7a4c4428953f63",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bb93ee5_8fb7992b",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:13:09Z",
+      "side": 1,
+      "message": "what do you think about using `fmt::format` for this?",
+      "range": {
+        "startLine": 299,
+        "startChar": 1,
+        "endLine": 303,
+        "endChar": 60
+      },
+      "revId": "44171a08d8e8dcf722fed224cc7a4c4428953f63",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5aeb27d5_b8d7142a",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-10T09:13:09Z",
+      "side": 1,
+      "message": "This will be logged during each ops data request, but I do not have a better solution.",
+      "revId": "44171a08d8e8dcf722fed224cc7a4c4428953f63",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

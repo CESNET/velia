@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "7225a95c_ed21b730",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-12T14:55:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6a034b2_3e0073cd",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 68
+      },
+      "revId": "44171a08d8e8dcf722fed224cc7a4c4428953f63",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "677769fe_284892af",
         "filename": "src/system/IETFSystem.cpp",
         "patchSetId": 1

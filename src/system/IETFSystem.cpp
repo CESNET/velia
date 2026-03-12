@@ -300,10 +300,15 @@ void IETFSystem::initNTP(sdbus::IConnection& connection, const std::string& dbus
                 }
             }
 
+            auto serverName = proxy->getProperty("ServerName").onInterface(DBUS_TIMESYNC1_MANAGER_INTERFACE).get<std::string>();
+
             auto padWidth = fmt::formatted_size("{}", ntpServers.size());
             for (size_t i = 0; i < ntpServers.size(); i++) {
                 auto name = fmt::format("{:0>{}}-{}", i + 1, padWidth, ntpServers[i].second);
                 values.emplace_back(IETF_SYSTEM_NTP_PATH + "/server[name='"s + name + "']/udp/address", ntpServers[i].first);
+                if (ntpServers[i].first == serverName) {
+                    values.emplace_back(IETF_SYSTEM_NTP_PATH + "/server[name='"s + name + "']/prefer", "true");
+                }
             }
         } catch (const sdbus::Error&) {
             m_log->debug("Failed to query NTP servers, timesync1 service may not be running. Maybe NTP is disabled?");

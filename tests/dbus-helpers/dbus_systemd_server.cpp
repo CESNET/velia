@@ -113,6 +113,7 @@ void DbusSystemdServer::setNTP(bool enabled)
         m_timesync1Manager->registerProperty("SystemNTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_SystemNTPServers; });
         m_timesync1Manager->registerProperty("LinkNTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_LinkNTPServers; });
         m_timesync1Manager->registerProperty("FallbackNTPServers").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_FallbackNTPServers; });
+        m_timesync1Manager->registerProperty("ServerName").onInterface(ifaceTimesync1Manager).withGetter([this]() { return m_ServerName; });
         m_timesync1Manager->finishRegistration();
     } else {
         m_timesync1Manager.reset();
@@ -137,4 +138,9 @@ void DbusSystemdServer::setLinkNTPServers(std::vector<std::string> ntpServers)
 void DbusSystemdServer::setFallbackNTPServers(std::vector<std::string> ntpServers)
 {
     m_FallbackNTPServers = std::move(ntpServers);
+}
+
+void DbusSystemdServer::setServerName(const std::string& serverName)
+{
+    m_ServerName = serverName;
 }

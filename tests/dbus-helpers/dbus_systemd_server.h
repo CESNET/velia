@@ -24,6 +24,7 @@ public:
     void setSystemNTPServers(std::vector<std::string> ntpServers);
     void setLinkNTPServers(std::vector<std::string> ntpServers);
     void setFallbackNTPServers(std::vector<std::string> ntpServers);
+    void setServerName(const std::string& serverName);
 
 private:
     struct Unit {
@@ -48,6 +49,7 @@ private:
     std::vector<std::string> m_SystemNTPServers;
     std::vector<std::string> m_LinkNTPServers;
     std::vector<std::string> m_FallbackNTPServers;
+    std::string m_ServerName;
     bool m_canNTP, m_NTP;
 
     std::vector<UnitStruct> ListUnits();

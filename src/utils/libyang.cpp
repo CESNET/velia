@@ -27,4 +27,18 @@ std::optional<libyang::DataNode> getUniqueSubtree(const libyang::DataNode& start
         throw std::runtime_error(fmt::format("getUniqueSubtree({}, {}): more than one match (got {})", start.path(), path, set.size()));
     }
 }
+
+std::string formatHostPort(const libyang::DataNode& node, const std::string& hostNodeName, const std::optional<std::string>& portNodeName)
+{
+    auto hostNode = node.findPath(hostNodeName);
+    auto isIpv6 = hostNode->asTerm().valueType().internalPluginId().find("ipv6") != std::string::npos;
+    auto hostValue = asString(*hostNode);
+
+    if (auto portNode = portNodeName ? node.findPath(*portNodeName) : std::nullopt; portNode) {
+        auto portValue = asString(*portNode);
+        return isIpv6 ? fmt::format("[{}]:{}", hostValue, portValue) : fmt::format("{}:{}", hostValue, portValue);
+    }
+
+    return hostValue;
+}
 }

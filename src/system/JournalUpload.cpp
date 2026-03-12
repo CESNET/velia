@@ -6,6 +6,7 @@
  */
 
 #include <filesystem>
+#include <fmt/format.h>
 #include <fstream>
 #include <regex>
 #include "JournalUpload.h"
@@ -26,25 +27,10 @@ std::optional<std::string> extractURL(sysrepo::Session session)
         return std::nullopt;
     }
 
-    std::string url;
-
-    auto hostNode = data->findPath(UPLOAD_URL_CONTAINER + "/host"s);
-    auto hostValue = velia::utils::asString(*hostNode);
-    auto isIpv6 = hostNode->asTerm().valueType().internalPluginId().find("ipv6") != std::string::npos;
-
-    url += data->findPath(UPLOAD_URL_CONTAINER + "/protocol"s)->asTerm().valueStr();
-    url += "://";
-
-    if (isIpv6) {
-        url += "[" + hostValue + "]";
-    } else {
-        url += hostValue;
-    }
-
-    url += ":";
-    url += data->findPath(UPLOAD_URL_CONTAINER + "/port"s)->asTerm().valueStr();
-
-    return url;
+    auto uploadUrlContainer = data->findPath(UPLOAD_URL_CONTAINER);
+    return fmt::format("{}://{}",
+                       velia::utils::asString(*uploadUrlContainer->findPath("protocol")),
+                       velia::utils::formatHostPort(*uploadUrlContainer, "host", "port"));
 }
 
 sysrepo::ErrorCode configureJournalUpload(velia::Log log, const std::optional<std::string>& url, const std::filesystem::path& envFile, const velia::system::JournalUpload::RestartCb& restartCb)

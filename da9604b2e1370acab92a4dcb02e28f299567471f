@@ -22,6 +22,30 @@
       },
       "revId": "da9604b2e1370acab92a4dcb02e28f299567471f",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78d2d163_d97b712a",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "I learned something today: `using velia::system::IETFSystem::SystemdConfigData` results in `Using declaration cannot refer to class member` so we can\u0027t use it for nested classes.\n\nDone.",
+      "parentUuid": "dc52b728_1b563a98",
+      "range": {
+        "startLine": 82,
+        "startChar": 55,
+        "endLine": 82,
+        "endChar": 82
+      },
+      "revId": "da9604b2e1370acab92a4dcb02e28f299567471f",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

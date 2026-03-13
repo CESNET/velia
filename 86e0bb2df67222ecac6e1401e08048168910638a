@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "47959e37_49362fad",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04653463_af55b344",
+      "range": {
+        "startLine": 10,
+        "startChar": 32,
+        "endLine": 10,
+        "endChar": 60
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5464a844_ca3c59dc",
@@ -37,6 +61,30 @@
       "writtenOn": "2026-03-10T09:36:11Z",
       "side": 1,
       "message": "nit: would it make sense to use implicit initialization (i.e., skip these)?",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 82
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c972153_823967c3",
+        "filename": "src/main-system.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5464a844_ca3c59dc",
       "range": {
         "startLine": 84,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0afd5bfe_9beaa632",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97e3480c_b74626a4",
+      "range": {
+        "startLine": 82,
+        "startChar": 55,
+        "endLine": 82,
+        "endChar": 64
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5795ca2c_5f6e171b",
@@ -83,6 +155,30 @@
       "writtenOn": "2026-03-10T09:36:11Z",
       "side": 1,
       "message": "nit: `velia::utils::asString(*addressNode)` (at least I hope so)",
+      "range": {
+        "startLine": 97,
+        "startChar": 34,
+        "endLine": 97,
+        "endChar": 66
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3428642e_c0437f46",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5795ca2c_5f6e171b",
       "range": {
         "startLine": 97,
         "startChar": 34,
@@ -110,6 +206,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "da98d970_8e8f8d1a",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "Done as a separate commit (parent).",
+      "parentUuid": "2d3650ce_f855742d",
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de0161a4_8dd68d79",
@@ -133,6 +247,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "20348da0_305b14c4",
+        "filename": "src/system/IETFSystem.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de0161a4_8dd68d79",
+      "range": {
+        "startLine": 21,
+        "startChar": 8,
+        "endLine": 21,
+        "endChar": 44
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "43da5ae7_ad108c93",
@@ -146,6 +284,30 @@
       "writtenOn": "2026-03-10T09:36:11Z",
       "side": 1,
       "message": "any reason for not implementing this (I don\u0027t care if it\u0027s in this one or in a followup one)?",
+      "range": {
+        "startLine": 316,
+        "startChar": 1,
+        "endLine": 321,
+        "endChar": 3
+      },
+      "revId": "86e0bb2df67222ecac6e1401e08048168910638a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cabc0d36_78403be8",
+        "filename": "yang/czechlight-system@2022-07-08.yang",
+        "patchSetId": 4
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "We agreed today that our systems do not support turning off the NTP (currently). Our systems should be only time synced. :-)",
+      "parentUuid": "43da5ae7_ad108c93",
       "range": {
         "startLine": 316,
         "startChar": 1,

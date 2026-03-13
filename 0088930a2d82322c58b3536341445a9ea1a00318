@@ -22,6 +22,30 @@
       },
       "revId": "0088930a2d82322c58b3536341445a9ea1a00318",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e24d203_c8658fb9",
+        "filename": "tests/sysrepo_system-ietfsystem.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "It\u0027s SNI for DNS over TLS: https://www.freedesktop.org/software/systemd/man/latest/org.freedesktop.resolve1.html\nWe dont use it, it is just a placeholder so we can mock the DBus interface.\n\n\u003e SetLinkDNSEx() is similar to SetLinkDNS(), but allows an IP port (instead of the default 53) and DNS name to be specified for each DNS server. The server name is used for Server Name Indication (SNI), which is useful when DNS-over-TLS is used. C.f. DNS\u003d in resolved.conf(5).\n\nBut yeah, the port should not be there for the new entry)",
+      "parentUuid": "f0116ed1_d9699d7e",
+      "range": {
+        "startLine": 320,
+        "startChar": 50,
+        "endLine": 320,
+        "endChar": 63
+      },
+      "revId": "0088930a2d82322c58b3536341445a9ea1a00318",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

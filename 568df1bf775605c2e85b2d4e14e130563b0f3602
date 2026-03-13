@@ -24,6 +24,30 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "89974e65_17dbe415",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83297412_154f2d46",
+      "range": {
+        "startLine": 132,
+        "startChar": 18,
+        "endLine": 132,
+        "endChar": 26
+      },
+      "revId": "568df1bf775605c2e85b2d4e14e130563b0f3602",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e870390c_a405be7c",
@@ -37,6 +61,24 @@
       "writtenOn": "2026-03-10T09:53:59Z",
       "side": 1,
       "message": "This will break when one address is used several times with a different port.",
+      "revId": "568df1bf775605c2e85b2d4e14e130563b0f3602",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f624a2f_f16602df",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-13T13:00:57Z",
+      "side": 1,
+      "message": "I don\u0027t think so. Each such server gets its own name (key).\nMaybe the name of variable `name` confused you? Changed to `key` (in parent commit).\nThere is even a test for this.",
+      "parentUuid": "e870390c_a405be7c",
       "revId": "568df1bf775605c2e85b2d4e14e130563b0f3602",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

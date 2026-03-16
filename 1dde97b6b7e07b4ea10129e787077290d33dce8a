@@ -69,6 +69,30 @@
       },
       "revId": "1dde97b6b7e07b4ea10129e787077290d33dce8a",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cd71b95_dcb4598e",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-16T10:26:32Z",
+      "side": 1,
+      "message": "I messed up while rebasing. The method is not used in DNS yet. I have renamed it in order not to confuse readers.",
+      "parentUuid": "a7e7e77f_49e81114",
+      "range": {
+        "startLine": 97,
+        "startChar": 81,
+        "endLine": 97,
+        "endChar": 93
+      },
+      "revId": "1dde97b6b7e07b4ea10129e787077290d33dce8a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

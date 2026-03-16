@@ -18,6 +18,24 @@
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "45bb2664_9ad8cb31",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-16T10:43:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82cc9da2_66227d9c",
+      "revId": "622013b8a51d9f566fedd085c41fc2a8228775f3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6abf45b4_2825b700",
@@ -49,6 +67,24 @@
       "side": 1,
       "message": "...and whatever you pick, please make https://gerrit.cesnet.cz/c/CzechLight/velia/+/9151/3 use the same pattern.",
       "parentUuid": "6abf45b4_2825b700",
+      "revId": "622013b8a51d9f566fedd085c41fc2a8228775f3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb4cf27f_e801bc3d",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-16T10:43:28Z",
+      "side": 1,
+      "message": "I think it should be `floor(log10(i)) + 1` (your formula wouldn\u0027t work for numbers `10^n`. We also have to account for `log10(0)` returning `-INF`. I think `formatted_size` handles this nicely.",
+      "parentUuid": "9994a02c_48408e16",
       "revId": "622013b8a51d9f566fedd085c41fc2a8228775f3",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }

@@ -45,6 +45,30 @@
       },
       "revId": "1dde97b6b7e07b4ea10129e787077290d33dce8a",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7e7e77f_49e81114",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-16T09:19:30Z",
+      "side": 1,
+      "message": "...and I see that this is probably due to a follow-up change which ended up in https://gerrit.cesnet.cz/c/CzechLight/velia/+/9144/5/src/system/IETFSystem.cpp#110",
+      "parentUuid": "746b60be_5cbe8e64",
+      "range": {
+        "startLine": 97,
+        "startChar": 81,
+        "endLine": 97,
+        "endChar": 93
+      },
+      "revId": "1dde97b6b7e07b4ea10129e787077290d33dce8a",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

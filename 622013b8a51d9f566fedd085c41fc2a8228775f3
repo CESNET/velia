@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82cc9da2_66227d9c",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-16T09:00:34Z",
+      "side": 1,
+      "message": "nit: I\u0027d prefer not to have these on a single line",
+      "revId": "622013b8a51d9f566fedd085c41fc2a8228775f3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6abf45b4_2825b700",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-16T09:00:34Z",
+      "side": 1,
+      "message": "I do not have a strong opinion, but I think that an `std::ceil(std::log10)` would be \"better\". Feel free to reject this one if you\u0027re OK with this.",
+      "revId": "622013b8a51d9f566fedd085c41fc2a8228775f3",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

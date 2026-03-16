@@ -16,6 +16,24 @@
       "message": "this revision specification can be dropped completely",
       "revId": "db37b1a4138a80230e01cf1ee90b4a837fae5708",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e244091f_2ee7f136",
+        "filename": "yang/czechlight-network-sdn-generic@2025-06-06.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-16T13:32:24Z",
+      "side": 1,
+      "message": "Why? Doesn\u0027t this check for the correct cla-network revision -- i.e, isn\u0027t this safer?",
+      "parentUuid": "23137dc4_d6483ec9",
+      "revId": "db37b1a4138a80230e01cf1ee90b4a837fae5708",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

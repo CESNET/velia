@@ -52,6 +52,24 @@
       "parentUuid": "e244091f_2ee7f136",
       "revId": "db37b1a4138a80230e01cf1ee90b4a837fae5708",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "430e1307_9e958524",
+        "filename": "yang/czechlight-network-sdn-generic@2025-06-06.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-17T14:19:17Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "353fe8bd_c323979f",
+      "revId": "db37b1a4138a80230e01cf1ee90b4a837fae5708",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

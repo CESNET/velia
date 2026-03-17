@@ -34,6 +34,24 @@
       "parentUuid": "23137dc4_d6483ec9",
       "revId": "db37b1a4138a80230e01cf1ee90b4a837fae5708",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "353fe8bd_c323979f",
+        "filename": "yang/czechlight-network-sdn-generic@2025-06-06.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-17T13:32:06Z",
+      "side": 1,
+      "message": "I think that in the real world, we have test coverage and explicit installation of modules with a revision identification. If the revision is also listed in these models, IMHO it will only cause extra edits, and (if we wanted to really embrace the versioning rules), we \"should\" bump revisions of these files as well (otherwise it will break every reasonable caching implementation). So, I think that it\u0027s less work (long term) to drop the by-revision import.",
+      "parentUuid": "e244091f_2ee7f136",
+      "revId": "db37b1a4138a80230e01cf1ee90b4a837fae5708",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

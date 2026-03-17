@@ -9,7 +9,6 @@ module czechlight-network-sdn-inline {
 
     import czechlight-network {
         prefix cla-network;
-        revision-date 2025-06-06;
     }
 
     description

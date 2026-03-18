@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee80c834_ed051f1a",
+        "filename": "src/system/IETFSystem.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-18T17:19:24Z",
+      "side": 1,
+      "message": "nit: `present`",
+      "range": {
+        "startLine": 105,
+        "startChar": 28,
+        "endLine": 105,
+        "endChar": 35
+      },
+      "revId": "65273daea6a8843dba78cf246cb9467fa6cd57fa",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

@@ -52,6 +52,24 @@
       "parentUuid": "3eee7e0a_7be80bda",
       "revId": "a8c64e5965aeb7c3e7f67d449fbf8c5c6cc9e3b5",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b064ff2d_c1385346",
+        "filename": "tests/sysrepo_interfaces-systemd-networkd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-19T10:16:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bce50001_d5de852a",
+      "revId": "a8c64e5965aeb7c3e7f67d449fbf8c5c6cc9e3b5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

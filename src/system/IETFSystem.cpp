@@ -102,7 +102,7 @@ std::vector<std::string> getNTPOrDNSServersFromChange(const std::string& serverP
     std::vector<std::string> addresses;
 
     if (auto data = session.getData(serverPath)) {
-        // NTP port leaf is preesnt only if feature is enabled. However as of 2026-03, systemd-timesyncd does not support custom ports, so we do not enable it
+        // NTP port leaf is present only if feature is enabled. However as of 2026-03, systemd-timesyncd does not support custom ports, so we do not enable it
         auto serverPathChildren = session.getContext().findPath(serverPath).childInstantiables();
         bool hasPortLeaf = std::find_if(serverPathChildren.begin(), serverPathChildren.end(), [](const auto& node) { return node.name() == "port"; }) != serverPathChildren.end();
 

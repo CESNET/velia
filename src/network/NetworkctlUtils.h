@@ -18,4 +18,5 @@ struct NetworkConfFiles {
     bool operator==(const NetworkConfFiles&) const = default;
 };
 std::map<std::string, NetworkConfFiles> linkConfigurationFiles(const std::string& jsonData, std::set<std::string> managedInterfaces);
+std::string getLocalChassisId(const std::string& jsonData);
 }

@@ -1,8 +1,10 @@
 #include "trompeloeil_doctest.h"
 #include "network/LLDP.h"
 #include "system_vars.h"
+#include "tests/configure.cmake.h"
 #include "tests/pretty_printers.h"
 #include "tests/test_log_setup.h"
+#include "utils/io.h"
 
 using namespace std::literals;
 
@@ -90,4 +92,18 @@ TEST_CASE("Parsing with the mock")
         velia::network::LLDPDataProvider::LocalData{.chassisId = "blabla", .chassisSubtype = "local"});
     REQUIRE(lldp->getNeighbors() == expected);
     REQUIRE(lldp->localProperties() == std::map<std::string, std::string>{{"chassisId", "blabla"}, {"chassisSubtype", "local"}});
+}
+
+TEST_CASE("Getting local chassis ID")
+{
+    TEST_INIT_LOGS;
+
+    auto log = spdlog::get("network");
+    auto chassisId = velia::network::getLocalChassisId(velia::utils::readFileToString(CMAKE_CURRENT_SOURCE_DIR "/tests/networkctl/coherent-a-d-DQ000V9U-systemd258.json"));
+    REQUIRE(chassisId == "67749f3a768542d185a31359428acf50");
+
+    REQUIRE_THROWS_WITH_AS(
+        velia::network::getLocalChassisId(velia::utils::readFileToString(CMAKE_CURRENT_SOURCE_DIR "/tests/networkctl/sdn-bidi-cplus1572-PGCL250303.json")),
+        "No LLDP chassis ID found in networkctl JSON data",
+        std::runtime_error);
 }

@@ -63,4 +63,19 @@ std::map<std::string, NetworkConfFiles> linkConfigurationFiles(const std::string
 
     return result;
 }
+
+/** @brief Expects JSON produced by `networkctl list --json=pretty|short` and returns the chassis ID of the local machine as seen by LLDP. */
+std::string getLocalChassisId(const std::string& jsonData)
+{
+    nlohmann::json data = nlohmann::json::parse(jsonData);
+
+    // As of systemd 258, the LLDP chassis ID is included in the "LLDP" section of each LLDP-enabled interface
+    for (const auto& interface: data["Interfaces"]) {
+        if (interface.contains("LLDP") && interface["LLDP"].contains("ChassisID")) {
+            return interface["LLDP"]["ChassisID"].get<std::string>();
+        }
+    }
+
+    throw std::runtime_error{"No LLDP chassis ID found in networkctl JSON data"};
+}
 }

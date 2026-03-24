@@ -61,7 +61,9 @@ int main(int argc, char* argv[])
 
     const std::filesystem::path runtimeConfigDirectory = "/run/systemd/network";
     const std::filesystem::path systemdConfigDirectory = "/usr/lib/systemd/network";
-    const auto managedLinks = velia::network::systemdNetworkdManagedLinks(velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"list", "--json=short"}, ""));
+
+    const auto networkctlListOutput = velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"list", "--json=short"}, "");
+    const auto managedLinks = velia::network::systemdNetworkdManagedLinks(networkctlListOutput);
 
     auto daemons = velia::network::create(
         sysrepo::Connection{},
@@ -104,7 +106,7 @@ int main(int argc, char* argv[])
         },
         []() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
         velia::network::LLDPDataProvider::LocalData{
-            .chassisId = velia::utils::readFileString("/etc/machine-id"),
+            .chassisId = velia::network::getLocalChassisId(networkctlListOutput),
             .chassisSubtype = "local"}
     );
     waitUntilSignaled();

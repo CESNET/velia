@@ -39,8 +39,8 @@ find_package(nlohmann_json REQUIRED)
 pkg_check_modules(DOCOPT REQUIRED IMPORTED_TARGET docopt)
 
 pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
-if(${SYSTEMD_VERSION} VERSION_LESS 256)
-    message(WARNING "LLDP neighbor listing support in systemd <= 255 is not supported and will break at runtime. Upgrade to systemd 256.")
+if(${SYSTEMD_VERSION} VERSION_LESS 258)
+    message(WARNING "LLDP neighbor listing and getting local chassis ID will not work in systemd <= 257. Upgrade to systemd 258.")
 endif()
 
 pkg_check_modules(SYSREPO REQUIRED IMPORTED_TARGET sysrepo sysrepo-cpp>=7)

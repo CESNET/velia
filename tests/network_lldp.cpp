@@ -91,14 +91,3 @@ TEST_CASE("Parsing with the mock")
     REQUIRE(lldp->getNeighbors() == expected);
     REQUIRE(lldp->localProperties() == std::map<std::string, std::string>{{"chassisId", "blabla"}, {"chassisSubtype", "local"}});
 }
-
-#if LIST_NEIGHBORS_RUN
-TEST_CASE("Real systemd")
-{
-    TEST_INIT_LOGS;
-
-    auto dbusConnection = sdbus::createSystemBusConnection();
-    auto lldp = std::make_shared<velia::network::LLDPDataProvider>([]() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); });
-    [[maybe_unused]] auto x = lldp->getNeighbors();
-}
-#endif

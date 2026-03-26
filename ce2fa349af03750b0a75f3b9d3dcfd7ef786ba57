@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9bc1008_c20bc710",
+        "filename": "src/network/NetworkctlUtils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-03-26T10:35:13Z",
+      "side": 1,
+      "message": "We talked about the possibility of adding a fallback option which would simply read `/etc/machine-id` when the `ChassisId` is not present in the JSON output. We decided not to do that because we\u0027re not sure about the stability guarantees of the JSON format, and because we wanted to receive an early failure at runtime instead of possibly silently returning wrong data.",
+      "revId": "ce2fa349af03750b0a75f3b9d3dcfd7ef786ba57",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

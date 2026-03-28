@@ -77,7 +77,7 @@ void valuesToYang(const YANGData& values, const std::vector<std::string>& foreig
             }
         }
         if (!hasExactDiscard) {
-            auto discard = session.getContext().newOpaqueJSON({"sysrepo", "sysrepo", "discard-items"}, libyang::JSON{xpath});
+            auto discard = session.getContext().newOpaqueJSON({"sysrepo", "sysrepo", "discard-items"}, xpath);
 
             if (!parent) {
                 parent = discard;

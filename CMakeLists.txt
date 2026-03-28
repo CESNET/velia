@@ -44,7 +44,7 @@ if(${SYSTEMD_VERSION} VERSION_LESS 258)
 endif()
 
 pkg_check_modules(SYSREPO REQUIRED IMPORTED_TARGET sysrepo sysrepo-cpp>=7)
-pkg_check_modules(LIBYANG REQUIRED IMPORTED_TARGET libyang-cpp>=8)
+pkg_check_modules(LIBYANG REQUIRED IMPORTED_TARGET libyang-cpp>=9)
 pkg_check_modules(LIBNL REQUIRED IMPORTED_TARGET libnl-route-3.0)
 
 include(GNUInstallDirs)

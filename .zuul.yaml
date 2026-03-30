@@ -21,15 +21,15 @@
             requires: CzechLight-deps-f38-clang-tsan
             required-projects: *projects
             pre-run: ci/pre.yaml
-        # - f38-cpp-coverage-diff:
-        #     voting: false
+        - f38-cpp-coverage-diff:
+            voting: false
         - clang-format:
             voting: false
-        # - f38-gcc-cover-previous:
-        #     requires: CzechLight-deps-f38-gcc
-        #     required-projects: *projects
-        #     pre-run: ci/pre.yaml
-        # - czechlight-clearfog:
-        #     required-projects:
-        #       - CzechLight/br2-external
-        #     requires: CzechLight-br2-build-clearfog
+        - f38-gcc-cover-previous:
+            requires: CzechLight-deps-f38-gcc
+            required-projects: *projects
+            pre-run: ci/pre.yaml
+        - czechlight-clearfog:
+            required-projects:
+              - CzechLight/br2-external
+            requires: CzechLight-br2-build-clearfog

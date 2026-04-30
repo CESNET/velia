@@ -30,12 +30,12 @@ module czechlight-system {
   description
     "YANG model for system administration in Czechlight devices.";
 
-  revision 2021-01-13 {
-    description "Initial release";
-  }
-
   revision 2022-07-08 {
     description "Extended firmware slot properties and actions";
+  }
+
+  revision 2021-01-13 {
+    description "Initial release";
   }
 
   typedef percent {

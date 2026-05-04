@@ -11,6 +11,7 @@
 #include <fstream>
 #include <libyang-cpp/Time.hpp>
 #include <optional>
+#include <unistd.h>
 #include "IETFSystem.h"
 #include "system_vars.h"
 #include "utils/exec.h"

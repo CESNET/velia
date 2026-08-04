@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37ad412c_d48acd56",
+        "filename": "cli/velia-list-sensors.jq",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-08-04T14:41:35Z",
+      "side": 1,
+      "message": "wow, this looks.... rather non-trivial. Thanks!",
+      "revId": "6ef325bc94322d47361d240293b1359cc55f1dc5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e388f8d2_77f26de5",
+        "filename": "cli/velia-list-sensors.jq",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-08-04T14:41:35Z",
+      "side": 1,
+      "message": "This is an insane rule, but I see that it comes from the RFC. Oh well.",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 101
+      },
+      "revId": "6ef325bc94322d47361d240293b1359cc55f1dc5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b328a3f9_6d3ab430",
+        "filename": "tests/jq/velia-list-sensors/EDFA-LINE-SDN-ID210512.expected",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-08-04T14:41:35Z",
+      "side": 1,
+      "message": "I wanted to ask for printing this as `%`, but nope, we cannot have nice things, it\u0027s hardcoded in our C++ source. OK, fair enough.",
+      "range": {
+        "startLine": 2,
+        "startChar": 26,
+        "endLine": 2,
+        "endChar": 33
+      },
+      "revId": "6ef325bc94322d47361d240293b1359cc55f1dc5",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

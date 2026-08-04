@@ -1,0 +1,253 @@
+{
+  "ietf-hardware:hardware": {
+    "last-change": "2024-10-16T15:53:03.328307844+00:00",
+    "component": [
+      {
+        "name": "ne",
+        "class": "iana-hardware:chassis",
+        "description": "a component with no sensor-data is not listed",
+        "state": {
+          "oper-state": "enabled"
+        }
+      },
+      {
+        "name": "ne:negative",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": -1234,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:negative-below-one",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": -5,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:tiny",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 7,
+          "value-type": "watts",
+          "value-scale": "micro",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:huge",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 3,
+          "value-type": "hertz",
+          "value-scale": "kilo",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:huge-zero",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 0,
+          "value-type": "hertz",
+          "value-scale": "kilo",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:truth-yes",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 1,
+          "value-type": "truth-value",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:truth-no",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 2,
+          "value-type": "truth-value",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:unknown-units",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 42,
+          "value-type": "unknown",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok",
+          "units-display": "widgets"
+        }
+      },
+      {
+        "name": "ne:no-units",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 5,
+          "value-type": "other",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fixed-point",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 256,
+          "value-type": "celsius",
+          "value-scale": "units",
+          "value-precision": 1,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:fixed-point-scaled",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 426,
+          "value-type": "amperes",
+          "value-scale": "milli",
+          "value-precision": 1,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:accurate-digits",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 42,
+          "value-type": "celsius",
+          "value-scale": "units",
+          "value-precision": -2,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:too-hot",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 1000000000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:too-cold",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": -1000000000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:not-a-sentinel",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 1000000000,
+          "value-type": "other",
+          "value-scale": "units",
+          "value-precision": 0,
+          "oper-status": "ok",
+          "units-display": "widgets"
+        }
+      },
+      {
+        "name": "ne:too-hot-as-velia-reports-it",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 1000000000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "nonoperational"
+        }
+      },
+      {
+        "name": "ne:trailing-zeros",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 45000,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "ok"
+        }
+      },
+      {
+        "name": "ne:bare-minimum",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 42,
+          "value-type": "celsius"
+        }
+      },
+      {
+        "name": "ne:broken",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value": 666,
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "nonoperational"
+        }
+      },
+      {
+        "name": "ne:gone",
+        "class": "iana-hardware:sensor",
+        "parent": "ne",
+        "sensor-data": {
+          "value-type": "celsius",
+          "value-scale": "milli",
+          "value-precision": 0,
+          "oper-status": "unavailable"
+        }
+      }
+    ]
+  }
+}

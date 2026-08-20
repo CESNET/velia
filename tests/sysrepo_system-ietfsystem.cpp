@@ -36,12 +36,12 @@ TEST_CASE("Sysrepo ietf-system")
 
     velia::system::IETFSystem::SystemdConfigData resolve{
         .busName = dbusConnServer->getUniqueName(),
-        .dropinDir = CMAKE_CURRENT_BINARY_DIR "tests/resolved.conf.d",
+        .dropinDir = CMAKE_CURRENT_BINARY_DIR "/tests/resolved.conf.d",
         .reload = [&systemctlMock] { systemctlMock.reloadResolve(); },
     };
     velia::system::IETFSystem::SystemdConfigData timesync{
         .busName = dbusConnServer->getUniqueName(),
-        .dropinDir = CMAKE_CURRENT_BINARY_DIR "tests/timesyncd.conf.d",
+        .dropinDir = CMAKE_CURRENT_BINARY_DIR "/tests/timesyncd.conf.d",
         .reload = [&systemctlMock] { systemctlMock.reloadTimesync(); },
     };
     velia::system::IETFSystem::SystemdConfigData timedate{

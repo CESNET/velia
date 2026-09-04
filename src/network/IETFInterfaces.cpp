@@ -182,6 +182,7 @@ IETFInterfaces::IETFInterfaces(::sysrepo::Session srSess)
           [this](rtnl_addr* addr, int action) { onAddrUpdate(addr, action); },
           [this](rtnl_route* addr, int action) { onRouteUpdate(addr, action); }))
 {
+    std::lock_guard<std::mutex> lock(m_mtx);
     utils::ensureModuleImplemented(m_srSession, IETF_INTERFACES_MODULE_NAME, "2018-02-20");
     utils::ensureModuleImplemented(m_srSession, IETF_IP_MODULE_NAME, "2018-02-22");
     utils::ensureModuleImplemented(m_srSession, IETF_ROUTING_MODULE_NAME, "2018-03-13");
@@ -205,6 +206,7 @@ IETFInterfaces::IETFInterfaces(::sysrepo::Session srSess)
             values.emplace_back(yangPrefix + "/out-errors", std::to_string(rtnl_link_get_stat(link.get(), RTNL_LINK_TX_ERRORS)));
         }
 
+        std::lock_guard<std::mutex> lock(m_mtx);
         utils::valuesToYang(values, {}, {}, session, parent);
         return sysrepo::ErrorCode::Ok;
     };
@@ -213,14 +215,18 @@ IETFInterfaces::IETFInterfaces(::sysrepo::Session srSess)
 
     m_srSubscribe->onOperGet(
         IETF_INTERFACES_MODULE_NAME, [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
-            utils::valuesToYang(collectNeighboursIP(m_rtnetlink, AF_INET, m_log), {}, {}, session, parent);
+            auto values = collectNeighboursIP(m_rtnetlink, AF_INET, m_log);
+            std::lock_guard<std::mutex> lock(m_mtx);
+            utils::valuesToYang(values, {}, {}, session, parent);
             return sysrepo::ErrorCode::Ok;
         },
         IETF_INTERFACES + "/interface/ietf-ip:ipv4/neighbor");
 
     m_srSubscribe->onOperGet(
         IETF_INTERFACES_MODULE_NAME, [this](auto session, auto, auto, auto, auto, auto, auto& parent) {
-            utils::valuesToYang(collectNeighboursIP(m_rtnetlink, AF_INET6, m_log), {}, {}, session, parent);
+            auto values = collectNeighboursIP(m_rtnetlink, AF_INET6, m_log);
+            std::lock_guard<std::mutex> lock(m_mtx);
+            utils::valuesToYang(values, {}, {}, session, parent);
             return sysrepo::ErrorCode::Ok;
         },
         IETF_INTERFACES + "/interface/ietf-ip:ipv6/neighbor");
@@ -232,8 +238,8 @@ void IETFInterfaces::onLinkUpdate(rtnl_link* link, int action)
     m_log->trace("Netlink update on link '{}', action {}", name, nlActionToString(action));
 
     if (action == NL_ACT_DEL) {
-        std::lock_guard<std::mutex> lock(m_mtx);
         std::vector<std::string> deletePaths = {IETF_INTERFACES + "/interface[name='" + name + "']"};
+        std::lock_guard<std::mutex> lock(m_mtx);
         utils::valuesPush(m_srSession, utils::YANGData{}, deletePaths, deletePaths);
     } else if (action == NL_ACT_CHANGE || action == NL_ACT_NEW) {
         utils::YANGData values;

@@ -11,6 +11,7 @@
 #include "utils/exec.h"
 #include "utils/io.h"
 #include "utils/journal.h"
+#include "utils/Varlink.h"
 #include "utils/log-init.h"
 #include "utils/sysrepo.h"
 #include "utils/waitUntilSignalled.h"
@@ -104,7 +105,7 @@ int main(int argc, char* argv[])
                 }
             }
         },
-        []() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
+        [varlink = velia::utils::Varlink{"/run/systemd/netif/io.systemd.Network"}]() { return varlink.call("io.systemd.Network.GetLLDPNeighbors"); },
         velia::network::LLDPDataProvider::LocalData{
             .chassisId = velia::network::getLocalChassisId(networkctlListOutput),
             .chassisSubtype = "local"},

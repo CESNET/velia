@@ -119,6 +119,8 @@ add_library(velia-utils STATIC
     src/utils/log-init.h
     src/utils/sysrepo.cpp
     src/utils/sysrepo.h
+    src/utils/Varlink.cpp
+    src/utils/Varlink.h
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )

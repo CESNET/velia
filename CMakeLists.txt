@@ -38,10 +38,7 @@ find_package(fmt "9.0.0" REQUIRED)
 find_package(nlohmann_json REQUIRED)
 pkg_check_modules(DOCOPT REQUIRED IMPORTED_TARGET docopt)
 
-pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
-if(${SYSTEMD_VERSION} VERSION_LESS 258)
-    message(WARNING "LLDP neighbor listing and getting local chassis ID will not work in systemd <= 257. Upgrade to systemd 258.")
-endif()
+pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd>=258)
 
 pkg_check_modules(SYSREPO REQUIRED IMPORTED_TARGET sysrepo sysrepo-cpp>=8)
 pkg_check_modules(LIBYANG REQUIRED IMPORTED_TARGET libyang-cpp>=9)
@@ -119,6 +116,8 @@ add_library(velia-utils STATIC
     src/utils/log-init.h
     src/utils/sysrepo.cpp
     src/utils/sysrepo.h
+    src/utils/Varlink.cpp
+    src/utils/Varlink.h
     src/utils/waitUntilSignalled.cpp
     src/utils/waitUntilSignalled.h
     )

@@ -315,11 +315,12 @@ TEST_CASE("concurrent modifications within a systemd-networkd callback")
             std::this_thread::sleep_for(WAIT);
             ++reloaded;
         },
-        []() { return std::string{}; },
+        []() { return R"({"Neighbors": []})"s; },
         velia::network::LLDPDataProvider::LocalData{
             .chassisId = "xxx",
             .chassisSubtype = "local",
-        });
+        },
+        1s);
 
     std::this_thread::sleep_for(WAIT);
     REQUIRE(reloaded == 2);

@@ -7,9 +7,11 @@
 
 #pragma once
 
+#include <chrono>
 #include <memory>
-#include <optional>
-#include <sysrepo-cpp/Subscription.hpp>
+#include <sysrepo-cpp/Connection.hpp>
+#include <sysrepo-cpp/Session.hpp>
+#include <thread>
 #include "LLDP.h"
 #include "utils/log-fwd.h"
 
@@ -17,13 +19,18 @@ namespace velia::network {
 
 class LLDPSysrepo {
 public:
-    explicit LLDPSysrepo(sysrepo::Session& session, std::shared_ptr<LLDPDataProvider> lldp);
-    void fetch(sysrepo::Session session, std::optional<libyang::DataNode>& output);
+    explicit LLDPSysrepo(sysrepo::Connection conn, std::shared_ptr<LLDPDataProvider> lldp, std::chrono::milliseconds pollInterval);
 
 private:
+    void poll();
+    void push(const std::vector<NeighborEntry>& neighbors);
+
     velia::Log m_log;
+    sysrepo::Session m_session;
     std::shared_ptr<LLDPDataProvider> m_lldp;
-    sysrepo::Subscription m_sub;
+    std::chrono::milliseconds m_pollInterval;
+    std::vector<NeighborEntry> m_lastNeighbors;
+    std::jthread m_thread; // last member, it must be destroyed first
 };
 
 }

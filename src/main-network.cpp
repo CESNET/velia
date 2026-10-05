@@ -107,8 +107,8 @@ int main(int argc, char* argv[])
         []() { return velia::utils::execAndWait(spdlog::get("network"), NETWORKCTL_EXECUTABLE, {"lldp", "--json=short"}, ""); },
         velia::network::LLDPDataProvider::LocalData{
             .chassisId = velia::network::getLocalChassisId(networkctlListOutput),
-            .chassisSubtype = "local"}
-    );
+            .chassisSubtype = "local"},
+        5s);
     waitUntilSignaled();
     return 0;
 }

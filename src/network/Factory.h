@@ -1,4 +1,5 @@
 #pragma once
+#include <chrono>
 #include <filesystem>
 #include <sysrepo-cpp/Connection.hpp>
 #include "network/IETFInterfaces.h"
@@ -20,7 +21,8 @@ Services create(
     const std::vector<std::string>& managedLinks,
     IETFInterfacesConfig::reload_cb_t runningNetworkReloadCB,
     LLDPDataProvider::data_callback_t lldpCallback,
-    LLDPDataProvider::LocalData lldpLocalData)
+    LLDPDataProvider::LocalData lldpLocalData,
+    std::chrono::milliseconds lldpPollInterval)
 {
     std::filesystem::create_directories(runtimeNetworkDirectory);
     std::filesystem::create_directories(persistentNetworkDirectory);
@@ -30,8 +32,9 @@ Services create(
         .opsData = velia::network::IETFInterfaces{conn.sessionStart(sysrepo::Datastore::Operational)},
         .startupConfig = IETFInterfacesConfig{conn.sessionStart(sysrepo::Datastore::Startup), persistentNetworkDirectory, managedLinks, [](const auto&) {}},
         .runtimeConfig = IETFInterfacesConfig{running, runtimeNetworkDirectory, managedLinks, std::move(runningNetworkReloadCB)},
-        .lldp = LLDPSysrepo{running,
-                            std::make_shared<velia::network::LLDPDataProvider>(std::move(lldpCallback), std::move(lldpLocalData))},
+        .lldp = LLDPSysrepo{conn,
+                            std::make_shared<velia::network::LLDPDataProvider>(std::move(lldpCallback), std::move(lldpLocalData)),
+                            lldpPollInterval},
     };
 }
 }

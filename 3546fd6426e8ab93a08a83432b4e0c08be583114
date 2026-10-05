@@ -16,6 +16,29 @@
       "message": "recheck",
       "revId": "3546fd6426e8ab93a08a83432b4e0c08be583114",
       "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "312aa8d3_40d9e371",
+        "filename": "src/network/IETFInterfaces.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-10-05T12:50:41Z",
+      "side": 1,
+      "message": "This runs synchronously on the same thread. And the callbacks (e.g. `IETFInterfaces::onLinkUpdate`) use the same mutex. Hence the deadlock, the thread is waiting on itself.",
+      "range": {
+        "startLine": 193,
+        "startChar": 17,
+        "endLine": 193,
+        "endChar": 39
+      },
+      "revId": "3546fd6426e8ab93a08a83432b4e0c08be583114",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
     }
   ]
 }

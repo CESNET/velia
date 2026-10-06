@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "420841a7_45b5f0ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-10-06T10:17:17Z",
+      "side": 1,
+      "message": "Oh, CI has libsystemd v253, but this requires v257...",
+      "revId": "e5e2bfd79ac0ec52a4df316530501d2bc89ce5a2",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}

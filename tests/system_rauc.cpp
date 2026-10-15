@@ -8,15 +8,15 @@
 using namespace std::literals::chrono_literals;
 
 /** @brief waits until expectation is saturated, but 150ms at most */
-void waitForSaturation(const std::unique_ptr<trompeloeil::expectation>& exp)
+void waitForSaturation(const trompeloeil::expectation& exp)
 {
     static const auto WAIT_FOR_INSTALLATION_START_STEP = 5ms;
     static const auto WAIT_FOR_INSTALLATION_START_MAX_STEPS = 30;
 
-    for (auto i = 0; i < WAIT_FOR_INSTALLATION_START_MAX_STEPS && !exp->is_saturated(); i++) {
+    for (auto i = 0; i < WAIT_FOR_INSTALLATION_START_MAX_STEPS && !exp.is_saturated(); i++) {
         std::this_thread::sleep_for(WAIT_FOR_INSTALLATION_START_STEP);
     }
-    REQUIRE(exp->is_saturated());
+    REQUIRE(exp.is_saturated());
 }
 
 TEST_CASE("Fetch RAUC data over DBus")
@@ -151,7 +151,7 @@ TEST_CASE("Fetch RAUC data over DBus")
         FAKE_RAUC_OPERATION("idle");
 
         rauc->install("/path/to/bundle");
-        waitForSaturation(exp); // wait until installation starts
+        waitForSaturation(*exp); // wait until installation starts
         REQUIRE(rauc->operation() == "installing");
 
         SECTION("Invoking another operation before the installation ends")
@@ -178,7 +178,7 @@ TEST_CASE("Fetch RAUC data over DBus")
         FAKE_RAUC_OPERATION("idle");
 
         rauc->install("/path/to/bundle");
-        waitForSaturation(exp); // wait until installation starts
+        waitForSaturation(*exp); // wait until installation starts
         REQUIRE(rauc->operation() == "installing");
         waitForCompletionAndBitMore(seq1);
         REQUIRE(rauc->lastError() == "Failed to download bundle https://10.88.3.11:8000/update.raucb: Transfer failed: error:1408F10B:SSL routines:ssl3_get_record:wrong version number");

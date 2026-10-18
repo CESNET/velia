@@ -28,7 +28,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-YANGLINT_OUTPUT=$(yanglint -t config -f json ${YANG_FILES[@]} 2>&1)
+YANGLINT_OUTPUT=$(yanglint -D -t config -f json ${YANG_FILES[@]} 2>&1)
 YANGLINT_EXITCODE=$?
 
 if [[ -n ${ERROR_FILE} ]]; then

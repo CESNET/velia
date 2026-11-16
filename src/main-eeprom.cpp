@@ -11,7 +11,6 @@
 #include "VELIA_VERSION.h"
 #include "ietf-hardware/sysfs/IpmiFruEEPROM.h"
 #include "ietf-hardware/sysfs/OnieEEPROM.h"
-#include "utils/exceptions.h"
 #include "utils/log-init.h"
 #include "utils/log.h"
 
@@ -288,7 +287,8 @@ int main(int argc, char* argv[])
 
         return 0;
     } catch (const std::exception& e) {
-        velia::utils::fatalException(spdlog::get("main"), e, "main");
+        spdlog::get("main")->critical("{}", e.what());
+        return 1;
     }
 }
 

@@ -770,3 +770,5 @@ add_jq_test(velia-list-sensors value-formatting)
 add_velia_eeprom_json_test(188_0-0052_eeprom)
 add_velia_eeprom_json_test(onie-marvell)
 add_velia_eeprom_json_test(PGCL250303)
+add_test(NAME velia-eeprom-invalid
+    COMMAND sh -c "$<TARGET_FILE:velia-eeprom> --onie ${CMAKE_CURRENT_SOURCE_DIR}/tests/sysfs/eeprom/191_0-0053_eeprom-wrongcrc.bin; test $? -eq 1")

@@ -4,6 +4,7 @@
  * Written by Tomáš Pecka <tomas.pecka@cesnet.cz>
  *
  */
+#include <algorithm>
 #include <boost/crc.hpp>
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>
 #include <boost/spirit/home/x3.hpp>
@@ -192,6 +193,10 @@ const auto CzechLightBlobParser = x3::rule<struct CzechLightBlobParser, CzechLig
 
 TlvInfo parse(std::vector<uint8_t>::const_iterator begin, std::vector<uint8_t>::const_iterator end)
 {
+    if (std::all_of(begin, end, [](uint8_t byte) { return byte == 0xff; })) {
+        throw std::runtime_error{"The EEPROM is empty (all bytes are 0xff)"};
+    }
+
     TlvInfo tlvinfo;
 
     if (!x3::parse(begin, end, TlvInfoParser, tlvinfo)) {

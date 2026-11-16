@@ -406,5 +406,6 @@ TEST_CASE("ONIE EEPROM reader")
     DOCTEST_SUBCASE("Invalid files")
     {
         REQUIRE_THROWS_WITH_AS(velia::ietf_hardware::sysfs::onieEeprom(testsDir / "191_0-0053_eeprom-wrongcrc.bin"), "Failed to parse TlvInfo structure", std::runtime_error);
+        REQUIRE_THROWS_WITH_AS(velia::ietf_hardware::sysfs::onieEeprom(testsDir / "empty.bin"), "The EEPROM is empty (all bytes are 0xff)", std::runtime_error);
     }
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a94507e3_b7b11d0a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-11-18T08:54:47Z",
+      "side": 1,
+      "message": "This is a personal style preference, but it\u0027s a bit too verbose claudism for my taste.",
+      "range": {
+        "startLine": 8,
+        "startChar": 1,
+        "endLine": 15,
+        "endChar": 7
+      },
+      "revId": "c0d9a6c1af7c7987b29235866faeccc4d4047818",
+      "serverId": "e32f8df8-3db0-4f76-a6c6-fe9d6e69dd68"
+    }
+  ]
+}
